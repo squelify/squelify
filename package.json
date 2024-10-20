@@ -1,0 +1,44 @@
+{
+    "name": "nitro-app",
+    "private": true,
+    "sideEffects": false,
+    "type": "module",
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/riipandi/nitro-stack.git"
+    },
+    "bugs": {
+        "url": "https://github.com/riipandi/nitro-stack/issues"
+    },
+    "homepage": "https://github.com/riipandi/nitro-stack#readme",
+    "scripts": {
+        "dev": "nitro dev",
+        "build": "nitro build",
+        "preview": "node .output/server/index.mjs",
+        "check": "biome check . --write",
+        "format": "biome format . --write",
+        "lint": "biome lint . --write",
+        "generate:changelog": "git-cliff -o CHANGELOG.md -c cliff-full.toml",
+        "prepare": "nitro prepare",
+        "postinstall": "lefthook install || true",
+        "pre-commit": "lefthook run pre-commit --force",
+        "update-deps": "npm-check-updates --configFileName .ncurc.json",
+        "cleanup": "pnpm run --stream --color \"/cleanup:/\"",
+        "cleanup:artifacts": "pnpm dlx rimraf .output .data .nitro",
+        "cleanup:deps": "pnpm dlx rimraf pnpm-lock.yaml node_modules",
+        "cleanup:tests": "pnpm dlx rimraf tests-results playwright-report",
+        "typecheck": "tsc -b"
+    },
+    "dependencies": {
+        "std-env": "^3.7.0"
+    },
+    "devDependencies": {
+        "@biomejs/biome": "^1.9.4",
+        "git-cliff": "^2.6.1",
+        "lefthook": "^1.7.22",
+        "nitropack": "latest",
+        "npm-check-updates": "^17.1.4",
+        "typescript": "^5.6.3"
+    },
+    "packageManager": "pnpm@9.12.2"
+}

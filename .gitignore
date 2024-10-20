@@ -1,0 +1,74 @@
+/node_modules
+/.fleet
+/.idea
+/.pnp
+/.cache
+/.output
+/.husky
+.pnp.js
+.DS_Store
+.DS_Store?
+/coverage
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+*tsbuildinfo
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.json
+!.vscode/launch.json
+
+*.bak
+
+# SQLite
+*.sqlite*
+*.sqlite3*
+*.libsql
+*.db
+
+# Nitro
+build/
+dist/
+.data
+.nitro
+.cache
+.output
+
+# envars
+.env.*
+!.env.example
+compose.env*
+!compose.env.example
+
+# Disable this line in your real app
+/playwright/.cache/
+/playwright-report/
+/tests-results/
+/blob-report/
+.playwright/
+
+# Sentry Config File
+.sentryclirc
+
+# Storybook
+*storybook.log
+/storybook-static/
+
+# fly.toml
+fly*.toml*
+!fly*.example.toml
+
+# Miscellaneous
+vite.config.ts.*
+RELEASE_NOTE.md
+.unikraft/
+slim.report.json
+stats.html
+
+# Terraform
+.terraform/
+.terraform.lock.hcl
+terraform.tfstate*
+terraform.tfvars*
+!terraform.tfvars.example
