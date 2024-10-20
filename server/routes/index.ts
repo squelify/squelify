@@ -8,10 +8,10 @@ export default defineRenderHandler((event) => {
     body: /* html */ `<!DOCTYPE html>
     <html>
       <head>
-        <title>Rendered Page</title>
+        <title>Nitro App</title>
         </head>
         <body>
-            <h1>Rendered by Nitro!</h1>
+            <h1>Welcome to Nitro!</h1>
         </body>
     </html>`,
   }

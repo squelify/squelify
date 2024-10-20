@@ -1,0 +1,58 @@
+export default defineCachedEventHandler(
+  async (event) => {
+    setResponseHeader(event, 'Content-Type', 'application/json')
+    return {
+      lang: 'en',
+      dir: 'ltr',
+      name: 'Remix MVP',
+      short_name: 'remix-mvp',
+      description:
+        'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
+      theme_color: '#2563eb',
+      background_color: '#0c0a09',
+      start_url: '/?source=pwa',
+      id: '/?source=pwa',
+      icons: [
+        {
+          src: '/favicon.svg',
+          sizes: '36x36',
+          type: 'image/svg+xml',
+          density: '0.75',
+        },
+        {
+          src: '/favicon.svg',
+          sizes: '48x48',
+          type: 'image/svg+xml',
+          density: '1.0',
+        },
+        {
+          src: '/favicon.svg',
+          sizes: '72x72',
+          type: 'image/svg+xml',
+          density: '1.5',
+        },
+        {
+          src: '/favicon.svg',
+          sizes: '96x96',
+          type: 'image/svg+xml',
+          density: '2.0',
+        },
+        {
+          src: '/favicon.svg',
+          sizes: '144x144',
+          type: 'image/svg+xml',
+          density: '3.0',
+        },
+        {
+          src: '/favicon.svg',
+          sizes: '192x192',
+          type: 'image/svg+xml',
+          density: '4.0',
+        },
+      ],
+      display: 'standalone',
+      orientation: 'natural',
+    }
+  },
+  { shouldBypassCache: (e) => e.node.req.url.includes('preview') }
+)
