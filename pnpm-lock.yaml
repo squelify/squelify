@@ -8,6 +8,9 @@ importers:
 
   .:
     dependencies:
+      redactyl.js:
+        specifier: ^1.6.0
+        version: 1.6.0
       std-env:
         specifier: ^3.7.0
         version: 3.7.0
@@ -1516,6 +1519,9 @@ packages:
   readdirp@3.6.0:
     resolution: {integrity: sha512-hOS089on8RduqdbhvQ5Z37A0ESjsqz6qnRcffsMU3495FuTdqSm+7bhJ29JvIOsBDEEnan5DPu9t3To9VRlMzA==}
     engines: {node: '>=8.10.0'}
+
+  redactyl.js@1.6.0:
+    resolution: {integrity: sha512-K5HZ+fVPfR7PWABroIUb+of2HVDM/VNcHYCTB1ZTqXVpCAwpj++c0eSHg0oJcDIBaNAe59DeKHzJ6rC7p91B5g==}
 
   redis-errors@1.2.0:
     resolution: {integrity: sha512-1qny3OExCf0UvUV/5wpYKf2YwPcOqXzkwKKSmKHiE6ZMQs5heeE/c8eXK+PNllPvmjgAbfnsbpkGZWy8cBpn9w==}
@@ -3269,6 +3275,8 @@ snapshots:
   readdirp@3.6.0:
     dependencies:
       picomatch: 2.3.1
+
+  redactyl.js@1.6.0: {}
 
   redis-errors@1.2.0: {}
 

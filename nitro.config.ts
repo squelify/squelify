@@ -8,6 +8,7 @@ export default defineNitroConfig({
   srcDir: 'server',
   errorHandler: '~/error',
   prerender: {
+    autoSubfolderIndex: true,
     crawlLinks: true,
     failOnError: false,
     routes: ['/'],

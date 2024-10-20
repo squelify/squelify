@@ -29,6 +29,7 @@
         "typecheck": "tsc -b"
     },
     "dependencies": {
+        "redactyl.js": "^1.6.0",
         "std-env": "^3.7.0"
     },
     "devDependencies": {

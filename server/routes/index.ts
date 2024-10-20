@@ -1,6 +1,18 @@
-export default eventHandler((event) => {
+import { defineRenderHandler } from 'nitropack/runtime'
+import logger from '~~/core/utils/logger'
+
+export default defineRenderHandler((event) => {
+  logger.info('[app]', event.path)
+
   return {
-    path: event.path,
-    message: 'Start by editing <code>server/routes/index.ts</code>.',
+    body: /* html */ `<!DOCTYPE html>
+    <html>
+      <head>
+        <title>Rendered Page</title>
+        </head>
+        <body>
+            <h1>Rendered by Nitro!</h1>
+        </body>
+    </html>`,
   }
 })
