@@ -22,7 +22,7 @@ importers:
         specifier: ^1.7.22
         version: 1.7.22
       nitropack:
-        specifier: latest
+        specifier: ^2.9.7
         version: 2.9.7
       npm-check-updates:
         specifier: ^17.1.4

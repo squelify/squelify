@@ -1,4 +1,8 @@
-export default defineNitroErrorHandler((error, event) => {
-  setResponseHeader(event, 'Content-Type', 'text/plain')
-  return send(event, `[custom error handler] ${error.stack}`)
-})
+import type { EventHandlerRequest, H3Event } from 'h3'
+
+export default defineNitroErrorHandler(
+  (error: { stack: any }, event: H3Event<EventHandlerRequest>) => {
+    setResponseHeader(event, 'Content-Type', 'text/plain')
+    return send(event, `[custom error handler] ${error.stack}`)
+  }
+)
