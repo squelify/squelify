@@ -4,10 +4,10 @@ import { defineConfig } from 'vite'
 export default defineConfig({
   plugins: [react()],
   server: { port: 5173, strictPort: true },
-  appType: 'spa',
+  appType: 'mpa',
   build: {
     manifest: true,
-    outDir: './dist',
+    outDir: './.client',
     rollupOptions: {
       input: './client/main.tsx',
     },
