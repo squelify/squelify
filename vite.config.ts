@@ -7,7 +7,7 @@ export default defineConfig({
   appType: 'spa',
   build: {
     manifest: true,
-    outDir: './server/dist',
+    outDir: './dist',
     rollupOptions: {
       input: './client/main.tsx',
     },

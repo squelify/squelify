@@ -10,8 +10,8 @@ export default defineNitroConfig({
   srcDir: 'server',
   renderer: '~/entry.server.ts',
   errorHandler: '~/error',
-  publicAssets: [{ dir: 'server/dist' }],
-  serverAssets: [{ baseName: 'vite', dir: './server/dist/.vite' }],
+  publicAssets: [{ dir: 'dist' }],
+  serverAssets: [{ baseName: 'vite', dir: 'dist/.vite' }],
   // prerender: {
   //   autoSubfolderIndex: true,
   //   crawlLinks: true,

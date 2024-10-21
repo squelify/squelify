@@ -13,7 +13,6 @@
     "homepage": "https://github.com/riipandi/nitro-stack#readme",
     "scripts": {
         "dev": "nitro dev",
-        "build": "pnpm run --stream --color \"/build:(vite|nitro)/\"",
         "build:nitro": "nitro build",
         "build:vite": "vite build",
         "preview": "node .output/server/index.mjs",
