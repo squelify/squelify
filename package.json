@@ -13,6 +13,7 @@
     "homepage": "https://github.com/riipandi/nitro-stack#readme",
     "scripts": {
         "dev": "nitro dev",
+        "build": "pnpm --silent run build:vite && pnpm --silent run build:nitro",
         "build:nitro": "nitro build",
         "build:vite": "vite build",
         "preview": "node .output/server/index.mjs",

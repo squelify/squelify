@@ -7,8 +7,5 @@
         "tsBuildInfoFile": "./node_modules/.tsbuildinfo_nitro"
     },
     "exclude": ["vite.config.ts", "client"],
-    "references": [
-        // { "path": "./tsconfig.app.json" },
-        { "path": "./tsconfig.node.json" }
-    ]
+    "references": [{ "path": "./tsconfig.app.json" }, { "path": "./tsconfig.node.json" }]
 }

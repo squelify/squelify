@@ -1,28 +1,27 @@
 {
     "$schema": "https://json.schemastore.org/tsconfig",
     "compilerOptions": {
+        "allowJs": false,
+        "baseUrl": ".",
         "composite": true,
-        "allowJs": false, // Allow JavaScript files in the project
-        // "declaration": false, // Generate .d.ts files
-        "disableSizeLimit": false, // Disable size limit for incremental compilation
-        "esModuleInterop": true, // Emit additional JavaScript for CommonJS modules
-        "incremental": true, // Enable incremental compilation
-        // "jsx": "react-jsx", // Specify JSX code generation
-        // "lib": ["DOM", "DOM.Iterable", "ESNext"], // Specify library files to include
-        "module": "ESNext", // Specify module code generation
-        "moduleDetection": "auto", // Control module detection method
-        "moduleResolution": "Bundler", // Specify module resolution strategy
-        "noImplicitAny": true, // Raise error on expressions and declarations with implied 'any' type
-        "noUncheckedIndexedAccess": true, // Include 'undefined' in index signature results, make indexing stricter
-        "skipLibCheck": true, // Skip type checking of all declaration files
-        // "strict": true, // Enable all strict type-checking options
-        // "target": "ESNext", // Set JavaScript language version
+        "disableSizeLimit": false,
+        "esModuleInterop": true,
+        "incremental": true,
+        "jsx": "react-jsx",
+        "lib": ["DOM", "DOM.Iterable", "ESNext"],
+        "module": "ESNext",
+        "moduleDetection": "auto",
+        "moduleResolution": "Bundler",
+        "noImplicitAny": true,
+        "noUncheckedIndexedAccess": true,
+        "skipLibCheck": true,
+        "strict": true,
+        "target": "ESNext",
         "tsBuildInfoFile": "./node_modules/.tsbuildinfo_app",
-        "useDefineForClassFields": true, // Use define semantics for class fields
-        "verbatimModuleSyntax": true, // Do not transform imports/exports, enforced 'type-only' imports
-        "baseUrl": ".", // Base directory for non-relative module names
+        "useDefineForClassFields": true,
+        "verbatimModuleSyntax": true,
         "paths": {
-            "#/client/*": ["./client/*"]
+            "#/client/*": ["client"]
         }
     },
     "include": ["./client/*"]
