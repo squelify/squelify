@@ -1,4 +1,4 @@
-import process from 'node:process'
+import { process } from 'std-env'
 import type { ViteDevServer } from 'vite'
 
 export default defineNitroPlugin(async (nitroApp) => {

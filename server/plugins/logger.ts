@@ -11,4 +11,8 @@ export default defineNitroPlugin(({ hooks }) => {
   hooks.hook('afterResponse', (event, { body }) => {
     logger.info('[app]', 'on after response', event.path, body)
   })
+
+  hooks.hook('error', async (error, { event }) => {
+    logger.error('[app]', event.path, error)
+  })
 })
