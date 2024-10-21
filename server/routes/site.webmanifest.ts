@@ -4,10 +4,9 @@ export default defineCachedEventHandler(
     return {
       lang: 'en',
       dir: 'ltr',
-      name: 'Remix MVP',
-      short_name: 'remix-mvp',
-      description:
-        'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
+      name: 'Nitro Start',
+      short_name: 'nitro-start',
+      description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit sed do eiusmod aliqua.',
       theme_color: '#2563eb',
       background_color: '#0c0a09',
       start_url: '/?source=pwa',
@@ -54,5 +53,8 @@ export default defineCachedEventHandler(
       orientation: 'natural',
     }
   },
-  { shouldBypassCache: (e) => e.node.req.url.includes('preview') }
+  {
+    shouldBypassCache: (e) => e.node.req.url.includes('preview'),
+    maxAge: 60 * 60 * 12 * 7 /* 7 days */,
+  }
 )
