@@ -23,7 +23,8 @@
         "pre-commit": "lefthook run pre-commit --force",
         "update-deps": "npm-check-updates --configFileName .ncurc.json",
         "cleanup": "pnpm run --stream --color \"/cleanup:/\"",
-        "cleanup:dev": "pnpm dlx rimraf .output .data .nitro tests-results",
+        "cleanup:dev": "pnpm dlx rimraf .output .data .nitro .wrangler dist",
+        "cleanup:test": "pnpm dlx rimraf tests-results playwright-report",
         "cleanup:deps": "pnpm dlx rimraf pnpm-lock.yaml node_modules",
         "changelog:full": "git-cliff -o CHANGELOG.md -c cliff-full.toml",
         "typecheck": "tsc -b"
