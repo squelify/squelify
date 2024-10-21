@@ -9,7 +9,7 @@
         "esModuleInterop": true, // Emit additional JavaScript for CommonJS modules
         "incremental": true, // Enable incremental compilation
         // "jsx": "react-jsx", // Specify JSX code generation
-        // "lib": ["DOM", "DOM.Iterable", "ESNext"], // Specify library files to include
+        "lib": ["DOM", "DOM.Iterable", "ESNext"], // Specify library files to include
         "module": "ESNext", // Specify module code generation
         "moduleDetection": "auto", // Control module detection method
         "moduleResolution": "Bundler", // Specify module resolution strategy

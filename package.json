@@ -13,7 +13,9 @@
     "homepage": "https://github.com/riipandi/nitro-stack#readme",
     "scripts": {
         "dev": "nitro dev",
-        "build": "nitro build",
+        "build": "pnpm run --stream --color \"/build:(vite|nitro)/\"",
+        "build:nitro": "nitro build",
+        "build:vite": "vite build",
         "preview": "node .output/server/index.mjs",
         "check": "biome check . --write",
         "format": "biome format . --write",
@@ -30,16 +32,21 @@
         "typecheck": "tsc -b"
     },
     "dependencies": {
+        "react-dom": "^18.3.1",
+        "react": "^18.3.1",
         "redactyl.js": "^1.6.0",
         "std-env": "^3.7.0"
     },
     "devDependencies": {
         "@biomejs/biome": "^1.9.4",
+        "@types/react-dom": "^18.3.1",
+        "@vitejs/plugin-react": "^4.3.3",
         "git-cliff": "^2.6.1",
         "lefthook": "^1.7.22",
         "nitropack": "^2.9.7",
         "npm-check-updates": "^17.1.4",
-        "typescript": "^5.6.3"
+        "typescript": "^5.6.3",
+        "vite": "^5.4.9"
     },
     "packageManager": "pnpm@9.12.2"
 }
