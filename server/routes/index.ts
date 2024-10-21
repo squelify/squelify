@@ -1,7 +1,9 @@
 import { defineRenderHandler } from 'nitropack/runtime'
+import type { AppConfig } from '~/config'
 
 export default defineRenderHandler((event) => {
-  const appConfig = useAppConfig(event)
+  const appConfig = useAppConfig(event) as AppConfig
+
   const htmlBody = /* html */ `<!DOCTYPE html>
 <html>
   <head>

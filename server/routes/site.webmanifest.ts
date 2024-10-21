@@ -1,6 +1,11 @@
+import type { AppConfig } from '~/config'
+
 export default defineCachedEventHandler(
   async (event) => {
+    const appConfig = useAppConfig(event) as AppConfig
+
     setResponseHeader(event, 'Content-Type', 'application/json')
+
     return {
       lang: 'en',
       dir: 'ltr',
@@ -9,8 +14,8 @@ export default defineCachedEventHandler(
       description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit sed do eiusmod aliqua.',
       theme_color: '#2563eb',
       background_color: '#0c0a09',
-      start_url: '/?source=pwa',
-      id: '/?source=pwa',
+      start_url: `${appConfig.baseURL}/?source=pwa`,
+      id: `${appConfig.baseURL}/?source=pwa`,
       icons: [
         {
           src: '/favicon.svg',
