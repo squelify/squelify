@@ -17,7 +17,7 @@
         "skipLibCheck": true, // Skip type checking of all declaration files
         // "strict": true, // Enable all strict type-checking options
         // "target": "ESNext", // Set JavaScript language version
-        "tsBuildInfoFile": "./node_modules/.app.tsbuildinfo",
+        "tsBuildInfoFile": "./node_modules/.tsbuildinfo_app",
         "useDefineForClassFields": true, // Use define semantics for class fields
         "verbatimModuleSyntax": true, // Do not transform imports/exports, enforced 'type-only' imports
         "baseUrl": ".", // Base directory for non-relative module names
