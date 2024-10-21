@@ -36,7 +36,8 @@
         "react-dom": "^18.3.1",
         "redactyl.js": "^1.6.0",
         "std-env": "^3.7.0",
-        "ua-parser-js": "^1.0.39"
+        "ua-parser-js": "^1.0.39",
+        "zod": "^3.23.8"
     },
     "devDependencies": {
         "@biomejs/biome": "^1.9.4",
