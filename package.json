@@ -21,6 +21,14 @@
         "format": "biome format . --write",
         "lint": "biome lint . --write",
         "prepare": "nitro prepare",
+        "docker:build": "docker build -f Dockerfile . -t $npm_package_name:latest -t $npm_package_name:$npm_package_version",
+        "docker:images": "docker image list --filter reference=$npm_package_name:$npm_package_version --filter reference=$npm_package_name:latest",
+        "docker:run": "pnpm --silent run dockerx --name $npm_package_name $npm_package_name:$npm_package_version",
+        "docker:shell": "pnpm --silent run dockerx --entrypoint /bin/sh $npm_package_name:$npm_package_version",
+        "dockerx": "docker run --network=host --rm -it --env-file .env",
+        "compose:up": "docker compose up --detach --remove-orphans",
+        "compose:down": "docker compose down --remove-orphans",
+        "compose:cleanup": "docker compose down --remove-orphans --volumes",
         "postinstall": "lefthook install || true",
         "pre-commit": "lefthook run pre-commit --force",
         "update-deps": "npm-check-updates --configFileName .meta/ncurc.json",
@@ -32,8 +40,10 @@
         "typecheck": "tsc -b"
     },
     "dependencies": {
-        "react": "^18.3.1",
+        "@libsql/kysely-libsql": "^0.4.1",
+        "kysely": "^0.27.4",
         "react-dom": "^18.3.1",
+        "react": "^18.3.1",
         "redactyl.js": "^1.6.0",
         "std-env": "^3.7.0",
         "ua-parser-js": "^1.0.39",
@@ -44,8 +54,8 @@
         "@tailwindcss/aspect-ratio": "^0.4.2",
         "@tailwindcss/forms": "^0.5.9",
         "@tailwindcss/typography": "^0.5.15",
-        "@types/react": "^18.3.11",
         "@types/react-dom": "^18.3.1",
+        "@types/react": "^18.3.11",
         "@types/ua-parser-js": "^0.7.39",
         "@vitejs/plugin-react": "^4.3.3",
         "autoprefixer": "^10.4.20",
@@ -57,13 +67,13 @@
         "postcss": "^8.4.47",
         "tailwind-debug-breakpoints": "^1.0.3",
         "tailwind-merge": "^2.5.4",
-        "tailwindcss": "^3.4.14",
         "tailwindcss-animate": "^1.0.7",
         "tailwindcss-motion": "0.3.0-beta",
+        "tailwindcss": "^3.4.14",
         "typescript": "^5.6.3",
-        "vite": "^5.4.9",
         "vite-plugin-inspect": "^0.8.7",
-        "vite-tsconfig-paths": "^5.0.1"
+        "vite-tsconfig-paths": "^5.0.1",
+        "vite": "^5.4.9"
     },
     "packageManager": "pnpm@9.12.2"
 }
