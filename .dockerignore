@@ -7,6 +7,7 @@ dist/
 .dockerignore
 .sentryclirc
 Dockerfile
+compose.env*
 node_modules
 npm-debug.log
 slim.report.json
@@ -23,6 +24,7 @@ tests-results/
 *.log
 *.md
 .env*
+.meta
 .data
 .nitro
 .output
