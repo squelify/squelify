@@ -1,22 +1,33 @@
 import react from '@vitejs/plugin-react'
-import { visualizer } from 'rollup-plugin-visualizer'
-import { isCI, isProduction } from 'std-env'
-import { defineConfig } from 'vite'
+import { isProduction, isTest } from 'std-env'
+import { createLogger, defineConfig } from 'vite'
 import inspect from 'vite-plugin-inspect'
 import tsconfigPaths from 'vite-tsconfig-paths'
 
+// @ts-ignore: FIXME fix the tsconfig.node.json
+import logger from './server/utils/logger'
+
+const viteLogger = createLogger()
+const logMethods = ['info', 'error', 'warn', 'warnOnce'] as const
+
+for (const method of logMethods) {
+  viteLogger[method] = (msg: string) => {
+    // Ignore empty CSS files warning
+    if (method === 'warn' && msg.includes('vite:css') && msg.includes(' is empty')) return
+    if (method in logger) {
+      const loggerMethod = method === 'warnOnce' ? 'warn' : method
+      ;(logger[loggerMethod as keyof typeof logger] as Function)('[vite]', msg)
+    }
+  }
+}
+
 export default defineConfig({
-  plugins: [
-    react(),
-    // `emitFile` is necessary since Nitro builds more than one bundle!
-    !isCI && visualizer({ emitFile: true, template: 'treemap' }),
-    inspect({ build: false, open: false }),
-    tsconfigPaths(),
-  ],
+  plugins: [react(), inspect({ build: false, open: false }), tsconfigPaths()],
   appType: 'mpa',
   clearScreen: true,
   envPrefix: ['VITE_'],
   server: { port: 5173, strictPort: true },
+  customLogger: !isTest ? viteLogger : undefined,
   optimizeDeps: {
     /**
      * Excludes the specified packages from the Vite dependency optimization.

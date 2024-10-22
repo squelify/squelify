@@ -8,7 +8,7 @@ export default defineNitroConfig({
   sourceMap: isDevelopment,
   appConfigFiles: ['~/config'],
   srcDir: 'server',
-  renderer: '~/entry.server.ts',
+  renderer: '~/renderer',
   errorHandler: '~/error',
   publicAssets: [{ dir: '../public' }, { dir: '../.client' }],
   serverAssets: [{ baseName: 'vite', dir: '../.client/.vite' }],
