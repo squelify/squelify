@@ -5,12 +5,12 @@
     "private": true,
     "repository": {
         "type": "git",
-        "url": "git+https://github.com/riipandi/nitro-stack.git"
+        "url": "git+https://github.com/riipandi/ntrl.git"
     },
     "bugs": {
-        "url": "https://github.com/riipandi/nitro-stack/issues"
+        "url": "https://github.com/riipandi/ntrl/issues"
     },
-    "homepage": "https://github.com/riipandi/nitro-stack#readme",
+    "homepage": "https://github.com/riipandi/ntrl#readme",
     "scripts": {
         "dev": "nitro dev",
         "build": "pnpm --silent run build:vite && pnpm --silent run build:nitro",
@@ -51,7 +51,7 @@
         "autoprefixer": "^10.4.20",
         "clsx": "^2.1.1",
         "git-cliff": "^2.6.1",
-        "lefthook": "^1.7.22",
+        "lefthook": "^1.8.0",
         "nitropack": "^2.9.7",
         "npm-check-updates": "^17.1.4",
         "postcss": "^8.4.47",
