@@ -15,7 +15,7 @@ export default function NotFound() {
       <div className="mt-8 flex flex-col items-center justify-center lg:mt-14">
         <Link
           href="/"
-          className="inline-flex w-full items-center justify-center gap-2 rounded-md border border-transparent px-3 py-2 font-semibold text-primary-500 ring-offset-white transition-all hover:text-primary-700 focus:outline-none focus:ring-1 focus:ring-primary-500 focus:ring-offset-2 sm:w-auto dark:ring-offset-gray-900"
+          className="inline-flex w-full items-center justify-center gap-2 rounded-md border border-transparent px-3 py-2 font-semibold text-brand-500 ring-offset-white transition-all hover:text-brand-700 focus:outline-none focus:ring-1 focus:ring-brand-500 focus:ring-offset-2 sm:w-auto dark:ring-offset-gray-900"
         >
           <svg className="size-2.5" width={20} height={20} viewBox="0 0 16 16" fill="none">
             <path

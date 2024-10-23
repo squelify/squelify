@@ -78,10 +78,10 @@ const SVGLoader = () => (
 
 export default function PageLoader() {
   return (
-    <div className="flex size-full min-h-screen flex-col items-center justify-center bg-primary-900 p-4 py-12 sm:px-6 lg:px-8 dark:bg-gray-900">
+    <div className="flex size-full min-h-screen flex-col items-center justify-center bg-brand-900 p-4 py-12 sm:px-6 lg:px-8 dark:bg-gray-900">
       <div className="flex flex-col items-center justify-center space-y-4 sm:mx-auto sm:w-full sm:max-w-lg">
         <h1 className="mt-3 text-center font-medium text-white">Loading...</h1>
-        <p className="text-center text-primary-50 text-sm leading-6 tracking-tight">
+        <p className="text-center text-brand-50 text-sm leading-6 tracking-tight">
           Does this take longer than expected? <br />
           Try clearing your browser's cache or check if you have an ad blocker enabled!
         </p>

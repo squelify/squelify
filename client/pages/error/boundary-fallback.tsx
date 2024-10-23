@@ -4,7 +4,7 @@ export default function ErrorBoundaryFallback({ error, resetErrorBoundary }: Fal
   return (
     <main className="grid h-full min-h-screen place-items-center bg-white px-6 py-24 sm:py-32 lg:px-8">
       <div className="text-center">
-        <p className="font-semibold text-base text-primary-600">Something went wrong!</p>
+        <p className="font-semibold text-base text-brand-600">Something went wrong!</p>
         <h1 className="mt-4 font-bold text-3xl text-neutral-900 tracking-tight sm:text-5xl">
           Internal server error
         </h1>
@@ -14,7 +14,7 @@ export default function ErrorBoundaryFallback({ error, resetErrorBoundary }: Fal
         <div className="mt-10 flex items-center justify-center gap-x-6">
           <button
             type="button"
-            className="rounded-md bg-primary-600 px-5 py-2.5 font-semibold text-sm text-white shadow-sm hover:bg-primary-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary-600 focus-visible:outline-offset-2"
+            className="rounded-md bg-brand-600 px-5 py-2.5 font-semibold text-sm text-white shadow-sm hover:bg-brand-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-brand-600 focus-visible:outline-offset-2"
             onClick={resetErrorBoundary}
           >
             Try again

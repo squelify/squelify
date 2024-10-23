@@ -14,12 +14,12 @@
         "moduleResolution": "Bundler",
         "noImplicitAny": true,
         "noUncheckedIndexedAccess": true,
+        "outDir": "dist",
         "skipLibCheck": true,
         "strict": true,
         "target": "ESNext",
         "tsBuildInfoFile": "./node_modules/.tsbuildinfo_app",
         "useDefineForClassFields": true,
-        "outDir": "dist",
         "paths": {
             "#/*": ["./client/*"]
         }
