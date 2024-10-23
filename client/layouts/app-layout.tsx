@@ -9,8 +9,6 @@ export default function AppLayout() {
   const { pathname } = useLocation()
   const { user, role, logout } = useAuth()
 
-  console.debug('DEBUG:AppLayout', user)
-
   if (!user) {
     return <Navigate to={`/auth/login?redirect_to=${pathname}`} replace />
   }

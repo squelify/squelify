@@ -11,7 +11,7 @@ export default defineEventHandler(async (event) => {
     )
 
     if (!parseBody.success) {
-      return createErrorResponse(400, 'Invalid user input', {
+      return createErrorResponse(400, 'Invalid request', {
         issues: parseBody.error.issues.map((issue) => ({
           field: issue.path.join('.'),
           message: issue.message,

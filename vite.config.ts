@@ -1,6 +1,6 @@
-import path from 'node:path'
+import 'dotenv/config'
 import react from '@vitejs/plugin-react'
-import { isProduction, isTest } from 'std-env'
+import { isProduction, isTest, process } from 'std-env'
 import { createLogger, defineConfig } from 'vite'
 import inspect from 'vite-plugin-inspect'
 import tsconfigPaths from 'vite-tsconfig-paths'
@@ -24,13 +24,12 @@ for (const method of logMethods) {
 
 export default defineConfig({
   plugins: [react(), inspect({ build: false, open: false }), tsconfigPaths()],
-  appType: 'spa',
-  clearScreen: true,
-  envPrefix: ['APP_'],
+  envPrefix: 'APP_',
   define: {
     'import.meta.env.APP_VERSION': `"${process.env.npm_package_version}"`,
   },
-  envDir: path.join(__dirname),
+  appType: 'spa',
+  clearScreen: true,
   server: { port: 5173, strictPort: true },
   customLogger: !isTest ? viteLogger : undefined,
   optimizeDeps: {

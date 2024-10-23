@@ -1,5 +1,6 @@
 import { LibsqlError } from '@libsql/client'
 import { NoResultError } from 'kysely'
+import { z } from 'zod'
 
 interface ErrorDetails {
   issues?: Array<{ field: string; message: string }>
@@ -41,6 +42,15 @@ export function throwErrorResponse(error: Error, statusCode?: number) {
       statusCode,
       message: `Query error: ${error.message}`,
     }
+  }
+
+  if (error instanceof z.ZodError) {
+    return createErrorResponse(400, 'Invalid request', {
+      issues: error.issues.map((issue) => ({
+        field: issue.path.join('.'),
+        message: issue.message,
+      })),
+    })
   }
 
   // Handle unknown errors

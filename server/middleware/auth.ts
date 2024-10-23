@@ -1,3 +1,7 @@
 export default defineEventHandler((event) => {
-  event.context.auth = { name: `User ${Math.round(Math.random() * 100)}` }
+  const authCookie = getCookie(event, 'auth_session')
+
+  logger.debug('DEBUG:authCookie', authCookie)
+
+  event.context.auth = { authCookie }
 })

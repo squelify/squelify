@@ -13,8 +13,8 @@ export default defineNitroConfig({
   publicAssets: [{ dir: '../public' }, { dir: '../.client' }],
   serverAssets: [{ baseName: 'vite', dir: '../.client/.vite' }],
   // prerender: {
-  //   autoSubfolderIndex: true,
-  //   crawlLinks: true,
+  //   autoSubfolderIndex: false,
+  //   crawlLinks: false,
   //   failOnError: false,
   //   routes: ['/'],
   // },

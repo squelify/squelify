@@ -1,6 +1,6 @@
 import type { ConsolaInstance } from 'consola/core'
 import { createConsola } from 'consola/core'
-import { isProduction } from 'std-env'
+import { env, isProduction } from 'std-env'
 
 type LogLevelString = 'silent' | 'error' | 'warn' | 'info' | 'debug' | 'trace'
 
@@ -18,9 +18,7 @@ function getNumericLogLevel(level: LogLevelString | undefined): number {
   return LOG_LEVEL_MAP[level] ?? 3
 }
 
-const LOG_LEVEL = getNumericLogLevel(
-  String(import.meta.env.APP_LOG_LEVEL).toLowerCase() as LogLevelString
-)
+const LOG_LEVEL = getNumericLogLevel(String(env.APP_LOG_LEVEL).toLowerCase() as LogLevelString)
 
 /**
  * Creates a Consola instance for logging.

@@ -10,7 +10,7 @@ export default defineEventHandler(async (event) => {
     const parseBody = await readValidatedBody(event, (body) => LoginRequestSchema.safeParse(body))
 
     if (!parseBody.success) {
-      return createErrorResponse(400, 'Invalid user input', {
+      return createErrorResponse(400, 'Invalid request', {
         issues: parseBody.error.issues.map((issue) => ({
           field: issue.path.join('.'),
           message: issue.message,
@@ -25,14 +25,21 @@ export default defineEventHandler(async (event) => {
     // })
 
     const hashedPassword = await hashPassword(parseBody.data.password)
-    logger.debug('hashedPassword', hashedPassword)
+
+    // setCookie(event, 'auth_session', hashedPassword, {
+    //   httpOnly: true,
+    //   secure: isProduction,
+    //   sameSite: 'lax',
+    //   path: '/',
+    //   maxAge: 60 * 60 * 24 * 7, // 7 days
+    // })
 
     return {
       status: 200,
       success: true,
       message: null,
       data: {
-        accessToken: 'at1222323232',
+        accessToken: hashedPassword,
         refreshToken: 'rt3232323',
         role: 'admin',
         user: {

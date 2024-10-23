@@ -1,6 +1,7 @@
 import { type ConsolaInstance, type LogLevel, createConsola } from 'consola'
 import { type $Fetch, FetchError, ofetch } from 'ofetch'
 import { hasWindow, isProduction } from 'std-env'
+import { LOG_LEVEL } from '#/utils/logger'
 import AuthService from './modules/auth.service'
 import { DEFAULT_OPTIONS } from './options'
 import type { ApiClientOptions, HealthCheckData } from './types/base'
@@ -45,7 +46,7 @@ export default class ApiClient {
 
     // By default, in DEV mode we log all requests and responses.
     // This setting can be overridden via the `logLevel` option.
-    const defaultLogLevel = settings.logLevel || import.meta.env.PROD ? -999 : 5
+    const defaultLogLevel = settings.logLevel || LOG_LEVEL
     this.logLevel = options.logLevel ?? defaultLogLevel
     this.logger = createConsola({
       level: this.logLevel,
@@ -59,7 +60,7 @@ export default class ApiClient {
       )
     }
 
-    this.baseURL = settings.baseURL ?? ''
+    this.baseURL = options.baseURL || settings.baseURL
     this.headers = settings.headers || {}
     this.clientInfo = settings.clientInfo
     this.fetcher = this._createFetcher()
@@ -82,6 +83,10 @@ export default class ApiClient {
 
   private _createFetcher(): $Fetch {
     const logger = this.logger
+
+    // FIXME - the baseURL is not being set correctly.
+    console.info('DEBUG:_createFetcher', this.baseURL)
+
     return ofetch.create({
       baseURL: this.baseURL,
       async onRequest(_ctx) {

@@ -49,14 +49,6 @@ export default defineCachedEventHandler(
         },
       }
     } catch (error) {
-      if (error instanceof z.ZodError) {
-        return createErrorResponse(400, 'Invalid user input', {
-          issues: error.issues.map((issue) => ({
-            field: issue.path.join('.'),
-            message: issue.message,
-          })),
-        })
-      }
       return throwErrorResponse(error)
     }
   },
