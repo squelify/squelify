@@ -3,10 +3,10 @@ import './assets/styles/globals.css'
 
 import React from 'react'
 import ReactDOM from 'react-dom/client'
-import { RouterProvider } from 'react-router-dom'
+import { BrowserRouter } from 'react-router-dom'
 import { isDevelopment } from 'std-env'
 import AppProvider from '#/context/providers/app-provider'
-import { BrowserRoutes } from '#/routes'
+import AppRoutes from '#/routes'
 
 const rootElement = document.getElementById('root')
 
@@ -21,7 +21,9 @@ if (!rootElement) {
 ReactDOM.createRoot(rootElement).render(
   <React.StrictMode>
     <AppProvider debugScreenSize={isDevelopment}>
-      <RouterProvider router={BrowserRoutes} />
+      <BrowserRouter>
+        <AppRoutes />
+      </BrowserRouter>
     </AppProvider>
   </React.StrictMode>
 )

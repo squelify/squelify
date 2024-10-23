@@ -36,6 +36,7 @@ export default defineNitroPlugin(({ hooks }) => {
     const endTime = performance.now()
     const startTime = event.context.requestStartTime
     const responseTimeMs = (endTime - startTime).toFixed(2)
+    const statusCode = `[${event.node.res.statusCode}]`
 
     logger.info(
       '[app][res]',
@@ -43,6 +44,7 @@ export default defineNitroPlugin(({ hooks }) => {
       clientIpAddress,
       event.path,
       clientIdentifier,
+      statusCode,
       `${responseTimeMs}ms`
     )
   })

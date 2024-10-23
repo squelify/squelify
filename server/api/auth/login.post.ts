@@ -1,7 +1,7 @@
 import { z } from 'zod'
 
 export const LoginRequestSchema = z.object({
-  email: z.string().email({ message: 'Invalid email address' }),
+  identity: z.string().email({ message: 'Invalid email address' }),
   password: z.string({ message: 'Password is required' }),
 })
 
@@ -25,8 +25,37 @@ export default defineEventHandler(async (event) => {
     // })
 
     const hashedPassword = await hashPassword(parseBody.data.password)
+    logger.debug('hashedPassword', hashedPassword)
 
-    return { ...parseBody.data, password: hashedPassword }
+    return {
+      status: 200,
+      success: true,
+      message: null,
+      data: {
+        accessToken: 'at1222323232',
+        refreshToken: 'rt3232323',
+        role: 'admin',
+        user: {
+          id: 'number',
+          pub_id: 'string',
+          email: 'string',
+          username: 'string',
+          first_name: 'string',
+          last_name: 'string',
+          avatar_url: 'string',
+          preferred_theme: 'string',
+          email_confirmed_at: 'number',
+          last_seen_at: 'number',
+          banned_until: 'number',
+          created_at: 'number',
+          updated_at: 'number',
+        },
+      },
+      error: {
+        hint: 100000,
+        reason: 'Invalid credentials',
+      },
+    }
   } catch (error) {
     return throwErrorResponse(error, 400)
   }

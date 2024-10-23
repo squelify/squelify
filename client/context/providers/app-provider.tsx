@@ -16,6 +16,9 @@ export type AuthContextType = {
   logout: () => void
 } & Pick<AuthStore, 'user' | 'role'>
 
+// Used for useOutletContext<AppContextType>()
+export type AppContextType = Pick<AuthContextType, 'user' | 'role' | 'logout'>
+
 const defaultAuthContext: AuthContextType = {
   user: defaultAuthStoreValues.user,
   role: defaultAuthStoreValues.role,

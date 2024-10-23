@@ -1,5 +1,5 @@
 import type { RouteObject } from 'react-router-dom'
-import { Navigate, createBrowserRouter, useRoutes } from 'react-router-dom'
+import { Navigate, useRoutes } from 'react-router-dom'
 
 // Application layouts
 import AppLayout from '#/layouts/app-layout'
@@ -12,6 +12,8 @@ import SignUpPage from '#/pages/auth/register'
 import ResetPasswordPage from '#/pages/auth/reset-password'
 import InternalError from '#/pages/error/internal-error'
 import NotFound from '#/pages/error/not-found'
+
+import DashboardPage from '#/pages/dashboard'
 
 /**
  * Utility function to create a route object with the provided path and other properties.
@@ -37,11 +39,8 @@ const Routes: RouteObject[] = [
       { index: true, element: <Navigate to="/dashboard" replace /> },
       {
         path: 'dashboard',
-        lazy: () =>
-          import('#/pages/dashboard').then((module) => ({
-            Component: module.Component,
-            loader: module.Loader,
-          })),
+        element: <DashboardPage />,
+        // lazy: () => import('#/pages/dashboard'),
       },
     ],
     errorElement: <InternalError />,
@@ -57,22 +56,6 @@ const Routes: RouteObject[] = [
   }),
   Route('*', { element: <NotFound />, errorElement: <InternalError /> }),
 ]
-
-/**
- * Creates a browser-based router instance using the provided `routes` configuration.
- * This router instance can be used with the `RouterProvider` component to render the application's routes.
- *
- * @example
- *
- * import { RouterProvider } from 'react-router-dom'
- * import { Route, BrowserRoutes } from './routes'
- *
- * const App = () => {
- *   return <RouterProvider router={BrowserRoutes} />
- * }
- *
- */
-const BrowserRoutes = createBrowserRouter(Routes)
 
 /**
  * Renders the application's routes using the `useRoutes` hook from `react-router-dom`.
@@ -95,7 +78,5 @@ const BrowserRoutes = createBrowserRouter(Routes)
  * @returns {JSX.Element} The rendered routes for the application.
  */
 const AppRoutes = (): React.ReactElement | null => useRoutes(Routes)
-
-export { Routes, BrowserRoutes }
 
 export default AppRoutes

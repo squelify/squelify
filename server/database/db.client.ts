@@ -23,10 +23,10 @@ export default new Kysely<Database>({
     if (event.level === 'query') {
       // Silent if env not development
       if (isProduction) return
-      logger.query('[app]', event.query.sql, event.query.parameters)
+      logger.query('[app][kysely]', event.query.sql, event.query.parameters)
     }
     if (event.level === 'error') {
-      logger.query('[app]', event.error)
+      logger.query('[app][kysely]', event.error)
     }
   },
 })
