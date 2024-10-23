@@ -14,39 +14,6 @@ services:
       - libsql_data:/var/lib/sqld/data
     command: '/bin/sqld --enable-namespaces --enable-http-console'
 
-  # pgsql:
-  #   image: postgres:17-alpine
-  #   container_name: ntrl_pgsql
-  #   hostname: postgres
-  #   restart: unless-stopped
-  #   ports:
-  #     - 5432:5432
-  #   volumes:
-  #     - pgsql_data:/var/lib/postgresql/data
-  #     - ./scripts/pgsql-multidb.sh:/docker-entrypoint-initdb.d/multidb.sh
-  #   environment:
-  #     POSTGRES_USER: postgres
-  #     POSTGRES_PASSWORD: securedb
-  #     POSTGRES_DATABASES: remixdb,extradb
-  #   command: ['postgres', '-c', 'wal_level=logical']
-  #   healthcheck:
-  #     test: ['CMD-SHELL', 'pg_isready -U postgres -d remixdb']
-  #     interval: 30s
-  #     timeout: 20s
-  #     retries: 3
-
-  # pgweb:
-  #   image: sosedoff/pgweb:latest
-  #   container_name: ntrl_pgweb
-  #   restart: always
-  #   ports:
-  #     - 54321:8081
-  #   environment:
-  #     PGWEB_DATABASE_URL: 'postgres://postgres:securedb@pgsql:5432/remixdb?sslmode=disable'
-  #   depends_on:
-  #     pgsql:
-  #       condition: service_started
-
   mailpit:
     image: axllent/mailpit:latest
     container_name: ntrl_mailpit
@@ -62,8 +29,6 @@ services:
       TZ: Asia/Jakarta
 
 volumes:
-  # pgsql_data:
-  #   driver: local
   libsql_data:
     driver: local
   mailpit_data:
