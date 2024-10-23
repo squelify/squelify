@@ -20,9 +20,10 @@
         "tsBuildInfoFile": "./node_modules/.tsbuildinfo_app",
         "useDefineForClassFields": true,
         "verbatimModuleSyntax": true,
+        "outDir": "./dist/client",
         "paths": {
-            "#/client/*": ["client"]
+            "#/*": ["./client/*"]
         }
     },
-    "include": ["./client/*"]
+    "include": ["client"]
 }

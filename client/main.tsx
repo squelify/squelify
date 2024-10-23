@@ -3,7 +3,10 @@ import './assets/styles/globals.css'
 
 import React from 'react'
 import ReactDOM from 'react-dom/client'
-import App from './app'
+import { RouterProvider } from 'react-router-dom'
+import { isDevelopment } from 'std-env'
+import AppProvider from '#/context/providers/app-provider'
+import { BrowserRoutes } from '#/routes'
 
 const rootElement = document.getElementById('root')
 
@@ -17,6 +20,8 @@ if (!rootElement) {
 // @ref: https://react.dev/blog/2022/03/08/react-18-upgrade-guide#react
 ReactDOM.createRoot(rootElement).render(
   <React.StrictMode>
-    <App />
+    <AppProvider debugScreenSize={isDevelopment}>
+      <RouterProvider router={BrowserRoutes} />
+    </AppProvider>
   </React.StrictMode>
 )
