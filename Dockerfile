@@ -45,6 +45,9 @@ COPY --from=builder /srv/.npmrc /srv/.npmrc
 COPY --from=builder /srv/pnpm-lock.yaml /srv/pnpm-lock.yaml
 COPY --from=builder /srv/.output /srv/.output
 
+# Create the data directory and set permissions.
+RUN mkdir -p /srv/_data && chmod 0775 /srv/_data
+
 # Install production dependencies and cleanup node_modules.
 RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --prod \
     --frozen-lockfile --ignore-scripts && pnpm prune --prod \
@@ -93,6 +96,7 @@ ENV APP_BASE_URL=$APP_BASE_URL \
 # ----- Read application environment variables --------------------------------
 
 # Copy the build output files from the pruner stage.
+COPY --chown=nonroot:nonroot --from=pruner /srv/_data /srv/_data
 COPY --chown=nonroot:nonroot --from=pruner /srv/.output /srv
 
 # Copy some necessary system utilities from build stage.

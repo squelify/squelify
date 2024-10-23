@@ -1,20 +1,31 @@
+import { mkdir } from 'node:fs/promises'
+import { dirname } from 'node:path'
 import { LibsqlDialect } from '@libsql/kysely-libsql'
 import { CamelCasePlugin, Kysely, ParseJSONResultsPlugin } from 'kysely'
 import type { ErrorLogEvent, KyselyConfig, QueryLogEvent } from 'kysely'
-import { env, isProduction } from 'std-env'
+import { env, isProduction, process } from 'std-env'
 import type { Database } from '~/database/db.schema'
+import logger from '~/utils/logger'
 
+let dialect: LibsqlDialect
+
+const getDatabaseDialect = () => {
+  if (dialect) return dialect
+
+  const dataDir = `${process.cwd()}/_data`
+
+  // Create data directory synchronously, only once
+  logger.info('[app]', 'Creating data directory:', dataDir)
+  mkdir(dirname(dataDir), { recursive: true, mode: 0o755 })
+
+  return new LibsqlDialect({ url: env.DATABASE_URL, authToken: env.DATABASE_TOKEN })
+}
+
+// CamelCasePlugin will converts snake_case identifiers
+// in the database into camelCase in the javascript side.
 export const kyselyConfig: KyselyConfig = {
-  dialect: new LibsqlDialect({
-    url: env.DATABASE_URL,
-    authToken: env.DATABASE_TOKEN,
-  }),
-  plugins: [
-    // CamelCasePlugin will converts snake_case identifiers
-    // in the database into camelCase in the javascript side.
-    new CamelCasePlugin(),
-    new ParseJSONResultsPlugin(),
-  ],
+  dialect: getDatabaseDialect(),
+  plugins: [new CamelCasePlugin(), new ParseJSONResultsPlugin()],
 }
 
 export default new Kysely<Database>({

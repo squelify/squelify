@@ -28,6 +28,7 @@ $RECYCLE.BIN/
 *.db
 
 # Nitro
+_data/
 build/
 dist/
 .data
