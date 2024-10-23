@@ -12,6 +12,8 @@ export default {
         mono: ['JetBrains Mono Variable', ...fontFamily.mono],
       },
       colors: {
+        /* https://uxplanet.org/alternatives-to-using-pure-black-000000-for-text-and-backgrounds-54ef0e733cdb */
+        black: '#0A0A0A',
         brand: colors.red,
         primary: {
           DEFAULT: 'hsl(var(--primary))',
