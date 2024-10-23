@@ -15,7 +15,7 @@ export default function Page() {
   const { pageTitle } = useSEOMeta('Sign In')
 
   return (
-    <Card className="mx-auto max-w-sm">
+    <Card className="mx-auto w-full max-w-sm">
       <CardHeader>
         <CardTitle className="text-2xl">{pageTitle}</CardTitle>
         <CardDescription>Enter your email below to login to your account</CardDescription>
@@ -33,7 +33,7 @@ export default function Page() {
                 Forgot your password?
               </Link>
             </div>
-            <Input id="password" type="password" required />
+            <Input id="password" type="password" placeholder="*************" required />
           </div>
           <Button type="submit" className="w-full">
             Login
@@ -42,9 +42,9 @@ export default function Page() {
             Login with Google
           </Button>
         </div>
-        <div className="mt-4 text-center text-sm">
+        <div className="mt-6 text-center text-sm">
           Don&apos;t have an account?{' '}
-          <Link href="/signup" className="underline">
+          <Link href="/auth/signup" className="underline">
             Sign up
           </Link>
         </div>
