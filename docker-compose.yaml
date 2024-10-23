@@ -14,22 +14,6 @@ services:
       - libsql_data:/var/lib/sqld/data
     command: '/bin/sqld --enable-namespaces --enable-http-console'
 
-  mailpit:
-    image: axllent/mailpit:latest
-    container_name: ntrl_mailpit
-    restart: unless-stopped
-    volumes:
-      - mailpit_data:/data
-    ports:
-      - 1025:1025 # port the SMTP server should be accessible on
-      - 8025:8025 # port the web interface should be accessible on
-    environment:
-      # https://mailpit.axllent.org/docs/configuration/runtime-options
-      # MP_UI_AUTH: 'user1:password1 user2:password2'
-      TZ: Asia/Jakarta
-
 volumes:
   libsql_data:
-    driver: local
-  mailpit_data:
     driver: local

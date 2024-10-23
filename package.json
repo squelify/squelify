@@ -36,6 +36,7 @@
         "compose:up": "docker compose up --detach --remove-orphans",
         "compose:down": "docker compose down --remove-orphans",
         "compose:cleanup": "docker compose down --remove-orphans --volumes",
+        "compose:restart": "pnpm --silent run compose:down && pnpm --silent run compose:up",
         "postinstall": "lefthook install || true",
         "pre-commit": "lefthook run pre-commit --force",
         "update-deps": "npm-check-updates --configFileName .ncurc.json",
