@@ -1,6 +1,7 @@
 import React, { useEffect, useRef } from 'react'
 import { useErrorBoundary } from 'react-error-boundary'
 import { Toaster, toast } from 'sonner'
+import { env } from 'std-env'
 import { useApiClient } from '#/context/hooks/use-api-client'
 import type { ApiResponse, HealthCheckData } from '#/services'
 import { clx } from '#/utils/helper'
@@ -12,7 +13,7 @@ interface RootLayoutProps {
 }
 
 // Enable this to show error boundary instead of toast
-const BLOCK_ON_ERROR = false
+const BLOCK_ON_ERROR = env.APP_LOG_LEVEL === 'trace' || false
 
 // Health check configuration
 const HEALTH_CHECK_CONFIG = {
@@ -35,7 +36,7 @@ export default function RootLayout({ children, className }: RootLayoutProps) {
       const description = [
         `Latency: ${result.database.latency}ms`,
         `Memory: ${result.memory.heapUsed}MB used of ${result.memory.heapTotal}MB`,
-        `Uptime: ${Math.floor(result.uptime / 60)} minutes`,
+        `Uptime: ${result.uptime}`,
       ].join(' | ')
 
       if (BLOCK_ON_ERROR) {

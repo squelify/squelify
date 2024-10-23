@@ -24,9 +24,12 @@ export interface ApiResponse<T = unknown> {
 export interface HealthCheckData {
   status: 'healthy' | 'unhealthy'
   timestamp: string
-  uptime: number
+  serviceId: string
+  clientIp: string
+  uptime: string
   database: {
     status: 'up' | 'down'
+    version: string
     latency: number
   }
   memory: {
