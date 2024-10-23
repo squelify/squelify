@@ -1,4 +1,5 @@
 import { z } from 'zod'
+import { findUserByEmail } from '~/database/repository/user.repo'
 
 export const LoginRequestSchema = z.object({
   identity: z.string().email({ message: 'Invalid email address' }),
@@ -18,6 +19,12 @@ export default defineEventHandler(async (event) => {
       })
     }
 
+    const user = await findUserByEmail(parseBody.data.identity)
+
+    if (!user) {
+      return createErrorResponse(400, 'Invalid credentials')
+    }
+
     // await sendJSXEmail<OtpCodeProps>('otp-code', 'user@example.com', {
     //   name: 'John Doe',
     //   email: 'user@example.com',
@@ -25,6 +32,12 @@ export default defineEventHandler(async (event) => {
     // })
 
     const hashedPassword = await hashPassword(parseBody.data.password)
+    logger.debug('[app]', hashedPassword)
+
+    const payload = { userId: user.id, email: user.email }
+    const accessToken = await generateAccessToken(payload)
+    const refreshToken = await generateRefreshToken(payload)
+    const sessionId = 'sess_1212121212121212121'
 
     // setCookie(event, 'auth_session', hashedPassword, {
     //   httpOnly: true,
@@ -38,30 +51,7 @@ export default defineEventHandler(async (event) => {
       status: 200,
       success: true,
       message: null,
-      data: {
-        accessToken: hashedPassword,
-        refreshToken: 'rt3232323',
-        role: 'admin',
-        user: {
-          id: 'number',
-          pub_id: 'string',
-          email: 'string',
-          username: 'string',
-          first_name: 'string',
-          last_name: 'string',
-          avatar_url: 'string',
-          preferred_theme: 'string',
-          email_confirmed_at: 'number',
-          last_seen_at: 'number',
-          banned_until: 'number',
-          created_at: 'number',
-          updated_at: 'number',
-        },
-      },
-      error: {
-        hint: 100000,
-        reason: 'Invalid credentials',
-      },
+      data: { userId: user.id, sessionId, accessToken, refreshToken },
     }
   } catch (error) {
     return throwErrorResponse(error, 400)

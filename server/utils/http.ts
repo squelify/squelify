@@ -15,33 +15,27 @@ interface ErrorDetails {
  * @param details - Optional additional error details, including a list of issues with field and message properties.
  * @returns An object with the status code, error message, and optional error details.
  */
-export function createErrorResponse(statusCode: number, error: string, details?: ErrorDetails) {
-  return { statusCode, error, ...details }
+export function createErrorResponse(statusCode: number, message: string, details?: ErrorDetails) {
+  return { status: statusCode, success: false, message, ...details }
 }
 
 export function throwErrorResponse(error: Error, statusCode?: number) {
   // Handle connection errors
   if ('code' in error && error.code === 'ECONNREFUSED') {
-    return {
-      statusCode: 503,
-      message: 'Database service is currently unavailable',
-    }
+    const message = 'Database service is currently unavailable'
+    return { status: 503, success: false, message }
   }
 
   // Handle LibSQL errors
   if (error instanceof LibsqlError) {
-    return {
-      statusCode,
-      message: `Database error ${error.code}: ${error.message}`,
-    }
+    const message = `Database error ${error.code}: ${error.message}`
+    return { status: statusCode, success: false, message }
   }
 
   // Handle Kysely errors
   if (error instanceof NoResultError) {
-    return {
-      statusCode,
-      message: `Query error: ${error.message}`,
-    }
+    const message = `Query error: ${error.message}`
+    return { status: statusCode, success: false, message }
   }
 
   if (error instanceof z.ZodError) {
@@ -55,7 +49,8 @@ export function throwErrorResponse(error: Error, statusCode?: number) {
 
   // Handle unknown errors
   return {
-    statusCode: statusCode || 500,
+    status: statusCode || 500,
+    success: false,
     message: error.message || 'An unexpected error occurred',
   }
 }

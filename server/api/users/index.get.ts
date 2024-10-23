@@ -38,7 +38,8 @@ export default defineCachedEventHandler(
       const totalPages = Math.ceil(Number(totalCount?.count || 0) / limit)
 
       return {
-        statusCode: 200,
+        status: 200,
+        success: true,
         message: null,
         data: users,
         meta: {

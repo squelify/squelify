@@ -75,6 +75,7 @@
         "class-variance-authority": "^0.7.0",
         "consola": "^3.2.3",
         "input-otp": "^1.2.4",
+        "jose": "^5.9.6",
         "jsx-email": "^2.0.11",
         "kysely": "^0.27.4",
         "lucide-react": "^0.453.0",

@@ -29,6 +29,31 @@ export async function findUserById<SE extends SelectExpression<Database, 'users'
 }
 
 /**
+ * Finds a user by their email address.
+ *
+ * @param email - The email address of the user to find.
+ * @param cols - An optional array of column names to select from the 'users' table.
+ * @returns A partial user object if found, or `null` if not found.
+ * @throws Error if there was a failure finding the user.
+ */
+export async function findUserByEmail<SE extends SelectExpression<Database, 'users'>>(
+  email: string,
+  cols?: readonly SE[]
+): Promise<Partial<User> | null> {
+  try {
+    const query = db.selectFrom('users').where('email', '=', email)
+    const result = cols
+      ? await query.select(cols).executeTakeFirst()
+      : await query.selectAll().executeTakeFirst()
+
+    return result || null
+  } catch (error) {
+    logger.error('[app]', `Error finding user with id ${email}:`, error)
+    throw new Error(`Failed to find user with id ${email}`)
+  }
+}
+
+/**
  * Updates the username of a user in the database.
  *
  * @param userId - The unique identifier of the user to update.
