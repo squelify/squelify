@@ -180,7 +180,7 @@ export async function autoMigrate(): Promise<void> {
   ]
 
   const isMigrateCliCommand = !!process.argv[2] && migrateCommands.includes(process.argv[2])
-  const shouldAutoMigrate = !isMigrateCliCommand && ENV.DATABASE_AUTO_MIGRATE === true
+  const shouldAutoMigrate = !isMigrateCliCommand && env.DATABASE_AUTO_MIGRATE
 
   if (!shouldAutoMigrate) return
 

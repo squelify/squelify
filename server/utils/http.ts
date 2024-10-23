@@ -11,6 +11,6 @@ interface ErrorDetails {
  * @param details - Optional additional error details, including a list of issues with field and message properties.
  * @returns An object with the status code, error message, and optional error details.
  */
-export function createErrorResponse(statusCode: number, error: string, details: ErrorDetails) {
+export function createErrorResponse(statusCode: number, error: string, details?: ErrorDetails) {
   return { statusCode, error, ...details }
 }

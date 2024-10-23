@@ -1,7 +1,13 @@
-export default eventHandler(({ path, context }) => {
+export default eventHandler(async (event) => {
+  const users = await event.context.db.selectFrom('users').selectAll().execute()
+
+  if (!users) {
+    return createErrorResponse(400, 'No user found')
+  }
+
   return {
-    path,
-    message: 'Users Endpoint',
-    name: context.auth.name,
+    statusCode: 200,
+    message: null,
+    data: users,
   }
 })
