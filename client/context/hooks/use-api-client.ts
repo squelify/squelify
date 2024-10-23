@@ -13,7 +13,7 @@ import { ApiClient } from '#/services'
  * @returns The singleton instance of the `ApiClient` class.
  */
 const apiClient = ApiClient.getInstance({
-  baseUrl: API_BASE_URL,
+  baseURL: API_BASE_URL,
   logLevel: LOG_LEVEL,
 })
 

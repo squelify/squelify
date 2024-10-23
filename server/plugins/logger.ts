@@ -15,7 +15,7 @@ function getClientInfo(event) {
     if (uaParser.getBrowser().name) {
       const clientOS = `${uaParser.getOS().name} ${uaParser.getOS().version}`
       const browserInfo = `${uaParser.getBrowser().name} ${uaParser.getBrowser().version}`
-      clientIdentifier = `[${clientOS} - ${browserInfo}]`
+      clientIdentifier = `[${clientOS} ${browserInfo}]`
     }
   }
 

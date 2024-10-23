@@ -8,6 +8,6 @@ import type { ApiClientOptions } from './types/base'
  * These options can be overridden when creating an API client instance.
  */
 export const DEFAULT_OPTIONS: Omit<Required<ApiClientOptions>, 'headers'> = {
-  baseUrl: API_BASE_URL,
+  baseURL: API_BASE_URL,
   logLevel: LOG_LEVEL,
 }

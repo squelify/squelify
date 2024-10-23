@@ -1,13 +1,11 @@
 import { type ConsolaInstance, type LogLevel, createConsola } from 'consola'
 import { type $Fetch, FetchError, ofetch } from 'ofetch'
-import { isProduction } from 'std-env'
+import { hasWindow, isProduction } from 'std-env'
 import AuthService from './modules/auth.service'
 import { DEFAULT_OPTIONS } from './options'
 import type { ApiClientOptions, ApiResponse, HealthCheckData } from './types/base'
 
 const HTTPRegexp = /^http:\/\//
-
-const isBrowser = () => typeof document !== 'undefined'
 
 interface RequestOptions extends RequestInit {
   clientInfo?: string
@@ -22,7 +20,7 @@ export default class ApiClient {
   private fetcher: $Fetch
   private clientInfo: string
 
-  protected baseUrl: string
+  protected baseURL: string
   protected logLevel: LogLevel
   protected logger: ConsolaInstance
 
@@ -53,7 +51,7 @@ export default class ApiClient {
       level: this.logLevel,
     })
 
-    if (this.instanceID > 0 && isBrowser()) {
+    if (this.instanceID > 0 && hasWindow) {
       this.logger.warn(
         ApiClient.logTag,
         'Multiple ApiClient instances detected in the same browser context.',
@@ -61,13 +59,13 @@ export default class ApiClient {
       )
     }
 
-    this.baseUrl = settings.baseUrl ?? ''
+    this.baseURL = settings.baseURL ?? ''
     this.headers = settings.headers || {}
     this.clientInfo = settings.clientInfo
     this.fetcher = this._createFetcher()
     this.auth = new AuthService(this)
 
-    if (isProduction && HTTPRegexp.test(this.baseUrl)) {
+    if (isProduction && HTTPRegexp.test(this.baseURL)) {
       this.logger.warn(
         ApiClient.logTag,
         'NEVER USE HTTP IN PRODUCTION. Always use HTTPS for secure operations.'
@@ -85,7 +83,7 @@ export default class ApiClient {
   private _createFetcher(): $Fetch {
     const logger = this.logger
     return ofetch.create({
-      baseURL: this.baseUrl,
+      baseURL: this.baseURL,
       async onRequest(_ctx) {
         // Do something before request is sent.
         // logger.debug('onRequest', ctx.request)

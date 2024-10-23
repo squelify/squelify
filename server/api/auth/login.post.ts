@@ -18,7 +18,15 @@ export default defineEventHandler(async (event) => {
       })
     }
 
-    return parseBody.data
+    // await sendJSXEmail<OtpCodeProps>('otp-code', 'user@example.com', {
+    //   name: 'John Doe',
+    //   email: 'user@example.com',
+    //   otp: '123456',
+    // })
+
+    const hashedPassword = await hashPassword(parseBody.data.password)
+
+    return { ...parseBody.data, password: hashedPassword }
   } catch (error) {
     return { statusCode: 400, message: error.message }
   }

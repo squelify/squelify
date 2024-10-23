@@ -2,7 +2,7 @@ import type { LogLevel } from 'consola'
 
 export interface ApiClientOptions {
   /** Base URL for API requests */
-  baseUrl?: string
+  baseURL?: string
   /** Custom headers for all requests */
   headers?: { [key: string]: string }
   /** Enable debug mode or provide a custom logging function */
