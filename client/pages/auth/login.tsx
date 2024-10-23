@@ -7,18 +7,13 @@ import { Button } from '#/components/base-ui/button'
 import { Card, CardHeader, CardTitle } from '#/components/base-ui/card'
 import { CardContent, CardDescription } from '#/components/base-ui/card'
 import { Checkbox } from '#/components/base-ui/checkbox'
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from '#/components/base-ui/form'
+import { Form, FormControl, FormField, FormItem } from '#/components/base-ui/form'
+import { FormLabel, FormMessage } from '#/components/base-ui/form'
 import { Input } from '#/components/base-ui/input'
 import { Link } from '#/components/link'
 import { useAuth } from '#/context/hooks/use-auth'
 import { useSEOMeta } from '#/context/hooks/use-seo-meta'
+import logger from '#/utils/logger'
 
 const FormSchema = z.object({
   identity: z.string().min(1, { message: 'Email address or username is required' }),
@@ -46,7 +41,7 @@ export default function Page() {
     toast.promise(auth.login(identity, password), {
       loading: 'Signing in...',
       success: (ctx) => {
-        console.info('[LOGIN]', remember, ctx)
+        logger.info('[LOGIN]', remember, ctx)
         // if (ctx.error) {
         //   throw ctx.error // Trigger the error handler
         // }
@@ -58,7 +53,7 @@ export default function Page() {
         return `Sign in successful!`
       },
       error: (err) => {
-        console.error('[LOGIN]', err)
+        logger.error('[LOGIN]', err)
         form.setFocus('identity')
         return `Failed to sign in: ${err.message}`
       },

@@ -1,3 +1,4 @@
+import path from 'node:path'
 import react from '@vitejs/plugin-react'
 import { isProduction, isTest } from 'std-env'
 import { createLogger, defineConfig } from 'vite'
@@ -29,6 +30,7 @@ export default defineConfig({
   define: {
     'import.meta.env.APP_VERSION': `"${process.env.npm_package_version}"`,
   },
+  envDir: path.join(__dirname),
   server: { port: 5173, strictPort: true },
   customLogger: !isTest ? viteLogger : undefined,
   optimizeDeps: {

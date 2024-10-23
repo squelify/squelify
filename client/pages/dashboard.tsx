@@ -4,7 +4,7 @@ import { useSEOMeta } from '#/context/hooks/use-seo-meta'
 import type { AppContextType } from '#/context/providers/app-provider'
 
 export default function Component() {
-  useSEOMeta('Onboarding')
+  useSEOMeta('Dashboard')
 
   const ctx = useOutletContext<AppContextType>()
   const [count, setCount] = useState(0)

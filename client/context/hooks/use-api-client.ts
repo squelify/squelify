@@ -1,6 +1,5 @@
 import { useMemo } from 'react'
 import { useLoaderData as useLoaderDataOriginal } from 'react-router-dom'
-import { API_BASE_URL, LOG_LEVEL } from '#/config'
 import { ApiClient } from '#/services'
 
 /**
@@ -12,10 +11,7 @@ import { ApiClient } from '#/services'
  *
  * @returns The singleton instance of the `ApiClient` class.
  */
-const apiClient = ApiClient.getInstance({
-  baseURL: API_BASE_URL,
-  logLevel: LOG_LEVEL,
-})
+const apiClient = ApiClient.getInstance({ baseURL: `${import.meta.env.APP_BASE_URL}/api` })
 
 /**
  * Returns a memoized instance of the `ApiClient` class.
