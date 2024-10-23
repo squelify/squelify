@@ -23,9 +23,12 @@ for (const method of logMethods) {
 
 export default defineConfig({
   plugins: [react(), inspect({ build: false, open: false }), tsconfigPaths()],
-  appType: 'mpa',
+  appType: 'spa',
   clearScreen: true,
-  envPrefix: ['VITE_'],
+  envPrefix: ['APP_'],
+  define: {
+    'import.meta.env.APP_VERSION': `"${process.env.npm_package_version}"`,
+  },
   server: { port: 5173, strictPort: true },
   customLogger: !isTest ? viteLogger : undefined,
   optimizeDeps: {
@@ -34,9 +37,8 @@ export default defineConfig({
      * This can be useful to exclude packages that are not needed in the production build,
      * or to exclude packages that are causing issues during the build process.
      */
-    exclude: ['react/jsx-runtime', '@node-rs/argon2'],
+    exclude: ['react/jsx-runtime'],
   },
-  publicDir: './public',
   base: '/',
   build: {
     manifest: true,

@@ -8,7 +8,7 @@ function getClientInfo(event) {
   let clientIdentifier = userAgent
 
   if (clientInfo) {
-    clientIdentifier = clientInfo
+    clientIdentifier = `[${clientInfo}]`
   } else if (userAgent) {
     const uaParser = new UAParser(userAgent)
     // Check if browser info exists

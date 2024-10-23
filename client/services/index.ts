@@ -13,6 +13,6 @@
  * initializing and customizing the API client's behavior.
  */
 
-export type { ApiClientOptions, ApiResponse } from './types/base'
+export type { ApiClientOptions, ApiResponse, HealthCheckData } from './types/base'
 
 export { default as ApiClient } from './client'

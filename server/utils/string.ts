@@ -27,7 +27,7 @@ export function cleanString(str: string): string {
  */
 export async function hashPassword(password: string): Promise<string> {
   return hash(password, {
-    secret: Buffer.from(env.APP_SECRET_KEY, 'base64'),
+    secret: Buffer.from(env.JWT_SECRET_KEY, 'base64'),
   })
 }
 
@@ -40,6 +40,6 @@ export async function hashPassword(password: string): Promise<string> {
  */
 export async function verifyPassword(password: string, hash: string): Promise<boolean> {
   return await verify(hash, password, {
-    secret: Buffer.from(env.APP_SECRET_KEY, 'base64'),
+    secret: Buffer.from(env.JWT_SECRET_KEY, 'base64'),
   })
 }

@@ -22,9 +22,9 @@ export const LOG_LEVEL: LogLevel = Number(import.meta.env.APP_LOG_LEVEL) || (isP
 
 /**
  * Defines the base URL for the API based on the environment.
- * If the `VITE_API_URL` environment variable is set, it will be used as the base URL.
+ * If the `APP_BASE_URL` environment variable is set, it will be used as the base URL.
  * Otherwise, if the application is running in development mode (`process.env.NODE_ENV === 'development'`),
  * the base URL will be `/api`. If the application is running in production mode,
  * the base URL will be `http://localhost:3000/api`.
  */
-export const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000/api'
+export const API_BASE_URL = `${import.meta.env.APP_BASE_URL}/api` || 'http://localhost:3000/api'
