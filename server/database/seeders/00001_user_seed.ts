@@ -10,7 +10,8 @@ export default async function seed(db: Kysely<Database>): Promise<void> {
     {
       id: typeid('user').toString(),
       email: 'admin@example.com',
-      name: 'Admin Sistem',
+      firstName: 'Admin',
+      lastName: 'Sistem',
       username: 'admin',
       emailVerified: true,
       diggestSubscribed: false,
