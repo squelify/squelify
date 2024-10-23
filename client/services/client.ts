@@ -3,7 +3,7 @@ import { type $Fetch, FetchError, ofetch } from 'ofetch'
 import { hasWindow, isProduction } from 'std-env'
 import AuthService from './modules/auth.service'
 import { DEFAULT_OPTIONS } from './options'
-import type { ApiClientOptions, ApiResponse, HealthCheckData } from './types/base'
+import type { ApiClientOptions, HealthCheckData } from './types/base'
 
 const HTTPRegexp = /^http:\/\//
 
@@ -92,7 +92,7 @@ export default class ApiClient {
         // Extract the request path from the request URL
         const requestUrl = new URL(ctx.request.toString())
         const requestPath = requestUrl.pathname
-        const ignoredPaths = ['/api/health']
+        const ignoredPaths = ['/api/healthz']
 
         if (ignoredPaths.includes(requestPath)) {
           return
@@ -135,7 +135,7 @@ export default class ApiClient {
     }
   }
 
-  _healthCheck(): Promise<ApiResponse<HealthCheckData>> {
-    return this._request<ApiResponse<HealthCheckData>>('/health')
+  _healthCheck(): Promise<HealthCheckData> {
+    return this._request<HealthCheckData>('/healthz')
   }
 }

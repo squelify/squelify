@@ -20,8 +20,18 @@ export interface ApiResponse<T = unknown> {
   }
 }
 
+// TODO: infer from API response
 export interface HealthCheckData {
-  dbVersion: string
-  timestamp: number
+  status: 'healthy' | 'unhealthy'
+  timestamp: string
   uptime: number
+  database: {
+    status: 'up' | 'down'
+    latency: number
+  }
+  memory: {
+    heapUsed: number
+    heapTotal: number
+    external: number
+  }
 }
