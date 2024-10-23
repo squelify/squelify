@@ -1,0 +1,32 @@
+{
+    "editor.defaultFormatter": "biomejs.biome",
+    "typescript.enablePromptUseWorkspaceTsdk": false,
+    "files.associations": {
+        "*.yml.example": "yaml",
+        "*.css": "tailwindcss"
+    },
+    "search.exclude": {
+        "**/.husky": true,
+        "**/.output": true,
+        "**/build": true,
+        "**/dist": true
+    },
+    "tailwindCSS.files.exclude": ["**/server/**", "vite.config.ts"],
+    "tailwindCSS.experimental.classRegex": [
+        // https://www.tailwind-variants.org/docs/getting-started#intellisense-setup-optional
+        ["([\"'`][^\"'`]*.*?[\"'`])", "[\"'`]([^\"'`]*).*?[\"'`]"],
+        "cn\\(([^)]*)\\)", // cn(xxx)
+        "clx\\(([^)]*)\\)", // clx(xxx)
+        "cx\\(([^)]*)\\)" // cx(xxx)
+    ],
+    "[css]": {
+        "editor.defaultFormatter": "biomejs.biome"
+    },
+    "[toml]": {
+        "editor.formatOnSave": false,
+        "editor.defaultFormatter": "tamasfe.even-better-toml"
+    },
+    "[markdown]": {
+        "editor.defaultFormatter": "darkriszty.markdown-table-prettify"
+    }
+}

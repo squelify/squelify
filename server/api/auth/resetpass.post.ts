@@ -1,16 +1,13 @@
 import { z } from 'zod'
 
-const CreateUserRequestSchema = z.object({
-  firstName: z.string({ message: 'First name is required' }),
-  lastName: z.string({ message: 'Last name is required' }),
-  email: z.string().email({ message: 'Invalid email address' }),
+export const PasswordResetRequestSchema = z.object({
   password: z.string({ message: 'Password is required' }),
 })
 
 export default defineEventHandler(async (event) => {
   try {
     const parseBody = await readValidatedBody(event, (body) =>
-      CreateUserRequestSchema.safeParse(body)
+      PasswordResetRequestSchema.safeParse(body)
     )
 
     if (!parseBody.success) {
@@ -24,9 +21,6 @@ export default defineEventHandler(async (event) => {
 
     return parseBody.data
   } catch (error) {
-    return {
-      statusCode: 400,
-      message: error.message,
-    }
+    return { statusCode: 400, message: error.message }
   }
 })

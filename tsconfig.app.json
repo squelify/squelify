@@ -21,7 +21,8 @@
         "tsBuildInfoFile": "./node_modules/.tsbuildinfo_app",
         "useDefineForClassFields": true,
         "paths": {
-            "#/*": ["./client/*"]
+            "#/*": ["./client/*"],
+            "~/*": ["./server/*"]
         }
     },
     "include": ["client"]
