@@ -1,3 +1,6 @@
+import { LibsqlError } from '@libsql/client'
+import { NoResultError } from 'kysely'
+
 interface ErrorDetails {
   issues?: Array<{ field: string; message: string }>
   message?: string
@@ -13,4 +16,36 @@ interface ErrorDetails {
  */
 export function createErrorResponse(statusCode: number, error: string, details?: ErrorDetails) {
   return { statusCode, error, ...details }
+}
+
+export function throwErrorResponse(error: Error, statusCode?: number) {
+  // Handle connection errors
+  if ('code' in error && error.code === 'ECONNREFUSED') {
+    return {
+      statusCode: 503,
+      message: 'Database service is currently unavailable',
+    }
+  }
+
+  // Handle LibSQL errors
+  if (error instanceof LibsqlError) {
+    return {
+      statusCode,
+      message: `Database error ${error.code}: ${error.message}`,
+    }
+  }
+
+  // Handle Kysely errors
+  if (error instanceof NoResultError) {
+    return {
+      statusCode,
+      message: `Query error: ${error.message}`,
+    }
+  }
+
+  // Handle unknown errors
+  return {
+    statusCode: statusCode || 500,
+    message: error.message || 'An unexpected error occurred',
+  }
 }

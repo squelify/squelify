@@ -28,6 +28,6 @@ export default defineEventHandler(async (event) => {
 
     return { ...parseBody.data, password: hashedPassword }
   } catch (error) {
-    return { statusCode: 400, message: error.message }
+    return throwErrorResponse(error, 400)
   }
 })

@@ -29,18 +29,29 @@ export class ESMFileMigrationProvider implements MigrationProvider {
 
 export class AutomaticMigrateProvider implements MigrationProvider {
   private migrations: Record<string, Migration>
+  private readonly migrationsPath: string
 
   constructor() {
-    const migrationFiles = import.meta.glob('../migrations/*.ts', { eager: true })
-    this.migrations = Object.fromEntries(
-      Object.entries(migrationFiles).map(([key, value]) => [
-        key.replace('../migrations/', '').replace('.ts', ''),
-        (value as { default?: Migration }).default || (value as Migration),
-      ])
-    )
+    this.migrationsPath = path.resolve(import.meta.dirname, '../migrations')
+    this.migrations = {}
   }
 
   async getMigrations(): Promise<Record<string, Migration>> {
+    const files = await fs.readdir(this.migrationsPath)
+
+    this.migrations = Object.fromEntries(
+      await Promise.all(
+        files
+          .filter((fileName) => fileName.endsWith('.ts'))
+          .map(async (fileName) => {
+            const migrationKey = fileName.replace('.ts', '')
+            const importPath = path.join(this.migrationsPath, fileName).replace(/\\/g, '/')
+            const migration = await import(/* @vite-ignore */ importPath)
+            return [migrationKey, migration.default || migration] as const
+          })
+      )
+    )
+
     return this.migrations
   }
 }
