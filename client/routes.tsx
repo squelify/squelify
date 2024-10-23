@@ -1,5 +1,5 @@
-import { Navigate, type RouteObject, createBrowserRouter, useRoutes } from 'react-router-dom'
-import NotFound from '#/pages/error/not-found'
+import type { RouteObject } from 'react-router-dom'
+import { Navigate, createBrowserRouter, useRoutes } from 'react-router-dom'
 
 // Application layouts
 import AppLayout from '#/layouts/app-layout'
@@ -10,7 +10,8 @@ import ForgotPasswordPage from '#/pages/auth/forgot-password'
 import SignInPage from '#/pages/auth/login'
 import SignUpPage from '#/pages/auth/register'
 import ResetPasswordPage from '#/pages/auth/reset-password'
-import { InternalError } from '#/pages/error/internal-error'
+import InternalError from '#/pages/error/internal-error'
+import NotFound from '#/pages/error/not-found'
 
 /**
  * Utility function to create a route object with the provided path and other properties.
@@ -64,10 +65,10 @@ const Routes: RouteObject[] = [
  * @example
  *
  * import { RouterProvider } from 'react-router-dom'
- * import { Route, browserRoutes } from './routes'
+ * import { Route, BrowserRoutes } from './routes'
  *
  * const App = () => {
- *   return <RouterProvider router={browserRoutes} />
+ *   return <RouterProvider router={BrowserRoutes} />
  * }
  *
  */

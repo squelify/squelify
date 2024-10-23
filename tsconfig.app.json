@@ -19,8 +19,7 @@
         "target": "ESNext",
         "tsBuildInfoFile": "./node_modules/.tsbuildinfo_app",
         "useDefineForClassFields": true,
-        "verbatimModuleSyntax": true,
-        "outDir": "./dist/client",
+        "outDir": "dist",
         "paths": {
             "#/*": ["./client/*"]
         }

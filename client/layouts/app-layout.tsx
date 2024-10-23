@@ -1,7 +1,7 @@
 import { ErrorBoundary } from 'react-error-boundary'
 import { Navigate, Outlet, useLocation } from 'react-router-dom'
 import { useAuth } from '#/context/hooks/use-auth'
-import { ErrorBoundaryFallback } from '#/pages/error/internal-error'
+import ErrorBoundaryFallback from '#/pages/error/boundary-fallback'
 import RootLayout from './root-layout'
 
 export default function AppLayout() {
