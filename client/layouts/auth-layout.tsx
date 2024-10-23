@@ -17,8 +17,8 @@ export default function AuthLayout() {
       <RootLayout
         className={clx(
           'relative flex size-full min-h-screen flex-1 items-center',
-          'bg-gradient-to-bl from-primary-100 via-transparent',
-          'dark:from-primary-950 dark:via-transparent'
+          'bg-gradient-to-bl from-brand-100 via-transparent',
+          'dark:from-brand-950 dark:via-transparent'
         )}
       >
         <Outlet />
