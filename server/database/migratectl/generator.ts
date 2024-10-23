@@ -1,5 +1,5 @@
 import { readdir, writeFile } from 'node:fs/promises'
-import { join } from 'node:path'
+import { join } from 'pathe'
 import { MIGRATION_FOLDER, SEEDER_FOLDER } from './migrator'
 
 const isRunningFromCLI = (): boolean => process.argv.length > 2

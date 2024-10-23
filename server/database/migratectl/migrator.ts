@@ -1,7 +1,7 @@
 import 'dotenv/config'
-import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { Kysely, Migrator, NO_MIGRATIONS } from 'kysely'
+import { dirname, join } from 'pathe'
 import { env } from 'std-env'
 import { kyselyConfig } from '~/database/db.client'
 import type { Database } from '~/database/db.schema'
@@ -9,9 +9,9 @@ import { AutomaticMigrateProvider, ESMFileMigrationProvider } from '~/database/m
 
 const isRunningFromCLI = (): boolean => process.argv.length > 2
 
-const __dirname = path.dirname(fileURLToPath(import.meta.url))
-export const MIGRATION_FOLDER = path.join(__dirname, '../migrations')
-export const SEEDER_FOLDER = path.join(__dirname, '../seeders')
+const __dirname = dirname(fileURLToPath(import.meta.url))
+export const MIGRATION_FOLDER = join(__dirname, '../migrations')
+export const SEEDER_FOLDER = join(__dirname, '../seeders')
 
 type MigrationAction = 'migrate' | 'rollback' | 'reset'
 

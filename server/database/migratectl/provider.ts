@@ -1,13 +1,13 @@
 import { promises as fs } from 'node:fs'
-import path from 'node:path'
 import type { MigrationProvider } from 'kysely'
 import type { Migration } from 'kysely'
+import { join, resolve } from 'pathe'
 
 export class ESMFileMigrationProvider implements MigrationProvider {
   private readonly resolvedPath: string
 
   constructor(absolutePath: string) {
-    this.resolvedPath = path.resolve(import.meta.dirname, absolutePath)
+    this.resolvedPath = resolve(import.meta.dirname, absolutePath)
   }
 
   async getMigrations(): Promise<Record<string, Migration>> {
@@ -18,7 +18,7 @@ export class ESMFileMigrationProvider implements MigrationProvider {
           .filter((fileName) => fileName.endsWith('.ts'))
           .map(async (fileName) => {
             const migrationKey = fileName.slice(0, -3) // Remove file extensions
-            const importPath = path.join(this.resolvedPath, fileName).replace(/\\/g, '/')
+            const importPath = join(this.resolvedPath, fileName).replace(/\\/g, '/')
             const migration = await import(/* @vite-ignore */ importPath)
             return [migrationKey, migration.default || migration] as const
           })
@@ -32,7 +32,7 @@ export class AutomaticMigrateProvider implements MigrationProvider {
   private readonly migrationsPath: string
 
   constructor() {
-    this.migrationsPath = path.resolve(import.meta.dirname, '../migrations')
+    this.migrationsPath = resolve(import.meta.dirname, '../migrations')
     this.migrations = {}
   }
 
@@ -45,7 +45,7 @@ export class AutomaticMigrateProvider implements MigrationProvider {
           .filter((fileName) => fileName.endsWith('.ts'))
           .map(async (fileName) => {
             const migrationKey = fileName.replace('.ts', '')
-            const importPath = path.join(this.migrationsPath, fileName).replace(/\\/g, '/')
+            const importPath = join(this.migrationsPath, fileName).replace(/\\/g, '/')
             const migration = await import(/* @vite-ignore */ importPath)
             return [migrationKey, migration.default || migration] as const
           })
