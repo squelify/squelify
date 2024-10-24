@@ -1,6 +1,9 @@
 build/
 dist/
 _data/
+.dist
+.build
+.wrangler
 .cache
 .husky
 .DS_Store

@@ -133,6 +133,6 @@
             "**/*.json",
             ".swcrc"
         ],
-        "ignore": [".github", ".nitro", ".output", "build", "dist", "public"]
+        "ignore": [".github", ".nitro", ".output", ".build", ".dist", "public"]
     }
 }

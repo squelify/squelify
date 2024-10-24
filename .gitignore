@@ -32,10 +32,13 @@ _data/
 build/
 dist/
 .data
+.dist
 .nitro
 .cache
 .output
 .client
+.build
+.wrangler
 
 # envars
 .env.*

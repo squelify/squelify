@@ -14,7 +14,7 @@
         "moduleResolution": "Bundler",
         "noImplicitAny": true,
         "noUncheckedIndexedAccess": true,
-        "outDir": "dist",
+        "outDir": ".build",
         "skipLibCheck": true,
         "strict": true,
         "target": "ESNext",
