@@ -1,6 +1,6 @@
 import 'dotenv/config'
-import { fileURLToPath } from 'node:url'
 import { Kysely, Migrator, NO_MIGRATIONS } from 'kysely'
+import { fileURLToPath } from 'mlly'
 import { dirname, join } from 'pathe'
 import { env } from 'std-env'
 import { kyselyConfig } from '~/database/db.client'

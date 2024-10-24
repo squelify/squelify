@@ -1,5 +1,6 @@
 import { z } from 'zod'
 import { findUserByEmail } from '~/database/repository/user.repo'
+import type { OtpCodeProps } from '~/mailer/templates/otp-code'
 
 export const LoginRequestSchema = z.object({
   identity: z.string().email({ message: 'Invalid email address' }),
@@ -25,11 +26,11 @@ export default defineEventHandler(async (event) => {
       return createErrorResponse(400, 'Invalid credentials')
     }
 
-    // await sendJSXEmail<OtpCodeProps>('otp-code', 'user@example.com', {
-    //   name: 'John Doe',
-    //   email: 'user@example.com',
-    //   otp: '123456',
-    // })
+    await sendJSXEmail<OtpCodeProps>('otp-code', 'user@example.com', {
+      name: 'John Doe',
+      email: 'user@example.com',
+      otp: '123456',
+    })
 
     const hashedPassword = await hashPassword(parseBody.data.password)
     logger.debug('[app]', hashedPassword)

@@ -36,7 +36,7 @@ const LOG_LEVEL = getNumericLogLevel(String(env.APP_LOG_LEVEL).toLowerCase() as 
  * - +999: Verbose logs
  *
  * @returns {ConsolaInstance} A Consola instance for logging.
- * @see: https://unjs.io/packages/consola
+ * @see https://unjs.io/packages/consola
  */
 const logger: ConsolaInstance = createConsola({ level: LOG_LEVEL })
 

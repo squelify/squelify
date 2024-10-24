@@ -34,6 +34,7 @@ interface AppProviderProps {
   debugScreenSize?: boolean
 }
 
+// TODO - replace with `cookie-es`
 const COOKIE_NAME = 'auth_session'
 const COOKIE_LIFETIME = 60 * 60 * 24 * 7 // 7 days
 const COOKIE_OPTIONS: Omit<CookieSetOptions, 'maxAge'> = { path: '/', sameSite: 'strict' }
