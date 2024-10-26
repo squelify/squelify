@@ -13,6 +13,7 @@
     "homepage": "https://github.com/riipandi/ntrl#readme",
     "scripts": {
         "dev": "nitro dev",
+        "dev:tunnel": "nitro dev --tunnel",
         "build": "pnpm --silent run build:vite && pnpm --silent run build:nitro",
         "build:nitro": "nitro build",
         "build:vite": "vite build",
@@ -40,7 +41,7 @@
         "postinstall": "lefthook install || true",
         "pre-commit": "lefthook run pre-commit --force",
         "update-deps": "npm-check-updates --configFileName .ncurc.json",
-        "cleanup": "pnpm run --stream --color \"/cleanup:/\"",
+        "cleanup": "pnpm run --stream --parallel --color \"/cleanup:(?!deps)/\"",
         "cleanup:dev": "pnpm dlx rimraf .{output,client,build,data,dist,nitro,wrangler} _data",
         "cleanup:deps": "pnpm dlx rimraf pnpm-lock.yaml node_modules tests-results",
         "changelog:full": "git-cliff -o CHANGELOG.md -c cliff-full.toml",

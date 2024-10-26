@@ -1,6 +1,6 @@
 import { Body, ColorScheme, Container, Head, Hr, Html, Preview, Section, Text } from 'jsx-email'
 import { Tailwind } from 'jsx-email'
-import type React from 'react'
+import * as React from 'react'
 import { isProduction } from 'std-env'
 import appConfig from '~/config'
 import AppLogo from './app-logo'

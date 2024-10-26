@@ -23,4 +23,21 @@ export default defineNitroConfig({
   // },
   publicAssets: [{ dir: '../public' }, { dir: '../.client' }],
   serverAssets: [{ baseName: 'vite', dir: '../.client/.vite' }],
+  typescript: {
+    generateTsConfig: true,
+    tsConfig: {
+      compilerOptions: {
+        jsx: 'react',
+        jsxFactory: 'React.createElement',
+        jsxFragmentFactory: 'React.Fragment',
+        noEmit: true,
+        skipLibCheck: true,
+        strict: false,
+        useDefineForClassFields: true,
+        verbatimModuleSyntax: false,
+        tsBuildInfoFile: '../../node_modules/.tsbuildinfo',
+      },
+      exclude: ['../../vite.config.ts', '../../client'],
+    },
+  },
 })

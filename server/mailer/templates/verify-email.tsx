@@ -1,4 +1,5 @@
 import { Button, Heading, Hr, Link, Preview, Section, Text } from 'jsx-email'
+import * as React from 'react'
 import appConfig from '~/config'
 import EmailAuthTemplate from '../layouts/auth-layout'
 

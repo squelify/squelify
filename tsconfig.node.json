@@ -16,7 +16,8 @@
         "skipLibCheck": true,
         "strict": true,
         "target": "ESNext",
-        "tsBuildInfoFile": "./node_modules/.tsbuildinfo_vite"
+        "tsBuildInfoFile": "./node_modules/.tsbuildinfo_vite",
+        "verbatimModuleSyntax": false
     },
     "include": ["vite.config.ts"],
     "exclude": ["node_modules", "client", "server"]
