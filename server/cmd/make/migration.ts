@@ -23,7 +23,7 @@ async function getNextMigrationNumber(): Promise<number> {
 
 export default defineCommand({
   meta: {
-    name: 'make migration',
+    name: 'migration',
     description: 'Create a new migration file',
   },
   args: {

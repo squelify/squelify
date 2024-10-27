@@ -23,7 +23,7 @@ async function getNextSeederNumber(): Promise<number> {
 
 export default defineCommand({
   meta: {
-    name: 'make seeder',
+    name: 'seeder',
     description: 'Create a new seeder file',
   },
   args: {

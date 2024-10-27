@@ -4,7 +4,7 @@ import { generateRandomStr } from '~/utils/string'
 
 export default defineCommand({
   meta: {
-    name: 'make app-key',
+    name: 'app-key',
     description: 'Create application secret key',
   },
   args: {

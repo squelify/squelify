@@ -2,7 +2,7 @@ import { defineCommand, showUsage } from 'citty'
 
 export default defineCommand({
   meta: {
-    name: 'migrate dump',
+    name: 'migrate export',
     description: 'Export current database schema to SQL file',
   },
   args: {
