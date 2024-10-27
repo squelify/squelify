@@ -1,5 +1,6 @@
 import { hash, verify } from '@node-rs/argon2'
 import { env } from 'std-env'
+import { getRandomValues } from 'uncrypto'
 
 /**
  * Cleans a string by performing the following operations:
@@ -42,4 +43,20 @@ export async function verifyPassword(password: string, hash: string): Promise<bo
   return await verify(hash, password, {
     secret: Buffer.from(env.JWT_SECRET_KEY, 'base64'),
   })
+}
+
+/**
+ * Generates a cryptographically secure random key with specified length
+ * Uses uncrypto which provides isomorphic crypto API
+ */
+export function generateRandomStr(length = 10): string {
+  const charset = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'
+  const bytes = new Uint8Array(length)
+  getRandomValues(bytes)
+
+  let result = ''
+  for (let i = 0; i < length; i++) {
+    result += charset[bytes[i] % charset.length]
+  }
+  return result
 }
