@@ -22,7 +22,7 @@ export default defineCommand({
     }
 
     try {
-      consola.info('Populating database with seeders...')
+      consola.log('🍀 Populating database with seeders...')
       await runSeeds()
     } catch (error) {
       consola.error(error instanceof Error ? error.message : 'Unknown error occurred')

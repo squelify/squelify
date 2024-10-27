@@ -50,7 +50,7 @@ export async function runSeeds(): Promise<void> {
         console.info(`🍀 Seeding table ${name}...`)
         await seeder.default(migrateDBClient)
       }
-      console.info('🍀 Database seeding completed\n')
+      console.info('🍀 Database seeding completed')
     } else {
       console.info('🍀 No seeders provided. Skipping database seeding.')
     }

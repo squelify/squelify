@@ -22,7 +22,7 @@ export default defineCommand({
     }
 
     try {
-      consola.info('Rolling back migration...')
+      consola.log('🍀 Rolling back migration...')
       await runMigration('rollback')
     } catch (error) {
       consola.error(error instanceof Error ? error.message : 'Unknown error occurred')

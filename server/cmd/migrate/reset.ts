@@ -41,16 +41,16 @@ export default defineCommand({
         return
       }
 
-      consola.info('Reset database migration...')
+      consola.log('🍀 Reset database migration...')
       await runMigration('reset')
 
       if (args.migrate) {
-        consola.info('Running database migration...')
+        consola.log('🍀 Running database migration...')
         await runMigration('migrate')
       }
 
       if (args.seed) {
-        consola.info('Populating database with seeders...')
+        consola.log('🍀 Populating database with seeders...')
         await runSeeds()
       }
     } catch (error) {

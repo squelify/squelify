@@ -22,7 +22,7 @@ export default defineCommand({
     }
 
     try {
-      consola.info('Running database migration...')
+      consola.log('🍀 Running database migration...')
       await runMigration('migrate')
     } catch (error) {
       consola.error(error instanceof Error ? error.message : 'Unknown error occurred')

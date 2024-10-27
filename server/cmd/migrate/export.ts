@@ -21,7 +21,7 @@ export default defineCommand({
     }
 
     try {
-      consola.info('Exporting database schema...')
+      consola.log('🍀 Exporting database schema...')
     } catch (error) {
       consola.error(error instanceof Error ? error.message : 'Unknown error occurred')
       process.exit(1)
