@@ -1,4 +1,4 @@
-import type { Kysely } from 'kysely'
+import { type Kysely, sql } from 'kysely'
 import { ISO_TIMESTAMP } from '~/database/db.helper'
 import type { Database } from '~/database/db.schema'
 
@@ -8,8 +8,9 @@ export async function up(db: Kysely<Database>): Promise<void> {
     .addColumn('id', 'text', (col) => col.primaryKey())
     .addColumn('identifier', 'text', (col) => col.notNull())
     .addColumn('value', 'text', (col) => col.notNull())
-    .addColumn('expires_at', 'date', (col) => col.notNull())
+    .addColumn('expires_at', 'text', (col) => col.notNull())
     .addColumn('created_at', 'text', (col) => col.defaultTo(ISO_TIMESTAMP).notNull())
+    .modifyEnd(sql`STRICT`)
     .execute()
 
   // Indexes for verification table

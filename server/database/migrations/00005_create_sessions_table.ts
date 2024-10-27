@@ -1,4 +1,4 @@
-import type { Kysely } from 'kysely'
+import { type Kysely, sql } from 'kysely'
 import type { Database } from '~/database/db.schema'
 
 export async function up(db: Kysely<Database>): Promise<void> {
@@ -10,11 +10,13 @@ export async function up(db: Kysely<Database>): Promise<void> {
     .addColumn('user_agent', 'text')
     .addColumn('impersonated_by', 'text', (col) => col.references('users.id'))
     .addColumn('active_organization_id', 'text')
-    .addColumn('expires_at', 'date', (col) => col.notNull())
+    .addColumn('expires_at', 'text', (col) => col.notNull())
+    .modifyEnd(sql`STRICT`)
     .execute()
 
   // Indexes for session table
   await db.schema.createIndex('sessions_user_id_idx').on('sessions').column('user_id').execute()
+
   await db.schema
     .createIndex('sessions_expires_at_idx')
     .on('sessions')

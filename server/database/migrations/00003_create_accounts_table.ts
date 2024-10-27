@@ -1,4 +1,4 @@
-import type { Kysely } from 'kysely'
+import { type Kysely, sql } from 'kysely'
 import { ISO_TIMESTAMP } from '~/database/db.helper'
 import type { Database } from '~/database/db.schema'
 
@@ -13,13 +13,15 @@ export async function up(db: Kysely<Database>): Promise<void> {
     .addColumn('refresh_token', 'text') // for credential, google, github, etc
     .addColumn('id_token', 'text') // for credential, google, github, etc
     .addColumn('password', 'text')
-    .addColumn('token_expires_at', 'date')
+    .addColumn('token_expires_at', 'text')
     .addColumn('created_at', 'text', (col) => col.defaultTo(ISO_TIMESTAMP).notNull())
     .addColumn('updated_at', 'text', (col) => col.defaultTo(ISO_TIMESTAMP).notNull())
+    .modifyEnd(sql`STRICT`)
     .execute()
 
   // Indexes for account table
   await db.schema.createIndex('accounts_user_id_idx').on('accounts').column('user_id').execute()
+
   await db.schema
     .createIndex('accounts_provider_id_idx')
     .on('accounts')

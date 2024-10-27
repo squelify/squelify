@@ -1,4 +1,4 @@
-import type { Kysely } from 'kysely'
+import { type Kysely, sql } from 'kysely'
 import { ISO_TIMESTAMP } from '~/database/db.helper'
 import type { Database } from '~/database/db.schema'
 
@@ -9,6 +9,7 @@ export async function up(db: Kysely<Database>): Promise<void> {
     .addColumn('public_key', 'text', (col) => col.notNull())
     .addColumn('private_key', 'text', (col) => col.notNull())
     .addColumn('created_at', 'text', (col) => col.defaultTo(ISO_TIMESTAMP).notNull())
+    .modifyEnd(sql`STRICT`)
     .execute()
 
   // Indexes for jwks table
@@ -16,6 +17,6 @@ export async function up(db: Kysely<Database>): Promise<void> {
 }
 
 export async function down(db: Kysely<Database>): Promise<void> {
-  await db.schema.dropIndex('jwks_created_at_index').execute()
-  await db.schema.dropTable('jwks').execute()
+  await db.schema.dropIndex('jwks_created_at_index').ifExists().execute()
+  await db.schema.dropTable('jwks').ifExists().execute()
 }

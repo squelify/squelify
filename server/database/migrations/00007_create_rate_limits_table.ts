@@ -1,4 +1,4 @@
-import type { Kysely } from 'kysely'
+import { type Kysely, sql } from 'kysely'
 import type { Database } from '~/database/db.schema'
 
 export async function up(db: Kysely<Database>): Promise<void> {
@@ -9,6 +9,7 @@ export async function up(db: Kysely<Database>): Promise<void> {
     .addColumn('window', 'integer', (col) => col.notNull())
     .addColumn('count', 'integer', (col) => col.notNull())
     .addColumn('last_request', 'integer', (col) => col.notNull())
+    .modifyEnd(sql`STRICT`)
     .execute()
 
   // Index for rate_limit table

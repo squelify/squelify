@@ -1,4 +1,4 @@
-import type { Kysely } from 'kysely'
+import { type Kysely, sql } from 'kysely'
 import { ISO_TIMESTAMP } from '~/database/db.helper'
 import type { Database } from '~/database/db.schema'
 
@@ -11,8 +11,9 @@ export async function up(db: Kysely<Database>): Promise<void> {
     .addColumn('email', 'text', (col) => col.notNull())
     .addColumn('role', 'text')
     .addColumn('status', 'text', (col) => col.notNull())
-    .addColumn('expires_at', 'date', (col) => col.notNull())
+    .addColumn('expires_at', 'text', (col) => col.notNull())
     .addColumn('created_at', 'text', (col) => col.defaultTo(ISO_TIMESTAMP).notNull())
+    .modifyEnd(sql`STRICT`)
     .execute()
 
   // Indexes for invitation table
@@ -21,6 +22,7 @@ export async function up(db: Kysely<Database>): Promise<void> {
     .on('invitations')
     .column('organization_id')
     .execute()
+
   await db.schema.createIndex('invitations_email_idx').on('invitations').column('email').execute()
   await db.schema.createIndex('invitations_status_idx').on('invitations').column('status').execute()
 }
