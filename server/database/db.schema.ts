@@ -1,9 +1,22 @@
 import type { ColumnType } from 'kysely'
-import type { AccountTable } from './schemas/account'
-import type { PasskeyTable } from './schemas/passkey'
-import type { RateLimitTable, SessionTable } from './schemas/session'
-import type { UserTable } from './schemas/user'
-import type { VerificationTable } from './schemas/verification'
+
+import type { Account } from './schemas/account'
+import type { Email } from './schemas/email'
+import type { Invitation } from './schemas/invitation'
+import type { JWK } from './schemas/jwk'
+import type { Member } from './schemas/member'
+import type { Organization } from './schemas/organization'
+import type { Passkey } from './schemas/passkey'
+import type { Password } from './schemas/password'
+import type { Permission } from './schemas/permission'
+import type { RateLimit } from './schemas/rate_limit'
+import type { Role } from './schemas/role'
+import type { RolePermission } from './schemas/role_permission'
+import type { Session } from './schemas/session'
+import type { TwoFactor } from './schemas/two_factor'
+import type { User } from './schemas/user'
+import type { UserRole } from './schemas/user_role'
+import type { Verification } from './schemas/verification'
 
 /**
  * For Kysely's type-safety and autocompletion to work, it needs to know
@@ -11,12 +24,23 @@ import type { VerificationTable } from './schemas/verification'
  * that contains table names as keys and table schema interfaces as values.
  */
 export interface Database {
-  accounts: AccountTable
-  passkey: PasskeyTable
-  rate_limit: RateLimitTable
-  sessions: SessionTable
-  users: UserTable
-  verifications: VerificationTable
+  accounts: Account
+  emails: Email
+  invitations: Invitation
+  jwks: JWK
+  members: Member
+  organizations: Organization
+  passwords: Password
+  passkeys: Passkey
+  permissions: Permission
+  rate_limits: RateLimit
+  roles: Role
+  role_permissions: RolePermission
+  sessions: Session
+  two_factors: TwoFactor
+  user_roles: UserRole
+  users: User
+  verifications: Verification
 }
 
 /**

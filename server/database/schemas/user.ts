@@ -1,33 +1,43 @@
 import type { Insertable, Selectable, Updateable } from 'kysely'
+import type { ColumnType, Generated } from 'kysely'
 import { z } from 'zod'
-import { columnType, generatedType } from '~/database/db.helper'
+import { booleanSchema, timestampSchema } from '~/database/db.helper'
 
+// User schema with validation rules
 export const UserSchema = z.object({
-  id: generatedType<string>(),
-  email: z.string(),
+  id: z.string(),
   firstName: z.string(),
-  lastName: z.string().nullable().default(null),
+  lastName: z.string().nullable(),
   username: z.string().nullable(),
-  phoneNumber: z.string().nullable().default(null),
-  avatarUrl: z.string().nullable().default(null),
-  twoFactorEnabled: z.boolean().nullable().default(null),
-  isAnonymous: z.boolean().nullable().default(null),
-  isBanned: z.boolean().nullable().default(null),
-  banReason: z.string().nullable().default(null),
-  bannedUntil: columnType<Date>().nullable().default(null),
-  emailVerifiedAt: columnType<Date>().nullable().default(null),
-  phoneVerifiedAt: columnType<Date>().nullable().default(null),
-  createdAt: columnType<Date>(),
-  updatedAt: columnType<Date>(),
+  avatarUrl: z.string().url().nullable(),
+  locale: z.string().default('en'),
+  isActive: booleanSchema.default(1),
+  isBanned: booleanSchema.default(0),
+  banReason: z.string().nullable(),
+  bannedUntil: timestampSchema.nullable(),
+  lastSignInAt: timestampSchema.nullable(),
+  createdAt: timestampSchema,
+  updatedAt: timestampSchema.nullable(),
 })
 
-/**
- * If the column is nullable in the database, make its type nullable.
- * Don't use optional properties. Optionality is always determined
- * automatically by Kysely.
- */
-export type UserTable = z.infer<typeof UserSchema>
+// Database interface for Kysely
+export interface User {
+  id: Generated<string>
+  firstName: ColumnType<string>
+  lastName: ColumnType<string | null>
+  username: ColumnType<string | null>
+  avatarUrl: ColumnType<string | null>
+  locale: ColumnType<string>
+  isActive: ColumnType<number>
+  isBanned: ColumnType<number>
+  banReason: ColumnType<string | null>
+  bannedUntil: ColumnType<Date, string | null, never>
+  lastSignInAt: ColumnType<Date, string | null, never>
+  createdAt: ColumnType<Date, string | undefined, never>
+  updatedAt: ColumnType<Date, string | undefined, never>
+}
 
-export type User = Selectable<UserTable>
-export type UserInsert = Insertable<UserTable>
-export type UserUpdate = Updateable<UserTable>
+// Kysely types for operations
+export type UserSelect = Selectable<User>
+export type UserInsert = Insertable<User>
+export type UserUpdate = Updateable<User>

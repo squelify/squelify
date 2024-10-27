@@ -1,28 +1,44 @@
 import type { Insertable, Selectable, Updateable } from 'kysely'
+import type { ColumnType, Generated } from 'kysely'
 import { z } from 'zod'
-import { columnType, generatedType } from '~/database/db.helper'
+import { timestampSchema } from '~/database/db.helper'
 
+const accountProviderEnum = z.enum(['local', 'google', 'github', 'apple', 'passkey'])
+export type AccountProvider = z.infer<typeof accountProviderEnum>
+
+// Account schema with validation rules
 export const AccountSchema = z.object({
-  id: generatedType<string>(),
+  id: z.string(),
   userId: z.string(),
-  providerId: z.string(),
-  accountId: z.string(),
-  accessToken: z.string().nullable().default(null),
-  refreshToken: z.string().nullable().default(null),
-  idToken: z.string().nullable().default(null),
-  password: z.string().nullable().default(null),
-  tokenExpiresAt: columnType<Date>().nullable().default(null),
-  createdAt: columnType<Date>(),
-  updatedAt: columnType<Date>(),
+  provider: accountProviderEnum,
+  providerAccountId: z.string(),
+  providerRefreshToken: z.string().nullable(),
+  providerAccessToken: z.string().nullable(),
+  providerIdToken: z.string().nullable(),
+  providerScope: z.string().nullable(),
+  providerTokenType: z.string().nullable(),
+  providerExpiresAt: timestampSchema.nullable(),
+  createdAt: timestampSchema,
+  updatedAt: timestampSchema.nullable(),
 })
 
-/**
- * If the column is nullable in the database, make its type nullable.
- * Don't use optional properties. Optionality is always determined
- * automatically by Kysely.
- */
-export type AccountTable = z.infer<typeof AccountSchema>
+// Database interface for Kysely
+export interface Account {
+  id: Generated<string>
+  userId: ColumnType<string>
+  provider: ColumnType<AccountProvider>
+  providerAccountId: ColumnType<string>
+  providerRefreshToken: ColumnType<string | null>
+  providerAccessToken: ColumnType<string | null>
+  providerIdToken: ColumnType<string | null>
+  providerScope: ColumnType<string | null>
+  providerTokenType: ColumnType<string | null>
+  providerExpiresAt: ColumnType<Date, string | null, never>
+  createdAt: ColumnType<Date, string | undefined, never>
+  updatedAt: ColumnType<Date, string | undefined, never>
+}
 
-export type Account = Selectable<AccountTable>
-export type AccountInsert = Insertable<AccountTable>
-export type AccountUpdate = Updateable<AccountTable>
+// Kysely types for operations
+export type AccountSelect = Selectable<Account>
+export type AccountInsert = Insertable<Account>
+export type AccountUpdate = Updateable<Account>

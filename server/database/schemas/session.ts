@@ -1,32 +1,35 @@
 import type { Insertable, Selectable, Updateable } from 'kysely'
+import type { ColumnType, Generated } from 'kysely'
 import { z } from 'zod'
-import { columnType, generatedType } from '~/database/db.helper'
+import { timestampSchema } from '~/database/db.helper'
 
+// Session schema with validation rules
 export const SessionSchema = z.object({
-  id: generatedType<string>(),
+  id: z.string(),
   userId: z.string(),
-  ipAddress: z.string().nullable().default(null),
-  userAgent: z.string().nullable().default(null),
-  impersonatedBy: z.string().nullable().default(null),
-  activeOrganizationId: z.string().nullable().default(null),
-  expiresAt: columnType<Date>(),
+  ipAddress: z.string().nullable(),
+  userAgent: z.string().nullable(),
+  impersonatedBy: z.string().nullable(),
+  activeOrganizationId: z.string().nullable(),
+  expiresAt: timestampSchema,
+  createdAt: timestampSchema,
+  updatedAt: timestampSchema.nullable(),
 })
 
-export type SessionTable = z.infer<typeof SessionSchema>
-export type Session = Selectable<SessionTable>
-export type SessionInsert = Insertable<SessionTable>
-export type SessionUpdate = Updateable<SessionTable>
+// Database interface for Kysely
+export interface Session {
+  id: Generated<string>
+  userId: ColumnType<string>
+  ipAddress: ColumnType<string | null>
+  userAgent: ColumnType<string | null>
+  impersonatedBy: ColumnType<string | null>
+  activeOrganizationId: ColumnType<string | null>
+  expiresAt: ColumnType<Date, string, never>
+  createdAt: ColumnType<Date, string | undefined, never>
+  updatedAt: ColumnType<Date, string | undefined, never>
+}
 
-export const RateLimitSchema = z.object({
-  key: z.string(),
-  max: z.number().int(),
-  window: z.number().int(),
-  count: z.number().int(),
-  lastRequest: columnType<Date>(),
-})
-
-export type RateLimitTable = z.infer<typeof RateLimitSchema>
-
-export type RateLimit = Selectable<RateLimitTable>
-export type RateLimitInsert = Insertable<RateLimitTable>
-export type RateLimitUpdate = Updateable<RateLimitTable>
+// Kysely types for operations
+export type SessionSelect = Selectable<Session>
+export type SessionInsert = Insertable<Session>
+export type SessionUpdate = Updateable<Session>

@@ -7,9 +7,7 @@ export async function up(db: Kysely<Database>): Promise<void> {
     .createTable('accounts')
     .addColumn('id', 'text', (col) => col.primaryKey())
     .addColumn('user_id', 'text', (col) => col.notNull().references('users.id').onDelete('cascade'))
-    .addColumn('provider', 'text', (col) =>
-      col.notNull().check(sql`provider IN ('local', 'google', 'github', 'apple', 'passkey')`)
-    )
+    .addColumn('provider', 'text')
     .addColumn('provider_account_id', 'text', (col) => col.notNull())
     .addColumn('provider_refresh_token', 'text')
     .addColumn('provider_access_token', 'text')

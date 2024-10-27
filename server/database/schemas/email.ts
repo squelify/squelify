@@ -3,17 +3,12 @@ import type { ColumnType, Generated } from 'kysely'
 import { z } from 'zod'
 import { booleanSchema, timestampSchema } from '~/database/db.helper'
 
-const twoFactorTypeEnum = z.enum(['totp', 'email', 'sms'])
-export type TwoFactorType = z.infer<typeof twoFactorTypeEnum>
-
-// Two factor schema with validation rules
-export const TwoFactorSchema = z.object({
+// Email schema with validation rules
+export const EmailSchema = z.object({
   id: z.string(),
   userId: z.string(),
-  type: twoFactorTypeEnum,
-  secret: z.string(),
-  backupCodes: z.string().default('[]'),
-  lastUsedAt: timestampSchema.nullable(),
+  email: z.string().email(),
+  isPrimary: booleanSchema.default(0),
   isVerified: booleanSchema.default(0),
   verifiedAt: timestampSchema.nullable(),
   createdAt: timestampSchema,
@@ -21,13 +16,11 @@ export const TwoFactorSchema = z.object({
 })
 
 // Database interface for Kysely
-export interface TwoFactor {
+export interface Email {
   id: Generated<string>
   userId: ColumnType<string>
-  type: ColumnType<TwoFactorType>
-  secret: ColumnType<string>
-  backupCodes: ColumnType<string>
-  lastUsedAt: ColumnType<Date, string | null, never>
+  email: ColumnType<string>
+  isPrimary: ColumnType<number>
   isVerified: ColumnType<number>
   verifiedAt: ColumnType<Date, string | null, never>
   createdAt: ColumnType<Date, string | undefined, never>
@@ -35,6 +28,6 @@ export interface TwoFactor {
 }
 
 // Kysely types for operations
-export type TwoFactorSelect = Selectable<TwoFactor>
-export type TwoFactorInsert = Insertable<TwoFactor>
-export type TwoFactorUpdate = Updateable<TwoFactor>
+export type EmailSelect = Selectable<Email>
+export type EmailInsert = Insertable<Email>
+export type EmailUpdate = Updateable<Email>

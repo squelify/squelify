@@ -31,3 +31,7 @@ export const columnSoftDelete = <T extends string, C extends string = never>(
 export function json<T>(value: T): RawBuilder<T> {
   return sql`CAST(${JSON.stringify(value)} AS JSONB)`
 }
+
+// Reusable timestamp schema for SQLite
+export const timestampSchema = z.string().datetime({ offset: true })
+export const booleanSchema = z.number().min(0).max(1)

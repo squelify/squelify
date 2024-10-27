@@ -1,28 +1,48 @@
 import type { Insertable, Selectable, Updateable } from 'kysely'
+import type { ColumnType, Generated } from 'kysely'
 import { z } from 'zod'
-import { columnType, generatedType } from '~/database/db.helper'
+import { booleanSchema, timestampSchema } from '~/database/db.helper'
 
+const credentialDeviceTypeEnum = z.enum(['platform', 'cross-platform'])
+export type CredentialDeviceType = z.infer<typeof credentialDeviceTypeEnum>
+
+// Passkey schema with validation rules
 export const PasskeySchema = z.object({
-  id: generatedType<string>(),
+  id: z.string(),
   userId: z.string(),
-  name: z.string().nullable().default(null),
+  name: z.string(),
+  credentialId: z.string(),
   publicKey: z.string(),
-  webauthnUserId: z.string(),
-  counter: z.number().int(),
-  deviceType: z.string(),
-  backedUp: z.boolean(),
-  transports: z.string().nullable().default(null),
-  createdAt: columnType<Date>(),
-  updatedAt: columnType<Date>(),
+  signCount: z.number().default(0),
+  transports: z.string().nullable(),
+  attestationFormat: z.string().nullable(),
+  aaguid: z.string().nullable(),
+  credentialDeviceType: credentialDeviceTypeEnum,
+  credentialBackedUp: booleanSchema.default(0),
+  lastUsedAt: timestampSchema.nullable(),
+  createdAt: timestampSchema,
+  updatedAt: timestampSchema.nullable(),
 })
 
-/**
- * If the column is nullable in the database, make its type nullable.
- * Don't use optional properties. Optionality is always determined
- * automatically by Kysely.
- */
-export type PasskeyTable = z.infer<typeof PasskeySchema>
+// Database interface for Kysely
+export interface Passkey {
+  id: Generated<string>
+  userId: ColumnType<string>
+  name: ColumnType<string>
+  credentialId: ColumnType<string>
+  publicKey: ColumnType<string>
+  signCount: ColumnType<number>
+  transports: ColumnType<string | null>
+  attestationFormat: ColumnType<string | null>
+  aaguid: ColumnType<string | null>
+  credentialDeviceType: ColumnType<CredentialDeviceType>
+  credentialBackedUp: ColumnType<number>
+  lastUsedAt: ColumnType<Date, string | null, never>
+  createdAt: ColumnType<Date, string | undefined, never>
+  updatedAt: ColumnType<Date, string | undefined, never>
+}
 
-export type Passkey = Selectable<PasskeyTable>
-export type PasskeyInsert = Insertable<PasskeyTable>
-export type PasskeyUpdate = Updateable<PasskeyTable>
+// Kysely types for operations
+export type PasskeySelect = Selectable<Passkey>
+export type PasskeyInsert = Insertable<Passkey>
+export type PasskeyUpdate = Updateable<Passkey>

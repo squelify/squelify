@@ -1,41 +1,89 @@
-import { type Kysely, sql } from 'kysely'
+import { type Kysely } from 'kysely'
 import { typeid } from 'typeid-js'
 import type { Database } from '~/database/db.schema'
 import type { AccountInsert } from '~/database/schemas/account'
+import type { EmailInsert } from '~/database/schemas/email'
+import type { MemberInsert } from '~/database/schemas/member'
+import type { OrganizationInsert } from '~/database/schemas/organization'
+import type { PasswordInsert } from '~/database/schemas/password'
 import type { UserInsert } from '~/database/schemas/user'
 import { hashPassword } from '~/utils/string'
 
 export default async function seed(db: Kysely<Database>): Promise<void> {
-  const newUsers: UserInsert[] = [
-    {
-      id: typeid('user').toString(),
-      email: 'admin@example.com',
-      firstName: 'Admin',
-      lastName: 'Sistem',
-      username: 'admin',
-      emailVerifiedAt: new Date().toISOString(),
-    },
-  ]
-
   await db.transaction().execute(async (trx) => {
-    const hashed_password = await hashPassword('@Passw0rd$123')
+    const now = new Date().toISOString()
 
-    const users = await trx
-      .insertInto('users')
-      .values(newUsers)
-      .returning(['id', 'email'])
-      .onConflict((oc) => oc.column('email').doNothing())
-      .execute()
+    // Create admin user
+    const userId = typeid('user').toString()
+    const newUser: UserInsert = {
+      id: userId,
+      username: 'admin',
+      firstName: 'Admin',
+      lastName: 'System',
+      locale: 'en',
+      isActive: 1,
+      createdAt: now,
+    }
 
-    // Create authentication key for Lucia Auth
-    const userAccount: AccountInsert[] = users.map((item) => ({
-      id: typeid('acc').toString(),
-      userId: item.id,
-      accountId: item.id,
-      providerId: 'credential',
-      password: hashed_password,
-    }))
+    // Create admin email
+    const emailId = typeid('eml').toString()
+    const newEmail: EmailInsert = {
+      id: emailId,
+      userId: userId,
+      email: 'admin@example.com',
+      isPrimary: 1,
+      isVerified: 1,
+      verifiedAt: now,
+      createdAt: now,
+    }
 
-    return await trx.insertInto('accounts').values(userAccount).execute()
+    // Create admin password
+    const passwordId = typeid('pwd').toString()
+    const hashedPassword = await hashPassword('Admin123!')
+    const newPassword: PasswordInsert = {
+      id: passwordId,
+      userId: userId,
+      hash: hashedPassword,
+      algorithm: 'argon2id',
+      createdAt: now,
+    }
+
+    // Create root organization
+    const orgId = typeid('org').toString()
+    const newOrg: OrganizationInsert = {
+      id: orgId,
+      name: 'Root Organization',
+      slug: 'root-org',
+      isVerified: 1,
+      createdAt: now,
+    }
+
+    // Create admin membership
+    const memberId = typeid('mem').toString()
+    const newMember: MemberInsert = {
+      id: memberId,
+      organizationId: orgId,
+      userId: userId,
+      role: 'owner',
+      isDefault: 1,
+      createdAt: now,
+    }
+
+    // Create admin account
+    const accountId = typeid('acc').toString()
+    const newAccount: AccountInsert = {
+      id: accountId,
+      userId: userId,
+      provider: 'local',
+      providerAccountId: userId,
+      createdAt: now,
+    }
+
+    await trx.insertInto('users').values(newUser).execute()
+    await trx.insertInto('emails').values(newEmail).execute()
+    await trx.insertInto('passwords').values(newPassword).execute()
+    await trx.insertInto('organizations').values(newOrg).execute()
+    await trx.insertInto('members').values(newMember).execute()
+    await trx.insertInto('accounts').values(newAccount).execute()
   })
 }

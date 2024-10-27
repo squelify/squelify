@@ -6,10 +6,9 @@ export async function up(db: Kysely<Database>): Promise<void> {
   await db.schema
     .createTable('users')
     .addColumn('id', 'text', (col) => col.primaryKey())
-    .addColumn('username', 'text', (col) => col.unique().check(sql`LENGTH(username) >= 3`))
     .addColumn('first_name', 'text', (col) => col.notNull())
     .addColumn('last_name', 'text')
-    .addColumn('display_name', 'text')
+    .addColumn('username', 'text', (col) => col.unique().check(sql`LENGTH(username) >= 3`))
     .addColumn('avatar_url', 'text')
     .addColumn('locale', 'text', (col) => col.defaultTo('en'))
     // Boolean fields using integer (0/1)
