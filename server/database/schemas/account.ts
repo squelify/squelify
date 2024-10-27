@@ -11,7 +11,7 @@ export const AccountSchema = z.object({
   refreshToken: z.string().nullable().default(null),
   idToken: z.string().nullable().default(null),
   password: z.string().nullable().default(null),
-  expiresAt: columnType<Date>().nullable().default(null),
+  tokenExpiresAt: columnType<Date>().nullable().default(null),
   createdAt: columnType<Date>(),
   updatedAt: columnType<Date>(),
 })

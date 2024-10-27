@@ -96,7 +96,7 @@ importers:
         specifier: ^5.9.6
         version: 5.9.6
       jsx-email:
-        specifier: ^2.0.11
+        specifier: ^2.1.1
         version: 2.1.1(@jsx-email/app-preview@2.0.2(@types/node@22.8.1)(@types/react-dom@18.3.1)(@types/react@18.3.12)(react@18.3.1)(terser@5.36.0))(@jsx-email/plugin-inline@1.0.1)(@jsx-email/plugin-minify@1.0.1)(@jsx-email/plugin-pretty@1.0.0)(@types/node@22.8.1)(@types/react@18.3.12)(react@18.3.1)(terser@5.36.0)
       kysely:
         specifier: ^0.27.4
@@ -152,6 +152,9 @@ importers:
       universal-cookie:
         specifier: ^7.2.1
         version: 7.2.1
+      unstorage:
+        specifier: ^1.12.0
+        version: 1.12.0(ioredis@5.4.1)
       vaul:
         specifier: ^1.1.0
         version: 1.1.0(@types/react-dom@18.3.1)(@types/react@18.3.12)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
@@ -205,7 +208,7 @@ importers:
         specifier: ^2.9.7
         version: 2.9.7
       npm-check-updates:
-        specifier: ^17.1.4
+        specifier: ^17.1.6
         version: 17.1.6
       postcss:
         specifier: ^8.4.47
@@ -226,8 +229,8 @@ importers:
         specifier: 0.3.0-beta
         version: 0.3.0-beta(tailwindcss@3.4.14)
       tsx:
-        specifier: ^4.19.1
-        version: 4.19.1
+        specifier: ^4.19.2
+        version: 4.19.2
       typescript:
         specifier: ^5.6.3
         version: 5.6.3
@@ -3272,7 +3275,6 @@ packages:
 
   libsql@0.3.19:
     resolution: {integrity: sha512-Aj5cQ5uk/6fHdmeW0TiXK42FqUlwx7ytmMLPSaUQPin5HKKKuUPD62MAbN4OEweGBBI7q1BekoEN4gPUEL6MZA==}
-    cpu: [x64, arm64, wasm32]
     os: [darwin, linux, win32]
 
   lilconfig@2.1.0:
@@ -4310,8 +4312,8 @@ packages:
   tslib@2.8.0:
     resolution: {integrity: sha512-jWVzBLplnCmoaTr13V9dYbiQ99wvZRd0vNWaDRg+aVYRcjDF3nDksxFDE/+fkXnKhpnUUkmx5pK/v8mCtLVqZA==}
 
-  tsx@4.19.1:
-    resolution: {integrity: sha512-0flMz1lh74BR4wOvBjuh9olbnwqCPc35OOlfyzHba0Dc+QNUeWX/Gq2YTbnwcWPO3BMd8fkzRVrHcsR+a7z7rA==}
+  tsx@4.19.2:
+    resolution: {integrity: sha512-pOUl6Vo2LUq/bSa8S5q7b91cgNSjctn9ugq/+Mvow99qW6x/UZYwzxy/3NmqoT66eHYfCVvFvACC58UBPFf28g==}
     engines: {node: '>=18.0.0'}
     hasBin: true
 
@@ -8791,7 +8793,7 @@ snapshots:
 
   tslib@2.8.0: {}
 
-  tsx@4.19.1:
+  tsx@4.19.2:
     dependencies:
       esbuild: 0.23.1
       get-tsconfig: 4.8.1

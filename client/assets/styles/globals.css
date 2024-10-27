@@ -68,7 +68,7 @@
         @apply antialiased min-h-screen scroll-smooth;
     }
     body {
-        @apply bg-background text-foreground;
+        @apply bg-background text-foreground font-sans;
     }
 }
 

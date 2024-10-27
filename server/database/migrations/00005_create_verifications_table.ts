@@ -18,6 +18,7 @@ export async function up(db: Kysely<Database>): Promise<void> {
     .on('verifications')
     .column('identifier')
     .execute()
+
   await db.schema
     .createIndex('verifications_expires_at_idx')
     .on('verifications')

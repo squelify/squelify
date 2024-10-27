@@ -7,13 +7,13 @@ export async function up(db: Kysely<Database>): Promise<void> {
     .createTable('accounts')
     .addColumn('id', 'text', (col) => col.primaryKey())
     .addColumn('user_id', 'text', (col) => col.notNull().references('users.id'))
-    .addColumn('provider_id', 'text', (col) => col.notNull())
-    .addColumn('account_id', 'text', (col) => col.notNull())
-    .addColumn('access_token', 'text')
-    .addColumn('refresh_token', 'text')
-    .addColumn('id_token', 'text')
+    .addColumn('provider_id', 'text', (col) => col.notNull()) // credential, google, github, etc
+    .addColumn('account_id', 'text', (col) => col.notNull()) // userId from provider
+    .addColumn('access_token', 'text') // for credential, google, github, etc
+    .addColumn('refresh_token', 'text') // for credential, google, github, etc
+    .addColumn('id_token', 'text') // for credential, google, github, etc
     .addColumn('password', 'text')
-    .addColumn('expires_at', 'date')
+    .addColumn('token_expires_at', 'date')
     .addColumn('created_at', 'text', (col) => col.defaultTo(ISO_TIMESTAMP).notNull())
     .addColumn('updated_at', 'text', (col) => col.defaultTo(ISO_TIMESTAMP).notNull())
     .execute()

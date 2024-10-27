@@ -13,9 +13,7 @@ export default async function seed(db: Kysely<Database>): Promise<void> {
       firstName: 'Admin',
       lastName: 'Sistem',
       username: 'admin',
-      emailVerified: true,
-      diggestSubscribed: false,
-      role: 'admin',
+      emailVerifiedAt: new Date().toISOString(),
     },
   ]
 

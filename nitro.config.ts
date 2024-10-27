@@ -13,16 +13,16 @@ export default defineNitroConfig({
   appConfigFiles: ['~/config'],
   renderer: '~/renderer',
   errorHandler: '~/error',
-  // rollupConfig: {
-  //   jsx: {
-  //     mode: 'preserve',
-  //     preset: 'react-jsx',
-  //     factory: 'React.createElement"',
-  //     fragment: 'React.Fragment',
-  //   },
-  // },
   publicAssets: [{ dir: '../public' }, { dir: '../.client' }],
   serverAssets: [{ baseName: 'vite', dir: '../.client/.vite' }],
+  rollupConfig: {
+    // jsx: {
+    //   mode: 'preserve',
+    //   preset: 'react-jsx',
+    //   factory: 'React.createElement"',
+    //   fragment: 'React.Fragment',
+    // },
+  },
   typescript: {
     generateTsConfig: true,
     tsConfig: {
