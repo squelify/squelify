@@ -4,21 +4,39 @@ import type { Database } from '~/database/db.schema'
 
 export async function up(db: Kysely<Database>): Promise<void> {
   await db.schema
-    .createTable('two_factor')
+    .createTable('two_factors')
     .addColumn('id', 'text', (col) => col.primaryKey())
-    .addColumn('user_id', 'text', (col) => col.notNull().references('users.id'))
+    .addColumn('user_id', 'text', (col) => col.notNull().references('users.id').onDelete('cascade'))
+    .addColumn('type', 'text', (col) => col.notNull().check(sql`type IN ('totp', 'email', 'sms')`))
     .addColumn('secret', 'text', (col) => col.notNull())
-    .addColumn('backup_codes', 'text', (col) => col.notNull())
-    .addColumn('created_at', 'text', (col) => col.defaultTo(ISO_TIMESTAMP).notNull())
-    .addColumn('updated_at', 'text', (col) => col.defaultTo(ISO_TIMESTAMP).notNull())
+    .addColumn('backup_codes', 'text', (col) => col.notNull().defaultTo('[]'))
+    .addColumn('last_used_at', 'text')
+    .addColumn('is_verified', 'integer', (col) =>
+      col.notNull().defaultTo(0).check(sql`is_verified IN (0, 1)`)
+    )
+    .addColumn('verified_at', 'text')
+    .addColumn('created_at', 'text', (col) => col.notNull().defaultTo(ISO_TIMESTAMP))
+    .addColumn('updated_at', 'text')
     .modifyEnd(sql`STRICT`)
     .execute()
 
-  // Indexes for two_factor table
-  await db.schema.createIndex('two_factor_user_id_idx').on('two_factor').column('user_id').execute()
+  // Indexes
+  await db.schema
+    .createIndex('two_factors_user_id_type_idx')
+    .on('two_factors')
+    .columns(['user_id', 'type'])
+    .unique()
+    .execute()
+
+  await db.schema
+    .createIndex('two_factors_user_id_idx')
+    .on('two_factors')
+    .column('user_id')
+    .execute()
 }
 
 export async function down(db: Kysely<Database>): Promise<void> {
-  await db.schema.dropIndex('two_factor_user_id_idx').ifExists().execute()
-  await db.schema.dropTable('two_factor').ifExists().execute()
+  await db.schema.dropIndex('two_factors_user_id_idx').ifExists().execute()
+  await db.schema.dropIndex('two_factors_user_id_type_idx').ifExists().execute()
+  await db.schema.dropTable('two_factors').ifExists().execute()
 }

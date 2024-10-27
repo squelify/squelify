@@ -6,30 +6,49 @@ export async function up(db: Kysely<Database>): Promise<void> {
   await db.schema
     .createTable('invitations')
     .addColumn('id', 'text', (col) => col.primaryKey())
-    .addColumn('organization_id', 'text', (col) => col.notNull().references('organizations.id'))
-    .addColumn('inviter_id', 'text', (col) => col.notNull().references('users.id'))
+    .addColumn('organization_id', 'text', (col) =>
+      col.notNull().references('organizations.id').onDelete('cascade')
+    )
     .addColumn('email', 'text', (col) => col.notNull())
-    .addColumn('role', 'text')
-    .addColumn('status', 'text', (col) => col.notNull())
+    .addColumn('role', 'text', (col) => col.notNull().check(sql`role IN ('admin', 'member')`))
+    .addColumn('token', 'text', (col) => col.notNull().unique())
+    .addColumn('invited_by', 'text', (col) => col.notNull().references('users.id'))
+    .addColumn('status', 'text', (col) =>
+      col
+        .notNull()
+        .defaultTo('pending')
+        .check(sql`status IN ('pending', 'accepted', 'expired', 'revoked')`)
+    )
     .addColumn('expires_at', 'text', (col) => col.notNull())
-    .addColumn('created_at', 'text', (col) => col.defaultTo(ISO_TIMESTAMP).notNull())
+    .addColumn('accepted_at', 'text')
+    .addColumn('metadata', 'text', (col) => col.notNull().defaultTo('{}'))
+    .addColumn('created_at', 'text', (col) => col.notNull().defaultTo(ISO_TIMESTAMP))
+    .addColumn('updated_at', 'text')
     .modifyEnd(sql`STRICT`)
     .execute()
 
-  // Indexes for invitation table
+  // Indexes
   await db.schema
-    .createIndex('invitations_organization_id_idx')
+    .createIndex('invitations_org_email_idx')
     .on('invitations')
-    .column('organization_id')
+    .columns(['organization_id', 'email'])
     .execute()
 
-  await db.schema.createIndex('invitations_email_idx').on('invitations').column('email').execute()
+  await db.schema.createIndex('invitations_token_idx').on('invitations').column('token').execute()
+
   await db.schema.createIndex('invitations_status_idx').on('invitations').column('status').execute()
+
+  await db.schema
+    .createIndex('invitations_expires_at_idx')
+    .on('invitations')
+    .column('expires_at')
+    .execute()
 }
 
 export async function down(db: Kysely<Database>): Promise<void> {
+  await db.schema.dropIndex('invitations_expires_at_idx').ifExists().execute()
   await db.schema.dropIndex('invitations_status_idx').ifExists().execute()
-  await db.schema.dropIndex('invitations_email_idx').ifExists().execute()
-  await db.schema.dropIndex('invitations_organization_id_idx').ifExists().execute()
+  await db.schema.dropIndex('invitations_token_idx').ifExists().execute()
+  await db.schema.dropIndex('invitations_org_email_idx').ifExists().execute()
   await db.schema.dropTable('invitations').ifExists().execute()
 }

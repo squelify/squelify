@@ -6,41 +6,37 @@ export async function up(db: Kysely<Database>): Promise<void> {
   await db.schema
     .createTable('users')
     .addColumn('id', 'text', (col) => col.primaryKey())
-    .addColumn('email', 'text', (col) => col.notNull().unique())
+    .addColumn('username', 'text', (col) => col.unique().check(sql`LENGTH(username) >= 3`))
     .addColumn('first_name', 'text', (col) => col.notNull())
     .addColumn('last_name', 'text')
-    .addColumn('username', 'text', (col) => col.unique().check(sql`LENGTH(username) > 2`))
-    .addColumn('phone_number', 'text', (col) => col.unique().check(sql`LENGTH(phone_number) > 10`))
+    .addColumn('display_name', 'text')
     .addColumn('avatar_url', 'text')
-    .addColumn('two_factor_enabled', 'integer', (col) =>
-      col.notNull().defaultTo(0).check(sql`two_factor_enabled IN (0, 1)`)
-    )
-    .addColumn('is_anonymous', 'integer', (col) =>
-      col.notNull().defaultTo(0).check(sql`is_anonymous IN (0, 1)`)
+    .addColumn('locale', 'text', (col) => col.defaultTo('en'))
+    // Boolean fields using integer (0/1)
+    .addColumn('is_active', 'integer', (col) =>
+      col.notNull().defaultTo(1).check(sql`is_active IN (0, 1)`)
     )
     .addColumn('is_banned', 'integer', (col) =>
       col.notNull().defaultTo(0).check(sql`is_banned IN (0, 1)`)
     )
     .addColumn('ban_reason', 'text')
+    // Dates using ISO8601 string
     .addColumn('banned_until', 'text')
-    .addColumn('email_verified_at', 'text')
-    .addColumn('phone_verified_at', 'text')
-    .addColumn('created_at', 'text', (col) => col.defaultTo(ISO_TIMESTAMP).notNull())
-    .addColumn('updated_at', 'text', (col) => col.defaultTo(ISO_TIMESTAMP).notNull())
+    .addColumn('last_sign_in_at', 'text')
+    .addColumn('created_at', 'text', (col) => col.notNull().defaultTo(ISO_TIMESTAMP))
+    .addColumn('updated_at', 'text')
     .modifyEnd(sql`STRICT`)
     .execute()
 
-  // Indexes for user table
-  await db.schema.createIndex('users_email_idx').on('users').column('email').execute()
-
+  // Indexes
   await db.schema.createIndex('users_username_idx').on('users').column('username').execute()
-
-  await db.schema.createIndex('users_phone_number_idx').on('users').column('phone_number').execute()
+  await db.schema.createIndex('users_is_active_idx').on('users').column('is_active').execute()
+  await db.schema.createIndex('users_created_at_idx').on('users').column('created_at').execute()
 }
 
 export async function down(db: Kysely<Database>): Promise<void> {
-  await db.schema.dropIndex('users_phone_number_idx').ifExists().execute()
+  await db.schema.dropIndex('users_created_at_idx').ifExists().execute()
+  await db.schema.dropIndex('users_is_active_idx').ifExists().execute()
   await db.schema.dropIndex('users_username_idx').ifExists().execute()
-  await db.schema.dropIndex('users_email_idx').ifExists().execute()
   await db.schema.dropTable('users').ifExists().execute()
 }

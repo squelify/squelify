@@ -6,33 +6,38 @@ export async function up(db: Kysely<Database>): Promise<void> {
   await db.schema
     .createTable('accounts')
     .addColumn('id', 'text', (col) => col.primaryKey())
-    .addColumn('user_id', 'text', (col) => col.notNull().references('users.id'))
-    .addColumn('provider_id', 'text', (col) =>
-      col.notNull().check(sql`provider_id IN ('credential', 'google', 'github', 'passkey')`)
+    .addColumn('user_id', 'text', (col) => col.notNull().references('users.id').onDelete('cascade'))
+    .addColumn('provider', 'text', (col) =>
+      col.notNull().check(sql`provider IN ('local', 'google', 'github', 'apple', 'passkey')`)
     )
-    .addColumn('account_id', 'text', (col) => col.notNull()) // userId from provider
-    .addColumn('access_token', 'text') // for credential, google, github, etc
-    .addColumn('refresh_token', 'text') // for credential, google, github, etc
-    .addColumn('id_token', 'text') // for credential, google, github, etc
-    .addColumn('password', 'text')
-    .addColumn('token_expires_at', 'text')
-    .addColumn('created_at', 'text', (col) => col.defaultTo(ISO_TIMESTAMP).notNull())
-    .addColumn('updated_at', 'text', (col) => col.defaultTo(ISO_TIMESTAMP).notNull())
+    .addColumn('provider_account_id', 'text', (col) => col.notNull())
+    .addColumn('provider_refresh_token', 'text')
+    .addColumn('provider_access_token', 'text')
+    .addColumn('provider_id_token', 'text')
+    .addColumn('provider_scope', 'text')
+    .addColumn('provider_token_type', 'text')
+    .addColumn('provider_expires_at', 'text')
+    .addColumn('created_at', 'text', (col) => col.notNull().defaultTo(ISO_TIMESTAMP))
+    .addColumn('updated_at', 'text')
     .modifyEnd(sql`STRICT`)
     .execute()
 
-  // Indexes for account table
+  // Indexes
   await db.schema.createIndex('accounts_user_id_idx').on('accounts').column('user_id').execute()
 
   await db.schema
-    .createIndex('accounts_provider_id_idx')
+    .createIndex('accounts_provider_account_id_idx')
     .on('accounts')
-    .column('provider_id')
+    .columns(['provider', 'provider_account_id'])
+    .unique()
     .execute()
+
+  await db.schema.createIndex('accounts_provider_idx').on('accounts').column('provider').execute()
 }
 
 export async function down(db: Kysely<Database>): Promise<void> {
-  await db.schema.dropIndex('accounts_provider_id_idx').ifExists().execute()
+  await db.schema.dropIndex('accounts_provider_idx').ifExists().execute()
+  await db.schema.dropIndex('accounts_provider_account_id_idx').ifExists().execute()
   await db.schema.dropIndex('accounts_user_id_idx').ifExists().execute()
   await db.schema.dropTable('accounts').ifExists().execute()
 }

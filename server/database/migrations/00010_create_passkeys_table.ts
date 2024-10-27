@@ -4,28 +4,40 @@ import type { Database } from '~/database/db.schema'
 
 export async function up(db: Kysely<Database>): Promise<void> {
   await db.schema
-    .createTable('passkey')
+    .createTable('passkeys')
     .addColumn('id', 'text', (col) => col.primaryKey())
-    .addColumn('user_id', 'text', (col) => col.notNull().references('users.id'))
-    .addColumn('name', 'text')
+    .addColumn('user_id', 'text', (col) => col.notNull().references('users.id').onDelete('cascade'))
+    .addColumn('name', 'text', (col) => col.notNull())
+    .addColumn('credential_id', 'text', (col) => col.notNull().unique())
     .addColumn('public_key', 'text', (col) => col.notNull())
-    .addColumn('webauthn_user_id', 'text', (col) => col.notNull())
-    .addColumn('counter', 'integer', (col) => col.notNull())
-    .addColumn('device_type', 'text', (col) => col.notNull())
-    .addColumn('backed_up', 'integer', (col) => col.notNull().defaultTo(0))
+    .addColumn('sign_count', 'integer', (col) => col.notNull().defaultTo(0))
     .addColumn('transports', 'text')
-    .addColumn('created_at', 'text', (col) => col.defaultTo(ISO_TIMESTAMP).notNull())
-    .addColumn('updated_at', 'text', (col) => col.defaultTo(ISO_TIMESTAMP).notNull())
+    .addColumn('attestation_format', 'text')
+    .addColumn('aaguid', 'text')
+    .addColumn('credential_device_type', 'text', (col) =>
+      col.notNull().check(sql`credential_device_type IN ('platform', 'cross-platform')`)
+    )
+    .addColumn('credential_backed_up', 'integer', (col) =>
+      col.notNull().defaultTo(0).check(sql`credential_backed_up IN (0, 1)`)
+    )
+    .addColumn('last_used_at', 'text')
+    .addColumn('created_at', 'text', (col) => col.notNull().defaultTo(ISO_TIMESTAMP))
+    .addColumn('updated_at', 'text')
     .modifyEnd(sql`STRICT`)
     .execute()
 
-  // Indexes for passkey table
-  await db.schema.createIndex('passkey_user_id_idx').on('passkey').column('user_id').execute()
-  await db.schema.createIndex('passkey_public_key_idx').on('passkey').column('public_key').execute()
+  // Indexes
+  await db.schema.createIndex('passkeys_user_id_idx').on('passkeys').column('user_id').execute()
+
+  await db.schema
+    .createIndex('passkeys_credential_id_idx')
+    .on('passkeys')
+    .column('credential_id')
+    .execute()
 }
 
 export async function down(db: Kysely<Database>): Promise<void> {
-  await db.schema.dropIndex('passkey_public_key_idx').ifExists().execute()
-  await db.schema.dropIndex('passkey_user_id_idx').ifExists().execute()
-  await db.schema.dropTable('passkey').ifExists().execute()
+  await db.schema.dropIndex('passkeys_credential_id_idx').ifExists().execute()
+  await db.schema.dropIndex('passkeys_user_id_idx').ifExists().execute()
+  await db.schema.dropTable('passkeys').ifExists().execute()
 }
