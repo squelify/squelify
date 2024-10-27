@@ -39,7 +39,7 @@ export default async function seed(db: Kysely<Database>): Promise<void> {
 
     // Create admin password
     const passwordId = typeid('pwd').toString()
-    const hashedPassword = await hashPassword('Admin123!')
+    const hashedPassword = await hashPassword('@Passw0rd$123')
     const newPassword: PasswordInsert = {
       id: passwordId,
       userId: userId,
