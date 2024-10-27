@@ -1,4 +1,6 @@
 import { defineCommand, showUsage } from 'citty'
+import consola from 'consola'
+import { runMigration } from '~/database/migratectl/migrator'
 
 export default defineCommand({
   meta: {
@@ -12,11 +14,19 @@ export default defineCommand({
       default: false,
     },
   },
-  run({ args, cmd }) {
-    // Show help page if --help flag is used or no subcommand provided
-    if (args.help || args._.length === 0) {
+  async run({ args, cmd }) {
+    // Show help page if --help flag is used
+    if (args.help) {
       showUsage(cmd)
       return
+    }
+
+    try {
+      consola.info('Running database migration...')
+      await runMigration('migrate')
+    } catch (error) {
+      consola.error(error instanceof Error ? error.message : 'Unknown error occurred')
+      process.exit(1)
     }
   },
 })

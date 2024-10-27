@@ -1,11 +1,9 @@
 import { mkdir, readdir, writeFile } from 'node:fs/promises'
 import { defineCommand, showUsage } from 'citty'
 import consola from 'consola'
-import { fileURLToPath } from 'mlly'
-import { dirname, join } from 'pathe'
+import { join } from 'pathe'
 
-const __dirname = dirname(fileURLToPath(import.meta.url))
-const MIGRATION_FOLDER = join(__dirname, '../../database/migrations')
+const MIGRATION_FOLDER = join(process.cwd(), 'server/database/migrations')
 
 async function isMigrationNameUnique(name: string): Promise<boolean> {
   const files = await readdir(MIGRATION_FOLDER)
@@ -38,6 +36,15 @@ export default defineCommand({
       default: false,
     },
   },
+  async setup() {
+    try {
+      // Create migration folder first
+      await mkdir(MIGRATION_FOLDER, { recursive: true })
+    } catch (error) {
+      consola.error(error instanceof Error ? error.message : 'Unknown error occurred')
+      process.exit(1)
+    }
+  },
   async run({ args, cmd }) {
     // Show help page if --help flag is used or no subcommand provided
     if (args.help || args._.length === 0) {
@@ -46,9 +53,6 @@ export default defineCommand({
     }
 
     try {
-      // Create migration folder first
-      await mkdir(MIGRATION_FOLDER, { recursive: true })
-
       const migrationName = args.name.replace(/[^a-zA-Z0-9_]/g, '_')
       const template = `import type { Kysely } from 'kysely'
 import type { Database } from '~/database/db.schema'

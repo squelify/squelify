@@ -20,13 +20,18 @@ export default defineCommand({
     },
   },
   run({ args }) {
-    const secureKey = generateRandomStr(40)
+    try {
+      const secureKey = generateRandomStr(40)
 
-    if (args.plain) {
-      consola.log(secureKey)
-      return
+      if (args.plain) {
+        consola.log(secureKey)
+        return
+      }
+
+      consola.log(`APP_SECRET_KEY=${secureKey}`)
+    } catch (error) {
+      consola.error(error instanceof Error ? error.message : 'Unknown error occurred')
+      process.exit(1)
     }
-
-    consola.log(`APP_SECRET_KEY=${secureKey}`)
   },
 })

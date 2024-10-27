@@ -1,5 +1,6 @@
 import { createClient } from '@libsql/client'
 import { LibsqlDialect } from '@libsql/kysely-libsql'
+import consola from 'consola'
 import { CamelCasePlugin, Kysely, ParseJSONResultsPlugin } from 'kysely'
 import type { ErrorLogEvent, KyselyConfig, QueryLogEvent } from 'kysely'
 import { join } from 'pathe'
@@ -11,12 +12,6 @@ let dialect: LibsqlDialect
 
 const getDatabaseDialect = () => {
   if (dialect) return dialect
-
-  const dataDir = join(process.cwd(), '_data')
-
-  if (process.argv.length > 2) {
-    console.debug('Data directory:', dataDir)
-  }
 
   /* @ref: https://github.com/tursodatabase/libsql-client-ts */
   const libSQLClient = createClient({

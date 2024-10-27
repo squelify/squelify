@@ -44,7 +44,7 @@ interface DatabaseSeeder {
 export async function runSeeds(): Promise<void> {
   try {
     const seeders: DatabaseSeeder[] = [
-      { name: 'users', seeder: await import('../seeders/00001_user_seed') },
+      { name: 'users', seeder: await import('../seeders/00001_user_seeder') },
       // { name: 'sites', seeder: await import('./seeders/site.seed') },
     ]
 
