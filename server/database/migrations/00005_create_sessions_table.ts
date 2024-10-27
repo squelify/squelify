@@ -1,5 +1,6 @@
 import { type Kysely, sql } from 'kysely'
 import type { Database } from '~/database/db.schema'
+import { ISO_TIMESTAMP } from '../db.helper'
 
 export async function up(db: Kysely<Database>): Promise<void> {
   await db.schema
@@ -11,6 +12,7 @@ export async function up(db: Kysely<Database>): Promise<void> {
     .addColumn('impersonated_by', 'text', (col) => col.references('users.id'))
     .addColumn('active_organization_id', 'text')
     .addColumn('expires_at', 'text', (col) => col.notNull())
+    .addColumn('created_at', 'text', (col) => col.defaultTo(ISO_TIMESTAMP).notNull())
     .modifyEnd(sql`STRICT`)
     .execute()
 

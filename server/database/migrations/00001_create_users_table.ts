@@ -9,12 +9,18 @@ export async function up(db: Kysely<Database>): Promise<void> {
     .addColumn('email', 'text', (col) => col.notNull().unique())
     .addColumn('first_name', 'text', (col) => col.notNull())
     .addColumn('last_name', 'text')
-    .addColumn('username', 'text', (col) => col.unique())
-    .addColumn('phone_number', 'text', (col) => col.unique())
+    .addColumn('username', 'text', (col) => col.unique().check(sql`LENGTH(username) > 2`))
+    .addColumn('phone_number', 'text', (col) => col.unique().check(sql`LENGTH(phone_number) > 10`))
     .addColumn('avatar_url', 'text')
-    .addColumn('two_factor_enabled', 'integer', (col) => col.notNull().defaultTo(0))
-    .addColumn('is_anonymous', 'integer', (col) => col.notNull().defaultTo(0))
-    .addColumn('is_banned', 'integer', (col) => col.notNull().defaultTo(0))
+    .addColumn('two_factor_enabled', 'integer', (col) =>
+      col.notNull().defaultTo(0).check(sql`two_factor_enabled IN (0, 1)`)
+    )
+    .addColumn('is_anonymous', 'integer', (col) =>
+      col.notNull().defaultTo(0).check(sql`is_anonymous IN (0, 1)`)
+    )
+    .addColumn('is_banned', 'integer', (col) =>
+      col.notNull().defaultTo(0).check(sql`is_banned IN (0, 1)`)
+    )
     .addColumn('ban_reason', 'text')
     .addColumn('banned_until', 'text')
     .addColumn('email_verified_at', 'text')
