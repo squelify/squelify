@@ -1,3 +1,4 @@
+import 'dotenv/config'
 import { defineCommand, runMain, showUsage } from 'citty'
 import pkg from '~~/package.json' assert { type: 'json' }
 

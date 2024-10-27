@@ -1,6 +1,6 @@
 import { defineCommand, showUsage } from 'citty'
 import consola from 'consola'
-import { runMigration, runSeeds } from '~/database/migratectl/migrator'
+import { runSeeds } from '~/database/migrator'
 
 export default defineCommand({
   meta: {

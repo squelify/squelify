@@ -1,17 +1,14 @@
-import 'dotenv/config'
 import { Kysely, Migrator, NO_MIGRATIONS } from 'kysely'
-import { fileURLToPath } from 'mlly'
-import { dirname, join } from 'pathe'
+import { join } from 'pathe'
 import { env } from 'std-env'
 import { kyselyConfig } from '~/database/db.client'
 import type { Database } from '~/database/db.schema'
-import { AutomaticMigrateProvider, ESMFileMigrationProvider } from '~/database/migratectl/provider'
+import { AutomaticMigrateProvider, ESMFileMigrationProvider } from '~/database/provider'
 
 const isRunningFromCLI = (): boolean => process.argv.length > 2
 
-const __dirname = dirname(fileURLToPath(import.meta.url))
-export const MIGRATION_FOLDER = join(__dirname, '../migrations')
-export const SEEDER_FOLDER = join(__dirname, '../seeders')
+export const MIGRATION_FOLDER = join(process.cwd(), 'server/database/migrations')
+export const SEEDER_FOLDER = join(process.cwd(), 'server/database/seeders')
 
 type MigrationAction = 'migrate' | 'rollback' | 'reset'
 
@@ -44,7 +41,7 @@ interface DatabaseSeeder {
 export async function runSeeds(): Promise<void> {
   try {
     const seeders: DatabaseSeeder[] = [
-      { name: 'users', seeder: await import('../seeders/00001_user_seeder') },
+      { name: 'users', seeder: await import('./seeders/00001_user_seeder') },
       // { name: 'sites', seeder: await import('./seeders/site.seed') },
     ]
 

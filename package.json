@@ -23,14 +23,6 @@
         "start": "node --env-file .env .output/server/index.mjs",
         "prepare": "nitro prepare && pnpm dlx make-dir-cli _data --mode=0755",
         "app": "tsx -r dotenv/config ./server/cmd/index.ts",
-        "db:migrate": "tsx -r dotenv/config ./server/database/migratectl/cli.ts migrate",
-        "db:reset": "tsx -r dotenv/config ./server/database/migratectl/cli.ts reset",
-        "db:rollback": "tsx -r dotenv/config ./server/database/migratectl/cli.ts rollback",
-        "db:seed": "tsx -r dotenv/config ./server/database/migratectl/cli.ts seed",
-        "db:generate": "tsx -r dotenv/config ./server/database/migratectl/cli.ts generate",
-        "make:migration": "tsx -r dotenv/config ./server/database/migratectl/cli.ts make-migration",
-        "make:seeder": "tsx -r dotenv/config ./server/database/migratectl/cli.ts make-seeder",
-        "make:changelog": "git-cliff -o CHANGELOG.md -c cliff-full.toml",
         "docker:build": "docker build -f Dockerfile . -t $npm_package_name:latest -t $npm_package_name:$npm_package_version",
         "docker:images": "docker image list --filter reference=$npm_package_name:$npm_package_version --filter reference=$npm_package_name:latest",
         "docker:run": "pnpm --silent run dockerx --name $npm_package_name $npm_package_name:$npm_package_version",
@@ -46,6 +38,7 @@
         "cleanup": "pnpm run --stream --parallel --color \"/cleanup:(?!deps)/\"",
         "cleanup:dev": "pnpm dlx rimraf .{output,client,build,data,dist,nitro,wrangler} _data",
         "cleanup:deps": "pnpm dlx rimraf pnpm-lock.yaml node_modules tests-results",
+        "changelog-full": "git-cliff -o CHANGELOG.md -c cliff-full.toml",
         "typecheck": "tsc -b"
     },
     "dependencies": {

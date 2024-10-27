@@ -2,8 +2,7 @@ import { mkdir, readdir, writeFile } from 'node:fs/promises'
 import { defineCommand, showUsage } from 'citty'
 import consola from 'consola'
 import { join } from 'pathe'
-
-const SEEDER_FOLDER = join(process.cwd(), 'server/database/seeders')
+import { SEEDER_FOLDER } from '~/database/migrator'
 
 async function isSeederNameUnique(name: string): Promise<boolean> {
   const files = await readdir(SEEDER_FOLDER)

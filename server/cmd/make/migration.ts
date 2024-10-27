@@ -2,8 +2,7 @@ import { mkdir, readdir, writeFile } from 'node:fs/promises'
 import { defineCommand, showUsage } from 'citty'
 import consola from 'consola'
 import { join } from 'pathe'
-
-const MIGRATION_FOLDER = join(process.cwd(), 'server/database/migrations')
+import { MIGRATION_FOLDER } from '~/database/migrator'
 
 async function isMigrationNameUnique(name: string): Promise<boolean> {
   const files = await readdir(MIGRATION_FOLDER)
