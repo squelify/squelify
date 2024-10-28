@@ -1,4 +1,4 @@
-import { type Kysely, sql } from 'kysely'
+import { type Kysely } from 'kysely'
 import { typeid } from 'typeid-js'
 import type { Database } from '../db.schema'
 import type { JWKInsert, JWKSelect } from '../schemas/jwk'
@@ -8,7 +8,7 @@ import type { JWKInsert, JWKSelect } from '../schemas/jwk'
  * Returns active key or null if no active key exists
  */
 export async function getActiveJWK(db: Kysely<Database>): Promise<Partial<JWKSelect> | null> {
-  const now = new Date().toISOString()
+  const now = Math.floor(Date.now() / 1000)
 
   const activeKey = await db
     .selectFrom('jwks')
@@ -25,13 +25,15 @@ export async function getActiveJWK(db: Kysely<Database>): Promise<Partial<JWKSel
  * Generates new key pair and sets it as active
  */
 export async function createJWK(db: Kysely<Database>, keyPair: JWKInsert) {
+  const now = Math.floor(Date.now() / 1000)
+
   return await db
     .insertInto('jwks')
     .values({
       id: typeid('jwk').toString(),
       ...keyPair,
       isActive: 1,
-      createdAt: new Date().toISOString(),
+      createdAt: now,
     })
     .returningAll()
     .executeTakeFirst()

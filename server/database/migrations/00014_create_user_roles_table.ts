@@ -1,5 +1,5 @@
 import { type Kysely, sql } from 'kysely'
-import { ISO_TIMESTAMP } from '~/database/db.helper'
+import { UNIX_TIMESTAMP } from '~/database/db.helper'
 import type { Database } from '~/database/db.schema'
 
 export async function up(db: Kysely<Database>): Promise<void> {
@@ -12,9 +12,9 @@ export async function up(db: Kysely<Database>): Promise<void> {
       col.references('organizations.id').onDelete('cascade')
     )
     .addColumn('granted_by', 'text', (col) => col.references('users.id'))
-    .addColumn('expires_at', 'text')
-    .addColumn('created_at', 'text', (col) => col.notNull().defaultTo(ISO_TIMESTAMP))
-    .addColumn('updated_at', 'text')
+    .addColumn('expires_at', 'integer')
+    .addColumn('created_at', 'integer', (col) => col.notNull().defaultTo(UNIX_TIMESTAMP))
+    .addColumn('updated_at', 'integer')
     .modifyEnd(sql`STRICT`)
     .execute()
 
@@ -27,9 +27,7 @@ export async function up(db: Kysely<Database>): Promise<void> {
     .execute()
 
   await db.schema.createIndex('user_roles_user_id_idx').on('user_roles').column('user_id').execute()
-
   await db.schema.createIndex('user_roles_role_id_idx').on('user_roles').column('role_id').execute()
-
   await db.schema
     .createIndex('user_roles_organization_id_idx')
     .on('user_roles')

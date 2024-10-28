@@ -1,7 +1,6 @@
 import type { Insertable, Selectable, Updateable } from 'kysely'
 import type { ColumnType, Generated } from 'kysely'
 import { z } from 'zod'
-import { booleanSchema, timestampSchema } from '~/database/db.helper'
 
 // User schema with validation rules
 export const UserSchema = z.object({
@@ -11,13 +10,13 @@ export const UserSchema = z.object({
   username: z.string().nullable(),
   avatarUrl: z.string().url().nullable(),
   locale: z.string().default('en'),
-  isActive: booleanSchema.default(1),
-  isBanned: booleanSchema.default(0),
+  isActive: z.number().min(0).max(1).default(1),
+  isBanned: z.number().min(0).max(1).default(0),
   banReason: z.string().nullable(),
-  bannedUntil: timestampSchema.nullable(),
-  lastSignInAt: timestampSchema.nullable(),
-  createdAt: timestampSchema,
-  updatedAt: timestampSchema.nullable(),
+  bannedUntil: z.number().nullable(),
+  lastSignInAt: z.number().nullable(),
+  createdAt: z.number(),
+  updatedAt: z.number().nullable(),
 })
 
 // Database interface for Kysely
@@ -31,10 +30,10 @@ export interface User {
   isActive: ColumnType<number>
   isBanned: ColumnType<number>
   banReason: ColumnType<string | null>
-  bannedUntil: ColumnType<Date, string | null, never>
-  lastSignInAt: ColumnType<Date, string | null, never>
-  createdAt: ColumnType<Date, string | undefined, never>
-  updatedAt: ColumnType<Date, string | undefined, never>
+  bannedUntil: ColumnType<number | null>
+  lastSignInAt: ColumnType<number | null>
+  createdAt: ColumnType<number>
+  updatedAt: ColumnType<number | null>
 }
 
 // Kysely types for operations

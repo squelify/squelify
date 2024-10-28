@@ -4,12 +4,14 @@ export default defineEventHandler(async (event) => {
   const db = event.context.db
   const { refreshToken } = await readBody(event)
 
+  const now = Math.floor(Date.now() / 1000)
+
   // Get session by refresh token
   const session = await db
     .selectFrom('sessions')
     .where('refreshToken', '=', refreshToken)
     .where('isActive', '=', 1)
-    .where('expiresAt', '>', new Date().toISOString())
+    .where('expiresAt', '>', now)
     .select(['id', 'userId', 'keyId'])
     .executeTakeFirst()
 

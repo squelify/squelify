@@ -1,5 +1,5 @@
 import { type Kysely, sql } from 'kysely'
-import { ISO_TIMESTAMP } from '~/database/db.helper'
+import { UNIX_TIMESTAMP } from '~/database/db.helper'
 import type { Database } from '~/database/db.schema'
 
 export async function up(db: Kysely<Database>): Promise<void> {
@@ -12,16 +12,15 @@ export async function up(db: Kysely<Database>): Promise<void> {
       col.notNull().defaultTo('argon2id').check(sql`algorithm IN ('argon2id', 'bcrypt', 'scrypt')`)
     )
     .addColumn('reset_token', 'text')
-    .addColumn('reset_token_expires_at', 'text')
-    .addColumn('last_changed_at', 'text')
-    .addColumn('created_at', 'text', (col) => col.notNull().defaultTo(ISO_TIMESTAMP))
-    .addColumn('updated_at', 'text')
+    .addColumn('reset_token_expires_at', 'integer')
+    .addColumn('last_changed_at', 'integer')
+    .addColumn('created_at', 'integer', (col) => col.notNull().defaultTo(UNIX_TIMESTAMP))
+    .addColumn('updated_at', 'integer')
     .modifyEnd(sql`STRICT`)
     .execute()
 
   // Indexes
   await db.schema.createIndex('passwords_user_id_idx').on('passwords').column('user_id').execute()
-
   await db.schema
     .createIndex('passwords_reset_token_idx')
     .on('passwords')

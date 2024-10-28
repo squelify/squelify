@@ -1,5 +1,5 @@
 import { type Kysely, sql } from 'kysely'
-import { ISO_TIMESTAMP } from '~/database/db.helper'
+import { UNIX_TIMESTAMP } from '~/database/db.helper'
 import type { Database } from '~/database/db.schema'
 
 export async function up(db: Kysely<Database>): Promise<void> {
@@ -10,13 +10,13 @@ export async function up(db: Kysely<Database>): Promise<void> {
     .addColumn('type', 'text', (col) => col.notNull().check(sql`type IN ('totp', 'email', 'sms')`))
     .addColumn('secret', 'text', (col) => col.notNull())
     .addColumn('backup_codes', 'text', (col) => col.notNull().defaultTo('[]'))
-    .addColumn('last_used_at', 'text')
+    .addColumn('last_used_at', 'integer')
     .addColumn('is_verified', 'integer', (col) =>
       col.notNull().defaultTo(0).check(sql`is_verified IN (0, 1)`)
     )
-    .addColumn('verified_at', 'text')
-    .addColumn('created_at', 'text', (col) => col.notNull().defaultTo(ISO_TIMESTAMP))
-    .addColumn('updated_at', 'text')
+    .addColumn('verified_at', 'integer')
+    .addColumn('created_at', 'integer', (col) => col.notNull().defaultTo(UNIX_TIMESTAMP))
+    .addColumn('updated_at', 'integer')
     .modifyEnd(sql`STRICT`)
     .execute()
 

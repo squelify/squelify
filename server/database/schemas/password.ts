@@ -1,7 +1,6 @@
 import type { Insertable, Selectable, Updateable } from 'kysely'
 import type { ColumnType, Generated } from 'kysely'
 import { z } from 'zod'
-import { timestampSchema } from '~/database/db.helper'
 
 const passwordAlgorithmEnum = z.enum(['argon2id', 'bcrypt', 'scrypt'])
 export type PasswordAlgorithm = z.infer<typeof passwordAlgorithmEnum>
@@ -13,10 +12,10 @@ export const PasswordSchema = z.object({
   hash: z.string(),
   algorithm: passwordAlgorithmEnum.default('argon2id'),
   resetToken: z.string().nullable(),
-  resetTokenExpiresAt: timestampSchema.nullable(),
-  lastChangedAt: timestampSchema.nullable(),
-  createdAt: timestampSchema,
-  updatedAt: timestampSchema.nullable(),
+  resetTokenExpiresAt: z.number().nullable(),
+  lastChangedAt: z.number().nullable(),
+  createdAt: z.number(),
+  updatedAt: z.number().nullable(),
 })
 
 // Database interface for Kysely
@@ -26,10 +25,10 @@ export interface Password {
   hash: ColumnType<string>
   algorithm: ColumnType<PasswordAlgorithm>
   resetToken: ColumnType<string | null>
-  resetTokenExpiresAt: ColumnType<Date, string | null, never>
-  lastChangedAt: ColumnType<Date, string | null, never>
-  createdAt: ColumnType<Date, string | undefined, never>
-  updatedAt: ColumnType<Date, string | undefined, never>
+  resetTokenExpiresAt: ColumnType<number | null>
+  lastChangedAt: ColumnType<number | null>
+  createdAt: ColumnType<number>
+  updatedAt: ColumnType<number | null>
 }
 
 // Kysely types for operations

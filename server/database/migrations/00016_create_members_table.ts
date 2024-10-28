@@ -1,5 +1,5 @@
 import { type Kysely, sql } from 'kysely'
-import { ISO_TIMESTAMP } from '~/database/db.helper'
+import { UNIX_TIMESTAMP } from '~/database/db.helper'
 import type { Database } from '~/database/db.schema'
 
 export async function up(db: Kysely<Database>): Promise<void> {
@@ -16,13 +16,13 @@ export async function up(db: Kysely<Database>): Promise<void> {
     .addColumn('title', 'text')
     .addColumn('department', 'text')
     .addColumn('invited_by', 'text', (col) => col.references('users.id'))
-    .addColumn('invited_at', 'text')
-    .addColumn('joined_at', 'text')
+    .addColumn('invited_at', 'integer')
+    .addColumn('joined_at', 'integer')
     .addColumn('is_default', 'integer', (col) =>
       col.notNull().defaultTo(0).check(sql`is_default IN (0, 1)`)
     )
-    .addColumn('created_at', 'text', (col) => col.notNull().defaultTo(ISO_TIMESTAMP))
-    .addColumn('updated_at', 'text')
+    .addColumn('created_at', 'integer', (col) => col.notNull().defaultTo(UNIX_TIMESTAMP))
+    .addColumn('updated_at', 'integer')
     .modifyEnd(sql`STRICT`)
     .execute()
 
@@ -41,7 +41,6 @@ export async function up(db: Kysely<Database>): Promise<void> {
     .execute()
 
   await db.schema.createIndex('members_user_id_idx').on('members').column('user_id').execute()
-
   await db.schema.createIndex('members_role_idx').on('members').column('role').execute()
 }
 

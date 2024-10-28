@@ -1,7 +1,6 @@
 import type { Insertable, Selectable, Updateable } from 'kysely'
 import type { ColumnType, Generated } from 'kysely'
 import { z } from 'zod'
-import { booleanSchema, timestampSchema } from '~/database/db.helper'
 
 const twoFactorTypeEnum = z.enum(['totp', 'email', 'sms'])
 export type TwoFactorType = z.infer<typeof twoFactorTypeEnum>
@@ -13,11 +12,11 @@ export const TwoFactorSchema = z.object({
   type: twoFactorTypeEnum,
   secret: z.string(),
   backupCodes: z.string().default('[]'),
-  lastUsedAt: timestampSchema.nullable(),
-  isVerified: booleanSchema.default(0),
-  verifiedAt: timestampSchema.nullable(),
-  createdAt: timestampSchema,
-  updatedAt: timestampSchema.nullable(),
+  lastUsedAt: z.number().nullable(),
+  isVerified: z.number().min(0).max(1).default(0),
+  verifiedAt: z.number().nullable(),
+  createdAt: z.number(),
+  updatedAt: z.number().nullable(),
 })
 
 // Database interface for Kysely
@@ -27,11 +26,11 @@ export interface TwoFactor {
   type: ColumnType<TwoFactorType>
   secret: ColumnType<string>
   backupCodes: ColumnType<string>
-  lastUsedAt: ColumnType<Date, string | null, never>
+  lastUsedAt: ColumnType<number | null>
   isVerified: ColumnType<number>
-  verifiedAt: ColumnType<Date, string | null, never>
-  createdAt: ColumnType<Date, string | undefined, never>
-  updatedAt: ColumnType<Date, string | undefined, never>
+  verifiedAt: ColumnType<number | null>
+  createdAt: ColumnType<number>
+  updatedAt: ColumnType<number | null>
 }
 
 // Kysely types for operations

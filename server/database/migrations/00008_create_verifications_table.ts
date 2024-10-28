@@ -1,5 +1,5 @@
 import { type Kysely, sql } from 'kysely'
-import { ISO_TIMESTAMP } from '~/database/db.helper'
+import { UNIX_TIMESTAMP } from '~/database/db.helper'
 import type { Database } from '~/database/db.schema'
 
 export async function up(db: Kysely<Database>): Promise<void> {
@@ -14,10 +14,10 @@ export async function up(db: Kysely<Database>): Promise<void> {
     .addColumn('token', 'text', (col) => col.notNull())
     .addColumn('attempts', 'integer', (col) => col.notNull().defaultTo(0))
     .addColumn('max_attempts', 'integer', (col) => col.notNull().defaultTo(3))
-    .addColumn('expires_at', 'text', (col) => col.notNull())
-    .addColumn('verified_at', 'text')
-    .addColumn('created_at', 'text', (col) => col.notNull().defaultTo(ISO_TIMESTAMP))
-    .addColumn('updated_at', 'text')
+    .addColumn('expires_at', 'integer', (col) => col.notNull())
+    .addColumn('verified_at', 'integer')
+    .addColumn('created_at', 'integer', (col) => col.notNull().defaultTo(UNIX_TIMESTAMP))
+    .addColumn('updated_at', 'integer')
     .modifyEnd(sql`STRICT`)
     .execute()
 

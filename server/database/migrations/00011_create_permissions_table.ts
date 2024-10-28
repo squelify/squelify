@@ -1,5 +1,5 @@
 import { type Kysely, sql } from 'kysely'
-import { ISO_TIMESTAMP } from '~/database/db.helper'
+import { UNIX_TIMESTAMP } from '~/database/db.helper'
 import type { Database } from '~/database/db.schema'
 
 export async function up(db: Kysely<Database>): Promise<void> {
@@ -16,20 +16,18 @@ export async function up(db: Kysely<Database>): Promise<void> {
     )
     .addColumn('resource', 'text', (col) => col.notNull())
     .addColumn('conditions', 'text', (col) => col.notNull().defaultTo('{}'))
-    .addColumn('created_at', 'text', (col) => col.notNull().defaultTo(ISO_TIMESTAMP))
-    .addColumn('updated_at', 'text')
+    .addColumn('created_at', 'integer', (col) => col.notNull().defaultTo(UNIX_TIMESTAMP))
+    .addColumn('updated_at', 'integer')
     .modifyEnd(sql`STRICT`)
     .execute()
 
   // Indexes
   await db.schema.createIndex('permissions_name_idx').on('permissions').column('name').execute()
-
   await db.schema
     .createIndex('permissions_category_idx')
     .on('permissions')
     .column('category')
     .execute()
-
   await db.schema
     .createIndex('permissions_resource_action_idx')
     .on('permissions')

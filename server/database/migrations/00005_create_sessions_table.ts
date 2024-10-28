@@ -1,5 +1,5 @@
 import { type Kysely, sql } from 'kysely'
-import { ISO_TIMESTAMP } from '~/database/db.helper'
+import { UNIX_TIMESTAMP } from '~/database/db.helper'
 import type { Database } from '~/database/db.schema'
 
 export async function up(db: Kysely<Database>): Promise<void> {
@@ -17,29 +17,26 @@ export async function up(db: Kysely<Database>): Promise<void> {
     .addColumn('is_active', 'integer', (col) =>
       col.notNull().defaultTo(1).check(sql`is_active IN (0, 1)`)
     )
-    .addColumn('expires_at', 'text', (col) => col.notNull())
-    .addColumn('last_active_at', 'text')
-    .addColumn('created_at', 'text', (col) => col.notNull().defaultTo(ISO_TIMESTAMP))
-    .addColumn('updated_at', 'text')
+    .addColumn('expires_at', 'integer', (col) => col.notNull())
+    .addColumn('last_active_at', 'integer')
+    .addColumn('created_at', 'integer', (col) => col.notNull().defaultTo(UNIX_TIMESTAMP))
+    .addColumn('updated_at', 'integer')
     .modifyEnd(sql`STRICT`)
     .execute()
 
   // Indexes
   await db.schema.createIndex('sessions_user_id_idx').on('sessions').column('user_id').execute()
-
   await db.schema
     .createIndex('sessions_refresh_token_idx')
     .on('sessions')
     .column('refresh_token')
     .unique()
     .execute()
-
   await db.schema
     .createIndex('sessions_expires_at_idx')
     .on('sessions')
     .column('expires_at')
     .execute()
-
   await db.schema.createIndex('sessions_device_id_idx').on('sessions').column('device_id').execute()
 }
 

@@ -1,7 +1,6 @@
 import type { Insertable, Selectable, Updateable } from 'kysely'
 import type { ColumnType, Generated } from 'kysely'
 import { z } from 'zod'
-import { timestampSchema } from '~/database/db.helper'
 
 const permissionCategoryEnum = z.enum(['system', 'user', 'organization', 'content'])
 export type PermissionCategory = z.infer<typeof permissionCategoryEnum>
@@ -18,8 +17,8 @@ export const PermissionSchema = z.object({
   action: permissionActionEnum,
   resource: z.string(),
   conditions: z.string().default('{}'),
-  createdAt: timestampSchema,
-  updatedAt: timestampSchema.nullable(),
+  createdAt: z.number(),
+  updatedAt: z.number().nullable(),
 })
 
 // Database interface for Kysely
@@ -31,8 +30,8 @@ export interface Permission {
   action: ColumnType<PermissionAction>
   resource: ColumnType<string>
   conditions: ColumnType<string>
-  createdAt: ColumnType<Date, string | undefined, never>
-  updatedAt: ColumnType<Date, string | undefined, never>
+  createdAt: ColumnType<number>
+  updatedAt: ColumnType<number | null>
 }
 
 // Kysely types for operations

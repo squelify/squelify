@@ -1,5 +1,5 @@
 import { type Kysely, sql } from 'kysely'
-import { ISO_TIMESTAMP } from '~/database/db.helper'
+import { UNIX_TIMESTAMP } from '~/database/db.helper'
 import type { Database } from '~/database/db.schema'
 
 export async function up(db: Kysely<Database>): Promise<void> {
@@ -10,22 +10,30 @@ export async function up(db: Kysely<Database>): Promise<void> {
     .addColumn('public_key', 'text', (col) => col.notNull())
     .addColumn('private_key', 'text', (col) => col.notNull())
     .addColumn('algorithm', 'text', (col) =>
-      col.notNull().defaultTo('RS256').check(sql`algorithm IN ('RS256', 'ES256')`)
+      col
+        .notNull()
+        .defaultTo('RS256')
+        .check(
+          sql`algorithm IN (
+          'RS256', 'RS384', 'RS512',
+          'PS256', 'PS384', 'PS512',
+          'ES256', 'ES384', 'ES512',
+          'EdDSA'
+        )`
+        )
     )
     .addColumn('is_active', 'integer', (col) =>
       col.notNull().defaultTo(1).check(sql`is_active IN (0, 1)`)
     )
-    .addColumn('expires_at', 'text')
-    .addColumn('created_at', 'text', (col) => col.notNull().defaultTo(ISO_TIMESTAMP))
-    .addColumn('updated_at', 'text')
+    .addColumn('expires_at', 'integer', (col) => col.notNull())
+    .addColumn('created_at', 'integer', (col) => col.notNull().defaultTo(UNIX_TIMESTAMP))
+    .addColumn('updated_at', 'integer')
     .modifyEnd(sql`STRICT`)
     .execute()
 
   // Indexes
   await db.schema.createIndex('jwks_key_id_idx').on('jwks').column('key_id').execute()
-
   await db.schema.createIndex('jwks_is_active_idx').on('jwks').column('is_active').execute()
-
   await db.schema.createIndex('jwks_expires_at_idx').on('jwks').column('expires_at').execute()
 }
 

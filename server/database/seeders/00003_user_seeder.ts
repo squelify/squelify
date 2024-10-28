@@ -12,7 +12,7 @@ import { hashPassword } from '~/utils/string'
 
 export default async function seed(db: Kysely<Database>): Promise<void> {
   await db.transaction().execute(async (trx) => {
-    const now = new Date().toISOString()
+    const now = Math.floor(Date.now() / 1000)
 
     // Create admin user
     const userId = typeid('user').toString()
@@ -56,6 +56,8 @@ export default async function seed(db: Kysely<Database>): Promise<void> {
       name: 'Root Organization',
       slug: 'root-org',
       isVerified: 1,
+      settings: '{}',
+      metadata: '{}',
       createdAt: now,
     }
 

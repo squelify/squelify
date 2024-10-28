@@ -1,7 +1,6 @@
 import type { Insertable, Selectable, Updateable } from 'kysely'
 import type { ColumnType, Generated } from 'kysely'
 import { z } from 'zod'
-import { booleanSchema, timestampSchema } from '~/database/db.helper'
 
 const roleTypeEnum = z.enum(['system', 'organization', 'custom'])
 export type RoleType = z.infer<typeof roleTypeEnum>
@@ -13,10 +12,10 @@ export const RoleSchema = z.object({
   description: z.string().nullable(),
   type: roleTypeEnum,
   organizationId: z.string().nullable(),
-  isDefault: booleanSchema.default(0),
+  isDefault: z.number().min(0).max(1).default(0),
   metadata: z.string().default('{}'),
-  createdAt: timestampSchema,
-  updatedAt: timestampSchema.nullable(),
+  createdAt: z.number(),
+  updatedAt: z.number().nullable(),
 })
 
 // Database interface for Kysely
@@ -28,8 +27,8 @@ export interface Role {
   organizationId: ColumnType<string | null>
   isDefault: ColumnType<number>
   metadata: ColumnType<string>
-  createdAt: ColumnType<Date, string | undefined, never>
-  updatedAt: ColumnType<Date, string | undefined, never>
+  createdAt: ColumnType<number>
+  updatedAt: ColumnType<number | null>
 }
 
 // Kysely types for operations

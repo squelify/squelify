@@ -1,7 +1,6 @@
 import type { Insertable, Selectable, Updateable } from 'kysely'
 import type { ColumnType, Generated } from 'kysely'
 import { z } from 'zod'
-import { timestampSchema } from '~/database/db.helper'
 
 const invitationRoleEnum = z.enum(['admin', 'member'])
 export type InvitationRole = z.infer<typeof invitationRoleEnum>
@@ -13,32 +12,32 @@ export type InvitationStatus = z.infer<typeof invitationStatusEnum>
 export const InvitationSchema = z.object({
   id: z.string(),
   organizationId: z.string(),
-  inviterId: z.string(),
   email: z.string().email(),
   role: invitationRoleEnum,
-  status: invitationStatusEnum.default('pending'),
   token: z.string(),
-  expiresAt: timestampSchema,
-  acceptedAt: timestampSchema.nullable(),
+  invitedBy: z.string(),
+  status: invitationStatusEnum.default('pending'),
+  expiresAt: z.number(),
+  acceptedAt: z.number().nullable(),
   metadata: z.string().default('{}'),
-  createdAt: timestampSchema,
-  updatedAt: timestampSchema.nullable(),
+  createdAt: z.number(),
+  updatedAt: z.number().nullable(),
 })
 
 // Database interface for Kysely
 export interface Invitation {
   id: Generated<string>
   organizationId: ColumnType<string>
-  inviterId: ColumnType<string>
   email: ColumnType<string>
   role: ColumnType<InvitationRole>
-  status: ColumnType<InvitationStatus>
   token: ColumnType<string>
-  expiresAt: ColumnType<Date, string, never>
-  acceptedAt: ColumnType<Date, string | null, never>
+  invitedBy: ColumnType<string>
+  status: ColumnType<InvitationStatus>
+  expiresAt: ColumnType<number>
+  acceptedAt: ColumnType<number | null>
   metadata: ColumnType<string>
-  createdAt: ColumnType<Date, string | undefined, never>
-  updatedAt: ColumnType<Date, string | undefined, never>
+  createdAt: ColumnType<number>
+  updatedAt: ColumnType<number | null>
 }
 
 // Kysely types for operations

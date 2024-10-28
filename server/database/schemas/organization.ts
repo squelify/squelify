@@ -1,7 +1,6 @@
 import type { Insertable, Selectable, Updateable } from 'kysely'
 import type { ColumnType, Generated } from 'kysely'
 import { z } from 'zod'
-import { booleanSchema, timestampSchema } from '~/database/db.helper'
 
 const organizationStatusEnum = z.enum(['active', 'inactive', 'suspended'])
 export type OrganizationStatus = z.infer<typeof organizationStatusEnum>
@@ -20,9 +19,9 @@ export const OrganizationSchema = z.object({
   status: organizationStatusEnum.default('active'),
   settings: z.string().default('{}'),
   metadata: z.string().default('{}'),
-  isVerified: booleanSchema.default(0),
-  createdAt: timestampSchema,
-  updatedAt: timestampSchema.nullable(),
+  isVerified: z.number().min(0).max(1).default(0),
+  createdAt: z.number(),
+  updatedAt: z.number().nullable(),
 })
 
 // Database interface for Kysely
@@ -40,8 +39,8 @@ export interface Organization {
   settings: ColumnType<string>
   metadata: ColumnType<string>
   isVerified: ColumnType<number>
-  createdAt: ColumnType<Date, string | undefined, never>
-  updatedAt: ColumnType<Date, string | undefined, never>
+  createdAt: ColumnType<number>
+  updatedAt: ColumnType<number | null>
 }
 
 // Kysely types for operations

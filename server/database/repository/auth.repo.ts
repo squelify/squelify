@@ -42,28 +42,32 @@ export async function verifyUserCredentials(db: Kysely<Database>, email: string,
 
 /**
  * Create new session for authenticated user
- * Handles session creation with device tracking and key tracking
+ * Handles session creation with device tracking and metadata
  */
 export async function createUserSession(
   db: Kysely<Database>,
   userId: string,
   options: CreateSessionOptions
 ) {
+  const now = Math.floor(Date.now() / 1000)
+  const expiresAt = now + 7 * 24 * 60 * 60 // 7 days
+
   const session = await db
     .insertInto('sessions')
     .values({
       id: typeid('sess').toString(),
       userId,
+      keyId: options.keyId,
       refreshToken: typeid('tok').toString(),
       ipAddress: options.ipAddress,
       userAgent: options.userAgent,
       deviceId: options.deviceId,
       deviceType: options.deviceType,
       location: options.location,
-      keyId: options.keyId,
       isActive: 1,
-      expiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString(),
-      lastActiveAt: new Date().toISOString(),
+      expiresAt,
+      lastActiveAt: now,
+      createdAt: now,
     })
     .returningAll()
     .executeTakeFirst()

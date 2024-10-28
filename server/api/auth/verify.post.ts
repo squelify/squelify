@@ -14,10 +14,14 @@ export default defineEventHandler(async (event) => {
     return createErrorResponse(401, 'Invalid token format')
   }
 
+  const now = Math.floor(Date.now() / 1000)
+
   // Get JWK used for signing
   const jwk = await db
     .selectFrom('jwks')
     .where('keyId', '=', decoded.kid)
+    .where('isActive', '=', 1)
+    .where('expiresAt', '>', now)
     .select(['keyId', 'publicKey', 'algorithm'])
     .executeTakeFirst()
 

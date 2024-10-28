@@ -1,7 +1,6 @@
 import type { Insertable, Selectable, Updateable } from 'kysely'
 import type { ColumnType, Generated } from 'kysely'
 import { z } from 'zod'
-import { timestampSchema } from '~/database/db.helper'
 
 const accountProviderEnum = z.enum(['local', 'google', 'github', 'apple', 'passkey'])
 export type AccountProvider = z.infer<typeof accountProviderEnum>
@@ -17,9 +16,9 @@ export const AccountSchema = z.object({
   providerIdToken: z.string().nullable(),
   providerScope: z.string().nullable(),
   providerTokenType: z.string().nullable(),
-  providerExpiresAt: timestampSchema.nullable(),
-  createdAt: timestampSchema,
-  updatedAt: timestampSchema.nullable(),
+  providerExpiresAt: z.number().nullable(),
+  createdAt: z.number(),
+  updatedAt: z.number().nullable(),
 })
 
 // Database interface for Kysely
@@ -33,9 +32,9 @@ export interface Account {
   providerIdToken: ColumnType<string | null>
   providerScope: ColumnType<string | null>
   providerTokenType: ColumnType<string | null>
-  providerExpiresAt: ColumnType<Date, string | null, never>
-  createdAt: ColumnType<Date, string | undefined, never>
-  updatedAt: ColumnType<Date, string | undefined, never>
+  providerExpiresAt: ColumnType<number | null>
+  createdAt: ColumnType<number>
+  updatedAt: ColumnType<number | null>
 }
 
 // Kysely types for operations

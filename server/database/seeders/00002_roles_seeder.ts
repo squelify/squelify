@@ -5,7 +5,7 @@ import type { RoleInsert } from '~/database/schemas/role'
 import type { RolePermissionInsert } from '~/database/schemas/role_permission'
 
 export default async function seed(db: Kysely<Database>): Promise<void> {
-  const now = new Date().toISOString()
+  const now = Math.floor(Date.now() / 1000)
 
   // Create roles
   const adminRoleId = typeid('role').toString()

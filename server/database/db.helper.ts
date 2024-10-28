@@ -10,7 +10,9 @@ export const generatedType = <T>() => z.custom<Generated<T>>()
 // SQLite-specific function, returns the current Unix timestamp.
 export const UNIX_TIMESTAMP = sql.raw(`(strftime('%s', 'now'))`)
 
-// SQLite-specific function, returns the current timestamp in ISO 8601 format.
+// SQLite-specific function, returns the current timestamp in ISO8601 format.
+// For zod compatibility, we need to use the ISO8601 format.
+// Use this: z.string().datetime({ offset: true })
 export const ISO_TIMESTAMP = sql.raw(`(strftime('%Y-%m-%dT%H:%M:%fZ', 'now'))`)
 
 export const columnTimestamps = <T extends string, C extends string = never>(
@@ -31,7 +33,3 @@ export const columnSoftDelete = <T extends string, C extends string = never>(
 export function json<T>(value: T): RawBuilder<T> {
   return sql`CAST(${JSON.stringify(value)} AS JSONB)`
 }
-
-// Reusable timestamp schema for SQLite
-export const timestampSchema = z.string().datetime({ offset: true })
-export const booleanSchema = z.number().min(0).max(1)

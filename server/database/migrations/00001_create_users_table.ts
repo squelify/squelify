@@ -1,5 +1,5 @@
 import { type Kysely, sql } from 'kysely'
-import { ISO_TIMESTAMP } from '~/database/db.helper'
+import { UNIX_TIMESTAMP } from '~/database/db.helper'
 import type { Database } from '~/database/db.schema'
 
 export async function up(db: Kysely<Database>): Promise<void> {
@@ -11,7 +11,6 @@ export async function up(db: Kysely<Database>): Promise<void> {
     .addColumn('username', 'text', (col) => col.unique().check(sql`LENGTH(username) >= 3`))
     .addColumn('avatar_url', 'text')
     .addColumn('locale', 'text', (col) => col.defaultTo('en'))
-    // Boolean fields using integer (0/1)
     .addColumn('is_active', 'integer', (col) =>
       col.notNull().defaultTo(1).check(sql`is_active IN (0, 1)`)
     )
@@ -19,11 +18,10 @@ export async function up(db: Kysely<Database>): Promise<void> {
       col.notNull().defaultTo(0).check(sql`is_banned IN (0, 1)`)
     )
     .addColumn('ban_reason', 'text')
-    // Dates using ISO8601 string
-    .addColumn('banned_until', 'text')
-    .addColumn('last_sign_in_at', 'text')
-    .addColumn('created_at', 'text', (col) => col.notNull().defaultTo(ISO_TIMESTAMP))
-    .addColumn('updated_at', 'text')
+    .addColumn('banned_until', 'integer')
+    .addColumn('last_sign_in_at', 'integer')
+    .addColumn('created_at', 'integer', (col) => col.notNull().defaultTo(UNIX_TIMESTAMP))
+    .addColumn('updated_at', 'integer')
     .modifyEnd(sql`STRICT`)
     .execute()
 

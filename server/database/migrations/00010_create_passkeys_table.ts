@@ -1,5 +1,5 @@
 import { type Kysely, sql } from 'kysely'
-import { ISO_TIMESTAMP } from '~/database/db.helper'
+import { UNIX_TIMESTAMP } from '~/database/db.helper'
 import type { Database } from '~/database/db.schema'
 
 export async function up(db: Kysely<Database>): Promise<void> {
@@ -20,15 +20,14 @@ export async function up(db: Kysely<Database>): Promise<void> {
     .addColumn('credential_backed_up', 'integer', (col) =>
       col.notNull().defaultTo(0).check(sql`credential_backed_up IN (0, 1)`)
     )
-    .addColumn('last_used_at', 'text')
-    .addColumn('created_at', 'text', (col) => col.notNull().defaultTo(ISO_TIMESTAMP))
-    .addColumn('updated_at', 'text')
+    .addColumn('last_used_at', 'integer')
+    .addColumn('created_at', 'integer', (col) => col.notNull().defaultTo(UNIX_TIMESTAMP))
+    .addColumn('updated_at', 'integer')
     .modifyEnd(sql`STRICT`)
     .execute()
 
   // Indexes
   await db.schema.createIndex('passkeys_user_id_idx').on('passkeys').column('user_id').execute()
-
   await db.schema
     .createIndex('passkeys_credential_id_idx')
     .on('passkeys')

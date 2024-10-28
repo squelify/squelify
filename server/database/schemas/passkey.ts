@@ -1,7 +1,6 @@
 import type { Insertable, Selectable, Updateable } from 'kysely'
 import type { ColumnType, Generated } from 'kysely'
 import { z } from 'zod'
-import { booleanSchema, timestampSchema } from '~/database/db.helper'
 
 const credentialDeviceTypeEnum = z.enum(['platform', 'cross-platform'])
 export type CredentialDeviceType = z.infer<typeof credentialDeviceTypeEnum>
@@ -18,10 +17,10 @@ export const PasskeySchema = z.object({
   attestationFormat: z.string().nullable(),
   aaguid: z.string().nullable(),
   credentialDeviceType: credentialDeviceTypeEnum,
-  credentialBackedUp: booleanSchema.default(0),
-  lastUsedAt: timestampSchema.nullable(),
-  createdAt: timestampSchema,
-  updatedAt: timestampSchema.nullable(),
+  credentialBackedUp: z.number().min(0).max(1).default(0),
+  lastUsedAt: z.number().nullable(),
+  createdAt: z.number(),
+  updatedAt: z.number().nullable(),
 })
 
 // Database interface for Kysely
@@ -37,9 +36,9 @@ export interface Passkey {
   aaguid: ColumnType<string | null>
   credentialDeviceType: ColumnType<CredentialDeviceType>
   credentialBackedUp: ColumnType<number>
-  lastUsedAt: ColumnType<Date, string | null, never>
-  createdAt: ColumnType<Date, string | undefined, never>
-  updatedAt: ColumnType<Date, string | undefined, never>
+  lastUsedAt: ColumnType<number | null>
+  createdAt: ColumnType<number>
+  updatedAt: ColumnType<number | null>
 }
 
 // Kysely types for operations

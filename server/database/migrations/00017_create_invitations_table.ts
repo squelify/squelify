@@ -1,5 +1,5 @@
 import { type Kysely, sql } from 'kysely'
-import { ISO_TIMESTAMP } from '~/database/db.helper'
+import { UNIX_TIMESTAMP } from '~/database/db.helper'
 import type { Database } from '~/database/db.schema'
 
 export async function up(db: Kysely<Database>): Promise<void> {
@@ -19,11 +19,11 @@ export async function up(db: Kysely<Database>): Promise<void> {
         .defaultTo('pending')
         .check(sql`status IN ('pending', 'accepted', 'expired', 'revoked')`)
     )
-    .addColumn('expires_at', 'text', (col) => col.notNull())
-    .addColumn('accepted_at', 'text')
+    .addColumn('expires_at', 'integer', (col) => col.notNull())
+    .addColumn('accepted_at', 'integer')
     .addColumn('metadata', 'text', (col) => col.notNull().defaultTo('{}'))
-    .addColumn('created_at', 'text', (col) => col.notNull().defaultTo(ISO_TIMESTAMP))
-    .addColumn('updated_at', 'text')
+    .addColumn('created_at', 'integer', (col) => col.notNull().defaultTo(UNIX_TIMESTAMP))
+    .addColumn('updated_at', 'integer')
     .modifyEnd(sql`STRICT`)
     .execute()
 
@@ -35,9 +35,7 @@ export async function up(db: Kysely<Database>): Promise<void> {
     .execute()
 
   await db.schema.createIndex('invitations_token_idx').on('invitations').column('token').execute()
-
   await db.schema.createIndex('invitations_status_idx').on('invitations').column('status').execute()
-
   await db.schema
     .createIndex('invitations_expires_at_idx')
     .on('invitations')

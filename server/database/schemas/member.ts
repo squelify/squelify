@@ -1,7 +1,6 @@
 import type { Insertable, Selectable, Updateable } from 'kysely'
 import type { ColumnType, Generated } from 'kysely'
 import { z } from 'zod'
-import { booleanSchema, timestampSchema } from '~/database/db.helper'
 
 const memberRoleEnum = z.enum(['owner', 'admin', 'member'])
 export type MemberRole = z.infer<typeof memberRoleEnum>
@@ -15,11 +14,11 @@ export const MemberSchema = z.object({
   title: z.string().nullable(),
   department: z.string().nullable(),
   invitedBy: z.string().nullable(),
-  invitedAt: timestampSchema.nullable(),
-  joinedAt: timestampSchema.nullable(),
-  isDefault: booleanSchema.default(0),
-  createdAt: timestampSchema,
-  updatedAt: timestampSchema.nullable(),
+  invitedAt: z.number().nullable(),
+  joinedAt: z.number().nullable(),
+  isDefault: z.number().min(0).max(1).default(0),
+  createdAt: z.number(),
+  updatedAt: z.number().nullable(),
 })
 
 // Database interface for Kysely
@@ -31,11 +30,11 @@ export interface Member {
   title: ColumnType<string | null>
   department: ColumnType<string | null>
   invitedBy: ColumnType<string | null>
-  invitedAt: ColumnType<Date, string | null, never>
-  joinedAt: ColumnType<Date, string | null, never>
+  invitedAt: ColumnType<number | null>
+  joinedAt: ColumnType<number | null>
   isDefault: ColumnType<number>
-  createdAt: ColumnType<Date, string | undefined, never>
-  updatedAt: ColumnType<Date, string | undefined, never>
+  createdAt: ColumnType<number>
+  updatedAt: ColumnType<number | null>
 }
 
 // Kysely types for operations
