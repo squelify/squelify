@@ -9,11 +9,13 @@ export type TwoFactorType = z.infer<typeof twoFactorTypeEnum>
 export const TwoFactorSchema = z.object({
   id: z.string(),
   userId: z.string(),
+  name: z.string().min(1),
   type: twoFactorTypeEnum,
   secret: z.string(),
   backupCodes: z.string().default('[]'),
   lastUsedAt: z.number().nullable(),
   isVerified: z.number().min(0).max(1).default(0),
+  isPrimary: z.number().min(0).max(1).default(0),
   verifiedAt: z.number().nullable(),
   createdAt: z.number(),
   updatedAt: z.number().nullable(),
@@ -23,11 +25,13 @@ export const TwoFactorSchema = z.object({
 export interface TwoFactor {
   id: Generated<string>
   userId: ColumnType<string>
+  name: ColumnType<string>
   type: ColumnType<TwoFactorType>
   secret: ColumnType<string>
   backupCodes: ColumnType<string>
   lastUsedAt: ColumnType<number | null>
   isVerified: ColumnType<number>
+  isPrimary: ColumnType<number>
   verifiedAt: ColumnType<number | null>
   createdAt: ColumnType<number>
   updatedAt: ColumnType<number | null>
