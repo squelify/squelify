@@ -84,6 +84,7 @@ export default async function seed(db: Kysely<Database>): Promise<void> {
       status: 'active',
       settings: '{}',
       metadata: '{}',
+      createdBy: userId,
       createdAt: now,
     }
 

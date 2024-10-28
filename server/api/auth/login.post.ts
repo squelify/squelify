@@ -8,8 +8,8 @@ import { JWTPayload } from '~/utils/jwt'
 export const LoginRequestSchema = z.object({
   identity: z.string().email('Email tidak valid'),
   password: z.string().min(8, 'Password minimal 8 karakter'),
-  deviceId: z.string().optional(),
-  deviceType: z.string().optional(),
+  deviceId: z.string().optional().nullable(),
+  deviceType: z.string().optional().nullable(),
 })
 
 export default defineEventHandler(async (event) => {

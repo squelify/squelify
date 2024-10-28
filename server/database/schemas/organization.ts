@@ -20,6 +20,7 @@ export const OrganizationSchema = z.object({
   settings: z.string().default('{}'),
   metadata: z.string().default('{}'),
   isVerified: z.number().min(0).max(1).default(0),
+  createdBy: z.string(),
   createdAt: z.number(),
   updatedAt: z.number().nullable(),
 })
@@ -39,6 +40,7 @@ export interface Organization {
   settings: ColumnType<string>
   metadata: ColumnType<string>
   isVerified: ColumnType<number>
+  createdBy: ColumnType<string>
   createdAt: ColumnType<number>
   updatedAt: ColumnType<number | null>
 }

@@ -1,3 +1,4 @@
+import * as jose from 'jose'
 import { typeid } from 'typeid-js'
 import { z } from 'zod'
 
@@ -13,18 +14,62 @@ const CreateOrgSchema = z.object({
     .regex(/^[^-].*[^-]$/, 'Slug tidak boleh diawali atau diakhiri tanda hubung')
     .regex(/^[^0-9]/, 'Slug tidak boleh diawali angka')
     .regex(/^(?!.*--).+$/, 'Slug tidak boleh mengandung tanda hubung berurutan'),
-  description: z.string().optional(),
-  logoUrl: z.string().url('URL logo tidak valid').optional(),
-  website: z.string().url('URL website tidak valid').optional(),
-  email: z.string().email('Email tidak valid').optional(),
-  phone: z.string().nullable(),
-  address: z.string().nullable(),
+  description: z.string().optional().nullable(),
+  logoUrl: z.string().url('URL logo tidak valid').optional().nullable(),
+  website: z.string().url('URL website tidak valid').optional().nullable(),
+  email: z.string().email('Email tidak valid').optional().nullable(),
+  phone: z.string().optional().nullable(),
+  address: z.string().optional().nullable(),
 })
 
 export default defineEventHandler(async (event) => {
   try {
     const db = event.context.db
     const now = Math.floor(Date.now() / 1000)
+    const token = getRequestHeader(event, 'Authorization')?.replace('Bearer ', '')
+
+    if (!token) {
+      return createErrorResponse(401, 'Unauthorized')
+    }
+
+    // Extract key ID from token header
+    const decoded = jose.decodeProtectedHeader(token)
+    if (!decoded.kid) {
+      return createErrorResponse(401, 'Invalid token format')
+    }
+
+    // Get JWK used for signing
+    const jwk = await db
+      .selectFrom('jwks')
+      .where('keyId', '=', decoded.kid)
+      .where('isActive', '=', 1)
+      .where('expiresAt', '>', now)
+      .select(['keyId', 'publicKey', 'algorithm'])
+      .executeTakeFirst()
+
+    if (!jwk) {
+      return createErrorResponse(401, 'Invalid token signature')
+    }
+
+    // Verify token and decode payload
+    const payload = await verifyAccessToken(token, jwk)
+    if (!payload) {
+      return createErrorResponse(401, 'Token tidak valid')
+    }
+
+    // Check if session is still valid
+    const session = await db
+      .selectFrom('sessions')
+      .where('id', '=', payload.sid)
+      .where('userId', '=', payload.sub)
+      .where('isActive', '=', 1)
+      .where('expiresAt', '>', now)
+      .select(['id'])
+      .executeTakeFirst()
+
+    if (!session) {
+      return createErrorResponse(401, 'Session tidak valid atau telah berakhir')
+    }
 
     // Validate request body
     const body = await readValidatedBody(event, (body) => CreateOrgSchema.safeParse(body))
@@ -79,6 +124,7 @@ export default defineEventHandler(async (event) => {
         settings: '{}',
         metadata: '{}',
         isVerified: 0,
+        createdBy: payload.sub,
         createdAt: now,
       })
       .returningAll()

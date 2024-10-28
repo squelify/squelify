@@ -10,7 +10,7 @@ export default defineEventHandler(async (event) => {
     const token = getRequestHeader(event, 'Authorization')?.replace('Bearer ', '')
 
     if (!token) {
-      return createErrorResponse(401, 'Token tidak ditemukan')
+      return createErrorResponse(401, 'Unauthorized')
     }
 
     // Extract key ID from token header

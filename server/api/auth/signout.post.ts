@@ -2,7 +2,7 @@ import { z } from 'zod'
 
 const SignoutRequestSchema = z.object({
   sessionId: z.string({ required_error: 'Session ID is required' }),
-  deviceId: z.string().optional(),
+  deviceId: z.string().optional().nullable(),
 })
 
 export default defineEventHandler(async (event) => {

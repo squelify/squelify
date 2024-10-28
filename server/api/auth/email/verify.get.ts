@@ -10,7 +10,7 @@ export default defineEventHandler(async (event) => {
       const response = {
         status: 400,
         success: false,
-        message: 'Token tidak ditemukan',
+        message: 'Unauthorized',
         data: {
           callbackUrl: callbackUrl || null,
           shouldRedirect: redirect && !!callbackUrl,
