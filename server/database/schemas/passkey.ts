@@ -1,23 +1,20 @@
+import type { AuthenticatorTransportFuture } from '@simplewebauthn/typescript-types'
 import type { Insertable, Selectable, Updateable } from 'kysely'
 import type { ColumnType, Generated } from 'kysely'
 import { z } from 'zod'
-
-const credentialDeviceTypeEnum = z.enum(['platform', 'cross-platform'])
-export type CredentialDeviceType = z.infer<typeof credentialDeviceTypeEnum>
 
 // Passkey schema with validation rules
 export const PasskeySchema = z.object({
   id: z.string(),
   userId: z.string(),
+  webauthnUserId: z.string(),
   name: z.string(),
   credentialId: z.string(),
-  publicKey: z.string(),
-  signCount: z.number().default(0),
-  transports: z.string().nullable(),
-  attestationFormat: z.string().nullable(),
-  aaguid: z.string().nullable(),
-  credentialDeviceType: credentialDeviceTypeEnum,
-  credentialBackedUp: z.number().min(0).max(1).default(0),
+  credentialPublicKey: z.string(),
+  counter: z.number().default(0),
+  transports: z.array(z.string() as z.ZodType<AuthenticatorTransportFuture>).nullable(),
+  rpId: z.string(),
+  origin: z.string(),
   lastUsedAt: z.number().nullable(),
   createdAt: z.number(),
   updatedAt: z.number().nullable(),
@@ -27,15 +24,14 @@ export const PasskeySchema = z.object({
 export interface Passkey {
   id: Generated<string>
   userId: ColumnType<string>
+  webauthnUserId: ColumnType<string>
   name: ColumnType<string>
   credentialId: ColumnType<string>
-  publicKey: ColumnType<string>
-  signCount: ColumnType<number>
-  transports: ColumnType<string | null>
-  attestationFormat: ColumnType<string | null>
-  aaguid: ColumnType<string | null>
-  credentialDeviceType: ColumnType<CredentialDeviceType>
-  credentialBackedUp: ColumnType<number>
+  credentialPublicKey: ColumnType<string>
+  counter: ColumnType<number>
+  transports: ColumnType<AuthenticatorTransportFuture[] | null>
+  rpId: ColumnType<string>
+  origin: ColumnType<string>
   lastUsedAt: ColumnType<number | null>
   createdAt: ColumnType<number>
   updatedAt: ColumnType<number | null>
