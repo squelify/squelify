@@ -1,9 +1,4 @@
 import * as jose from 'jose'
-import { z } from 'zod'
-
-const PrimaryEmailSchema = z
-  .object({ emailId: z.string({ required_error: 'Email ID diperlukan' }) })
-  .strict()
 
 export default defineEventHandler(async (event) => {
   const db = event.context.db
@@ -54,58 +49,29 @@ export default defineEventHandler(async (event) => {
     return createErrorResponse(401, 'Session tidak valid atau telah berakhir')
   }
 
-  const body = await readValidatedBody(event, (body) => PrimaryEmailSchema.safeParse(body))
-  if (!body.success) {
-    return createErrorResponse(400, 'Invalid request', {
-      issues: body.error.issues.map((issue) => ({
-        field: issue.path.join('.'),
-        message: issue.message,
-      })),
-    })
-  }
-
-  // Get email record
-  const email = await db
+  // Get user's emails
+  const rawEmails = await db
     .selectFrom('emails')
-    .where('id', '=', body.data.emailId)
     .where('userId', '=', payload.sub)
-    .where('isVerified', '=', 1)
-    .select(['id', 'email'])
-    .executeTakeFirst()
+    .select(['id', 'email', 'isPrimary', 'isVerified', 'verifiedAt', 'createdAt', 'updatedAt'])
+    .orderBy('isPrimary', 'desc')
+    .orderBy('createdAt', 'desc')
+    .execute()
 
-  if (!email) {
-    return createErrorResponse(404, 'Email tidak ditemukan atau belum terverifikasi')
-  }
-
-  await db.transaction().execute(async (trx) => {
-    // Reset all primary emails
-    await trx
-      .updateTable('emails')
-      .set({
-        isPrimary: 0,
-        updatedAt: now,
-      })
-      .where('userId', '=', payload.sub)
-      .execute()
-
-    // Set new primary email
-    await trx
-      .updateTable('emails')
-      .set({
-        isPrimary: 1,
-        updatedAt: now,
-      })
-      .where('id', '=', body.data.emailId)
-      .execute()
-  })
+  // Transform data for response
+  const emails = rawEmails.map((email) => ({
+    id: email.id,
+    email: email.email,
+    isPrimary: Boolean(email.isPrimary),
+    isVerified: Boolean(email.isVerified),
+    verifiedAt: email.verifiedAt ? new Date(email.verifiedAt * 1000).toISOString() : null,
+    createdAt: new Date(email.createdAt * 1000).toISOString(),
+    updatedAt: email.updatedAt ? new Date(email.updatedAt * 1000).toISOString() : null,
+  }))
 
   return {
     status: 200,
     success: true,
-    message: 'Email utama berhasil diubah',
-    data: {
-      emailId: email.id,
-      email: email.email,
-    },
+    data: emails,
   }
 })

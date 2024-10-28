@@ -11,8 +11,6 @@ export const PasswordSchema = z.object({
   userId: z.string(),
   hash: z.string(),
   algorithm: passwordAlgorithmEnum.default('argon2id'),
-  resetToken: z.string().nullable(),
-  resetTokenExpiresAt: z.number().nullable(),
   lastChangedAt: z.number().nullable(),
   createdAt: z.number(),
   updatedAt: z.number().nullable(),
@@ -24,8 +22,6 @@ export interface Password {
   userId: ColumnType<string>
   hash: ColumnType<string>
   algorithm: ColumnType<PasswordAlgorithm>
-  resetToken: ColumnType<string | null>
-  resetTokenExpiresAt: ColumnType<number | null>
   lastChangedAt: ColumnType<number | null>
   createdAt: ColumnType<number>
   updatedAt: ColumnType<number | null>

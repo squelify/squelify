@@ -11,8 +11,6 @@ export async function up(db: Kysely<Database>): Promise<void> {
     .addColumn('algorithm', 'text', (col) =>
       col.notNull().defaultTo('argon2id').check(sql`algorithm IN ('argon2id', 'bcrypt', 'scrypt')`)
     )
-    .addColumn('reset_token', 'text')
-    .addColumn('reset_token_expires_at', 'integer')
     .addColumn('last_changed_at', 'integer')
     .addColumn('created_at', 'integer', (col) => col.notNull().defaultTo(UNIX_TIMESTAMP))
     .addColumn('updated_at', 'integer')

@@ -8,7 +8,6 @@ export default defineEventHandler(async (event) => {
   const now = Math.floor(Date.now() / 1000)
 
   // Get session by refresh token
-  // Get session by refresh token
   const session = await db
     .selectFrom('sessions')
     .innerJoin('users', 'users.id', 'sessions.userId')

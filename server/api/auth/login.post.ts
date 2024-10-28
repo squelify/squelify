@@ -50,7 +50,7 @@ export default defineEventHandler(async (event) => {
     userAgent,
     deviceId,
     deviceType,
-    keyId: activeKey.keyId,
+    keyId: activeKey.id, // Use the JWK id instead of keyId
   })
 
   // Generate tokens with key info

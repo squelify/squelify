@@ -93,7 +93,7 @@ export default defineEventHandler(async (event) => {
       .execute()
 
     // Create verification token
-    const verificationToken = typeid('ver').toString()
+    const verificationToken = typeid().toString()
     await trx
       .insertInto('verifications')
       .values({

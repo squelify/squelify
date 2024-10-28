@@ -26,20 +26,16 @@ export async function findUserById<SE extends SelectExpression<Database, 'users'
 /**
  * Finds a user by their email address.
  */
-export async function findUserByEmail<SE extends SelectExpression<Database, 'users'>>(
-  email: string,
-  cols?: readonly SE[]
-): Promise<Partial<UserSelect> | null> {
+export async function findUserByEmail(email: string): Promise<Partial<UserSelect> | null> {
   try {
-    const query = db
+    const result = await db
       .selectFrom('users')
       .innerJoin('emails', 'emails.userId', 'users.id')
       .where('emails.email', '=', email)
-      .where('emails.isVerified', '=', 1)
-
-    const result = cols
-      ? await query.select(cols).executeTakeFirst()
-      : await query.selectAll().executeTakeFirst()
+      .where('emails.isPrimary', '=', 1)
+      .where('users.isActive', '=', 1)
+      .select(['users.id', 'users.firstName', 'users.lastName', 'emails.email'])
+      .executeTakeFirst()
 
     return result || null
   } catch (error) {
