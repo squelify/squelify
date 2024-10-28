@@ -36,8 +36,12 @@ export default defineNitroConfig({
         useDefineForClassFields: true,
         verbatimModuleSyntax: false,
         tsBuildInfoFile: '../../node_modules/.tsbuildinfo',
+        paths: {
+          '#/*': ['../../client/*'],
+        },
       },
       exclude: ['../../vite.config.ts', '../../client'],
+      references: [{ path: '../../tsconfig.app.json' }, { path: '../../tsconfig.node.json' }],
     },
   },
 })

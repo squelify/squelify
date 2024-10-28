@@ -1,6 +1,5 @@
 {
     // https://nitro.unjs.io/guide/typescript
     "$schema": "https://json.schemastore.org/tsconfig",
-    "extends": "./.nitro/types/tsconfig.json",
-    "references": [{ "path": "./tsconfig.app.json" }, { "path": "./tsconfig.node.json" }]
+    "extends": "./.nitro/types/tsconfig.json"
 }
