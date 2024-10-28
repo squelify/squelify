@@ -1,7 +1,7 @@
-import { type Kysely, sql } from 'kysely'
+import { type Kysely } from 'kysely'
 import { typeid } from 'typeid-js'
+import { verifyPassword } from '~/utils/string'
 import type { Database } from '../db.schema'
-import type { RateLimitContext } from '../schemas/rate_limit'
 
 interface CreateSessionOptions {
   ipAddress: string
@@ -9,6 +9,7 @@ interface CreateSessionOptions {
   deviceId?: string
   deviceType?: string
   location?: string
+  keyId: string
 }
 
 /**
@@ -41,7 +42,7 @@ export async function verifyUserCredentials(db: Kysely<Database>, email: string,
 
 /**
  * Create new session for authenticated user
- * Handles session creation with device tracking and metadata
+ * Handles session creation with device tracking and key tracking
  */
 export async function createUserSession(
   db: Kysely<Database>,
@@ -59,6 +60,7 @@ export async function createUserSession(
       deviceId: options.deviceId,
       deviceType: options.deviceType,
       location: options.location,
+      keyId: options.keyId,
       isActive: 1,
       expiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString(),
       lastActiveAt: new Date().toISOString(),

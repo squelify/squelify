@@ -1,7 +1,7 @@
 import type { Insertable, Selectable, Updateable } from 'kysely'
 import type { ColumnType, Generated } from 'kysely'
 import { z } from 'zod'
-import { timestampSchema } from '~/database/db.helper'
+import { booleanSchema, timestampSchema } from '~/database/db.helper'
 
 // Session schema with validation rules
 export const SessionSchema = z.object({
@@ -13,7 +13,8 @@ export const SessionSchema = z.object({
   deviceId: z.string().nullable(),
   deviceType: z.string().nullable(),
   location: z.string().nullable(),
-  isActive: z.number().min(0).max(1),
+  keyId: z.string(),
+  isActive: booleanSchema.default(1),
   expiresAt: timestampSchema,
   lastActiveAt: timestampSchema.nullable(),
   createdAt: timestampSchema,
@@ -30,6 +31,7 @@ export interface Session {
   deviceId: ColumnType<string | null>
   deviceType: ColumnType<string | null>
   location: ColumnType<string | null>
+  keyId: ColumnType<string>
   isActive: ColumnType<number>
   expiresAt: ColumnType<Date, string, never>
   lastActiveAt: ColumnType<Date, string | null, never>

@@ -41,9 +41,10 @@ interface DatabaseSeeder {
 export async function runSeeds(): Promise<void> {
   try {
     const seeders: DatabaseSeeder[] = [
-      { name: 'users', seeder: await import('./seeders/00001_permissions_seeder') },
-      { name: 'sites', seeder: await import('./seeders/00002_roles_seeder') },
-      { name: 'sites', seeder: await import('./seeders/00003_user_seeder') },
+      { name: 'permissions', seeder: await import('./seeders/00001_permissions_seeder') },
+      { name: 'roles', seeder: await import('./seeders/00002_roles_seeder') },
+      { name: 'users', seeder: await import('./seeders/00003_user_seeder') },
+      { name: 'jwks', seeder: await import('./seeders/00004_jwk_seeder') },
     ]
 
     if (seeders.length > 0) {

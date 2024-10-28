@@ -14,7 +14,7 @@ export const JWKSchema = z.object({
   privateKey: z.string(),
   algorithm: jwkAlgorithmEnum.default('RS256'),
   isActive: booleanSchema.default(1),
-  expiresAt: timestampSchema.nullable(),
+  expiresAt: timestampSchema,
   createdAt: timestampSchema,
   updatedAt: timestampSchema.nullable(),
 })
@@ -27,7 +27,7 @@ export interface JWK {
   privateKey: ColumnType<string>
   algorithm: ColumnType<JWKAlgorithm>
   isActive: ColumnType<number>
-  expiresAt: ColumnType<Date, string | null, never>
+  expiresAt: ColumnType<Date, string, never>
   createdAt: ColumnType<Date, string | undefined, never>
   updatedAt: ColumnType<Date, string | undefined, never>
 }

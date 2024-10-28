@@ -1,40 +1,27 @@
 import * as jose from 'jose'
-import { env } from 'std-env'
-
-// Example usage:
-// const payload = { userId: '123', email: 'user@example.com' }
-// const accessToken = await generateAccessToken(payload)
-// const refreshToken = await generateRefreshToken(payload)
-// const decoded = await decodeJWT(accessToken)
+import type { JWKSelect } from '~/database/schemas/jwk'
 
 export async function generateAccessToken(
   payload: Record<string, any>,
-  expiresIn: number | string | Date = '1h'
+  key: JWKSelect,
+  expiresIn = '1h'
 ) {
-  const secret = new TextEncoder().encode(env.JWT_SECRET_KEY)
+  const privateKey = await jose.importPKCS8(key.privateKey, key.algorithm)
+
   return await new jose.SignJWT(payload)
-    .setProtectedHeader({ alg: 'HS256' })
+    .setProtectedHeader({ alg: key.algorithm, kid: key.keyId })
     .setIssuedAt()
     .setExpirationTime(expiresIn)
-    .sign(secret)
+    .sign(privateKey)
 }
 
-export async function generateRefreshToken(
-  payload: Record<string, any>,
-  expiresIn: number | string | Date = '7d'
-) {
-  const secret = new TextEncoder().encode(env.JWT_SECRET_KEY)
-  return await new jose.SignJWT(payload)
-    .setProtectedHeader({ alg: 'HS256' })
-    .setIssuedAt()
-    .setExpirationTime(expiresIn)
-    .sign(secret)
-}
-
-export async function decodeJWT<T extends jose.JWTPayload>(token: string): Promise<T | null> {
+export async function verifyAccessToken<T extends jose.JWTPayload>(
+  token: string,
+  key: JWKSelect
+): Promise<T | null> {
   try {
-    const secret = new TextEncoder().encode(env.JWT_SECRET_KEY)
-    const { payload } = await jose.jwtVerify(token, secret)
+    const publicKey = await jose.importSPKI(key.publicKey, key.algorithm)
+    const { payload } = await jose.jwtVerify(token, publicKey)
     return payload as T
   } catch (_error) {
     return null

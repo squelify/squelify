@@ -7,6 +7,7 @@ export async function up(db: Kysely<Database>): Promise<void> {
     .createTable('sessions')
     .addColumn('id', 'text', (col) => col.primaryKey())
     .addColumn('user_id', 'text', (col) => col.notNull().references('users.id').onDelete('cascade'))
+    .addColumn('key_id', 'text', (col) => col.references('jwks.key_id').onDelete('restrict'))
     .addColumn('refresh_token', 'text', (col) => col.notNull())
     .addColumn('ip_address', 'text')
     .addColumn('user_agent', 'text')
