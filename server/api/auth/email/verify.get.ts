@@ -1,25 +1,19 @@
+import { typeid } from 'typeid-js'
+import { AppConfig } from '~/config'
+
 export default defineEventHandler(async (event) => {
   try {
     const db = event.context.db
+    const appConfig = useAppConfig(event) as AppConfig
     const query = getQuery(event)
     const token = query.token as string
     const callbackUrl = query.callbackUrl as string
     const redirect = query.redirect === 'true'
+    const now = Math.floor(Date.now() / 1000)
 
     if (!token) {
-      const response = {
-        status: 400,
-        success: false,
-        message: 'Unauthorized',
-        data: {
-          callbackUrl: callbackUrl || null,
-          shouldRedirect: redirect && !!callbackUrl,
-        },
-      }
-      return response
+      return createErrorResponse(400, 'Token verifikasi diperlukan')
     }
-
-    const now = Math.floor(Date.now() / 1000)
 
     const verification = await db
       .selectFrom('verifications')
@@ -29,57 +23,97 @@ export default defineEventHandler(async (event) => {
       .executeTakeFirst()
 
     if (!verification) {
-      const response = {
-        status: 404,
-        success: false,
-        message: 'Token verifikasi tidak ditemukan',
-        data: {
-          callbackUrl: callbackUrl || null,
-          shouldRedirect: redirect && !!callbackUrl,
-        },
-      }
-      return response
+      return createErrorResponse(404, 'Token verifikasi tidak ditemukan')
     }
 
     if (verification.verifiedAt) {
-      const response = {
-        status: 400,
-        success: false,
-        message: 'Email sudah terverifikasi',
-        data: {
-          callbackUrl: callbackUrl || null,
-          shouldRedirect: redirect && !!callbackUrl,
-        },
-      }
-      return response
+      return createErrorResponse(400, 'Email sudah terverifikasi')
     }
 
+    // Check rate limit for token requests
+    const rateLimit = await db
+      .selectFrom('rate_limits')
+      .where('key', '=', verification.identifier)
+      .where('context', '=', 'email')
+      .where('expiresAt', '>', now)
+      .select(['points', 'blockedUntil'])
+      .executeTakeFirst()
+
+    if (rateLimit?.blockedUntil && rateLimit.blockedUntil > now) {
+      const waitMinutes = Math.ceil((rateLimit.blockedUntil - now) / 60)
+      return createErrorResponse(
+        429,
+        `Terlalu banyak permintaan, coba lagi dalam ${waitMinutes} menit`
+      )
+    }
+
+    // Handle expired token
     if (verification.expiresAt <= now) {
-      const response = {
-        status: 400,
-        success: false,
-        message: 'Token sudah kadaluarsa',
-        data: {
-          callbackUrl: callbackUrl || null,
-          shouldRedirect: redirect && !!callbackUrl,
-        },
+      // Update or create rate limit
+      if (rateLimit) {
+        const newPoints = rateLimit.points + 1
+        const blocked = newPoints >= 3
+
+        await db
+          .updateTable('rate_limits')
+          .set({
+            points: newPoints,
+            blockedUntil: blocked ? now + 30 * 60 : null, // Block for 30 minutes
+            updatedAt: now,
+          })
+          .where('key', '=', verification.identifier)
+          .where('context', '=', 'email')
+          .execute()
+
+        if (blocked) {
+          return createErrorResponse(
+            429,
+            'Terlalu banyak permintaan token, coba lagi dalam 30 menit'
+          )
+        }
+      } else {
+        await db
+          .insertInto('rate_limits')
+          .values({
+            id: typeid('rlim').toString(),
+            key: verification.identifier,
+            context: 'email',
+            points: 1,
+            limit: 3,
+            window: 3600, // 1 hour window
+            expiresAt: now + 3600,
+            createdAt: now,
+          })
+          .execute()
       }
-      return response
+
+      // Generate new token
+      const newToken = typeid().toString()
+      await db
+        .insertInto('verifications')
+        .values({
+          id: typeid('ver').toString(),
+          userId: verification.userId,
+          type: 'email',
+          identifier: verification.identifier,
+          token: newToken,
+          attempts: 0,
+          maxAttempts: 3,
+          expiresAt: now + 24 * 60 * 60,
+          createdAt: now,
+        })
+        .execute()
+
+      const verificationUrl = `${appConfig.baseURL}/api/auth/email/verify?token=${newToken}`
+      logger.info('[app]', 'New verification email:', verificationUrl)
+
+      return createErrorResponse(
+        410,
+        'Token sudah kadaluarsa, silakan cek email untuk verifikasi ulang'
+      )
     }
 
-    if (verification.attempts >= verification.maxAttempts) {
-      const response = {
-        status: 400,
-        success: false,
-        message: 'Token melebihi batas maksimal percobaan',
-        data: {
-          callbackUrl: callbackUrl || null,
-          shouldRedirect: redirect && !!callbackUrl,
-        },
-      }
-      return response
-    }
-
+    // Verify email
     await db.transaction().execute(async (trx) => {
       await trx
         .updateTable('verifications')
@@ -103,19 +137,17 @@ export default defineEventHandler(async (event) => {
         .execute()
     })
 
-    const shouldRedirect = redirect && !!callbackUrl
-
     const response = {
       status: 200,
       success: true,
       message: 'Email berhasil diverifikasi',
       data: {
         callbackUrl: callbackUrl || null,
-        shouldRedirect,
+        shouldRedirect: redirect && !!callbackUrl,
       },
     }
 
-    if (shouldRedirect) {
+    if (redirect && callbackUrl) {
       return sendRedirect(event, callbackUrl)
     }
 
