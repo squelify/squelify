@@ -1,20 +1,8 @@
 import * as jose from 'jose'
 import { typeid } from 'typeid-js'
 import { z } from 'zod'
-import { generateRandomStr } from '~/utils/string'
 
-interface OTPMetadata {
-  code: string
-  type: 'email' | 'sms'
-  purpose: '2fa' | 'login' | 'recovery'
-}
-
-const GenerateOTPSchema = z
-  .object({
-    type: z.enum(['email', 'sms']),
-    purpose: z.enum(['2fa', 'login', 'recovery']),
-  })
-  .strict()
+const AddEmailSchema = z.object({ email: z.string().email('Email tidak valid') }).strict()
 
 export default defineEventHandler(async (event) => {
   try {
@@ -66,7 +54,7 @@ export default defineEventHandler(async (event) => {
       return createErrorResponse(401, 'Session tidak valid atau telah berakhir')
     }
 
-    const body = await readValidatedBody(event, (body) => GenerateOTPSchema.safeParse(body))
+    const body = await readValidatedBody(event, (body) => AddEmailSchema.safeParse(body))
     if (!body.success) {
       return createErrorResponse(400, 'Invalid request', {
         issues: body.error.issues.map((issue) => ({
@@ -76,58 +64,57 @@ export default defineEventHandler(async (event) => {
       })
     }
 
-    // Get user's primary email
-    const userEmail = await db
+    // Check if email already exists
+    const existingEmail = await db
       .selectFrom('emails')
-      .where('userId', '=', payload.sub)
-      .where('isPrimary', '=', 1)
-      .where('isVerified', '=', 1)
-      .select(['email'])
+      .where('email', '=', body.data.email)
+      .select(['id'])
       .executeTakeFirst()
 
-    if (!userEmail) {
-      return createErrorResponse(404, 'Email utama tidak ditemukan atau belum terverifikasi')
+    if (existingEmail) {
+      return createErrorResponse(400, 'Email sudah terdaftar')
     }
 
-    // Generate OTP code
-    const otpCode = generateRandomStr({ size: 6, digitsOnly: true })
+    // Create verification token
     const verificationToken = typeid().toString()
+    await db.transaction().execute(async (trx) => {
+      // Add new email
+      await trx
+        .insertInto('emails')
+        .values({
+          id: typeid('eml').toString(),
+          userId: payload.sub,
+          email: body.data.email,
+          isPrimary: 0,
+          isVerified: 0,
+          createdAt: now,
+        })
+        .execute()
 
-    const metadata: OTPMetadata = {
-      code: otpCode,
-      type: body.data.type,
-      purpose: body.data.purpose,
-    }
+      // Create verification record
+      await trx
+        .insertInto('verifications')
+        .values({
+          id: typeid('ver').toString(),
+          userId: payload.sub,
+          type: 'email',
+          identifier: body.data.email,
+          token: verificationToken,
+          attempts: 0,
+          maxAttempts: 3,
+          expiresAt: now + 60 * 30, // 30 minutes
+          createdAt: now,
+        })
+        .execute()
+    })
 
-    // Create verification record
-    await db
-      .insertInto('verifications')
-      .values({
-        id: typeid('ver').toString(),
-        userId: payload.sub,
-        type: 'otp',
-        identifier: userEmail.email,
-        token: verificationToken,
-        attempts: 0,
-        maxAttempts: 3,
-        metadata: JSON.stringify(metadata),
-        expiresAt: now + 60 * 5, // 5 minutes
-        createdAt: now,
-      })
-      .execute()
-
-    // Log OTP for development
-    logger.info('[auth]', `OTP Code: ${otpCode}`)
+    // Log verification URL for development
+    logger.info('[auth]', `Email verification URL: /auth/email/verify?token=${verificationToken}`)
 
     return {
       status: 200,
       success: true,
-      message: 'Kode OTP telah dikirim',
-      data: {
-        token: verificationToken,
-        identifier: userEmail.email,
-        expiresIn: 300, // 5 minutes in seconds
-      },
+      message: 'Email berhasil ditambahkan, silakan cek inbox untuk verifikasi',
     }
   } catch (error) {
     return throwErrorResponse(error)

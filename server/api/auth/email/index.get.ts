@@ -50,23 +50,30 @@ export default defineEventHandler(async (event) => {
       return createErrorResponse(401, 'Session tidak valid atau telah berakhir')
     }
 
-    // Return standardized claims
+    // Get user's emails
+    const rawEmails = await db
+      .selectFrom('emails')
+      .where('userId', '=', payload.sub)
+      .select(['id', 'email', 'isPrimary', 'isVerified', 'verifiedAt', 'createdAt', 'updatedAt'])
+      .orderBy('isPrimary', 'desc')
+      .orderBy('createdAt', 'desc')
+      .execute()
+
+    // Transform data for response
+    const emails = rawEmails.map((email) => ({
+      id: email.id,
+      email: email.email,
+      isPrimary: Boolean(email.isPrimary),
+      isVerified: Boolean(email.isVerified),
+      verifiedAt: email.verifiedAt ? new Date(email.verifiedAt * 1000).toISOString() : null,
+      createdAt: new Date(email.createdAt * 1000).toISOString(),
+      updatedAt: email.updatedAt ? new Date(email.updatedAt * 1000).toISOString() : null,
+    }))
+
     return {
       status: 200,
       success: true,
-      data: {
-        sub: payload.sub,
-        sid: payload.sid,
-        email: payload.email,
-        name: payload.name,
-        given_name: payload.given_name,
-        family_name: payload.family_name,
-        locale: payload.locale,
-        amr: payload.amr,
-        roles: payload.roles,
-        perms: payload.perms,
-        org_id: payload.org_id,
-      },
+      data: emails,
     }
   } catch (error) {
     return throwErrorResponse(error)

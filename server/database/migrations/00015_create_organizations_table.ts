@@ -14,6 +14,9 @@ export async function up(db: Kysely<Database>): Promise<void> {
     .addColumn('email', 'text')
     .addColumn('phone', 'text')
     .addColumn('address', 'text')
+    .addColumn('status', 'text', (col) =>
+      col.notNull().check(sql`status IN ('active', 'inactive', 'suspended')`).defaultTo('inactive')
+    )
     .addColumn('settings', 'text', (col) => col.notNull().defaultTo('{}'))
     .addColumn('metadata', 'text', (col) => col.notNull().defaultTo('{}'))
     .addColumn('is_verified', 'integer', (col) =>

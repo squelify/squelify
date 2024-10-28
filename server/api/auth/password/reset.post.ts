@@ -15,68 +15,72 @@ const PasswordResetSchema = z
   .strict()
 
 export default defineEventHandler(async (event) => {
-  const db = event.context.db
-  const body = await readValidatedBody(event, (body) => PasswordResetSchema.safeParse(body))
+  try {
+    const db = event.context.db
+    const body = await readValidatedBody(event, (body) => PasswordResetSchema.safeParse(body))
 
-  if (!body.success) {
-    return createErrorResponse(400, 'Invalid request', {
-      issues: body.error.issues.map((issue) => ({
-        field: issue.path.join('.'),
-        message: issue.message,
-      })),
+    if (!body.success) {
+      return createErrorResponse(400, 'Invalid request', {
+        issues: body.error.issues.map((issue) => ({
+          field: issue.path.join('.'),
+          message: issue.message,
+        })),
+      })
+    }
+
+    const now = Math.floor(Date.now() / 1000)
+
+    // Get verification record
+    const verification = await db
+      .selectFrom('verifications')
+      .where('token', '=', body.data.token)
+      .where('type', '=', 'password_reset')
+      .where('verifiedAt', 'is', null)
+      .where('expiresAt', '>', now)
+      .select(['id', 'userId', 'attempts', 'maxAttempts'])
+      .executeTakeFirst()
+
+    if (!verification) {
+      return createErrorResponse(400, 'Token tidak valid atau sudah kadaluarsa')
+    }
+
+    if (verification.attempts >= verification.maxAttempts) {
+      return createErrorResponse(400, 'Token sudah melebihi batas percobaan')
+    }
+
+    // Hash new password
+    const hashedPassword = await hashPassword(body.data.password)
+
+    await db.transaction().execute(async (trx) => {
+      // Update verification record
+      await trx
+        .updateTable('verifications')
+        .set({
+          verifiedAt: now,
+          attempts: verification.attempts + 1,
+          updatedAt: now,
+        })
+        .where('id', '=', verification.id)
+        .execute()
+
+      // Update password
+      await trx
+        .updateTable('passwords')
+        .set({
+          hash: hashedPassword,
+          lastChangedAt: now,
+          updatedAt: now,
+        })
+        .where('userId', '=', verification.userId)
+        .execute()
     })
-  }
 
-  const now = Math.floor(Date.now() / 1000)
-
-  // Get verification record
-  const verification = await db
-    .selectFrom('verifications')
-    .where('token', '=', body.data.token)
-    .where('type', '=', 'password_reset')
-    .where('verifiedAt', 'is', null)
-    .where('expiresAt', '>', now)
-    .select(['id', 'userId', 'attempts', 'maxAttempts'])
-    .executeTakeFirst()
-
-  if (!verification) {
-    return createErrorResponse(400, 'Token tidak valid atau sudah kadaluarsa')
-  }
-
-  if (verification.attempts >= verification.maxAttempts) {
-    return createErrorResponse(400, 'Token sudah melebihi batas percobaan')
-  }
-
-  // Hash new password
-  const hashedPassword = await hashPassword(body.data.password)
-
-  await db.transaction().execute(async (trx) => {
-    // Update verification record
-    await trx
-      .updateTable('verifications')
-      .set({
-        verifiedAt: now,
-        attempts: verification.attempts + 1,
-        updatedAt: now,
-      })
-      .where('id', '=', verification.id)
-      .execute()
-
-    // Update password
-    await trx
-      .updateTable('passwords')
-      .set({
-        hash: hashedPassword,
-        lastChangedAt: now,
-        updatedAt: now,
-      })
-      .where('userId', '=', verification.userId)
-      .execute()
-  })
-
-  return {
-    status: 200,
-    success: true,
-    message: 'Password berhasil diubah',
+    return {
+      status: 200,
+      success: true,
+      message: 'Password berhasil diubah',
+    }
+  } catch (error) {
+    return throwErrorResponse(error)
   }
 })

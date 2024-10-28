@@ -81,6 +81,7 @@ export default async function seed(db: Kysely<Database>): Promise<void> {
       name: 'Root Organization',
       slug: 'root-org',
       isVerified: 1,
+      status: 'active',
       settings: '{}',
       metadata: '{}',
       createdAt: now,
