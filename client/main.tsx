@@ -21,7 +21,7 @@ if (!rootElement) {
 ReactDOM.createRoot(rootElement).render(
   <React.StrictMode>
     <AppProvider debugScreenSize={isDevelopment}>
-      <BrowserRouter>
+      <BrowserRouter basename="/">
         <AppRoutes />
       </BrowserRouter>
     </AppProvider>

@@ -11,18 +11,11 @@ export default defineNitroConfig({
   minify: isProduction,
   sourceMap: isDevelopment,
   appConfigFiles: ['~/config'],
-  renderer: '~/renderer',
+  renderer: '~/entry.client',
   errorHandler: '~/error',
   publicAssets: [{ dir: '../public' }, { dir: '../.client' }],
   serverAssets: [{ baseName: 'vite', dir: '../.client/.vite' }],
-  rollupConfig: {
-    // jsx: {
-    //   mode: 'preserve',
-    //   preset: 'react-jsx',
-    //   factory: 'React.createElement"',
-    //   fragment: 'React.Fragment',
-    // },
-  },
+  // TODO: modify rollupConfig to use React frontend
   typescript: {
     generateTsConfig: true,
     tsConfig: {
@@ -36,12 +29,8 @@ export default defineNitroConfig({
         useDefineForClassFields: true,
         verbatimModuleSyntax: false,
         tsBuildInfoFile: '../../node_modules/.tsbuildinfo',
-        paths: {
-          '#/*': ['../../client/*'],
-        },
       },
       exclude: ['../../vite.config.ts', '../../client'],
-      references: [{ path: '../../tsconfig.app.json' }, { path: '../../tsconfig.node.json' }],
     },
   },
 })
