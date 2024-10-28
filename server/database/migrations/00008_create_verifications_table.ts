@@ -21,6 +21,18 @@ export async function up(db: Kysely<Database>): Promise<void> {
     .modifyEnd(sql`STRICT`)
     .execute()
 
+  // Create auto-update trigger
+  await sql`
+    CREATE TRIGGER update_verifications_timestamp
+    AFTER UPDATE ON verifications
+    FOR EACH ROW
+    BEGIN
+      UPDATE verifications
+      SET updated_at = strftime('%s', 'now')
+      WHERE id = NEW.id;
+    END;
+  `.execute(db)
+
   // Indexes
   await db.schema
     .createIndex('verifications_user_id_idx')
@@ -53,5 +65,6 @@ export async function down(db: Kysely<Database>): Promise<void> {
   await db.schema.dropIndex('verifications_identifier_type_idx').ifExists().execute()
   await db.schema.dropIndex('verifications_token_idx').ifExists().execute()
   await db.schema.dropIndex('verifications_user_id_idx').ifExists().execute()
+  await sql`DROP TRIGGER IF EXISTS update_verifications_timestamp;`.execute(db)
   await db.schema.dropTable('verifications').ifExists().execute()
 }

@@ -21,6 +21,18 @@ export async function up(db: Kysely<Database>): Promise<void> {
     .modifyEnd(sql`STRICT`)
     .execute()
 
+  // Create auto-update trigger
+  await sql`
+    CREATE TRIGGER update_permissions_timestamp
+    AFTER UPDATE ON permissions
+    FOR EACH ROW
+    BEGIN
+      UPDATE permissions
+      SET updated_at = strftime('%s', 'now')
+      WHERE id = NEW.id;
+    END;
+  `.execute(db)
+
   // Indexes
   await db.schema.createIndex('permissions_name_idx').on('permissions').column('name').execute()
   await db.schema
@@ -39,5 +51,6 @@ export async function down(db: Kysely<Database>): Promise<void> {
   await db.schema.dropIndex('permissions_resource_action_idx').ifExists().execute()
   await db.schema.dropIndex('permissions_category_idx').ifExists().execute()
   await db.schema.dropIndex('permissions_name_idx').ifExists().execute()
+  await sql`DROP TRIGGER IF EXISTS update_permissions_timestamp;`.execute(db)
   await db.schema.dropTable('permissions').ifExists().execute()
 }

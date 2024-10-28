@@ -20,6 +20,18 @@ export async function up(db: Kysely<Database>): Promise<void> {
     .modifyEnd(sql`STRICT`)
     .execute()
 
+  // Create auto-update trigger
+  await sql`
+    CREATE TRIGGER update_rate_limits_timestamp
+    AFTER UPDATE ON rate_limits
+    FOR EACH ROW
+    BEGIN
+      UPDATE rate_limits
+      SET updated_at = strftime('%s', 'now')
+      WHERE id = NEW.id;
+    END;
+  `.execute(db)
+
   // Indexes
   await db.schema
     .createIndex('rate_limits_key_context_idx')
@@ -45,5 +57,6 @@ export async function down(db: Kysely<Database>): Promise<void> {
   await db.schema.dropIndex('rate_limits_blocked_until_idx').ifExists().execute()
   await db.schema.dropIndex('rate_limits_expires_at_idx').ifExists().execute()
   await db.schema.dropIndex('rate_limits_key_context_idx').ifExists().execute()
+  await sql`DROP TRIGGER IF EXISTS update_rate_limits_timestamp;`.execute(db)
   await db.schema.dropTable('rate_limits').ifExists().execute()
 }

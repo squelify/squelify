@@ -31,6 +31,18 @@ export async function up(db: Kysely<Database>): Promise<void> {
     .modifyEnd(sql`STRICT`)
     .execute()
 
+  // Create auto-update trigger
+  await sql`
+    CREATE TRIGGER update_jwks_timestamp
+    AFTER UPDATE ON jwks
+    FOR EACH ROW
+    BEGIN
+      UPDATE jwks
+      SET updated_at = strftime('%s', 'now')
+      WHERE id = NEW.id;
+    END;
+  `.execute(db)
+
   // Indexes
   await db.schema.createIndex('jwks_key_id_idx').on('jwks').column('key_id').execute()
   await db.schema.createIndex('jwks_is_active_idx').on('jwks').column('is_active').execute()
@@ -41,5 +53,6 @@ export async function down(db: Kysely<Database>): Promise<void> {
   await db.schema.dropIndex('jwks_expires_at_idx').ifExists().execute()
   await db.schema.dropIndex('jwks_is_active_idx').ifExists().execute()
   await db.schema.dropIndex('jwks_key_id_idx').ifExists().execute()
+  await sql`DROP TRIGGER IF EXISTS update_jwks_timestamp;`.execute(db)
   await db.schema.dropTable('jwks').ifExists().execute()
 }

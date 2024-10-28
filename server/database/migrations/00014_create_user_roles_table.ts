@@ -18,6 +18,18 @@ export async function up(db: Kysely<Database>): Promise<void> {
     .modifyEnd(sql`STRICT`)
     .execute()
 
+  // Create auto-update trigger
+  await sql`
+    CREATE TRIGGER update_user_roles_timestamp
+    AFTER UPDATE ON user_roles
+    FOR EACH ROW
+    BEGIN
+      UPDATE user_roles
+      SET updated_at = strftime('%s', 'now')
+      WHERE id = NEW.id;
+    END;
+  `.execute(db)
+
   // Indexes
   await db.schema
     .createIndex('user_roles_user_role_org_idx')
@@ -40,5 +52,6 @@ export async function down(db: Kysely<Database>): Promise<void> {
   await db.schema.dropIndex('user_roles_role_id_idx').ifExists().execute()
   await db.schema.dropIndex('user_roles_user_id_idx').ifExists().execute()
   await db.schema.dropIndex('user_roles_user_role_org_idx').ifExists().execute()
+  await sql`DROP TRIGGER IF EXISTS update_user_roles_timestamp;`.execute(db)
   await db.schema.dropTable('user_roles').ifExists().execute()
 }

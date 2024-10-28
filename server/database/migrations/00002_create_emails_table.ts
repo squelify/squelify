@@ -20,6 +20,18 @@ export async function up(db: Kysely<Database>): Promise<void> {
     .modifyEnd(sql`STRICT`)
     .execute()
 
+  // Create auto-update trigger
+  await sql`
+    CREATE TRIGGER update_emails_timestamp
+    AFTER UPDATE ON emails
+    FOR EACH ROW
+    BEGIN
+      UPDATE emails
+      SET updated_at = strftime('%s', 'now')
+      WHERE id = NEW.id;
+    END;
+  `.execute(db)
+
   // Indexes
   await db.schema.createIndex('emails_user_id_idx').on('emails').column('user_id').execute()
   await db.schema.createIndex('emails_email_idx').on('emails').column('email').execute()
@@ -34,5 +46,6 @@ export async function down(db: Kysely<Database>): Promise<void> {
   await db.schema.dropIndex('emails_is_primary_idx').ifExists().execute()
   await db.schema.dropIndex('emails_email_idx').ifExists().execute()
   await db.schema.dropIndex('emails_user_id_idx').ifExists().execute()
+  await sql`DROP TRIGGER IF EXISTS update_emails_timestamp;`.execute(db)
   await db.schema.dropTable('emails').ifExists().execute()
 }

@@ -7,7 +7,7 @@ export async function up(db: Kysely<Database>): Promise<void> {
     .createTable('sessions')
     .addColumn('id', 'text', (col) => col.primaryKey())
     .addColumn('user_id', 'text', (col) => col.notNull().references('users.id').onDelete('cascade'))
-    .addColumn('key_id', 'text', (col) => col.references('jwks.key_id').onDelete('restrict'))
+    .addColumn('key_id', 'text', (col) => col.references('jwks.id').onDelete('restrict'))
     .addColumn('refresh_token', 'text', (col) => col.notNull())
     .addColumn('ip_address', 'text')
     .addColumn('user_agent', 'text')
@@ -23,6 +23,18 @@ export async function up(db: Kysely<Database>): Promise<void> {
     .addColumn('updated_at', 'integer')
     .modifyEnd(sql`STRICT`)
     .execute()
+
+  // Create auto-update trigger
+  await sql`
+    CREATE TRIGGER update_sessions_timestamp
+    AFTER UPDATE ON sessions
+    FOR EACH ROW
+    BEGIN
+      UPDATE sessions
+      SET updated_at = strftime('%s', 'now')
+      WHERE id = NEW.id;
+    END;
+  `.execute(db)
 
   // Indexes
   await db.schema.createIndex('sessions_user_id_idx').on('sessions').column('user_id').execute()
@@ -45,5 +57,6 @@ export async function down(db: Kysely<Database>): Promise<void> {
   await db.schema.dropIndex('sessions_expires_at_idx').ifExists().execute()
   await db.schema.dropIndex('sessions_refresh_token_idx').ifExists().execute()
   await db.schema.dropIndex('sessions_user_id_idx').ifExists().execute()
+  await sql`DROP TRIGGER IF EXISTS update_sessions_timestamp;`.execute(db)
   await db.schema.dropTable('sessions').ifExists().execute()
 }

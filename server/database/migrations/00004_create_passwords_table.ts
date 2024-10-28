@@ -19,6 +19,18 @@ export async function up(db: Kysely<Database>): Promise<void> {
     .modifyEnd(sql`STRICT`)
     .execute()
 
+  // Create auto-update trigger
+  await sql`
+    CREATE TRIGGER update_passwords_timestamp
+    AFTER UPDATE ON passwords
+    FOR EACH ROW
+    BEGIN
+      UPDATE passwords
+      SET updated_at = strftime('%s', 'now')
+      WHERE id = NEW.id;
+    END;
+  `.execute(db)
+
   // Indexes
   await db.schema.createIndex('passwords_user_id_idx').on('passwords').column('user_id').execute()
   await db.schema
@@ -31,5 +43,6 @@ export async function up(db: Kysely<Database>): Promise<void> {
 export async function down(db: Kysely<Database>): Promise<void> {
   await db.schema.dropIndex('passwords_reset_token_idx').ifExists().execute()
   await db.schema.dropIndex('passwords_user_id_idx').ifExists().execute()
+  await sql`DROP TRIGGER IF EXISTS update_passwords_timestamp;`.execute(db)
   await db.schema.dropTable('passwords').ifExists().execute()
 }
