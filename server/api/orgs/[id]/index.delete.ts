@@ -1,7 +1,7 @@
-import { z } from 'zod'
-
 export default defineEventHandler(async (event) => {
   try {
+    await requireAuth(event)
+
     const db = event.context.db
     const orgId = event.context.params.id
 

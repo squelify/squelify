@@ -1,4 +1,3 @@
-import * as jose from 'jose'
 import { z } from 'zod'
 
 const RecoverySchema = z
@@ -11,68 +10,14 @@ const RecoverySchema = z
 export default defineEventHandler(async (event) => {
   try {
     const db = event.context.db
-    const token = getRequestHeader(event, 'Authorization')?.replace('Bearer ', '')
-
-    if (!token) {
-      return createErrorResponse(401, 'Unauthorized')
-    }
-
-    // Extract key ID from token header
-    const decoded = jose.decodeProtectedHeader(token)
-    if (!decoded.kid) {
-      return createErrorResponse(401, 'Invalid token format')
-    }
-
+    const payload = await requireAuth(event)
+    const body = await requireValidatedBody(event, RecoverySchema)
     const now = Math.floor(Date.now() / 1000)
-
-    // Get JWK used for signing
-    const jwk = await db
-      .selectFrom('jwks')
-      .where('keyId', '=', decoded.kid)
-      .where('isActive', '=', 1)
-      .where('expiresAt', '>', now)
-      .select(['keyId', 'publicKey', 'algorithm'])
-      .executeTakeFirst()
-
-    if (!jwk) {
-      return createErrorResponse(401, 'Invalid token signature')
-    }
-
-    // Verify token and decode payload
-    const payload = await verifyAccessToken(token, jwk)
-
-    if (!payload) {
-      return createErrorResponse(401, 'Token tidak valid')
-    }
-
-    // Check if session is still valid
-    const session = await db
-      .selectFrom('sessions')
-      .where('id', '=', payload.sid)
-      .where('userId', '=', payload.sub)
-      .where('isActive', '=', 1)
-      .where('expiresAt', '>', now)
-      .select(['id'])
-      .executeTakeFirst()
-
-    if (!session) {
-      return createErrorResponse(401, 'Session tidak valid atau telah berakhir')
-    }
-
-    const body = await readValidatedBody(event, (body) => RecoverySchema.safeParse(body))
-    if (!body.success) {
-      return createErrorResponse(400, 'Invalid request', {
-        issues: body.error.issues.map((issue) => ({
-          field: issue.path.join('.'),
-          message: issue.message,
-        })),
-      })
-    }
 
     // Get 2FA record with complete status check
     const twoFactor = await db
       .selectFrom('two_factors')
-      .where('id', '=', body.data.id)
+      .where('id', '=', body.id)
       .where('userId', '=', payload.sub)
       .select(['id', 'name', 'type', 'isVerified', 'backupCodes', 'lastUsedAt'])
       .executeTakeFirst()
@@ -102,7 +47,7 @@ export default defineEventHandler(async (event) => {
       return createErrorResponse(400, 'Tidak ada kode backup yang tersedia')
     }
 
-    const codeIndex = backupCodes.indexOf(body.data.code)
+    const codeIndex = backupCodes.indexOf(body.code)
     if (codeIndex === -1) {
       return createErrorResponse(400, 'Kode backup tidak valid atau sudah digunakan')
     }

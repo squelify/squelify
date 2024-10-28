@@ -26,43 +26,29 @@ const CreateUserSchema = z.object({
 })
 
 export default defineEventHandler(async (event) => {
+  const now = Math.floor(Date.now() / 1000)
+
   try {
+    await requireAuth(event)
     const db = event.context.db
-    const now = Math.floor(Date.now() / 1000)
-
-    // Verify authentication
-    const auth = await requireAuth(event)
-    if (!auth.success) {
-      return auth.error
-    }
-
-    // Validate request body
-    const body = await readValidatedBody(event, (body) => CreateUserSchema.safeParse(body))
-    if (!body.success) {
-      return createErrorResponse(400, 'Invalid request', {
-        issues: body.error.issues.map((issue) => ({
-          field: issue.path.join('.'),
-          message: issue.message,
-        })),
-      })
-    }
+    const body = await requireValidatedBody(event, CreateUserSchema)
 
     // Check if email already exists
     const existingEmail = await db
       .selectFrom('emails')
-      .where('email', '=', body.data.email)
+      .where('email', '=', body.email)
       .select(['id'])
       .executeTakeFirst()
 
     if (existingEmail) {
-      return createErrorResponse(409, `Email '${body.data.email}' sudah terdaftar`)
+      return createErrorResponse(409, `Email '${body.email}' sudah terdaftar`)
     }
 
-    let username = body.data.username
+    let username = body.username
 
     // Generate username if not provided
     if (!username) {
-      username = generateUsername(body.data.email)
+      username = generateUsername(body.email)
 
       let isUnique = false
       let attempt = 0
@@ -77,7 +63,7 @@ export default defineEventHandler(async (event) => {
         if (!exists) {
           isUnique = true
         } else {
-          username = generateUsername(body.data.email)
+          username = generateUsername(body.email)
           attempt++
         }
       }
@@ -104,11 +90,11 @@ export default defineEventHandler(async (event) => {
         .insertInto('users')
         .values({
           id: typeid('user').toString(),
-          firstName: body.data.firstName,
-          lastName: body.data.lastName || null,
+          firstName: body.firstName,
+          lastName: body.lastName || null,
           username,
-          avatarUrl: body.data.avatarUrl || null,
-          locale: body.data.locale,
+          avatarUrl: body.avatarUrl || null,
+          locale: body.locale,
           isActive: 1,
           isBanned: 0,
           createdAt: now,
@@ -122,15 +108,15 @@ export default defineEventHandler(async (event) => {
         .values({
           id: typeid('eml').toString(),
           userId: user.id,
-          email: body.data.email,
+          email: body.email,
           isPrimary: 1,
           isVerified: 0,
           createdAt: now,
         })
         .execute()
 
-      if (body.data.password) {
-        const hashedPassword = await hashPassword(body.data.password)
+      if (body.password) {
+        const hashedPassword = await hashPassword(body.password)
         await trx
           .insertInto('passwords')
           .values({

@@ -1,5 +1,5 @@
-import { LibsqlError } from '@libsql/client'
-import { NoResultError } from 'kysely'
+import { H3Error, type H3Event } from 'h3'
+import { isProduction } from 'std-env'
 import { z } from 'zod'
 
 interface ErrorDetails {
@@ -19,38 +19,80 @@ export function createErrorResponse(statusCode: number, message: string, details
   return { status: statusCode, success: false, message, ...details }
 }
 
-export function throwErrorResponse(error: Error, statusCode?: number) {
-  // Handle connection errors
-  if ('code' in error && error.code === 'ECONNREFUSED') {
-    const message = 'Database service is currently unavailable'
-    return { status: 503, success: false, message }
+/**
+ * Standardized error response handler
+ */
+export function throwErrorResponse(error: unknown) {
+  // If error already in correct format, return as is
+  if (isErrorResponse(error)) {
+    return error
   }
 
-  // Handle LibSQL errors
-  if (error instanceof LibsqlError) {
-    const message = `Database error ${error.code}: ${error.message}`
-    return { status: statusCode, success: false, message }
+  // Handle H3Error with data property
+  if (error instanceof H3Error && error.data) {
+    return {
+      status: error.statusCode,
+      success: false,
+      message: error.message,
+      data: error.data,
+    }
   }
 
-  // Handle Kysely errors
-  if (error instanceof NoResultError) {
-    const message = `Query error: ${error.message}`
-    return { status: statusCode, success: false, message }
+  // Handle known errors with status code
+  if (error instanceof Error && 'statusCode' in error) {
+    return createErrorResponse((error as any).statusCode || 500, error.message)
   }
 
-  if (error instanceof z.ZodError) {
-    return createErrorResponse(400, 'Invalid request', {
-      issues: error.issues.map((issue) => ({
-        field: issue.path.join('.'),
-        message: issue.message,
-      })),
+  // Default error response
+  const err = error as Error
+  return createErrorResponse(
+    500,
+    err.message || 'Internal server error',
+    !isProduction ? { message: err.message } : undefined
+  )
+}
+/**
+ * Type guard for error response format
+ */
+function isErrorResponse(error: unknown): error is {
+  status: number
+  success: boolean
+  message: string
+  data?: any
+} {
+  return (
+    typeof error === 'object' &&
+    error !== null &&
+    'status' in error &&
+    'success' in error &&
+    'message' in error
+  )
+}
+
+/**
+ * Validates request body against a Zod schema and returns the parsed data
+ * @param event H3Event from Nitro
+ * @param schema Zod schema for validation
+ * @returns Parsed and validated data
+ */
+export async function requireValidatedBody<T extends z.ZodType>(
+  event: H3Event,
+  schema: T
+): Promise<z.infer<T>> {
+  const body = await readValidatedBody(event, (body) => schema.safeParse(body))
+
+  if (!body.success) {
+    throw createError({
+      statusCode: 400,
+      data: {
+        issues: body.error.issues.map((issue) => ({
+          field: issue.path.join('.'),
+          message: issue.message,
+        })),
+      },
+      message: 'Invalid request',
     })
   }
 
-  // Handle unknown errors
-  return {
-    status: statusCode || 500,
-    success: false,
-    message: error.message || 'An unexpected error occurred',
-  }
+  return body.data
 }

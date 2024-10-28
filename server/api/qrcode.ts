@@ -16,6 +16,6 @@ export default defineEventHandler(async (event) => {
     setResponseHeader(event, 'Content-Type', 'image/svg+xml')
     return send(event, svg)
   } catch (error) {
-    return throwErrorResponse(error, 400)
+    return throwErrorResponse(error)
   }
 })

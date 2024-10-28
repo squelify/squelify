@@ -1,43 +1,41 @@
 import type { H3Event } from 'h3'
 import * as jose from 'jose'
 
-interface AuthResult {
-  success: boolean
-  error?: {
-    status: number
-    success: boolean
-    message: string
-  }
-  data?: {
-    user: {
-      id: string
-      email: string
-    }
-    session: {
-      id: string
-    }
-  }
+// Interface untuk hasil verifikasi token yang lebih lengkap
+interface VerifiedToken {
+  sub: string
+  sid: string
+  email: string
+  name?: string
+  given_name?: string
+  family_name?: string
+  locale?: string
+  amr?: string[]
+  roles?: string[]
+  perms?: string[]
+  org_id?: string
 }
 
-export async function requireAuth(event: H3Event): Promise<AuthResult> {
+// Middleware untuk memverifikasi token dan mengembalikan payload
+export async function requireAuth(event: H3Event): Promise<VerifiedToken> {
   const db = event.context.db
-  const now = Math.floor(Date.now() / 1000)
   const token = getRequestHeader(event, 'Authorization')?.replace('Bearer ', '')
+  const now = Math.floor(Date.now() / 1000)
 
   if (!token) {
-    return {
-      success: false,
-      error: createErrorResponse(401, 'Unauthorized'),
-    }
+    throw createError({
+      statusCode: 401,
+      message: 'Unauthorized',
+    })
   }
 
   // Extract key ID from token header
   const decoded = jose.decodeProtectedHeader(token)
   if (!decoded.kid) {
-    return {
-      success: false,
-      error: createErrorResponse(401, 'Invalid token format'),
-    }
+    throw createError({
+      statusCode: 401,
+      message: 'Invalid token format',
+    })
   }
 
   // Get JWK used for signing
@@ -50,19 +48,19 @@ export async function requireAuth(event: H3Event): Promise<AuthResult> {
     .executeTakeFirst()
 
   if (!jwk) {
-    return {
-      success: false,
-      error: createErrorResponse(401, 'Invalid token signature'),
-    }
+    throw createError({
+      statusCode: 401,
+      message: 'Invalid token signature',
+    })
   }
 
   // Verify token and decode payload
   const payload = await verifyAccessToken(token, jwk)
   if (!payload) {
-    return {
-      success: false,
-      error: createErrorResponse(401, 'Token tidak valid'),
-    }
+    throw createError({
+      statusCode: 401,
+      message: 'Token tidak valid',
+    })
   }
 
   // Check if session is still valid
@@ -76,22 +74,11 @@ export async function requireAuth(event: H3Event): Promise<AuthResult> {
     .executeTakeFirst()
 
   if (!session) {
-    return {
-      success: false,
-      error: createErrorResponse(401, 'Session tidak valid atau telah berakhir'),
-    }
+    throw createError({
+      statusCode: 401,
+      message: 'Session tidak valid atau telah berakhir',
+    })
   }
 
-  return {
-    success: true,
-    data: {
-      user: {
-        id: payload.sub,
-        email: payload.email,
-      },
-      session: {
-        id: session.id,
-      },
-    },
-  }
+  return payload as VerifiedToken
 }

@@ -47,64 +47,11 @@ const RegisterPasskeySchema = z
 
 export default defineEventHandler(async (event) => {
   try {
-    const db = event.context.db
     const appConfig = useAppConfig(event) as AppConfig
-    const token = getRequestHeader(event, 'Authorization')?.replace('Bearer ', '')
-
-    if (!token) {
-      return createErrorResponse(401, 'Unauthorized')
-    }
-
-    // Extract key ID from token header
-    const decoded = jose.decodeProtectedHeader(token)
-    if (!decoded.kid) {
-      return createErrorResponse(401, 'Invalid token format')
-    }
-
+    const db = event.context.db
+    const payload = await requireAuth(event)
+    const body = await requireValidatedBody(event, RegisterPasskeySchema)
     const now = Math.floor(Date.now() / 1000)
-
-    // Get JWK used for signing
-    const jwk = await db
-      .selectFrom('jwks')
-      .where('keyId', '=', decoded.kid)
-      .where('isActive', '=', 1)
-      .where('expiresAt', '>', now)
-      .select(['keyId', 'publicKey', 'algorithm'])
-      .executeTakeFirst()
-
-    if (!jwk) {
-      return createErrorResponse(401, 'Invalid token signature')
-    }
-
-    // Verify token and decode payload
-    const payload = await verifyAccessToken(token, jwk)
-    if (!payload) {
-      return createErrorResponse(401, 'Token tidak valid')
-    }
-
-    // Check if session is still valid
-    const session = await db
-      .selectFrom('sessions')
-      .where('id', '=', payload.sid)
-      .where('userId', '=', payload.sub)
-      .where('isActive', '=', 1)
-      .where('expiresAt', '>', now)
-      .select(['id'])
-      .executeTakeFirst()
-
-    if (!session) {
-      return createErrorResponse(401, 'Session tidak valid atau telah berakhir')
-    }
-
-    const body = await readValidatedBody(event, (body) => RegisterPasskeySchema.safeParse(body))
-    if (!body.success) {
-      return createErrorResponse(400, 'Invalid request', {
-        issues: body.error.issues.map((issue) => ({
-          field: issue.path.join('.'),
-          message: issue.message,
-        })),
-      })
-    }
 
     // Get user info
     const user = await db
@@ -121,7 +68,7 @@ export default defineEventHandler(async (event) => {
     const existingPasskey = await db
       .selectFrom('passkeys')
       .where('userId', '=', user.id)
-      .where('name', '=', body.data.name)
+      .where('name', '=', body.name)
       .select(['id'])
       .executeTakeFirst()
 
@@ -166,7 +113,7 @@ export default defineEventHandler(async (event) => {
 
     // Verify registration response
     const verification: VerifiedRegistrationResponse = await verifyRegistrationResponse({
-      response: body.data.response.response,
+      response: body.response.response,
       expectedChallenge: options.challenge,
       expectedOrigin: appConfig.baseURL,
       expectedRPID: appConfig.domain,
@@ -185,11 +132,11 @@ export default defineEventHandler(async (event) => {
         id: typeid('pass').toString(),
         userId: user.id,
         webauthnUserId: webauthnUserIdString,
-        name: body.data.name,
+        name: body.name,
         credentialId: Buffer.from(credential.id).toString('base64url'),
         credentialPublicKey: Buffer.from(credential.publicKey).toString('base64url'),
         counter: credential.counter,
-        transports: body.data.response.response.transports || null,
+        transports: body.response.response.transports || null,
         rpId: appConfig.domain,
         origin: appConfig.baseURL,
         createdAt: now,
@@ -201,7 +148,7 @@ export default defineEventHandler(async (event) => {
       success: true,
       message: 'Passkey berhasil didaftarkan',
       data: {
-        name: body.data.name,
+        name: body.name,
         registeredAt: new Date(now * 1000).toISOString(),
       },
     }

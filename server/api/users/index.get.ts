@@ -12,24 +12,22 @@ const QueryParamSchema = z.object({
 export default defineCachedEventHandler(
   async (event) => {
     try {
+      await requireAuth(event)
+      const db = event.context.db
+
       // Validate query params
       const query = getQuery(event)
       const { page, limit } = QueryParamSchema.parse(query)
       const offset = (page - 1) * limit
 
       // Get total count for pagination
-      const totalCount = await event.context.db
+      const totalCount = await db
         .selectFrom('users')
         .select((eb) => eb.fn.countAll().as('count'))
         .executeTakeFirst()
 
       // Get paginated users
-      const users = await event.context.db
-        .selectFrom('users')
-        .selectAll()
-        .limit(limit)
-        .offset(offset)
-        .execute()
+      const users = await db.selectFrom('users').selectAll().limit(limit).offset(offset).execute()
 
       if (!users) {
         return createErrorResponse(400, 'No user found')

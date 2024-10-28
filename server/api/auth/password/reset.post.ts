@@ -17,23 +17,13 @@ const PasswordResetSchema = z
 export default defineEventHandler(async (event) => {
   try {
     const db = event.context.db
-    const body = await readValidatedBody(event, (body) => PasswordResetSchema.safeParse(body))
-
-    if (!body.success) {
-      return createErrorResponse(400, 'Invalid request', {
-        issues: body.error.issues.map((issue) => ({
-          field: issue.path.join('.'),
-          message: issue.message,
-        })),
-      })
-    }
-
+    const body = await requireValidatedBody(event, PasswordResetSchema)
     const now = Math.floor(Date.now() / 1000)
 
     // Get verification record
     const verification = await db
       .selectFrom('verifications')
-      .where('token', '=', body.data.token)
+      .where('token', '=', body.token)
       .where('type', '=', 'password_reset')
       .where('verifiedAt', 'is', null)
       .where('expiresAt', '>', now)
@@ -49,7 +39,7 @@ export default defineEventHandler(async (event) => {
     }
 
     // Hash new password
-    const hashedPassword = await hashPassword(body.data.password)
+    const hashedPassword = await hashPassword(body.password)
 
     await db.transaction().execute(async (trx) => {
       // Update verification record

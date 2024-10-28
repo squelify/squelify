@@ -7,23 +7,13 @@ const PasswordRecoverySchema = z.object({ email: z.string().email('Email tidak v
 
 export default defineEventHandler(async (event) => {
   try {
-    const db = event.context.db
     const appConfig = useAppConfig(event) as AppConfig
-    const body = await readValidatedBody(event, (body) => PasswordRecoverySchema.safeParse(body))
-
-    if (!body.success) {
-      return createErrorResponse(400, 'Invalid request', {
-        issues: body.error.issues.map((issue) => ({
-          field: issue.path.join('.'),
-          message: issue.message,
-        })),
-      })
-    }
-
+    const db = event.context.db
+    const body = await requireValidatedBody(event, PasswordRecoverySchema)
     const now = Math.floor(Date.now() / 1000)
 
     // Find user by email
-    const user = await findUserByEmail(body.data.email)
+    const user = await findUserByEmail(body.email)
 
     if (!user) {
       return createErrorResponse(400, 'Email tidak terdaftar')
@@ -37,7 +27,7 @@ export default defineEventHandler(async (event) => {
         id: typeid('ver').toString(),
         userId: user.id,
         type: 'password_reset',
-        identifier: body.data.email,
+        identifier: body.email,
         token,
         expiresAt: now + 60 * 30, // 30 minutes
         createdAt: now,

@@ -1,10 +1,12 @@
-import { UserSelect } from '~/database/schemas/user'
-
 export default defineCachedEventHandler(
   async (event) => {
     try {
+      await requireAuth(event)
+
+      const db = event.context.db
       const userId = event.context.params.id
-      const user = await event.context.db
+
+      const user = await db
         .selectFrom('users')
         .where('id', '=', userId)
         .selectAll()

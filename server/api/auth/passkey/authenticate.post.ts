@@ -1,7 +1,8 @@
-export default defineEventHandler(async (_event) => {
+export default defineEventHandler(async (event) => {
   try {
+    await requireAuth(event)
     return { message: 'Not yet implemented' }
   } catch (error) {
-    return throwErrorResponse(error, 400)
+    return throwErrorResponse(error)
   }
 })

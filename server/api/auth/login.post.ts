@@ -15,18 +15,8 @@ export const LoginRequestSchema = z.object({
 export default defineEventHandler(async (event) => {
   try {
     const db = event.context.db
-    const body = await readValidatedBody(event, (body) => LoginRequestSchema.safeParse(body))
-
-    if (!body.success) {
-      return createErrorResponse(400, 'Invalid request', {
-        issues: body.error.issues.map((issue) => ({
-          field: issue.path.join('.'),
-          message: issue.message,
-        })),
-      })
-    }
-
-    const { identity, password, deviceId, deviceType = 'browser' } = body.data
+    const body = await requireValidatedBody(event, LoginRequestSchema)
+    const { identity, password, deviceId, deviceType = 'browser' } = body
 
     // Get client info
     const headers = getRequestHeaders(event)

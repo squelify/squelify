@@ -18,62 +18,9 @@ const PasswordUpdateSchema = z
 export default defineEventHandler(async (event) => {
   try {
     const db = event.context.db
-    const token = getRequestHeader(event, 'Authorization')?.replace('Bearer ', '')
-
-    if (!token) {
-      return createErrorResponse(401, 'Unauthorized')
-    }
-
-    // Extract key ID from token header
-    const decoded = jose.decodeProtectedHeader(token)
-    if (!decoded.kid) {
-      return createErrorResponse(401, 'Invalid token format')
-    }
-
+    const payload = await requireAuth(event)
+    const body = await requireValidatedBody(event, PasswordUpdateSchema)
     const now = Math.floor(Date.now() / 1000)
-
-    // Get JWK used for signing
-    const jwk = await db
-      .selectFrom('jwks')
-      .where('keyId', '=', decoded.kid)
-      .where('isActive', '=', 1)
-      .where('expiresAt', '>', now)
-      .select(['keyId', 'publicKey', 'algorithm'])
-      .executeTakeFirst()
-
-    if (!jwk) {
-      return createErrorResponse(401, 'Invalid token signature')
-    }
-
-    // Verify token and decode payload
-    const payload = await verifyAccessToken(token, jwk)
-    if (!payload) {
-      return createErrorResponse(401, 'Token tidak valid')
-    }
-
-    // Check if session is still valid
-    const session = await db
-      .selectFrom('sessions')
-      .where('id', '=', payload.sid)
-      .where('userId', '=', payload.sub)
-      .where('isActive', '=', 1)
-      .where('expiresAt', '>', now)
-      .select(['id'])
-      .executeTakeFirst()
-
-    if (!session) {
-      return createErrorResponse(401, 'Session tidak valid atau telah berakhir')
-    }
-
-    const body = await readValidatedBody(event, (body) => PasswordUpdateSchema.safeParse(body))
-    if (!body.success) {
-      return createErrorResponse(400, 'Invalid request', {
-        issues: body.error.issues.map((issue) => ({
-          field: issue.path.join('.'),
-          message: issue.message,
-        })),
-      })
-    }
 
     // Get current password
     const currentPassword = await db
@@ -87,13 +34,13 @@ export default defineEventHandler(async (event) => {
     }
 
     // Verify current password
-    const isValid = await verifyPassword(body.data.currentPassword, currentPassword.hash)
+    const isValid = await verifyPassword(body.currentPassword, currentPassword.hash)
     if (!isValid) {
       return createErrorResponse(400, 'Password saat ini tidak valid')
     }
 
     // Hash new password
-    const hashedPassword = await hashPassword(body.data.newPassword)
+    const hashedPassword = await hashPassword(body.newPassword)
 
     // Update password
     await db
