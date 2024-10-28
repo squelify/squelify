@@ -2,7 +2,6 @@ import { readdir } from 'node:fs/promises'
 import chalk from 'chalk'
 import { defineCommand } from 'citty'
 import Table from 'cli-table3'
-import consola from 'consola'
 import { resolve } from 'pathe'
 import stripAnsi from 'strip-ansi'
 
@@ -11,7 +10,14 @@ interface RouteInfo {
   methods: Set<string>
 }
 
-const TABLE_WIDTH = 70
+function formatPath(path: string, tableColWidth: number): string {
+  const maxWidth = tableColWidth - 3
+  const basePath = path.replace(/^\/api/, chalk.gray('/api'))
+  const coloredPath = basePath.replace(/:(\w+)/g, (_, param) => chalk.cyan(`:${param}`))
+  const rawLength = stripAnsi(path).length
+  const dots = chalk.gray('·'.repeat(maxWidth - rawLength))
+  return `${coloredPath} ${dots}`
+}
 
 const METHOD_COLORS = {
   GET: chalk.green,
@@ -20,15 +26,6 @@ const METHOD_COLORS = {
   DELETE: chalk.red,
   PATCH: chalk.magenta,
 } as const
-
-function formatPath(path: string): string {
-  const maxWidth = TABLE_WIDTH - 3
-  const basePath = path.replace(/^\/api/, chalk.gray('/api'))
-  const coloredPath = basePath.replace(/:(\w+)/g, (_, param) => chalk.cyan(`:${param}`))
-  const rawLength = stripAnsi(path).length
-  const dots = chalk.gray('·'.repeat(maxWidth - rawLength))
-  return `${coloredPath} ${dots}`
-}
 
 function formatMethods(methods: Set<string>): string {
   return Array.from(methods)
@@ -113,6 +110,27 @@ async function scanApiRoutes(dir: string, baseRoute = ''): Promise<RouteInfo[]> 
   return Array.from(routesMap.values())
 }
 
+function getMethodStats(routes: RouteInfo[]) {
+  const methodCounts = {
+    GET: 0,
+    POST: 0,
+    PUT: 0,
+    DELETE: 0,
+    PATCH: 0,
+  }
+
+  for (const route of routes) {
+    for (const method of route.methods) {
+      methodCounts[method]++
+    }
+  }
+
+  return {
+    total: routes.length,
+    counts: methodCounts,
+  }
+}
+
 export default defineCommand({
   meta: {
     name: 'print-routes',
@@ -130,9 +148,15 @@ export default defineCommand({
       const apiDir = resolve(process.cwd(), 'server/api')
       const routes = await scanApiRoutes(apiDir)
 
+      // stdout.columns || 120 -< import { stdout } from 'node:process'
+      const terminalWidth = 80
+      const methodColWidth = 21
+      const pathColWidth = terminalWidth - methodColWidth - 5 // Account for borders and padding
+
       const table = new Table({
         head: ['Methods', 'Path'],
-        colWidths: [20, TABLE_WIDTH],
+        colWidths: [methodColWidth, pathColWidth],
+
         colAligns: ['right', 'left'],
         chars: {
           top: '─',
@@ -159,12 +183,23 @@ export default defineCommand({
       })
 
       for (const route of routes.sort(sortRoutes)) {
-        table.push([formatMethods(route.methods), formatPath(route.path)])
+        table.push([formatMethods(route.methods), formatPath(route.path, pathColWidth)])
       }
 
-      consola.log(table.toString())
+      console.info(table.toString())
+
+      const stats = getMethodStats(routes)
+      console.info(
+        chalk.bold('Total Routes:'),
+        chalk.cyan(stats.total),
+        chalk.bold('-'),
+        Object.entries(stats.counts)
+          .filter(([_, count]) => count > 0)
+          .map(([method, count]) => `${METHOD_COLORS[method](method)} ${chalk.cyan(count)}`)
+          .join(chalk.gray(' · '))
+      )
     } catch (error) {
-      consola.error(error instanceof Error ? error.message : 'Unknown error occurred')
+      console.error(error instanceof Error ? error.message : 'Unknown error occurred')
       process.exit(1)
     }
   },
