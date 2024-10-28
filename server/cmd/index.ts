@@ -18,6 +18,7 @@ const main = defineCommand({
   subCommands: {
     make: () => import('./make').then((r) => r.default),
     migrate: () => import('./migrate').then((r) => r.default),
+    routes: () => import('./print-routes').then((r) => r.default),
   },
   async run({ args, cmd }) {
     // Show help page if --help flag is used or no subcommand provided
