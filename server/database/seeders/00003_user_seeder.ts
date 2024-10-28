@@ -1,3 +1,4 @@
+import consola from 'consola'
 import { type Kysely } from 'kysely'
 import { typeid } from 'typeid-js'
 import type { Database } from '~/database/db.schema'
@@ -13,6 +14,30 @@ import { hashPassword } from '~/utils/string'
 export default async function seed(db: Kysely<Database>): Promise<void> {
   await db.transaction().execute(async (trx) => {
     const now = Math.floor(Date.now() / 1000)
+
+    // Check for existing admin user
+    const existingUser = await trx
+      .selectFrom('emails')
+      .where('email', '=', 'admin@example.com')
+      .select('userId')
+      .executeTakeFirst()
+
+    if (existingUser) {
+      consola.warn('Admin user already exists, skipping user seed')
+      return
+    }
+
+    // Check for existing root organization
+    const existingOrg = await trx
+      .selectFrom('organizations')
+      .where('slug', '=', 'root-org')
+      .select('id')
+      .executeTakeFirst()
+
+    if (existingOrg) {
+      consola.warn('Root organization already exists, skipping organization seed')
+      return
+    }
 
     // Create admin user
     const userId = typeid('user').toString()
@@ -82,14 +107,18 @@ export default async function seed(db: Kysely<Database>): Promise<void> {
       createdAt: now,
     }
 
-    // Assign admin role to user
+    // Get admin role
     const adminRole = await trx
       .selectFrom('roles')
       .where('name', '=', 'admin')
       .select('id')
       .executeTakeFirst()
-    if (!adminRole) throw new Error('Admin role not found')
 
+    if (!adminRole) {
+      throw new Error('Admin role not found')
+    }
+
+    // Assign admin role
     const userRoleId = typeid('urol').toString()
     const newUserRole: UserRoleInsert = {
       id: userRoleId,
@@ -98,6 +127,7 @@ export default async function seed(db: Kysely<Database>): Promise<void> {
       createdAt: now,
     }
 
+    // Execute all inserts
     await trx.insertInto('users').values(newUser).execute()
     await trx.insertInto('emails').values(newEmail).execute()
     await trx.insertInto('passwords').values(newPassword).execute()
@@ -105,5 +135,7 @@ export default async function seed(db: Kysely<Database>): Promise<void> {
     await trx.insertInto('members').values(newMember).execute()
     await trx.insertInto('accounts').values(newAccount).execute()
     await trx.insertInto('user_roles').values(newUserRole).execute()
+
+    consola.info('Admin user and organization created successfully')
   })
 }

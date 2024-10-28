@@ -24,7 +24,14 @@ export async function verifyUserCredentials(db: Kysely<Database>, email: string,
     .where('emails.email', '=', email)
     .where('users.isActive', '=', 1)
     .where('emails.isVerified', '=', 1)
-    .select(['users.id', 'users.firstName', 'users.lastName', 'emails.email', 'passwords.hash'])
+    .select([
+      'users.id',
+      'users.firstName',
+      'users.lastName',
+      'users.locale',
+      'emails.email',
+      'passwords.hash',
+    ])
     .executeTakeFirst()
 
   if (!user) return null
@@ -37,6 +44,7 @@ export async function verifyUserCredentials(db: Kysely<Database>, email: string,
     email: user.email,
     firstName: user.firstName,
     lastName: user.lastName,
+    locale: user.locale,
   }
 }
 
@@ -51,6 +59,9 @@ export async function createUserSession(
 ) {
   const now = Math.floor(Date.now() / 1000)
   const expiresAt = now + 7 * 24 * 60 * 60 // 7 days
+
+  // Update user's last sign in timestamp
+  await db.updateTable('users').set({ lastSignInAt: now }).where('id', '=', userId).execute()
 
   const session = await db
     .insertInto('sessions')

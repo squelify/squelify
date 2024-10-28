@@ -1,7 +1,9 @@
 import { isProduction } from 'std-env'
+import { typeid } from 'typeid-js'
 import { z } from 'zod'
 import { createUserSession, verifyUserCredentials } from '~/database/repository/auth.repo'
 import { getActiveJWK } from '~/database/repository/jwk.repo'
+import { JWTPayload } from '~/utils/jwt'
 
 export const LoginRequestSchema = z.object({
   identity: z.string().email('Email tidak valid'),
@@ -52,12 +54,24 @@ export default defineEventHandler(async (event) => {
   })
 
   // Generate tokens with key info
-  const payload = {
-    userId: user.id,
+  const now = Math.floor(Date.now() / 1000)
+  const payload: JWTPayload = {
+    iss: 'auth-service',
+    sub: user.id,
+    aud: ['api://default'],
+    exp: now + 900,
+    nbf: now,
+    iat: now,
+    jti: typeid('tok').toString(),
+    sid: session.id,
+
+    given_name: user.firstName,
+    family_name: user.lastName,
+    name: `${user.firstName} ${user.lastName}`.trim(),
     email: user.email,
-    firstName: user.firstName,
-    sessionId: session.id,
-    kid: activeKey.keyId,
+    locale: user.locale,
+
+    amr: ['pwd'], // Password authentication
   }
 
   const accessToken = await generateAccessToken(payload, activeKey)

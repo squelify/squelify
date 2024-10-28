@@ -33,7 +33,6 @@ const jwkAlgorithmEnum = z.enum([
   'ES512',
   'EdDSA',
 ])
-
 export type JWKAlgorithm = z.infer<typeof jwkAlgorithmEnum>
 
 // JWK schema with validation rules
@@ -66,3 +65,6 @@ export interface JWK {
 export type JWKSelect = Selectable<JWK>
 export type JWKInsert = Insertable<JWK>
 export type JWKUpdate = Updateable<JWK>
+
+// Type for JWT verification that only requires necessary fields
+export type JWKVerifyKey = Pick<JWKSelect, 'keyId' | 'publicKey' | 'algorithm'>
