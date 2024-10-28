@@ -75,6 +75,12 @@ export default defineEventHandler(async (event) => {
   }
 
   const accessToken = await generateAccessToken(payload, activeKey)
+  const twoFactor = await db
+    .selectFrom('two_factors')
+    .where('userId', '=', user.id)
+    .where('isVerified', '=', 1)
+    .select(['type'])
+    .executeTakeFirst()
 
   // Set secure session cookie
   setCookie(event, 'auth_session', session.id, {
@@ -99,6 +105,10 @@ export default defineEventHandler(async (event) => {
       session: {
         id: session.id,
         refreshToken: session.refreshToken,
+      },
+      security: {
+        requires2FA: !!twoFactor,
+        type: twoFactor?.type || null,
       },
       accessToken,
     },

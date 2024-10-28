@@ -21,7 +21,7 @@ export default defineCommand({
   },
   run({ args }) {
     try {
-      const secureKey = generateRandomStr(40)
+      const secureKey = generateRandomStr({ size: 40 })
 
       if (args.plain) {
         consola.log(secureKey)

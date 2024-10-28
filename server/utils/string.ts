@@ -49,14 +49,36 @@ export async function verifyPassword(password: string, hash: string): Promise<bo
  * Generates a cryptographically secure random key with specified length
  * Uses uncrypto which provides isomorphic crypto API
  */
-export function generateRandomStr(length = 10): string {
-  const charset = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'
-  const bytes = new Uint8Array(length)
+interface RandomStringOptions {
+  size?: number
+  pattern?: string
+  digitsOnly?: boolean
+  includeLower?: boolean
+  includeUpper?: boolean
+  includeSpecial?: boolean
+}
+
+export function generateRandomStr(config: RandomStringOptions = {}): string {
+  const digits = '0123456789'
+  const lowerChars = 'abcdefghijklmnopqrstuvwxyz'
+  const upperChars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
+  const specialChars = '!@#$%^&*()_+-=[]{}|;:,.<>?'
+
+  let allowedChars = lowerChars + upperChars + digits
+
+  if (config.pattern) allowedChars = config.pattern
+  if (config.digitsOnly) allowedChars = digits
+  if (config.includeLower === false) allowedChars = allowedChars.replace(lowerChars, '')
+  if (config.includeUpper === false) allowedChars = allowedChars.replace(upperChars, '')
+  if (config.includeSpecial) allowedChars += specialChars
+
+  const size = config.size || 10
+  const bytes = new Uint8Array(size)
   getRandomValues(bytes)
 
   let result = ''
-  for (let i = 0; i < length; i++) {
-    result += charset[bytes[i] % charset.length]
+  for (let i = 0; i < size; i++) {
+    result += allowedChars[bytes[i] % allowedChars.length]
   }
   return result
 }
