@@ -7,6 +7,7 @@ import type { MemberInsert } from '~/database/schemas/member'
 import type { OrganizationInsert } from '~/database/schemas/organization'
 import type { PasswordInsert } from '~/database/schemas/password'
 import type { UserInsert } from '~/database/schemas/user'
+import type { UserRoleInsert } from '~/database/schemas/user_role'
 import { hashPassword } from '~/utils/string'
 
 export default async function seed(db: Kysely<Database>): Promise<void> {
@@ -19,7 +20,7 @@ export default async function seed(db: Kysely<Database>): Promise<void> {
       id: userId,
       username: 'admin',
       firstName: 'Admin',
-      lastName: 'System',
+      lastName: 'Sistem',
       locale: 'en',
       isActive: 1,
       createdAt: now,
@@ -79,11 +80,28 @@ export default async function seed(db: Kysely<Database>): Promise<void> {
       createdAt: now,
     }
 
+    // Assign admin role to user
+    const adminRole = await trx
+      .selectFrom('roles')
+      .where('name', '=', 'admin')
+      .select('id')
+      .executeTakeFirst()
+    if (!adminRole) throw new Error('Admin role not found')
+
+    const userRoleId = typeid('urol').toString()
+    const newUserRole: UserRoleInsert = {
+      id: userRoleId,
+      userId: userId,
+      roleId: adminRole.id,
+      createdAt: now,
+    }
+
     await trx.insertInto('users').values(newUser).execute()
     await trx.insertInto('emails').values(newEmail).execute()
     await trx.insertInto('passwords').values(newPassword).execute()
     await trx.insertInto('organizations').values(newOrg).execute()
     await trx.insertInto('members').values(newMember).execute()
     await trx.insertInto('accounts').values(newAccount).execute()
+    await trx.insertInto('user_roles').values(newUserRole).execute()
   })
 }

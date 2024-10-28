@@ -1,0 +1,70 @@
+import { type Kysely, sql } from 'kysely'
+import { typeid } from 'typeid-js'
+import type { Database } from '../db.schema'
+import type { RateLimitContext } from '../schemas/rate_limit'
+
+interface CreateSessionOptions {
+  ipAddress: string
+  userAgent: string
+  deviceId?: string
+  deviceType?: string
+  location?: string
+}
+
+/**
+ * Find user account by email and verify password
+ * Returns user data with verified email if credentials are valid
+ */
+export async function verifyUserCredentials(db: Kysely<Database>, email: string, password: string) {
+  const user = await db
+    .selectFrom('users')
+    .innerJoin('emails', 'emails.userId', 'users.id')
+    .innerJoin('passwords', 'passwords.userId', 'users.id')
+    .where('emails.email', '=', email)
+    .where('users.isActive', '=', 1)
+    .where('emails.isVerified', '=', 1)
+    .select(['users.id', 'users.firstName', 'users.lastName', 'emails.email', 'passwords.hash'])
+    .executeTakeFirst()
+
+  if (!user) return null
+
+  const isValid = await verifyPassword(password, user.hash)
+  if (!isValid) return null
+
+  return {
+    id: user.id,
+    email: user.email,
+    firstName: user.firstName,
+    lastName: user.lastName,
+  }
+}
+
+/**
+ * Create new session for authenticated user
+ * Handles session creation with device tracking and metadata
+ */
+export async function createUserSession(
+  db: Kysely<Database>,
+  userId: string,
+  options: CreateSessionOptions
+) {
+  const session = await db
+    .insertInto('sessions')
+    .values({
+      id: typeid('sess').toString(),
+      userId,
+      refreshToken: typeid('tok').toString(),
+      ipAddress: options.ipAddress,
+      userAgent: options.userAgent,
+      deviceId: options.deviceId,
+      deviceType: options.deviceType,
+      location: options.location,
+      isActive: 1,
+      expiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString(),
+      lastActiveAt: new Date().toISOString(),
+    })
+    .returningAll()
+    .executeTakeFirst()
+
+  return session
+}

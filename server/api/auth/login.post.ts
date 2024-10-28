@@ -1,60 +1,84 @@
+import { isProduction } from 'std-env'
 import { z } from 'zod'
-import { findUserByEmail } from '~/database/repository/user.repo'
-import type { OtpCodeProps } from '~/mailer/templates/otp-code'
+import { createUserSession, verifyUserCredentials } from '~/database/repository/auth.repo'
 
 export const LoginRequestSchema = z.object({
-  identity: z.string().email({ message: 'Invalid email address' }),
-  password: z.string({ message: 'Password is required' }),
+  identity: z.string().email('Email tidak valid'),
+  password: z.string().min(8, 'Password minimal 8 karakter'),
+  deviceId: z.string().optional(),
+  deviceType: z.string().optional(),
 })
 
 export default defineEventHandler(async (event) => {
-  try {
-    const parseBody = await readValidatedBody(event, (body) => LoginRequestSchema.safeParse(body))
+  const db = event.context.db
 
-    if (!parseBody.success) {
-      return createErrorResponse(400, 'Invalid request', {
-        issues: parseBody.error.issues.map((issue) => ({
-          field: issue.path.join('.'),
-          message: issue.message,
-        })),
-      })
-    }
+  // Get client info
+  const headers = getRequestHeaders(event)
+  const ipAddress = getRequestIP(event)
+  const userAgent = headers['user-agent'] || 'unknown'
 
-    const user = await findUserByEmail(parseBody.data.identity)
+  const body = await readValidatedBody(event, (body) => LoginRequestSchema.safeParse(body))
 
-    if (!user) {
-      return createErrorResponse(400, 'Invalid credentials')
-    }
-
-    await sendJSXEmail<OtpCodeProps>('otp-code', 'user@example.com', {
-      name: 'John Doe',
-      email: 'user@example.com',
-      otp: '123456',
+  if (!body.success) {
+    return createErrorResponse(400, 'Invalid request', {
+      issues: body.error.issues.map((issue) => ({
+        field: issue.path.join('.'),
+        message: issue.message,
+      })),
     })
+  }
 
-    const hashedPassword = await hashPassword(parseBody.data.password)
-    logger.debug('[app]', hashedPassword)
+  const { identity, password, deviceId, deviceType = 'browser' } = body.data
 
-    const payload = { userId: user.id, email: user.email }
-    const accessToken = await generateAccessToken(payload)
-    const refreshToken = await generateRefreshToken(payload)
-    const sessionId = 'sess_1212121212121212121'
+  // Verify credentials
+  const user = await verifyUserCredentials(db, identity, password)
+  if (!user) {
+    return createErrorResponse(401, 'Email atau password salah')
+  }
 
-    // setCookie(event, 'auth_session', hashedPassword, {
-    //   httpOnly: true,
-    //   secure: isProduction,
-    //   sameSite: 'lax',
-    //   path: '/',
-    //   maxAge: 60 * 60 * 24 * 7, // 7 days
-    // })
+  // Create session with enhanced tracking
+  const session = await createUserSession(db, user.id, {
+    ipAddress,
+    userAgent,
+    deviceId,
+    deviceType,
+    location: null,
+  })
 
-    return {
-      status: 200,
-      success: true,
-      message: null,
-      data: { userId: user.id, sessionId, accessToken, refreshToken },
-    }
-  } catch (error) {
-    return throwErrorResponse(error, 400)
+  // Generate tokens with user context
+  const payload = {
+    userId: user.id,
+    email: user.email,
+    firstName: user.firstName,
+    sessionId: session.id,
+  }
+  const accessToken = await generateAccessToken(payload)
+
+  // Set secure session cookie
+  setCookie(event, 'auth_session', session.id, {
+    httpOnly: true,
+    secure: isProduction,
+    sameSite: 'lax',
+    path: '/',
+    maxAge: 60 * 60 * 24 * 7 /* 7 days */,
+  })
+
+  return {
+    status: 200,
+    success: true,
+    message: 'Login berhasil',
+    data: {
+      user: {
+        id: user.id,
+        email: user.email,
+        firstName: user.firstName,
+        lastName: user.lastName,
+      },
+      session: {
+        id: session.id,
+        refreshToken: session.refreshToken,
+      },
+      accessToken,
+    },
   }
 })

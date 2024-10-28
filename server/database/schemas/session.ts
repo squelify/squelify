@@ -7,11 +7,15 @@ import { timestampSchema } from '~/database/db.helper'
 export const SessionSchema = z.object({
   id: z.string(),
   userId: z.string(),
+  refreshToken: z.string(),
   ipAddress: z.string().nullable(),
   userAgent: z.string().nullable(),
-  impersonatedBy: z.string().nullable(),
-  activeOrganizationId: z.string().nullable(),
+  deviceId: z.string().nullable(),
+  deviceType: z.string().nullable(),
+  location: z.string().nullable(),
+  isActive: z.number().min(0).max(1),
   expiresAt: timestampSchema,
+  lastActiveAt: timestampSchema.nullable(),
   createdAt: timestampSchema,
   updatedAt: timestampSchema.nullable(),
 })
@@ -20,11 +24,15 @@ export const SessionSchema = z.object({
 export interface Session {
   id: Generated<string>
   userId: ColumnType<string>
+  refreshToken: ColumnType<string>
   ipAddress: ColumnType<string | null>
   userAgent: ColumnType<string | null>
-  impersonatedBy: ColumnType<string | null>
-  activeOrganizationId: ColumnType<string | null>
+  deviceId: ColumnType<string | null>
+  deviceType: ColumnType<string | null>
+  location: ColumnType<string | null>
+  isActive: ColumnType<number>
   expiresAt: ColumnType<Date, string, never>
+  lastActiveAt: ColumnType<Date, string | null, never>
   createdAt: ColumnType<Date, string | undefined, never>
   updatedAt: ColumnType<Date, string | undefined, never>
 }
