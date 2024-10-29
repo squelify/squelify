@@ -51,6 +51,7 @@ export function throwErrorResponse(error: unknown) {
     !isProduction ? { message: err.message } : undefined
   )
 }
+
 /**
  * Type guard for error response format
  */

@@ -11,9 +11,9 @@ const QueryParamSchema = z.object({
 
 export default defineCachedEventHandler(
   async (event) => {
-    try {
-      const db = event.context.db
+    const db = event.context.db
 
+    try {
       // Validate query params
       const query = getQuery(event)
       const { page, limit } = QueryParamSchema.parse(query)

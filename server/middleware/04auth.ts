@@ -1,15 +1,55 @@
+import type { H3Event } from 'h3'
 import * as jose from 'jose'
 import { sha256base64 } from 'ohash'
 import { env } from 'std-env'
+import { z } from 'zod'
+
+const HeadersSchema = z.object({
+  'x-client-info': z
+    .string({
+      required_error: 'X-Client-Info header wajib dicantumkan',
+      invalid_type_error: 'X-Client-Info harus berupa string',
+    })
+    .min(1, 'X-Client-Info tidak boleh kosong'),
+})
+
+function validateHeaders(event: H3Event) {
+  const headers = getRequestHeaders(event)
+
+  const result = HeadersSchema.safeParse({
+    'x-client-info': headers['x-client-info'],
+  })
+
+  if (!result.success) {
+    setResponseStatus(event, 400)
+    throw createError({
+      statusCode: 400,
+      data: {
+        issues: result.error.issues.map((issue) => ({
+          field: issue.path.join('.'),
+          message: issue.message,
+        })),
+      },
+      message: 'Invalid request',
+    })
+  }
+}
 
 const publicRoutes = ['/healthz', '/auth/login']
 
 export default defineEventHandler(async (event) => {
   const pathname = getRequestURL(event).pathname
+  const headers = getRequestHeaders(event)
 
   // Only path that starts with `/api` will be checked
   if (!pathname.startsWith('/api')) {
     return
+  }
+
+  try {
+    validateHeaders(event)
+  } catch (error) {
+    return throwErrorResponse(error)
   }
 
   // Skip public API routes, extract actual path without `/api` prefix.
@@ -58,8 +98,7 @@ export default defineEventHandler(async (event) => {
       throw createError({ statusCode: 401, message: 'Invalid token signature' })
     }
 
-    // Get client info
-    const headers = getRequestHeaders(event)
+    // Get client user agent from header
     const userAgent = headers['user-agent'] || 'unknown'
     const userAgentHash = sha256base64(userAgent)
 
