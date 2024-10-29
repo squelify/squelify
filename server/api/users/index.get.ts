@@ -39,10 +39,10 @@ export default defineCachedEventHandler(
         ...user,
         isActive: Boolean(user.isActive),
         isBanned: Boolean(user.isBanned),
-        bannedUntil: user.bannedUntil ? new Date(user.bannedUntil * 1000).toISOString() : null,
-        lastSignInAt: user.lastSignInAt ? new Date(user.lastSignInAt * 1000).toISOString() : null,
-        createdAt: new Date(user.createdAt * 1000).toISOString(),
-        updatedAt: user.updatedAt ? new Date(user.updatedAt * 1000).toISOString() : null,
+        bannedUntil: toISOString(user.bannedUntil),
+        lastSignInAt: toISOString(user.lastSignInAt),
+        createdAt: toISOString(user.createdAt),
+        updatedAt: toISOString(user.updatedAt),
       }))
 
       return {

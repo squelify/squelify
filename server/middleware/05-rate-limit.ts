@@ -10,8 +10,9 @@ const DEFAULT_RATE_LIMITS = {
 
 // Custom rate limits per endpoint
 const ENDPOINT_RATE_LIMITS: Record<string, typeof DEFAULT_RATE_LIMITS | false> = {
-  // Disable rate limiting for refresh token since it's already protected
+  // Disable rate limiting since it's already protected
   '/api/auth/refresh': false,
+  '/api/auth/whoami': false,
 
   // Stricter rate limits for login to prevent brute force
   '/api/auth/login': {
