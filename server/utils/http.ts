@@ -83,6 +83,7 @@ export async function requireValidatedBody<T extends z.ZodType>(
   const body = await readValidatedBody(event, (body) => schema.safeParse(body))
 
   if (!body.success) {
+    setResponseStatus(event, 400)
     throw createError({
       statusCode: 400,
       data: {
