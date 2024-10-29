@@ -7,7 +7,7 @@ export default defineEventHandler(async (event) => {
   try {
     const query = getQuery(event)
     const token = query.token as string
-    const callbackUrl = query.callbackUrl as string
+    const callbackURL = query.callbackURL as string
     const redirect = query.redirect === 'true'
     const now = Math.floor(Date.now() / 1000)
 
@@ -40,10 +40,10 @@ export default defineEventHandler(async (event) => {
       .executeTakeFirst()
 
     if (rateLimit?.blockedUntil && rateLimit.blockedUntil > now) {
-      const waitMinutes = Math.ceil((rateLimit.blockedUntil - now) / 60)
+      const waitTimeMinutes = Math.ceil((rateLimit.blockedUntil - now) / 60)
       return createErrorResponse(
         429,
-        `Terlalu banyak permintaan, coba lagi dalam ${waitMinutes} menit`
+        `Terlalu banyak permintaan verifikasi email. Silakan coba lagi dalam ${waitTimeMinutes} menit`
       )
     }
 
@@ -142,13 +142,13 @@ export default defineEventHandler(async (event) => {
       success: true,
       message: 'Email berhasil diverifikasi',
       data: {
-        callbackUrl: callbackUrl || null,
-        shouldRedirect: redirect && !!callbackUrl,
+        callbackURL: callbackURL || null,
+        shouldRedirect: redirect && !!callbackURL,
       },
     }
 
-    if (redirect && callbackUrl) {
-      return sendRedirect(event, callbackUrl)
+    if (redirect && callbackURL) {
+      return sendRedirect(event, callbackURL)
     }
 
     return response

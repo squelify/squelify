@@ -19,8 +19,30 @@ export default defineEventHandler(async (event) => {
       return createErrorResponse(400, 'Email tidak terdaftar')
     }
 
+    // Check existing verification attempts in last 30 minutes
+    const existingVerification = await db
+      .selectFrom('verifications')
+      .where('userId', '=', user.id)
+      .where('type', '=', 'password_reset')
+      .where('identifier', '=', body.email)
+      .where('createdAt', '>', now - 60 * 30)
+      .select(['id', 'attempts', 'maxAttempts', 'createdAt'])
+      .orderBy('createdAt', 'desc')
+      .executeTakeFirst()
+
+    // Max 3 attempts per 30 minutes
+    if (existingVerification && existingVerification.attempts >= 3) {
+      const waitTimeMinutes = Math.ceil((existingVerification.createdAt + 60 * 30 - now) / 60)
+      return createErrorResponse(
+        400,
+        `Terlalu banyak permintaan reset password. Silakan coba lagi dalam ${waitTimeMinutes} menit.`
+      )
+    }
+
     // Create verification token
     const token = typeid().toString()
+    const attempts = existingVerification ? existingVerification.attempts + 1 : 1
+
     await db
       .insertInto('verifications')
       .values({
@@ -29,6 +51,8 @@ export default defineEventHandler(async (event) => {
         type: 'password_reset',
         identifier: body.email,
         token,
+        attempts,
+        maxAttempts: 3,
         expiresAt: now + 60 * 30, // 30 minutes
         createdAt: now,
       })

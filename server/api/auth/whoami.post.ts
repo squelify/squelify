@@ -1,8 +1,6 @@
 export default defineEventHandler(async (event) => {
-  const payload = event.context.auth.payload
-
+  const { payload, session } = event.context.auth
   try {
-    // Return standardized claims
     return {
       status: 200,
       success: true,
@@ -18,6 +16,7 @@ export default defineEventHandler(async (event) => {
         roles: payload.roles,
         perms: payload.perms,
         org_id: payload.org_id,
+        session,
       },
     }
   } catch (error) {

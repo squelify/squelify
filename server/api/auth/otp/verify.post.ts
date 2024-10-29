@@ -30,7 +30,7 @@ export default defineEventHandler(async (event) => {
       .where('userId', '=', payload.sub)
       .where('verifiedAt', 'is', null)
       .where('expiresAt', '>', now)
-      .select(['id', 'identifier', 'metadata', 'attempts', 'maxAttempts'])
+      .select(['id', 'identifier', 'metadata', 'attempts', 'maxAttempts', 'expiresAt'])
       .executeTakeFirst()
 
     if (!verification) {
@@ -38,7 +38,11 @@ export default defineEventHandler(async (event) => {
     }
 
     if (verification.attempts >= verification.maxAttempts) {
-      return createErrorResponse(400, 'Melebihi batas maksimal percobaan')
+      const waitTimeMinutes = Math.ceil((verification.expiresAt - now) / 60)
+      return createErrorResponse(
+        400,
+        `Melebihi batas maksimal percobaan. Silakan coba lagi dalam ${waitTimeMinutes} menit.`
+      )
     }
 
     let metadata: OTPMetadata

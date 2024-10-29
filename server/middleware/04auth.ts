@@ -61,7 +61,11 @@ export default defineEventHandler(async (event) => {
   const { appConfig, db } = event.context
 
   // Only path that starts with `/api` will be checked, except for `/api/healthz`
-  if (!pathname.startsWith('/api') || pathname.startsWith('/api/healthz')) {
+  if (
+    !pathname.startsWith('/api') ||
+    pathname.startsWith('/api/healthz') ||
+    pathname.startsWith('/api/settings')
+  ) {
     return
   }
 
@@ -135,7 +139,7 @@ export default defineEventHandler(async (event) => {
       .where('userId', '=', payload.sub)
       .where('isActive', '=', 1)
       .where('expiresAt', '>', now)
-      .select(['id'])
+      .select(['id', 'expiresAt'])
       .executeTakeFirst()
 
     if (!session) {
@@ -143,7 +147,15 @@ export default defineEventHandler(async (event) => {
       throw createError({ statusCode: 401, message: 'Session tidak valid atau telah berakhir' })
     }
 
-    event.context.auth = { sessionId, bearerToken, payload }
+    event.context.auth = {
+      sessionId,
+      bearerToken,
+      payload,
+      session: {
+        id: session.id,
+        exp: new Date(session.expiresAt * 1000).toISOString(),
+      },
+    }
   } catch (error) {
     return throwErrorResponse(error)
   }
@@ -170,6 +182,10 @@ declare module 'h3' {
       sessionId: string
       bearerToken: string
       payload?: VerifiedToken
+      session?: {
+        id: string
+        exp: string
+      }
     }
   }
 }

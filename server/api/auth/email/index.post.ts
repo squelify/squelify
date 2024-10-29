@@ -62,6 +62,10 @@ export default defineEventHandler(async (event) => {
       status: 200,
       success: true,
       message: 'Email berhasil ditambahkan, silakan cek inbox untuk verifikasi',
+      data: {
+        email: body.email,
+        token: verificationToken,
+      },
     }
   } catch (error) {
     return throwErrorResponse(error)
