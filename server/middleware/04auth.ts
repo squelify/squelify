@@ -13,8 +13,28 @@ const HeadersSchema = z.object({
     .min(1, 'X-Client-Info tidak boleh kosong'),
 })
 
-function validateHeaders(event: H3Event) {
+const UNPROTECTED_ROUTES = [
+  '/auth/login',
+  '/auth/signup',
+  '/auth/email/verify',
+  '/auth/password/forgot',
+  '/auth/password/reset',
+]
+
+// Check if pathname is root path (empty or `/`)
+const isRootPath = (pathname: string) => pathname === '' || pathname === '/'
+
+function validateRequiredHeaders(event: H3Event) {
+  const pathname = getRequestURL(event).pathname
   const headers = getRequestHeaders(event)
+  const apiRequestPath = pathname.replace('/api', '')
+
+  // Excllude some paths from validation
+  const excludedPaths = []
+
+  if (isRootPath(apiRequestPath) || excludedPaths.includes(apiRequestPath)) {
+    return
+  }
 
   const result = HeadersSchema.safeParse({
     'x-client-info': headers['x-client-info'],
@@ -35,31 +55,26 @@ function validateHeaders(event: H3Event) {
   }
 }
 
-const publicRoutes = ['/healthz', '/auth/login']
-
 export default defineEventHandler(async (event) => {
   const pathname = getRequestURL(event).pathname
   const headers = getRequestHeaders(event)
+  const { appConfig, db } = event.context
 
-  // Only path that starts with `/api` will be checked
-  if (!pathname.startsWith('/api')) {
+  // Only path that starts with `/api` will be checked, except for `/api/healthz`
+  if (!pathname.startsWith('/api') || pathname.startsWith('/api/healthz')) {
     return
   }
 
   try {
-    validateHeaders(event)
-  } catch (error) {
-    return throwErrorResponse(error)
-  }
+    // Validate X-Client-Info header
+    validateRequiredHeaders(event)
 
-  // Skip public API routes, extract actual path without `/api` prefix.
-  const apiRequestPath = pathname.replace('/api', '')
-  if (publicRoutes.includes(apiRequestPath)) {
-    return
-  }
+    // Skip public API routes, extract actual path without `/api` prefix.
+    const apiRequestPath = pathname.replace('/api', '')
+    if (isRootPath(apiRequestPath) || UNPROTECTED_ROUTES.includes(apiRequestPath)) {
+      return
+    }
 
-  try {
-    const { appConfig, db } = event.context
     const sessionId = getCookie(event, 'auth_session')
     const bearerToken = getRequestHeader(event, 'Authorization')?.replace('Bearer ', '')
 
