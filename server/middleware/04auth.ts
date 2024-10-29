@@ -2,16 +2,24 @@ import * as jose from 'jose'
 import { sha256base64 } from 'ohash'
 import { env } from 'std-env'
 
-const publicRoutes = ['/api/healthz', '/api/auth/login', '/api/auth/login']
+const publicRoutes = ['/healthz', '/auth/login']
 
 export default defineEventHandler(async (event) => {
-  if (publicRoutes.includes(getRequestURL(event).pathname)) {
+  const pathname = getRequestURL(event).pathname
+
+  // Only path that starts with `/api` will be checked
+  if (!pathname.startsWith('/api')) {
+    return
+  }
+
+  // Skip public API routes, extract actual path without `/api` prefix.
+  const apiRequestPath = pathname.replace('/api', '')
+  if (publicRoutes.includes(apiRequestPath)) {
     return
   }
 
   try {
     const { appConfig, db } = event.context
-
     const sessionId = getCookie(event, 'auth_session')
     const bearerToken = getRequestHeader(event, 'Authorization')?.replace('Bearer ', '')
 
