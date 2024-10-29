@@ -12,6 +12,7 @@ export default defineEventHandler(async (event) => {
       .executeTakeFirst()
 
     if (emailCount && Number(emailCount.count) <= 1) {
+      setResponseStatus(event, 400)
       return createErrorResponse(400, 'Tidak dapat menghapus email terakhir yang terverifikasi')
     }
 
@@ -24,10 +25,12 @@ export default defineEventHandler(async (event) => {
       .executeTakeFirst()
 
     if (!email) {
+      setResponseStatus(event, 404)
       return createErrorResponse(404, 'Email tidak ditemukan')
     }
 
     if (email.isPrimary) {
+      setResponseStatus(event, 400)
       return createErrorResponse(400, 'Email utama tidak dapat dihapus')
     }
 

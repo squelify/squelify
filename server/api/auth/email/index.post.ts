@@ -19,6 +19,7 @@ export default defineEventHandler(async (event) => {
       .executeTakeFirst()
 
     if (existingEmail) {
+      setResponseStatus(event, 400)
       return createErrorResponse(400, 'Email sudah terdaftar')
     }
 

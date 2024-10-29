@@ -129,7 +129,7 @@ export default defineEventHandler(async (event) => {
 
     if (!payload) {
       setResponseStatus(event, 401)
-      throw createError({ statusCode: 401, message: 'Token tidak valid' })
+      throw createError({ statusCode: 401, message: 'Token tidak valid atau telah kadaluarsa' })
     }
 
     // Check if session is still valid

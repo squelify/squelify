@@ -37,6 +37,7 @@ export default defineEventHandler(async (event) => {
       .executeTakeFirst()
 
     if (existingEmail) {
+      setResponseStatus(event, 400)
       return createErrorResponse(400, 'Email sudah terdaftar')
     }
 
@@ -65,6 +66,7 @@ export default defineEventHandler(async (event) => {
       }
 
       if (!isUnique) {
+        setResponseStatus(event, 500)
         return createErrorResponse(500, 'Gagal generate username yang unik')
       }
     } else {
@@ -75,6 +77,7 @@ export default defineEventHandler(async (event) => {
         .executeTakeFirst()
 
       if (existingUser) {
+        setResponseStatus(event, 409)
         return createErrorResponse(409, `Username '${username}' sudah digunakan`)
       }
     }

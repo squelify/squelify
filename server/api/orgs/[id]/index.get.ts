@@ -11,6 +11,7 @@ export default defineEventHandler(async (event) => {
       .executeTakeFirst()
 
     if (!org) {
+      setResponseStatus(event, 404)
       return createErrorResponse(404, 'Organisasi tidak ditemukan')
     }
 

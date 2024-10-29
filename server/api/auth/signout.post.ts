@@ -20,14 +20,17 @@ export default defineEventHandler(async (event) => {
       .executeTakeFirst()
 
     if (!session) {
+      setResponseStatus(event, 404)
       return createErrorResponse(404, 'Session tidak ditemukan')
     }
 
     if (session.expiresAt < now) {
+      setResponseStatus(event, 400)
       return createErrorResponse(400, 'Session sudah tidak berlaku')
     }
 
     if (!session.isActive) {
+      setResponseStatus(event, 400)
       return createErrorResponse(400, 'Session sudah tidak aktif')
     }
 

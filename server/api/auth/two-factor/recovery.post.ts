@@ -24,10 +24,12 @@ export default defineEventHandler(async (event) => {
       .executeTakeFirst()
 
     if (!twoFactor) {
+      setResponseStatus(event, 404)
       return createErrorResponse(404, 'Authenticator tidak ditemukan')
     }
 
     if (!twoFactor.isVerified) {
+      setResponseStatus(event, 400)
       return createErrorResponse(400, 'Authenticator belum diverifikasi')
     }
 
@@ -41,15 +43,18 @@ export default defineEventHandler(async (event) => {
         throw new Error('Invalid backup codes format')
       }
     } catch {
+      setResponseStatus(event, 500)
       return createErrorResponse(500, 'Format backup codes tidak valid')
     }
 
     if (backupCodes.length === 0) {
+      setResponseStatus(event, 400)
       return createErrorResponse(400, 'Tidak ada kode backup yang tersedia')
     }
 
     const codeIndex = backupCodes.indexOf(body.code)
     if (codeIndex === -1) {
+      setResponseStatus(event, 400)
       return createErrorResponse(400, 'Kode backup tidak valid atau sudah digunakan')
     }
 

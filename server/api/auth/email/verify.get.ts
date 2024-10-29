@@ -23,10 +23,12 @@ export default defineEventHandler(async (event) => {
       .executeTakeFirst()
 
     if (!verification) {
+      setResponseStatus(event, 404)
       return createErrorResponse(404, 'Token verifikasi tidak ditemukan')
     }
 
     if (verification.verifiedAt) {
+      setResponseStatus(event, 400)
       return createErrorResponse(400, 'Email sudah terverifikasi')
     }
 
@@ -40,6 +42,7 @@ export default defineEventHandler(async (event) => {
       .executeTakeFirst()
 
     if (rateLimit?.blockedUntil && rateLimit.blockedUntil > now) {
+      setResponseStatus(event, 429)
       const waitTimeMinutes = Math.ceil((rateLimit.blockedUntil - now) / 60)
       return createErrorResponse(
         429,
@@ -66,6 +69,7 @@ export default defineEventHandler(async (event) => {
           .execute()
 
         if (blocked) {
+          setResponseStatus(event, 429)
           return createErrorResponse(
             429,
             'Terlalu banyak permintaan token, coba lagi dalam 30 menit'
@@ -107,6 +111,7 @@ export default defineEventHandler(async (event) => {
       const verificationUrl = `${appConfig.baseURL}/api/auth/email/verify?token=${newToken}`
       logger.info('[app]', 'New verification email:', verificationUrl)
 
+      setResponseStatus(event, 410)
       return createErrorResponse(
         410,
         'Token sudah kadaluarsa, silakan cek email untuk verifikasi ulang'

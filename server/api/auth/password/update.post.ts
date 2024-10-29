@@ -31,12 +31,14 @@ export default defineEventHandler(async (event) => {
       .executeTakeFirst()
 
     if (!currentPassword) {
+      setResponseStatus(event, 400)
       return createErrorResponse(400, 'Password tidak ditemukan')
     }
 
     // Verify current password
     const isValid = await verifyPassword(body.currentPassword, currentPassword.hash)
     if (!isValid) {
+      setResponseStatus(event, 400)
       return createErrorResponse(400, 'Password saat ini tidak valid')
     }
 

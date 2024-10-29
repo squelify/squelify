@@ -28,12 +28,14 @@ export default defineEventHandler(async (event) => {
     // Get active JWK for token signing
     const activeKey = await getActiveJWK(db)
     if (!activeKey) {
+      setResponseStatus(event, 500)
       return createErrorResponse(500, 'No active signing key available')
     }
 
     // Verify credentials
     const user = await verifyUserCredentials(db, identity, password)
     if (!user) {
+      setResponseStatus(event, 401)
       return createErrorResponse(401, 'Email atau password salah')
     }
 
@@ -113,6 +115,7 @@ export default defineEventHandler(async (event) => {
     }
   } catch (error) {
     if (error instanceof JWTGenerationError) {
+      setResponseStatus(event, 401)
       return createErrorResponse(401, 'Invalid token signature')
     }
     return throwErrorResponse(error)

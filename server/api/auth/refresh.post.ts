@@ -33,12 +33,14 @@ export default defineEventHandler(async (event) => {
       .executeTakeFirst()
 
     if (!session) {
+      setResponseStatus(event, 401)
       return createErrorResponse(401, 'Invalid refresh token')
     }
 
     // Get active JWK
     const activeKey = await getActiveJWK(db)
     if (!activeKey) {
+      setResponseStatus(event, 500)
       return createErrorResponse(500, 'No active signing key available')
     }
 

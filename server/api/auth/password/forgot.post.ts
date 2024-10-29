@@ -16,6 +16,7 @@ export default defineEventHandler(async (event) => {
     const user = await findUserByEmail(body.email)
 
     if (!user) {
+      setResponseStatus(event, 400)
       return createErrorResponse(400, 'Email tidak terdaftar')
     }
 
@@ -32,6 +33,7 @@ export default defineEventHandler(async (event) => {
 
     // Max 3 attempts per 30 minutes
     if (existingVerification && existingVerification.attempts >= 3) {
+      setResponseStatus(event, 400)
       const waitTimeMinutes = Math.ceil((existingVerification.createdAt + 60 * 30 - now) / 60)
       return createErrorResponse(
         400,

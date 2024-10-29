@@ -25,16 +25,19 @@ export default defineEventHandler(async (event) => {
       .executeTakeFirst()
 
     if (!twoFactor) {
+      setResponseStatus(event, 404)
       return createErrorResponse(404, 'Authenticator tidak ditemukan')
     }
 
     if (!twoFactor.isVerified) {
+      setResponseStatus(event, 400)
       return createErrorResponse(400, 'Authenticator belum diverifikasi')
     }
 
     // Verify TOTP code first
     const isValid = verifyTOTP(twoFactor.secret, body.code)
     if (!isValid) {
+      setResponseStatus(event, 400)
       return createErrorResponse(400, 'Kode TOTP tidak valid')
     }
 
@@ -49,6 +52,7 @@ export default defineEventHandler(async (event) => {
         .executeTakeFirst()
 
       if (!otherVerified2FA) {
+        setResponseStatus(event, 400)
         return createErrorResponse(
           400,
           'Tidak dapat menonaktifkan authenticator utama. Aktifkan authenticator lain terlebih dahulu.'

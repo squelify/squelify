@@ -11,6 +11,7 @@ export default defineCachedEventHandler(
         .executeTakeFirst()
 
       if (!user) {
+        setResponseStatus(event, 400)
         return createErrorResponse(400, 'No user found')
       }
 
@@ -30,7 +31,7 @@ export default defineCachedEventHandler(
     }
   },
   {
-    shouldBypassCache: (e) => e.node.req.url.includes('nocache'),
+    shouldBypassCache: (e) => handleBypassCache(e),
     maxAge: 60 * 60 /* 1 hour */,
   }
 )

@@ -23,6 +23,7 @@ export default defineEventHandler(async (event) => {
       .executeTakeFirst()
 
     if (!email) {
+      setResponseStatus(event, 404)
       return createErrorResponse(404, 'Email tidak ditemukan atau belum terverifikasi')
     }
 

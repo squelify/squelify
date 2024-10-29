@@ -57,7 +57,7 @@ export default defineCachedEventHandler(
     }
   },
   {
-    shouldBypassCache: (e) => e.node.req.url.includes('nocache'),
+    shouldBypassCache: (e) => handleBypassCache(e),
     maxAge: 60 * 60 * 12 * 7 /* 7 days */,
   }
 )

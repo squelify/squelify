@@ -1,25 +1,22 @@
-import * as jose from 'jose'
 import { typeid } from 'typeid-js'
-import { z } from 'zod'
+import { OrganizationSchema } from '~/database/schemas/organization'
 
-const CreateOrgSchema = z.object({
-  name: z.string().min(3, 'Nama organisasi minimal 3 karakter'),
-  slug: z
-    .string()
-    .min(3, 'Slug minimal 3 karakter')
-    .max(50, 'Slug maksimal 50 karakter')
-    .regex(/^[a-z]/, 'Slug harus diawali huruf kecil')
-    .regex(/^[a-z0-9-]+$/, 'Slug hanya boleh mengandung huruf kecil, angka, dan tanda hubung')
-    .regex(/[a-z0-9]$/, 'Slug harus diakhiri huruf atau angka')
-    .regex(/^[^-].*[^-]$/, 'Slug tidak boleh diawali atau diakhiri tanda hubung')
-    .regex(/^[^0-9]/, 'Slug tidak boleh diawali angka')
-    .regex(/^(?!.*--).+$/, 'Slug tidak boleh mengandung tanda hubung berurutan'),
-  description: z.string().optional().nullable(),
-  logoUrl: z.string().url('URL logo tidak valid').optional().nullable(),
-  website: z.string().url('URL website tidak valid').optional().nullable(),
-  email: z.string().email('Email tidak valid').optional().nullable(),
-  phone: z.string().optional().nullable(),
-  address: z.string().optional().nullable(),
+export const CreateOrgSchema = OrganizationSchema.pick({
+  name: true,
+  slug: true,
+  description: true,
+  logoUrl: true,
+  website: true,
+  email: true,
+  phone: true,
+  address: true,
+}).partial({
+  description: true,
+  logoUrl: true,
+  website: true,
+  email: true,
+  phone: true,
+  address: true,
 })
 
 export default defineEventHandler(async (event) => {
@@ -45,12 +42,15 @@ export default defineEventHandler(async (event) => {
 
     if (existingOrg) {
       if (existingOrg.slug === body.slug) {
+        setResponseStatus(event, 409)
         return createErrorResponse(409, `Slug organisasi '${body.slug}' sudah digunakan`)
       }
       if (existingOrg.name === body.name) {
+        setResponseStatus(event, 409)
         return createErrorResponse(409, `Nama organisasi '${body.name}' tidak tersedia`)
       }
       if (existingOrg.email === body.email) {
+        setResponseStatus(event, 409)
         return createErrorResponse(409, `Email organisasi '${body.email}' sudah terdaftar`)
       }
     }

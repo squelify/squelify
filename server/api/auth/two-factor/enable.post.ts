@@ -28,6 +28,7 @@ export default defineEventHandler(async (event) => {
       .executeTakeFirst()
 
     if (!user) {
+      setResponseStatus(event, 404)
       return createErrorResponse(404, 'User tidak ditemukan')
     }
 
@@ -40,6 +41,7 @@ export default defineEventHandler(async (event) => {
       .executeTakeFirst()
 
     if (existingAuth) {
+      setResponseStatus(event, 400)
       return createErrorResponse(400, 'Nama authenticator sudah digunakan')
     }
 

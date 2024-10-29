@@ -1,29 +1,32 @@
 import { typeid } from 'typeid-js'
 import { z } from 'zod'
+import { UserSchema } from '~/database/schemas/user'
 
-const CreateUserSchema = z.object({
-  firstName: z.string().min(2, 'Nama depan minimal 2 karakter'),
-  lastName: z.string().optional(),
-  email: z.string().email('Email tidak valid'),
-  username: z
-    .string()
-    .min(3, 'Username minimal 3 karakter')
-    .max(50, 'Username maksimal 50 karakter')
-    .regex(/^[a-z0-9_]+$/, 'Username hanya boleh mengandung huruf kecil, angka, dan underscore')
-    .optional()
-    .nullable(),
-  password: z
-    .string()
-    .min(8, 'Password minimal 8 karakter')
-    .regex(/[A-Z]/, 'Password harus mengandung huruf kapital')
-    .regex(/[a-z]/, 'Password harus mengandung huruf kecil')
-    .regex(/[0-9]/, 'Password harus mengandung angka')
-    .regex(/[^A-Za-z0-9]/, 'Password harus mengandung karakter spesial')
-    .optional()
-    .nullable(),
-  avatarUrl: z.string().url('URL avatar tidak valid').optional(),
-  locale: z.string().default('en'),
+export const CreateUserSchema = UserSchema.pick({
+  firstName: true,
+  lastName: true,
+  username: true,
+  avatarUrl: true,
+  locale: true,
 })
+  .partial({
+    lastName: true,
+    username: true,
+    avatarUrl: true,
+    locale: true,
+  })
+  .extend({
+    email: z.string().email('Email tidak valid'),
+    password: z
+      .string()
+      .min(8, 'Password minimal 8 karakter')
+      .regex(/[A-Z]/, 'Password harus mengandung huruf kapital')
+      .regex(/[a-z]/, 'Password harus mengandung huruf kecil')
+      .regex(/[0-9]/, 'Password harus mengandung angka')
+      .regex(/[^A-Za-z0-9]/, 'Password harus mengandung karakter spesial')
+      .optional()
+      .nullable(),
+  })
 
 export default defineEventHandler(async (event) => {
   const now = Math.floor(Date.now() / 1000)
@@ -40,6 +43,7 @@ export default defineEventHandler(async (event) => {
       .executeTakeFirst()
 
     if (existingEmail) {
+      setResponseStatus(event, 409)
       return createErrorResponse(409, `Email '${body.email}' sudah terdaftar`)
     }
 
@@ -68,6 +72,7 @@ export default defineEventHandler(async (event) => {
       }
 
       if (!isUnique) {
+        setResponseStatus(event, 500)
         return createErrorResponse(500, 'Gagal generate username yang unik')
       }
     } else {
@@ -78,6 +83,7 @@ export default defineEventHandler(async (event) => {
         .executeTakeFirst()
 
       if (existingUser) {
+        setResponseStatus(event, 409)
         return createErrorResponse(409, `Username '${username}' sudah digunakan`)
       }
     }

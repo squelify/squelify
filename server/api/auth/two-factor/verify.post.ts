@@ -26,12 +26,14 @@ export default defineEventHandler(async (event) => {
       .executeTakeFirst()
 
     if (!twoFactor) {
+      setResponseStatus(event, 404)
       return createErrorResponse(404, 'TOTP tidak ditemukan')
     }
 
     // Verify TOTP code
     const isValid = verifyTOTP(twoFactor.secret, body.code)
     if (!isValid) {
+      setResponseStatus(event, 400)
       return createErrorResponse(400, 'Kode TOTP tidak valid')
     }
 

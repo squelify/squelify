@@ -61,6 +61,7 @@ export default defineEventHandler(async (event) => {
       .executeTakeFirst()
 
     if (!user) {
+      setResponseStatus(event, 404)
       return createErrorResponse(404, 'User tidak ditemukan')
     }
 
@@ -73,6 +74,7 @@ export default defineEventHandler(async (event) => {
       .executeTakeFirst()
 
     if (existingPasskey) {
+      setResponseStatus(event, 400)
       return createErrorResponse(400, 'Nama passkey sudah digunakan')
     }
 
@@ -120,6 +122,7 @@ export default defineEventHandler(async (event) => {
     })
 
     if (!verification.verified || !verification.registrationInfo) {
+      setResponseStatus(event, 400)
       return createErrorResponse(400, 'Verifikasi passkey gagal')
     }
 

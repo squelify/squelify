@@ -31,10 +31,12 @@ export default defineEventHandler(async (event) => {
       .executeTakeFirst()
 
     if (!verification) {
+      setResponseStatus(event, 400)
       return createErrorResponse(400, 'Token tidak valid atau sudah kadaluarsa')
     }
 
     if (verification.attempts >= verification.maxAttempts) {
+      setResponseStatus(event, 400)
       return createErrorResponse(400, 'Token sudah melebihi batas percobaan')
     }
 
