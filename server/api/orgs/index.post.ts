@@ -23,87 +23,35 @@ const CreateOrgSchema = z.object({
 })
 
 export default defineEventHandler(async (event) => {
+  const payload = event.context.auth.payload
+  const db = event.context.db
+
   try {
-    const db = event.context.db
+    const body = await requireValidatedBody(event, CreateOrgSchema)
     const now = Math.floor(Date.now() / 1000)
-    const token = getRequestHeader(event, 'Authorization')?.replace('Bearer ', '')
-
-    if (!token) {
-      return createErrorResponse(401, 'Unauthorized')
-    }
-
-    // Extract key ID from token header
-    const decoded = jose.decodeProtectedHeader(token)
-    if (!decoded.kid) {
-      return createErrorResponse(401, 'Invalid token format')
-    }
-
-    // Get JWK used for signing
-    const jwk = await db
-      .selectFrom('jwks')
-      .where('keyId', '=', decoded.kid)
-      .where('isActive', '=', 1)
-      .where('expiresAt', '>', now)
-      .select(['keyId', 'publicKey', 'algorithm'])
-      .executeTakeFirst()
-
-    if (!jwk) {
-      return createErrorResponse(401, 'Invalid token signature')
-    }
-
-    // Verify token and decode payload
-    const payload = await verifyAccessToken(token, jwk)
-    if (!payload) {
-      return createErrorResponse(401, 'Token tidak valid')
-    }
-
-    // Check if session is still valid
-    const session = await db
-      .selectFrom('sessions')
-      .where('id', '=', payload.sid)
-      .where('userId', '=', payload.sub)
-      .where('isActive', '=', 1)
-      .where('expiresAt', '>', now)
-      .select(['id'])
-      .executeTakeFirst()
-
-    if (!session) {
-      return createErrorResponse(401, 'Session tidak valid atau telah berakhir')
-    }
-
-    // Validate request body
-    const body = await readValidatedBody(event, (body) => CreateOrgSchema.safeParse(body))
-    if (!body.success) {
-      return createErrorResponse(400, 'Invalid request', {
-        issues: body.error.issues.map((issue) => ({
-          field: issue.path.join('.'),
-          message: issue.message,
-        })),
-      })
-    }
 
     // Check existing organization
     const existingOrg = await db
       .selectFrom('organizations')
       .where((eb) =>
         eb.or([
-          eb('slug', '=', body.data.slug),
-          eb('name', '=', body.data.name),
-          eb.and([eb('email', 'is not', null), eb('email', '=', body.data.email || '')]),
+          eb('slug', '=', body.slug),
+          eb('name', '=', body.name),
+          eb.and([eb('email', 'is not', null), eb('email', '=', body.email || '')]),
         ])
       )
       .select(['id', 'name', 'slug', 'email'])
       .executeTakeFirst()
 
     if (existingOrg) {
-      if (existingOrg.slug === body.data.slug) {
-        return createErrorResponse(409, `Slug organisasi '${body.data.slug}' sudah digunakan`)
+      if (existingOrg.slug === body.slug) {
+        return createErrorResponse(409, `Slug organisasi '${body.slug}' sudah digunakan`)
       }
-      if (existingOrg.name === body.data.name) {
-        return createErrorResponse(409, `Nama organisasi '${body.data.name}' tidak tersedia`)
+      if (existingOrg.name === body.name) {
+        return createErrorResponse(409, `Nama organisasi '${body.name}' tidak tersedia`)
       }
-      if (existingOrg.email === body.data.email) {
-        return createErrorResponse(409, `Email organisasi '${body.data.email}' sudah terdaftar`)
+      if (existingOrg.email === body.email) {
+        return createErrorResponse(409, `Email organisasi '${body.email}' sudah terdaftar`)
       }
     }
 
@@ -112,14 +60,14 @@ export default defineEventHandler(async (event) => {
       .insertInto('organizations')
       .values({
         id: typeid('org').toString(),
-        name: body.data.name,
-        slug: body.data.slug,
-        description: body.data.description || null,
-        logoUrl: body.data.logoUrl || null,
-        website: body.data.website || null,
-        email: body.data.email || null,
-        phone: body.data.phone || null,
-        address: body.data.address || null,
+        name: body.name,
+        slug: body.slug,
+        description: body.description || null,
+        logoUrl: body.logoUrl || null,
+        website: body.website || null,
+        email: body.email || null,
+        phone: body.phone || null,
+        address: body.address || null,
         status: 'active',
         settings: '{}',
         metadata: '{}',

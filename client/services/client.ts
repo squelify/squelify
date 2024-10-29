@@ -1,4 +1,4 @@
-import { type ConsolaInstance, type LogLevel, createConsola } from 'consola'
+import consola, { type ConsolaInstance, type LogLevel, createConsola } from 'consola'
 import { type $Fetch, FetchError, ofetch } from 'ofetch'
 import { hasWindow, isProduction } from 'std-env'
 import { LOG_LEVEL } from '#/utils/logger'
@@ -55,7 +55,7 @@ export default class ApiClient {
     if (this.instanceID > 0 && hasWindow) {
       this.logger.warn(
         ApiClient.logTag,
-        'Multiple ApiClient instances detected in the same browser context.',
+        'Multiple ApiClient instances detected in the same browser context',
         'It may produce undefined behavior when used concurrently under the same storage key.'
       )
     }
@@ -85,7 +85,7 @@ export default class ApiClient {
     const logger = this.logger
 
     // FIXME - the baseURL is not being set correctly.
-    console.info('DEBUG:_createFetcher', this.baseURL)
+    consola.debug('DEBUG:_createFetcher', this.baseURL)
 
     return ofetch.create({
       baseURL: this.baseURL,

@@ -1,9 +1,8 @@
 import { process } from 'std-env'
-import type { AppConfig } from '~/config'
 
 export default defineCachedEventHandler(
   async (event) => {
-    const appConfig = useAppConfig(event) as AppConfig
+    const appConfig = event.context.appConfig
 
     if (process.env.NODE_ENV === 'development') {
       const [serverAddress] = event.context.vite.resolvedUrls.local

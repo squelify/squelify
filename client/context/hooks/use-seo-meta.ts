@@ -30,7 +30,7 @@ interface SEOMetaOptions {
  * @example
  * function HomePage() {
  *   const { pageTitle, fullTitle, updatePageTitle } = useSEOMeta('Home', {
- *     description: 'Lorem ipsum dolor sit amet consectetur adipiscing elit.',
+ *     description: 'Lorem ipsum dolor sit amet consectetur adipiscing elit',
  *     image: 'https://example.com/og-image.jpg',
  *     url: 'https://example.com',
  *     twitterUsername: 'riipandi'

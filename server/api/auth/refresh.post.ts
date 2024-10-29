@@ -1,11 +1,16 @@
+import { sha256base64 } from 'ohash'
 import { typeid } from 'typeid-js'
 import { getActiveJWK } from '~/database/repository/jwk.repo'
 
 export default defineEventHandler(async (event) => {
+  const appConfig = event.context.appConfig
+
+  const headers = getRequestHeaders(event)
+  const userAgent = headers['user-agent'] || 'unknown'
+
   try {
     const db = event.context.db
     const { refreshToken } = await readBody(event)
-
     const now = Math.floor(Date.now() / 1000)
 
     // Get session by refresh token
@@ -57,7 +62,11 @@ export default defineEventHandler(async (event) => {
       amr: ['refresh_token'],
     }
 
-    const accessToken = await generateAccessToken(payload, activeKey)
+    const userAgentHash = sha256base64(userAgent)
+    const accessToken = await generateAccessToken(payload, activeKey, {
+      issuer: appConfig.baseURL,
+      audience: userAgentHash,
+    })
 
     // Update session last active timestamp
     await db

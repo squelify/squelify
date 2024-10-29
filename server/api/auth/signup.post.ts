@@ -1,6 +1,5 @@
 import { typeid } from 'typeid-js'
 import { z } from 'zod'
-import { AppConfig } from '~/config'
 
 const SignupRequestSchema = z
   .object({
@@ -24,26 +23,16 @@ const SignupRequestSchema = z
   .strict()
 
 export default defineEventHandler(async (event) => {
-  try {
-    const db = event.context.db
-    const appConfig = useAppConfig(event) as AppConfig
-    const now = Math.floor(Date.now() / 1000)
+  const appConfig = event.context.appConfig
+  const db = event.context.db
 
-    // Validate request body
-    const body = await readValidatedBody(event, (body) => SignupRequestSchema.safeParse(body))
-    if (!body.success) {
-      return createErrorResponse(400, 'Invalid request', {
-        issues: body.error.issues.map((issue) => ({
-          field: issue.path.join('.'),
-          message: issue.message,
-        })),
-      })
-    }
+  try {
+    const body = await requireValidatedBody(event, SignupRequestSchema)
 
     // Check if email already exists
     const existingEmail = await db
       .selectFrom('emails')
-      .where('email', '=', body.data.email)
+      .where('email', '=', body.email)
       .select('id')
       .executeTakeFirst()
 
@@ -51,11 +40,11 @@ export default defineEventHandler(async (event) => {
       return createErrorResponse(400, 'Email sudah terdaftar')
     }
 
-    let username = body.data.username
+    let username = body.username
 
     // Generate username if not provided
     if (!username) {
-      username = generateUsername(body.data.email)
+      username = generateUsername(body.email)
 
       let isUnique = false
       let attempt = 0
@@ -70,7 +59,7 @@ export default defineEventHandler(async (event) => {
         if (!exists) {
           isUnique = true
         } else {
-          username = generateUsername(body.data.email)
+          username = generateUsername(body.email)
           attempt++
         }
       }
@@ -92,7 +81,8 @@ export default defineEventHandler(async (event) => {
 
     // Create user account
     const userId = typeid('user').toString()
-    const hashedPassword = await hashPassword(body.data.password)
+    const hashedPassword = await hashPassword(body.password)
+    const now = Math.floor(Date.now() / 1000)
 
     await db.transaction().execute(async (trx) => {
       // Create user first
@@ -100,8 +90,8 @@ export default defineEventHandler(async (event) => {
         .insertInto('users')
         .values({
           id: userId,
-          firstName: body.data.firstName,
-          lastName: body.data.lastName || null,
+          firstName: body.firstName,
+          lastName: body.lastName || null,
           username,
           isActive: 1,
           createdAt: now,
@@ -138,7 +128,7 @@ export default defineEventHandler(async (event) => {
         .values({
           id: typeid('eml').toString(),
           userId,
-          email: body.data.email,
+          email: body.email,
           isPrimary: 1,
           isVerified: 0,
           createdAt: now,
@@ -153,7 +143,7 @@ export default defineEventHandler(async (event) => {
           id: typeid('ver').toString(),
           userId,
           type: 'email',
-          identifier: body.data.email,
+          identifier: body.email,
           token: verificationToken,
           expiresAt: now + 24 * 60 * 60,
           createdAt: now,

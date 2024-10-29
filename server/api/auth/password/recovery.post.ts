@@ -1,14 +1,14 @@
 import { typeid } from 'typeid-js'
 import { z } from 'zod'
-import { AppConfig } from '~/config'
 import { findUserByEmail } from '~/database/repository/user.repo'
 
 const PasswordRecoverySchema = z.object({ email: z.string().email('Email tidak valid') }).strict()
 
 export default defineEventHandler(async (event) => {
+  const appConfig = event.context.appConfig
+  const db = event.context.db
+
   try {
-    const appConfig = useAppConfig(event) as AppConfig
-    const db = event.context.db
     const body = await requireValidatedBody(event, PasswordRecoverySchema)
     const now = Math.floor(Date.now() / 1000)
 

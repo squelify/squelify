@@ -4,7 +4,7 @@ import pkg from '~~/package.json' assert { type: 'json' }
 
 const main = defineCommand({
   meta: {
-    name: 'app',
+    name: pkg.name,
     version: pkg.version,
     description: `${pkg.name} Command Line Interface`,
   },

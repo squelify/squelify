@@ -29,7 +29,6 @@ export default defineEventHandler(async (event) => {
   const now = Math.floor(Date.now() / 1000)
 
   try {
-    await requireAuth(event)
     const db = event.context.db
     const body = await requireValidatedBody(event, CreateUserSchema)
 

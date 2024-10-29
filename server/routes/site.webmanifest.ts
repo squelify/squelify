@@ -1,8 +1,6 @@
-import type { AppConfig } from '~/config'
-
 export default defineCachedEventHandler(
   async (event) => {
-    const appConfig = useAppConfig(event) as AppConfig
+    const appConfig = event.context.appConfig
 
     setResponseHeader(event, 'Content-Type', 'application/json')
 
@@ -11,7 +9,7 @@ export default defineCachedEventHandler(
       dir: 'ltr',
       name: 'Nitro Start',
       short_name: 'nitro-start',
-      description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit sed do eiusmod aliqua.',
+      description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit sed do eiusmod aliqua',
       theme_color: '#2563eb',
       background_color: '#0c0a09',
       start_url: `${appConfig.baseURL}/?source=pwa`,

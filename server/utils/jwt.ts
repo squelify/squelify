@@ -1,4 +1,6 @@
 import * as jose from 'jose'
+import type { JWTHeaderParameters } from 'jose'
+import { env } from 'std-env'
 import type { JWKSelect, JWKVerifyKey } from '~/database/schemas/jwk'
 
 export interface JWTPayload {
@@ -30,56 +32,115 @@ export interface JWTPayload {
   perms?: string[] // User permissions
 }
 
+const TOKEN_MAX_AGE = '15m' // 15 minutes
+
 export async function generateAccessToken(
   payload: JWTPayload,
   key: Partial<JWKSelect>,
-  expiresIn = '15m'
+  opts: {
+    issuer: string
+    audience: string | string[]
+  }
 ) {
-  const privateKey = await jose.importPKCS8(key.privateKey, key.algorithm)
+  try {
+    if (!key.privateKey || !key.algorithm || !key.keyId) {
+      throw new Error('Invalid JWK configuration: missing required fields')
+    }
 
-  return await new jose.SignJWT({
-    ...payload,
-    type: 'access_token',
-    iat: Math.floor(Date.now() / 1000),
-  })
-    .setProtectedHeader({
+    const privateKey = await jose.importPKCS8(key.privateKey, key.algorithm).catch((err) => {
+      throw new Error(`Failed to import private key: ${err.message}`)
+    })
+
+    const now = Math.floor(Date.now() / 1000)
+    const jwtPayload = { ...payload, type: 'access_token', iat: now }
+    const headerParams: JWTHeaderParameters = {
       alg: key.algorithm,
       kid: key.keyId,
       typ: 'JWT',
-    })
-    .setIssuedAt()
-    .setExpirationTime(expiresIn)
-    .setNotBefore(0)
-    .setAudience('api://default')
-    .setIssuer('auth-service')
-    .sign(privateKey)
+    }
+
+    const token = await new jose.SignJWT(jwtPayload)
+      .setProtectedHeader(headerParams)
+      .setIssuedAt()
+      .setIssuer(opts.issuer)
+      .setAudience(opts.audience)
+      .setExpirationTime(TOKEN_MAX_AGE)
+      .setNotBefore(0)
+      .sign(privateKey)
+      .catch((err) => {
+        throw new Error(`Failed to sign JWT: ${err.message}`)
+      })
+
+    return token
+  } catch (error) {
+    if (env.APP_LOG_LEVEL === 'trace') {
+      logger.error('[jwt]', 'Failed to generate access token:', error)
+    }
+    throw new JWTGenerationError('Failed to generate access token', { cause: error })
+  }
+}
+
+export class JWTGenerationError extends Error {
+  constructor(message: string, options?: ErrorOptions) {
+    super(message, options)
+    this.name = 'JWTGenerationError'
+  }
 }
 
 export async function verifyAccessToken(
   token: string,
-  key: JWKVerifyKey
+  key: JWKVerifyKey,
+  opts: {
+    issuer: string
+    audience: string | string[]
+  }
 ): Promise<JWTPayload | null> {
   try {
-    const publicKey = await jose.importSPKI(key.publicKey, key.algorithm)
+    if (!key.publicKey || !key.algorithm) {
+      throw new Error('Invalid JWK configuration: missing required fields')
+    }
 
-    const { payload } = await jose.jwtVerify(token, publicKey, {
-      algorithms: [key.algorithm],
-      issuer: 'auth-service',
-      audience: ['api://default'],
-      clockTolerance: 30,
-      maxTokenAge: '15m',
-      requiredClaims: ['iss', 'sub', 'aud', 'exp', 'nbf', 'iat', 'jti', 'sid'],
-      typ: 'JWT',
+    const publicKey = await jose.importSPKI(key.publicKey, key.algorithm).catch((err) => {
+      throw new Error(`Failed to import public key: ${err.message}`)
     })
 
+    const { payload } = await jose
+      .jwtVerify(token, publicKey, {
+        algorithms: [key.algorithm],
+        issuer: opts.issuer,
+        audience: opts.audience,
+        clockTolerance: 30,
+        maxTokenAge: TOKEN_MAX_AGE,
+        requiredClaims: ['iss', 'sub', 'aud', 'exp', 'nbf', 'iat', 'jti', 'sid'],
+        typ: 'JWT',
+      })
+      .catch((err) => {
+        throw new JWTVerificationError(`JWT verification failed: ${err.message}`)
+      })
+
     // Validate required custom claims
-    if (!payload.sid || !payload.given_name || !payload.email || !payload.locale) {
-      return null
+    const requiredClaims = ['sid', 'given_name', 'email', 'locale']
+    const missingClaims = requiredClaims.filter((claim) => !payload[claim])
+
+    if (missingClaims.length > 0) {
+      throw new JWTVerificationError(`Missing required claims: ${missingClaims.join(', ')}`)
     }
 
     return payload as unknown as JWTPayload
   } catch (error) {
-    logger.error('[jwt]', 'Token verification failed:', error)
+    if (env.APP_LOG_LEVEL === 'trace') {
+      logger.error('[jwt]', 'Token verification failed:', {
+        error,
+        token: `${token.substring(0, 10)}...`,
+      })
+    }
     return null
+  }
+}
+
+export class JWTVerificationError extends Error {
+  constructor(message: string, options?: ErrorOptions) {
+    super(message, options)
+    this.name = 'JWTVerificationError'
   }
 }

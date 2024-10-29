@@ -8,9 +8,10 @@ const DisableTOTPSchema = z
   .strict()
 
 export default defineEventHandler(async (event) => {
+  const payload = event.context.auth.payload
+  const db = event.context.db
+
   try {
-    const db = event.context.db
-    const payload = await requireAuth(event)
     const body = await requireValidatedBody(event, DisableTOTPSchema)
     const now = Math.floor(Date.now() / 1000)
 

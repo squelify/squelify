@@ -82,8 +82,8 @@ export default async function seed(db: Kysely<Database>): Promise<void> {
       slug: 'root-org',
       isVerified: 1,
       status: 'active',
-      settings: '{}',
-      metadata: '{}',
+      // settings: '{}',
+      // metadata: '{}',
       createdBy: userId,
       createdAt: now,
     }
@@ -138,6 +138,6 @@ export default async function seed(db: Kysely<Database>): Promise<void> {
     await trx.insertInto('accounts').values(newAccount).execute()
     await trx.insertInto('user_roles').values(newUserRole).execute()
 
-    consola.info('Admin user and organization created successfully')
+    consola.log('🍀 Admin user and organization created successfully')
   })
 }

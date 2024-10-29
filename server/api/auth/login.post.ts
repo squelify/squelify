@@ -1,3 +1,4 @@
+import { sha256base64 } from 'ohash'
 import { isProduction } from 'std-env'
 import { typeid } from 'typeid-js'
 import { z } from 'zod'
@@ -13,8 +14,9 @@ export const LoginRequestSchema = z.object({
 })
 
 export default defineEventHandler(async (event) => {
+  const { appConfig, db } = event.context
+
   try {
-    const db = event.context.db
     const body = await requireValidatedBody(event, LoginRequestSchema)
     const { identity, password, deviceId, deviceType = 'browser' } = body
 
@@ -65,7 +67,12 @@ export default defineEventHandler(async (event) => {
       amr: ['pwd'], // Password authentication
     }
 
-    const accessToken = await generateAccessToken(payload, activeKey)
+    const userAgentHash = sha256base64(userAgent)
+    const accessToken = await generateAccessToken(payload, activeKey, {
+      issuer: appConfig.baseURL,
+      audience: userAgentHash,
+    })
+
     const twoFactor = await db
       .selectFrom('two_factors')
       .where('userId', '=', user.id)
@@ -105,6 +112,9 @@ export default defineEventHandler(async (event) => {
       },
     }
   } catch (error) {
+    if (error instanceof JWTGenerationError) {
+      return createErrorResponse(401, 'Invalid token signature')
+    }
     return throwErrorResponse(error)
   }
 })

@@ -16,7 +16,6 @@ import type {
 import * as jose from 'jose'
 import { typeid } from 'typeid-js'
 import { z } from 'zod'
-import { AppConfig } from '~/config'
 
 const authenticatorAttestationResponseJSON = z.object({
   clientDataJSON: z.string() as z.ZodType<Base64URLString>,
@@ -46,10 +45,11 @@ const RegisterPasskeySchema = z
   .strict()
 
 export default defineEventHandler(async (event) => {
+  const payload = event.context.auth.payload
+  const appConfig = event.context.appConfig
+  const db = event.context.db
+
   try {
-    const appConfig = useAppConfig(event) as AppConfig
-    const db = event.context.db
-    const payload = await requireAuth(event)
     const body = await requireValidatedBody(event, RegisterPasskeySchema)
     const now = Math.floor(Date.now() / 1000)
 

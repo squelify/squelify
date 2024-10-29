@@ -1,6 +1,5 @@
 import { typeid } from 'typeid-js'
 import { z } from 'zod'
-import { AppConfig } from '~/config'
 import { generateTOTPSecret, generateTOTPUri } from '~/utils/totp'
 
 const Enable2FASchema = z
@@ -11,10 +10,11 @@ const Enable2FASchema = z
   .strict()
 
 export default defineEventHandler(async (event) => {
+  const payload = event.context.auth.payload
+  const appConfig = event.context.appConfig
+  const db = event.context.db
+
   try {
-    const appConfig = useAppConfig(event) as AppConfig
-    const db = event.context.db
-    const payload = await requireAuth(event)
     const body = await requireValidatedBody(event, Enable2FASchema)
     const now = Math.floor(Date.now() / 1000)
 
@@ -84,7 +84,7 @@ export default defineEventHandler(async (event) => {
     return {
       status: 200,
       success: true,
-      message: 'TOTP berhasil dibuat',
+      message: 'TOTP berhasil dibuat, verifikasi kode TOTP untuk mengaktifkan 2FA',
       data: {
         id: id,
         secret,

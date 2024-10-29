@@ -1,8 +1,8 @@
 export default defineEventHandler(async (event) => {
-  try {
-    const db = event.context.db
-    const payload = await requireAuth(event)
+  const payload = event.context.auth.payload
+  const db = event.context.db
 
+  try {
     // Count user's verified emails
     const emailCount = await db
       .selectFrom('emails')

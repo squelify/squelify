@@ -1,10 +1,10 @@
 import { typeid } from 'typeid-js'
-import { AppConfig } from '~/config'
 
 export default defineEventHandler(async (event) => {
+  const appConfig = event.context.appConfig
+  const db = event.context.db
+
   try {
-    const db = event.context.db
-    const appConfig = useAppConfig(event) as AppConfig
     const query = getQuery(event)
     const token = query.token as string
     const callbackUrl = query.callbackUrl as string

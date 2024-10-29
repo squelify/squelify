@@ -1,10 +1,10 @@
 import * as jose from 'jose'
 
 export default defineEventHandler(async (event) => {
-  try {
-    const db = event.context.db
-    const payload = await requireAuth(event)
+  const payload = event.context.auth.payload
+  const db = event.context.db
 
+  try {
     // Get user's emails
     const rawEmails = await db
       .selectFrom('emails')

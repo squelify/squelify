@@ -12,7 +12,6 @@ const QueryParamSchema = z.object({
 export default defineCachedEventHandler(
   async (event) => {
     try {
-      await requireAuth(event)
       const db = event.context.db
 
       // Validate query params

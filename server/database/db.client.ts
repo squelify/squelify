@@ -33,9 +33,10 @@ export default new Kysely<Database>({
   ...kyselyConfig,
   log: (event: QueryLogEvent | ErrorLogEvent): void => {
     if (event.level === 'query') {
-      // Silent if env not development
-      if (isProduction) return
-      logger.query('[app][kysely]', event.query.sql, event.query.parameters)
+      // Only log query logs if APP_LOG_LEVEL is set to 'trace'
+      if (String(env.APP_LOG_LEVEL).toLowerCase() === 'trace') {
+        logger.query('[app][kysely]', event.query.sql, event.query.parameters)
+      }
     }
     if (event.level === 'error') {
       logger.query('[app][kysely]', event.error)

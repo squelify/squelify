@@ -6,25 +6,16 @@ const SignoutRequestSchema = z.object({
 })
 
 export default defineEventHandler(async (event) => {
+  const db = event.context.db
+
   try {
-    const db = event.context.db
-    const body = await readValidatedBody(event, (body) => SignoutRequestSchema.safeParse(body))
-
-    if (!body.success) {
-      return createErrorResponse(400, 'Invalid request', {
-        issues: body.error.issues.map((issue) => ({
-          field: issue.path.join('.'),
-          message: issue.message,
-        })),
-      })
-    }
-
+    const body = await requireValidatedBody(event, SignoutRequestSchema)
     const now = Math.floor(Date.now() / 1000)
 
     // Check if session exists and still valid
     const session = await db
       .selectFrom('sessions')
-      .where('id', '=', body.data.sessionId)
+      .where('id', '=', body.sessionId)
       .select(['isActive', 'expiresAt'])
       .executeTakeFirst()
 
@@ -47,18 +38,18 @@ export default defineEventHandler(async (event) => {
         isActive: 0,
         updatedAt: now,
       })
-      .where('id', '=', body.data.sessionId)
+      .where('id', '=', body.sessionId)
       .execute()
 
     // If deviceId provided, deactivate all sessions for that device
-    if (body.data.deviceId) {
+    if (body.deviceId) {
       await db
         .updateTable('sessions')
         .set({
           isActive: 0,
           updatedAt: now,
         })
-        .where('deviceId', '=', body.data.deviceId)
+        .where('deviceId', '=', body.deviceId)
         .where('expiresAt', '>', now)
         .where('isActive', '=', 1)
         .execute()

@@ -1,8 +1,6 @@
 export default defineCachedEventHandler(
   async (event) => {
     try {
-      await requireAuth(event)
-
       const db = event.context.db
       const userId = event.context.params.id
 

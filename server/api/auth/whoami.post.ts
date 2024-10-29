@@ -1,8 +1,7 @@
 export default defineEventHandler(async (event) => {
-  try {
-    // Verify authentication and get payload
-    const payload = await requireAuth(event)
+  const payload = event.context.auth.payload
 
+  try {
     // Return standardized claims
     return {
       status: 200,

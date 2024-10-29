@@ -18,7 +18,7 @@ export default {
   baseURL: 'http://localhost:3000',
   domain: 'localhost:3000',
   title: 'Nitro Start',
-  description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
+  description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit',
   imageUrl: '/images/og-image.png',
   twitterUsername: '@riipandi',
   authorEmail: 'aris@duck.com',
