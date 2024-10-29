@@ -4,11 +4,6 @@ import { typeid } from 'typeid-js'
 import { z } from 'zod'
 import { createUserSession, verifyUserCredentials } from '~/database/repository/auth.repo'
 import { getActiveJWK } from '~/database/repository/jwk.repo'
-import {
-  checkRateLimit,
-  createRateLimit,
-  getRateLimitInfo,
-} from '~/database/repository/rate_limit.repo'
 import { JWTPayload } from '~/utils/jwt'
 
 export const LoginRequestSchema = z.object({
@@ -22,52 +17,11 @@ export default defineEventHandler(async (event) => {
   const { appConfig, db } = event.context
 
   try {
-    const ipAddress = getRequestIP(event) || 'unknown'
     const body = await requireValidatedBody(event, LoginRequestSchema)
     const { identity, password, deviceId, deviceType = 'browser' } = body
 
-    if (!identity) {
-      setResponseStatus(event, 400)
-      return createErrorResponse(400, 'Email wajib diisi')
-    }
-
-    // Check IP-based rate limit (5 attempts per 5 minutes)
-    const ipLimitInfo = await getRateLimitInfo(db, ipAddress, 'ip')
-    if (ipLimitInfo.isLimited) {
-      const waitMinutes = Math.ceil((ipLimitInfo.resetAt - Math.floor(Date.now() / 1000)) / 60)
-      setResponseStatus(event, 429)
-      return createErrorResponse(
-        429,
-        `Terlalu banyak percobaan login. Silakan coba lagi dalam ${waitMinutes} menit.`
-      )
-    }
-
-    // Check email-based rate limit
-    const emailLimitInfo = await getRateLimitInfo(db, identity, 'email')
-    if (emailLimitInfo.isLimited) {
-      const waitMinutes = Math.ceil((emailLimitInfo.resetAt - Math.floor(Date.now() / 1000)) / 60)
-      setResponseStatus(event, 429)
-      return createErrorResponse(
-        429,
-        `Terlalu banyak percobaan login untuk email ini. Silakan coba lagi dalam ${waitMinutes} menit.`
-      )
-    }
-
-    // Check email-based rate limit (10 attempts per 15 minutes)
-    const isEmailLimited = await checkRateLimit(db, identity, 'email')
-    if (isEmailLimited) {
-      setResponseStatus(event, 429)
-      return createErrorResponse(
-        429,
-        'Terlalu banyak percobaan login untuk email ini. Silakan coba lagi nanti.'
-      )
-    }
-
-    // Track rate limits
-    await createRateLimit(db, ipAddress, 'ip', 5, 300)
-    await createRateLimit(db, identity, 'email', 10, 900)
-
     // Get client info
+    const ipAddress = getRequestIP(event)
     const headers = getRequestHeaders(event)
     const userAgent = headers['user-agent'] || 'unknown'
 

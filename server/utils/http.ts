@@ -1,5 +1,6 @@
 import { H3Error, type H3Event } from 'h3'
 import { isProduction } from 'std-env'
+import { UAParser } from 'ua-parser-js'
 import { z } from 'zod'
 
 interface ErrorDetails {
@@ -97,4 +98,26 @@ export async function requireValidatedBody<T extends z.ZodType>(
   }
 
   return body.data
+}
+
+export function getClientInfo(event: H3Event) {
+  const clientIpAddress = getRequestIP(event, { xForwardedFor: true })
+  const clientInfo = event.headers.get('X-Client-Info')
+  const userAgent = event.headers.get('User-Agent')
+
+  let clientIdentifier = userAgent
+
+  if (clientInfo) {
+    clientIdentifier = `[${clientInfo}]`
+  } else if (userAgent) {
+    const uaParser = new UAParser(userAgent)
+    // Check if browser info exists
+    if (uaParser.getBrowser().name) {
+      const clientOS = `${uaParser.getOS().name} ${uaParser.getOS().version}`
+      const browserInfo = `${uaParser.getBrowser().name} ${uaParser.getBrowser().version}`
+      clientIdentifier = `[${clientOS} ${browserInfo}]`
+    }
+  }
+
+  return { clientIpAddress, clientIdentifier }
 }
