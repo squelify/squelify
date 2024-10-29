@@ -1,9 +1,9 @@
 export default defineCachedEventHandler(
   async (event) => {
-    try {
-      const db = event.context.db
-      const userId = event.context.params.id
+    const db = event.context.db
+    const userId = event.context.params.id
 
+    try {
       const user = await db
         .selectFrom('users')
         .where('id', '=', userId)

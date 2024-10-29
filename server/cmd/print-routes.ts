@@ -150,7 +150,7 @@ export default defineCommand({
 
       // stdout.columns || 120 -< import { stdout } from 'node:process'
       const terminalWidth = 80
-      const methodColWidth = 21
+      const methodColWidth = 24
       const pathColWidth = terminalWidth - methodColWidth - 5 // Account for borders and padding
 
       const table = new Table({
