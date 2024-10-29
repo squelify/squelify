@@ -1,3 +1,4 @@
+import consola from 'consola'
 import { isDevelopment, isProduction } from 'std-env'
 
 /**
@@ -7,7 +8,7 @@ import { isDevelopment, isProduction } from 'std-env'
 export default defineNitroConfig({
   srcDir: 'server',
   preset: 'node-server',
-  serveStatic: 'node',
+  serveStatic: 'inline',
   minify: isProduction,
   sourceMap: isDevelopment,
   appConfigFiles: ['~/config'],
@@ -15,6 +16,21 @@ export default defineNitroConfig({
   errorHandler: '~/error',
   publicAssets: [{ dir: '../public' }, { dir: '../.client' }],
   serverAssets: [{ baseName: 'vite', dir: '../.client/.vite' }],
+
+  hooks: {
+    'rollup:before': (_nitro, _config) => {
+      consola.info('Do something before rollup is executed')
+    },
+    compiled: (_nitro) => {
+      // Do something with the compiled Nitro instance.
+      // You can upload the compiled assets to a CDN or do something else with them.
+      // if ((!isCI || !isTest) && isProduction) {
+      //   consola.info('Do something after the app has been compiled')
+      // }
+      consola.info('Do something after the app has been compiled')
+    },
+  },
+
   // TODO: modify rollupConfig to use React frontend
   // esbuild: {
   //   options: {
