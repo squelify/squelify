@@ -102,8 +102,9 @@ COPY --chown=nonroot:nonroot --from=pruner /srv/.output /srv
 # Copy some necessary system utilities from build stage.
 # To enhance security, consider avoiding the copying of sysutils.
 COPY --from=builder /usr/bin/tini /usr/bin/tini
-COPY --from=busybox /bin/mkdir /bin/mkdir
 COPY --from=busybox /bin/clear /bin/clear
+COPY --from=busybox /bin/mkdir /bin/mkdir
+COPY --from=busybox /bin/which /bin/which
 COPY --from=busybox /bin/cat /bin/cat
 COPY --from=busybox /bin/ls /bin/ls
 COPY --from=busybox /bin/sh /bin/sh

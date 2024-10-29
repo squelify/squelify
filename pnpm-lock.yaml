@@ -102,8 +102,8 @@ importers:
         specifier: 5.9.6
         version: 5.9.6
       jsx-email:
-        specifier: 2.1.1
-        version: 2.1.1(@jsx-email/app-preview@2.0.2(@types/node@22.8.1)(@types/react-dom@18.3.1)(@types/react@18.3.12)(react@18.3.1)(terser@5.36.0))(@jsx-email/plugin-inline@1.0.1)(@jsx-email/plugin-minify@1.0.1)(@jsx-email/plugin-pretty@1.0.0)(@types/node@22.8.1)(@types/react@18.3.12)(react@18.3.1)(terser@5.36.0)
+        specifier: 2.1.2
+        version: 2.1.2(@jsx-email/app-preview@2.0.2(@types/node@22.8.1)(@types/react-dom@18.3.1)(@types/react@18.3.12)(react@18.3.1)(terser@5.36.0))(@jsx-email/plugin-inline@1.0.1)(@jsx-email/plugin-minify@1.0.1)(@jsx-email/plugin-pretty@1.0.0)(@types/node@22.8.1)(@types/react@18.3.12)(react@18.3.1)(terser@5.36.0)
       kysely:
         specifier: 0.27.4
         version: 0.27.4
@@ -168,8 +168,8 @@ importers:
         specifier: ^0.1.2
         version: 0.1.2
       vaul:
-        specifier: 1.1.0
-        version: 1.1.0(@types/react-dom@18.3.1)(@types/react@18.3.12)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+        specifier: 1.1.1
+        version: 1.1.1(@types/react-dom@18.3.1)(@types/react@18.3.12)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       zod:
         specifier: 3.23.8
         version: 3.23.8
@@ -3275,8 +3275,8 @@ packages:
   jsonfile@6.1.0:
     resolution: {integrity: sha512-5dgndWOriYSm5cnYaJNhalLNDKOqFwyDB/rr1E9ZsGciGvKPs8R2xYGCacuf3z6K1YKDz182fd+fY3cn3pMqXQ==}
 
-  jsx-email@2.1.1:
-    resolution: {integrity: sha512-n0tEpxew1hel5A3X6CEnDvFmPUL/f1Nv7nRLxzEMKJbd6dO5evHzr+sLn4v4EYpQymYDh3tyOcHKtkeUPeiN5w==}
+  jsx-email@2.1.2:
+    resolution: {integrity: sha512-eFYxhTwYjp+38g9W89FWaswhankE8r3hR1SCcXFTDjVf0p6NrHbsxetK8Np6IHH9QZZ/j8u0G4KQaP6Al9CNCg==}
     engines: {node: '>=18.0.0'}
     hasBin: true
     peerDependencies:
@@ -4588,11 +4588,11 @@ packages:
   valibot@0.30.0:
     resolution: {integrity: sha512-5POBdbSkM+3nvJ6ZlyQHsggisfRtyT4tVTo1EIIShs6qCdXJnyWU5TJ68vr8iTg5zpOLjXLRiBqNx+9zwZz/rA==}
 
-  vaul@1.1.0:
-    resolution: {integrity: sha512-YhO/bikcauk48hzhMhvIvT+U87cuCbNbKk9fF4Ou5UkI9t2KkBMernmdP37pCzF15hrv55fcny1YhexK8h6GVQ==}
+  vaul@1.1.1:
+    resolution: {integrity: sha512-+ejzF6ffQKPcfgS7uOrGn017g39F8SO4yLPXbBhpC7a0H+oPqPna8f1BUfXaz8eU4+pxbQcmjxW+jWBSbxjaFg==}
     peerDependencies:
-      react: ^16.8 || ^17.0 || ^18.0
-      react-dom: ^16.8 || ^17.0 || ^18.0
+      react: ^16.8 || ^17.0 || ^18.0 || ^19.0
+      react-dom: ^16.8 || ^17.0 || ^18.0 || ^19.0
 
   vfile-location@5.0.3:
     resolution: {integrity: sha512-5yXvWDEgqeiYiBe1lbxYF7UMAIm/IcopxMHrMQDq3nvKcjPKIhZklUKL+AE7J7uApI4kwe2snsK+eI6UTj9EHg==}
@@ -5236,18 +5236,18 @@ snapshots:
       micromatch: 4.0.8
       style-to-object: 1.0.8
 
-  '@jsx-email/plugin-inline@1.0.1(jsx-email@2.1.1)':
+  '@jsx-email/plugin-inline@1.0.1(jsx-email@2.1.2)':
     dependencies:
       '@adobe/css-tools': 4.4.0
       hast-util-select: 6.0.3
       hast-util-to-string: 3.0.1
-      jsx-email: 2.1.1(@jsx-email/app-preview@2.0.2(@types/node@22.8.1)(@types/react-dom@18.3.1)(@types/react@18.3.12)(react@18.3.1)(terser@5.36.0))(@jsx-email/plugin-inline@1.0.1)(@jsx-email/plugin-minify@1.0.1)(@jsx-email/plugin-pretty@1.0.0)(@types/node@22.8.1)(@types/react@18.3.12)(react@18.3.1)(terser@5.36.0)
+      jsx-email: 2.1.2(@jsx-email/app-preview@2.0.2(@types/node@22.8.1)(@types/react-dom@18.3.1)(@types/react@18.3.12)(react@18.3.1)(terser@5.36.0))(@jsx-email/plugin-inline@1.0.1)(@jsx-email/plugin-minify@1.0.1)(@jsx-email/plugin-pretty@1.0.0)(@types/node@22.8.1)(@types/react@18.3.12)(react@18.3.1)(terser@5.36.0)
       unist-util-remove: 4.0.0
       unist-util-visit: 5.0.0
 
-  '@jsx-email/plugin-minify@1.0.1(jsx-email@2.1.1)':
+  '@jsx-email/plugin-minify@1.0.1(jsx-email@2.1.2)':
     dependencies:
-      jsx-email: 2.1.1(@jsx-email/app-preview@2.0.2(@types/node@22.8.1)(@types/react-dom@18.3.1)(@types/react@18.3.12)(react@18.3.1)(terser@5.36.0))(@jsx-email/plugin-inline@1.0.1)(@jsx-email/plugin-minify@1.0.1)(@jsx-email/plugin-pretty@1.0.0)(@types/node@22.8.1)(@types/react@18.3.12)(react@18.3.1)(terser@5.36.0)
+      jsx-email: 2.1.2(@jsx-email/app-preview@2.0.2(@types/node@22.8.1)(@types/react-dom@18.3.1)(@types/react@18.3.12)(react@18.3.1)(terser@5.36.0))(@jsx-email/plugin-inline@1.0.1)(@jsx-email/plugin-minify@1.0.1)(@jsx-email/plugin-pretty@1.0.0)(@types/node@22.8.1)(@types/react@18.3.12)(react@18.3.1)(terser@5.36.0)
       rehype-minify-attribute-whitespace: 4.0.1
       rehype-minify-css-style: 4.0.1
       rehype-minify-enumerated-attribute: 5.0.1
@@ -5267,9 +5267,9 @@ snapshots:
       rehype-sort-attributes: 5.0.1
       unified: 11.0.5
 
-  '@jsx-email/plugin-pretty@1.0.0(jsx-email@2.1.1)':
+  '@jsx-email/plugin-pretty@1.0.0(jsx-email@2.1.2)':
     dependencies:
-      jsx-email: 2.1.1(@jsx-email/app-preview@2.0.2(@types/node@22.8.1)(@types/react-dom@18.3.1)(@types/react@18.3.12)(react@18.3.1)(terser@5.36.0))(@jsx-email/plugin-inline@1.0.1)(@jsx-email/plugin-minify@1.0.1)(@jsx-email/plugin-pretty@1.0.0)(@types/node@22.8.1)(@types/react@18.3.12)(react@18.3.1)(terser@5.36.0)
+      jsx-email: 2.1.2(@jsx-email/app-preview@2.0.2(@types/node@22.8.1)(@types/react-dom@18.3.1)(@types/react@18.3.12)(react@18.3.1)(terser@5.36.0))(@jsx-email/plugin-inline@1.0.1)(@jsx-email/plugin-minify@1.0.1)(@jsx-email/plugin-pretty@1.0.0)(@types/node@22.8.1)(@types/react@18.3.12)(react@18.3.1)(terser@5.36.0)
       pretty: 2.0.0
 
   '@levischuck/tiny-cbor@0.2.2': {}
@@ -7658,14 +7658,14 @@ snapshots:
     optionalDependencies:
       graceful-fs: 4.2.11
 
-  jsx-email@2.1.1(@jsx-email/app-preview@2.0.2(@types/node@22.8.1)(@types/react-dom@18.3.1)(@types/react@18.3.12)(react@18.3.1)(terser@5.36.0))(@jsx-email/plugin-inline@1.0.1)(@jsx-email/plugin-minify@1.0.1)(@jsx-email/plugin-pretty@1.0.0)(@types/node@22.8.1)(@types/react@18.3.12)(react@18.3.1)(terser@5.36.0):
+  jsx-email@2.1.2(@jsx-email/app-preview@2.0.2(@types/node@22.8.1)(@types/react-dom@18.3.1)(@types/react@18.3.12)(react@18.3.1)(terser@5.36.0))(@jsx-email/plugin-inline@1.0.1)(@jsx-email/plugin-minify@1.0.1)(@jsx-email/plugin-pretty@1.0.0)(@types/node@22.8.1)(@types/react@18.3.12)(react@18.3.1)(terser@5.36.0):
     dependencies:
       '@dot/log': 0.1.5
       '@jsx-email/app-preview': 2.0.2(@types/node@22.8.1)(@types/react-dom@18.3.1)(@types/react@18.3.12)(react@18.3.1)(terser@5.36.0)
       '@jsx-email/doiuse-email': 1.0.1
-      '@jsx-email/plugin-inline': 1.0.1(jsx-email@2.1.1)
-      '@jsx-email/plugin-minify': 1.0.1(jsx-email@2.1.1)
-      '@jsx-email/plugin-pretty': 1.0.0(jsx-email@2.1.1)
+      '@jsx-email/plugin-inline': 1.0.1(jsx-email@2.1.2)
+      '@jsx-email/plugin-minify': 1.0.1(jsx-email@2.1.2)
+      '@jsx-email/plugin-pretty': 1.0.0(jsx-email@2.1.2)
       '@parcel/watcher': 2.4.1
       '@radix-ui/react-slot': 1.0.2(@types/react@18.3.12)(react@18.3.1)
       '@unocss/core': 0.60.4
@@ -9172,7 +9172,7 @@ snapshots:
 
   valibot@0.30.0: {}
 
-  vaul@1.1.0(@types/react-dom@18.3.1)(@types/react@18.3.12)(react-dom@18.3.1(react@18.3.1))(react@18.3.1):
+  vaul@1.1.1(@types/react-dom@18.3.1)(@types/react@18.3.12)(react-dom@18.3.1(react@18.3.1))(react@18.3.1):
     dependencies:
       '@radix-ui/react-dialog': 1.1.2(@types/react-dom@18.3.1)(@types/react@18.3.12)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       react: 18.3.1
