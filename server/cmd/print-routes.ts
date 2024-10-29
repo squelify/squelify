@@ -16,7 +16,7 @@ function formatPath(path: string, tableColWidth: number): string {
   const coloredPath = basePath.replace(/:(\w+)/g, (_, param) => chalk.cyan(`:${param}`))
   const rawLength = stripAnsi(path).length
   const dots = chalk.gray('·'.repeat(maxWidth - rawLength))
-  return `${coloredPath} ${dots}`
+  return `${coloredPath}${dots}`
 }
 
 const METHOD_COLORS = {
@@ -119,15 +119,20 @@ function getMethodStats(routes: RouteInfo[]) {
     PATCH: 0,
   }
 
+  // Track total method count across all routes
+  let totalMethodCount = 0
+
   for (const route of routes) {
     for (const method of route.methods) {
       methodCounts[method]++
+      totalMethodCount++
     }
   }
 
   return {
-    total: routes.length,
-    counts: methodCounts,
+    totalRoutes: routes.length, // Total number of routes
+    methodStats: methodCounts, // Object with method counts
+    methodCount: totalMethodCount, // Total number of methods
   }
 }
 
@@ -147,16 +152,18 @@ export default defineCommand({
     try {
       const apiDir = resolve(process.cwd(), 'server/api')
       const routes = await scanApiRoutes(apiDir)
+      const stats = getMethodStats(routes)
 
       // stdout.columns || 120 -< import { stdout } from 'node:process'
-      const terminalWidth = 80
-      const methodColWidth = 24
-      const pathColWidth = terminalWidth - methodColWidth - 5 // Account for borders and padding
+      const terminalWidth = 80 // Width of the terminal window
+      const methodColWidth = 24 // Width of the "Methods" column
+
+      // Account for borders and padding
+      const pathColWidth = terminalWidth - methodColWidth - 5
 
       const table = new Table({
-        head: ['Methods', 'Path'],
+        head: [`Methods (${stats.methodCount})`, 'Path / Endpoint'],
         colWidths: [methodColWidth, pathColWidth],
-
         colAligns: ['right', 'left'],
         chars: {
           top: '─',
@@ -183,21 +190,23 @@ export default defineCommand({
       })
 
       for (const route of routes.sort(sortRoutes)) {
-        table.push([formatMethods(route.methods), formatPath(route.path, pathColWidth)])
+        table.push([formatMethods(route.methods), formatPath(`${route.path} `, pathColWidth)])
       }
 
-      console.info(table.toString())
+      table.push([
+        formatPath(chalk.gray('·'), methodColWidth),
+        formatPath(chalk.gray('·'), pathColWidth),
+      ])
 
-      const stats = getMethodStats(routes)
-      console.info(
-        chalk.bold('Total Routes:'),
-        chalk.cyan(stats.total),
-        chalk.bold('-'),
-        Object.entries(stats.counts)
+      table.push([
+        `${chalk.bold(chalk.gray('Total Routes:'))} ${chalk.cyan(stats.totalRoutes)}`,
+        Object.entries(stats.methodStats)
           .filter(([_, count]) => count > 0)
           .map(([method, count]) => `${METHOD_COLORS[method](method)} ${chalk.cyan(count)}`)
-          .join(chalk.gray(' · '))
-      )
+          .join(chalk.gray(' · ')),
+      ])
+
+      console.info(table.toString())
     } catch (error) {
       console.error(error instanceof Error ? error.message : 'Unknown error occurred')
       process.exit(1)
