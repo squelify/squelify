@@ -10,19 +10,36 @@ const DEFAULT_RATE_LIMITS = {
 
 // Custom rate limits per endpoint
 const ENDPOINT_RATE_LIMITS: Record<string, typeof DEFAULT_RATE_LIMITS | false> = {
-  // Disable rate limiting
+  // Disable rate limiting for refresh token since it's already protected
   '/api/auth/refresh': false,
 
-  // Soft rate limits for login
+  // Stricter rate limits for login to prevent brute force
   '/api/auth/login': {
-    ip: { points: 20, window: 300 }, // 20 attempts per 5 minutes
-    user: { points: 30, window: 900 }, // 30 attempts per 15 minutes
+    ip: { points: 10, window: 300 }, // 10 attempts per 5 minutes
+    user: { points: 15, window: 900 }, // 15 attempts per 15 minutes
   },
 
-  // Stricter limits for signup
+  // Balanced limits for signup considering shared IPs
   '/api/auth/signup': {
+    ip: { points: 10, window: 1800 }, // 10 attempts per 30 minutes
+    user: { points: 5, window: 300 }, // 5 attempts per 5 minutes
+  },
+
+  // Protect password reset endpoints
+  '/api/auth/password/forgot': {
     ip: { points: 3, window: 1800 }, // 3 attempts per 30 minutes
     user: { points: 5, window: 3600 }, // 5 attempts per hour
+  },
+
+  // Protect sensitive data endpoints
+  '/api/auth/otp/verify': {
+    ip: { points: 30, window: 60 }, // 30 requests per minute
+    user: { points: 100, window: 300 }, // 100 requests per 5 minutes
+  },
+
+  '/api/auth/two-factor/verify': {
+    ip: { points: 30, window: 60 }, // 30 requests per minute
+    user: { points: 100, window: 300 }, // 100 requests per 5 minutes
   },
 }
 
