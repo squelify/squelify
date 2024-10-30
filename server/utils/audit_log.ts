@@ -1,5 +1,6 @@
 import { type H3Event } from 'h3'
 import { sql } from 'kysely'
+import { env } from 'std-env'
 import { typeid } from 'typeid-js'
 import db from '~/database/db.client'
 import type { AuditAction, AuditEntity } from '~/database/schemas/audit_log'
@@ -29,63 +30,80 @@ interface AuditLogFilters {
   entity?: AuditEntity
 }
 
+// Get audit log configuration from environment
+const isAuditEnabled = env.AUDIT_LOG_ENABLE !== 'false'
+
+// Wrapper function to check if audit is enabled
+async function executeIfEnabled(fn: () => Promise<void>) {
+  if (isAuditEnabled) {
+    await fn()
+  }
+}
+
 // Single audit log insert
 export async function auditLog(event: H3Event, params: AuditLogParams) {
-  const ctx = event.context as RequestContext
-  const headers = getRequestHeaders(event)
+  await executeIfEnabled(async () => {
+    const ctx = event.context as RequestContext
+    const headers = getRequestHeaders(event)
 
-  await db
-    .insertInto('audit_logs')
-    .values({
-      id: typeid('log').toString(),
-      userId: params.userId || ctx.user?.id || null,
-      organizationId: params.organizationId || ctx.organization?.id || null,
-      action: params.action,
-      entity: params.entity,
-      entityId: params.entityId,
-      oldValues: JSON.stringify(params.oldValues || {}),
-      newValues: JSON.stringify(params.newValues || {}),
-      metadata: JSON.stringify(params.metadata || {}),
-      ipAddress: getRequestIP(event, { xForwardedFor: true }),
-      userAgent: headers['user-agent'] || 'unknown',
-      createdAt: Math.floor(Date.now() / 1000),
-    })
-    .execute()
+    await db
+      .insertInto('audit_logs')
+      .values({
+        id: typeid('log').toString(),
+        userId: params.userId || ctx.user?.id || null,
+        organizationId: params.organizationId || ctx.organization?.id || null,
+        action: params.action,
+        entity: params.entity,
+        entityId: params.entityId,
+        oldValues: JSON.stringify(params.oldValues || {}),
+        newValues: JSON.stringify(params.newValues || {}),
+        metadata: JSON.stringify(params.metadata || {}),
+        ipAddress: getRequestIP(event, { xForwardedFor: true }),
+        userAgent: headers['user-agent'] || 'unknown',
+        createdAt: Math.floor(Date.now() / 1000),
+      })
+      .execute()
+  })
 }
 
 // Batch insert for multiple audit logs
 export async function auditLogBatch(event: H3Event, logs: AuditLogParams[]) {
-  const ctx = event.context as RequestContext
-  const headers = getRequestHeaders(event)
-  const now = Math.floor(Date.now() / 1000)
+  await executeIfEnabled(async () => {
+    const ctx = event.context as RequestContext
+    const headers = getRequestHeaders(event)
+    const now = Math.floor(Date.now() / 1000)
 
-  const values = logs.map((log) => ({
-    id: typeid('log').toString(),
-    userId: log.userId || ctx.user?.id || null,
-    organizationId: log.organizationId || ctx.organization?.id || null,
-    action: log.action,
-    entity: log.entity,
-    entityId: log.entityId,
-    oldValues: JSON.stringify(log.oldValues || {}),
-    newValues: JSON.stringify(log.newValues || {}),
-    metadata: JSON.stringify(log.metadata || {}),
-    ipAddress: getRequestIP(event),
-    userAgent: headers['user-agent'] || 'unknown',
-    createdAt: now,
-  }))
+    const values = logs.map((log) => ({
+      id: typeid('log').toString(),
+      userId: log.userId || ctx.user?.id || null,
+      organizationId: log.organizationId || ctx.organization?.id || null,
+      action: log.action,
+      entity: log.entity,
+      entityId: log.entityId,
+      oldValues: JSON.stringify(log.oldValues || {}),
+      newValues: JSON.stringify(log.newValues || {}),
+      metadata: JSON.stringify(log.metadata || {}),
+      ipAddress: getRequestIP(event),
+      userAgent: headers['user-agent'] || 'unknown',
+      createdAt: now,
+    }))
 
-  await db.insertInto('audit_logs').values(values).execute()
+    await db.insertInto('audit_logs').values(values).execute()
+  })
 }
 
 // Cleanup old audit logs
 export async function cleanupAuditLogs(retentionDays = 90) {
-  const cutoff = Math.floor(Date.now() / 1000) - retentionDays * 24 * 60 * 60
-
-  await db.deleteFrom('audit_logs').where('createdAt', '<', cutoff).execute()
+  await executeIfEnabled(async () => {
+    const cutoff = Math.floor(Date.now() / 1000) - retentionDays * 24 * 60 * 60
+    await db.deleteFrom('audit_logs').where('createdAt', '<', cutoff).execute()
+  })
 }
 
 // Export audit logs
 export async function exportAuditLogs(filters: AuditLogFilters) {
+  if (!isAuditEnabled) return []
+
   const query = db.selectFrom('audit_logs')
 
   if (filters.startDate) {
@@ -132,12 +150,15 @@ export class AuditLogQuery {
   }
 
   async execute() {
+    if (!isAuditEnabled) return []
     return await this.query.selectAll().orderBy('createdAt', 'desc').execute()
   }
 }
 
 // Get audit statistics
 export async function getAuditStats(timeframe: number) {
+  if (!isAuditEnabled) return []
+
   const startTime = Math.floor(Date.now() / 1000) - timeframe
 
   return await db
@@ -156,16 +177,18 @@ export async function getAuditStats(timeframe: number) {
 
 // Critical changes notification
 export async function notifyCriticalChanges(log: AuditLogParams) {
-  const criticalActions: AuditAction[] = ['delete', 'update']
-  const criticalEntities: AuditEntity[] = ['user', 'organization', 'role']
+  await executeIfEnabled(async () => {
+    const criticalActions: AuditAction[] = ['delete', 'update']
+    const criticalEntities: AuditEntity[] = ['user', 'organization', 'role']
 
-  if (criticalActions.includes(log.action) && criticalEntities.includes(log.entity)) {
-    // TODO: Send notification to some channel, for now just log it
-    logger.warn('[audit]', `Critical ${log.action} on ${log.entity}`)
-    // await sendNotification({
-    //   type: 'audit_alert',
-    //   title: `Critical ${log.action} on ${log.entity}`,
-    //   data: log,
-    // })
-  }
+    if (criticalActions.includes(log.action) && criticalEntities.includes(log.entity)) {
+      // TODO: Send notification to some channel, for now just log it
+      logger.warn('[audit]', `Critical ${log.action} on ${log.entity}`)
+      // await sendNotification({
+      //   type: 'audit_alert',
+      //   title: `Critical ${log.action} on ${log.entity}`,
+      //   data: log,
+      // })
+    }
+  })
 }
