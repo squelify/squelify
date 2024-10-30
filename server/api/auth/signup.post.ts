@@ -156,6 +156,13 @@ export default defineEventHandler(async (event) => {
       // Send verification email
       const verificationUrl = `${appConfig.baseURL}/api/auth/email/verify?token=${verificationToken}`
       logger.info('[app]', 'Verification email: ', verificationUrl)
+
+      // TODO: Send verification email using jsx-email
+      // await sendJSXEmail('verify-email', body.email, {
+      //   email: body.email,
+      //   token: verificationToken,
+      //   url: verificationUrl,
+      // })
     })
 
     return {

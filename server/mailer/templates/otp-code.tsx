@@ -1,6 +1,6 @@
 import { Heading, Hr, Link, Preview, Section, Text } from 'jsx-email'
 import * as React from 'react'
-import appConfig from '~/config'
+import appConfig from '~~/app.config'
 import EmailAuthTemplate from '../layouts/auth-layout'
 
 export interface OtpCodeProps {
