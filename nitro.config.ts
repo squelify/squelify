@@ -1,5 +1,7 @@
 import consola from 'consola'
+import { resolve } from 'pathe'
 import { isDevelopment, isProduction } from 'std-env'
+import { build as buildVite } from 'vite'
 
 /**
  * Configures the Nitro server for the application.
@@ -18,8 +20,11 @@ export default defineNitroConfig({
   serverAssets: [{ baseName: 'vite', dir: '../.client/.vite' }],
 
   hooks: {
-    'rollup:before': (_nitro, _config) => {
-      consola.info('Do something before rollup is executed')
+    'rollup:before': async (_nitro, _config) => {
+      consola.info('Building frontend application...')
+      await buildVite({
+        configFile: resolve('vite.config.ts'),
+      }).then(() => consola.success('Frontend application built!'))
     },
     compiled: (_nitro) => {
       // Do something with the compiled Nitro instance.

@@ -14,9 +14,7 @@
     "scripts": {
         "dev": "nitro dev",
         "dev:tunnel": "nitro dev --tunnel",
-        "build": "pnpm --silent run build:vite && pnpm --silent run build:nitro",
-        "build:nitro": "nitro build",
-        "build:vite": "vite build",
+        "build": "nitro build",
         "check": "biome check . --write",
         "format": "biome format . --write",
         "lint": "biome lint . --write",

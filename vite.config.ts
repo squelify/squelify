@@ -1,25 +1,20 @@
 import 'dotenv/config'
 import react from '@vitejs/plugin-react'
+import consola from 'consola'
 import { isProduction, isTest, process } from 'std-env'
-import { createLogger, defineConfig } from 'vite'
+import { type LogLevel, defineConfig } from 'vite'
 import inspect from 'vite-plugin-inspect'
 import tsconfigPaths from 'vite-tsconfig-paths'
 
-// @ts-ignore: FIXME fix the tsconfig.node.json
-import logger from './server/utils/logger'
-
-const viteLogger = createLogger()
-const logMethods = ['info', 'error', 'warn', 'warnOnce'] as const
-
-for (const method of logMethods) {
-  viteLogger[method] = (msg: string) => {
-    // Ignore empty CSS files warning
-    if (method === 'warn' && msg.includes('vite:css') && msg.includes(' is empty')) return
-    if (method in logger) {
-      const loggerMethod = method === 'warnOnce' ? 'warn' : method
-      ;(logger[loggerMethod as keyof typeof logger] as Function)('[vite]', msg)
-    }
-  }
+const logger = {
+  warn: (msg: string) => consola.warn(msg),
+  warnOnce: (msg: string) => consola.warn(msg),
+  error: (msg: string) => consola.error(msg),
+  info: (msg: string) => consola.info(msg),
+  hasWarned: false,
+  clearScreen: () => {},
+  hasErrorLogged: () => true,
+  level: 'info' as LogLevel,
 }
 
 export default defineConfig({
@@ -31,7 +26,7 @@ export default defineConfig({
   appType: 'spa',
   clearScreen: true,
   server: { port: 5173, strictPort: true },
-  customLogger: !isTest ? viteLogger : undefined,
+  customLogger: !isTest ? logger : undefined,
   optimizeDeps: {
     /**
      * Excludes the specified packages from the Vite dependency optimization.
