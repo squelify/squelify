@@ -24,7 +24,7 @@
         "docker:images": "docker image list --filter reference=$npm_package_name:$npm_package_version --filter reference=$npm_package_name:latest",
         "docker:run": "pnpm --silent run dockerx --name $npm_package_name $npm_package_name:$npm_package_version",
         "docker:shell": "pnpm --silent run dockerx --entrypoint /bin/sh $npm_package_name:$npm_package_version",
-        "dockerx": "docker run --network=host --rm -it --env-file .env -v $(pwd)/_data:/srv/_data",
+        "dockerx": "docker run --network=host --rm -it --env-file .env -v $(pwd)/.data:/srv/_data",
         "compose:up": "docker compose up --detach --remove-orphans",
         "compose:down": "docker compose down --remove-orphans",
         "compose:cleanup": "docker compose down --remove-orphans --volumes",
@@ -33,7 +33,7 @@
         "pre-commit": "lefthook run pre-commit --force",
         "update-deps": "npm-check-updates --configFileName .ncurc.json",
         "cleanup": "pnpm run --stream --parallel --color \"/cleanup:(?!deps)/\"",
-        "cleanup:dev": "pnpm dlx rimraf .{output,client,build,data,dist,nitro,wrangler} _data",
+        "cleanup:dev": "pnpm dlx rimraf .{output,client,build,data,dist,nitro,wrangler}",
         "cleanup:deps": "pnpm dlx rimraf pnpm-lock.yaml node_modules tests-results",
         "changelog-full": "git-cliff -o CHANGELOG.md -c cliff-full.toml",
         "typecheck": "tsc -b"

@@ -141,10 +141,10 @@ export default function AppProvider({ children, debugScreenSize }: AppProviderPr
   }, [])
 
   const logout = useCallback(async () => {
-    await apiRef.current.auth.signout(authState.accessToken as string)
+    await apiRef.current.auth.signout(cookies.auth_session)
     removeCookie(COOKIE_NAME)
     resetAuthState()
-  }, [removeCookie, authState])
+  }, [removeCookie, cookies.auth_session])
 
   const authContextValues = useMemo(
     () => ({ ...authState, login, logout, signup }),

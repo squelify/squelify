@@ -20,9 +20,10 @@ export default class AuthService {
   }
 
   signout(sessionId: string) {
-    const url = `/auth/signout?session_id=${sessionId}`
+    const url = `/auth/signout`
     return this.apiClient._request<ApiResponse<LoginData>>(url, {
       method: 'POST',
+      body: JSON.stringify({ sessionId }),
     })
   }
 }
