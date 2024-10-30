@@ -35,7 +35,20 @@ export default defineEventHandler(async (event) => {
 
     // Verify credentials
     const user = await verifyUserCredentials(db, identity, password)
+
     if (!user) {
+      // AuditLog for unsuccessful login
+      await auditLog(event, {
+        action: 'login',
+        entity: 'user',
+        entityId: 'anonymous',
+        metadata: {
+          success: false,
+          email: body.identity,
+          reason: 'invalid_credentials',
+        },
+      })
+
       setResponseStatus(event, 401)
       return createErrorResponse(401, 'Email atau password salah')
     }
@@ -89,6 +102,16 @@ export default defineEventHandler(async (event) => {
       sameSite: 'lax',
       path: '/',
       maxAge: 60 * 60 * 24 * 7, // 7 days
+    })
+
+    // AuditLog for successful login
+    await auditLog(event, {
+      action: 'login',
+      entity: 'user',
+      entityId: user.id,
+      metadata: {
+        success: true,
+      },
     })
 
     return {

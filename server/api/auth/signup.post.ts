@@ -37,6 +37,17 @@ export default defineEventHandler(async (event) => {
       .executeTakeFirst()
 
     if (existingEmail) {
+      await auditLog(event, {
+        action: 'create',
+        entity: 'user',
+        entityId: 'anonymous',
+        metadata: {
+          success: false,
+          email: body.email,
+          reason: 'email_exists',
+        },
+      })
+
       setResponseStatus(event, 400)
       return createErrorResponse(400, 'Email sudah terdaftar')
     }
@@ -66,6 +77,17 @@ export default defineEventHandler(async (event) => {
       }
 
       if (!isUnique) {
+        await auditLog(event, {
+          action: 'create',
+          entity: 'user',
+          entityId: 'anonymous',
+          metadata: {
+            success: false,
+            email: body.email,
+            reason: 'username_generation_failed',
+          },
+        })
+
         setResponseStatus(event, 500)
         return createErrorResponse(500, 'Gagal generate username yang unik')
       }
@@ -77,6 +99,17 @@ export default defineEventHandler(async (event) => {
         .executeTakeFirst()
 
       if (existingUser) {
+        await auditLog(event, {
+          action: 'create',
+          entity: 'user',
+          entityId: 'anonymous',
+          metadata: {
+            success: false,
+            email: body.email,
+            reason: 'username_exists',
+          },
+        })
+
         setResponseStatus(event, 409)
         return createErrorResponse(409, `Username '${username}' sudah digunakan`)
       }
@@ -87,6 +120,7 @@ export default defineEventHandler(async (event) => {
     const hashedPassword = await hashPassword(body.password)
     const now = Math.floor(Date.now() / 1000)
 
+    // Create user account transaction
     await db.transaction().execute(async (trx) => {
       // Create user first
       await trx
@@ -148,7 +182,7 @@ export default defineEventHandler(async (event) => {
           type: 'email',
           identifier: body.email,
           token: verificationToken,
-          expiresAt: now + 24 * 60 * 60,
+          expiresAt: now,
           createdAt: now,
         })
         .execute()
@@ -165,12 +199,40 @@ export default defineEventHandler(async (event) => {
       // })
     })
 
+    // Log successful signup after transaction
+    await auditLog(event, {
+      action: 'create',
+      entity: 'user',
+      entityId: userId,
+      userId: userId,
+      newValues: {
+        id: userId,
+        username,
+        firstName: body.firstName,
+        lastName: body.lastName,
+        email: body.email,
+      },
+      metadata: {
+        success: true,
+      },
+    })
+
     return {
       status: 200,
       success: true,
       message: 'Pendaftaran berhasil, silakan cek email untuk verifikasi',
     }
   } catch (error) {
+    await auditLog(event, {
+      action: 'create',
+      entity: 'user',
+      entityId: 'anonymous',
+      metadata: {
+        success: false,
+        error: error.message,
+      },
+    })
+
     return throwErrorResponse(error)
   }
 })

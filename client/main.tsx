@@ -1,5 +1,5 @@
-import './assets/styles/fontface.css'
-import './assets/styles/globals.css'
+import './styles/fontface.css'
+import './styles/globals.css'
 
 import * as React from 'react'
 import ReactDOM from 'react-dom/client'

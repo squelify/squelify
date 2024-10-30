@@ -1,6 +1,7 @@
 import type { ColumnType } from 'kysely'
 
 import type { Account } from './schemas/account'
+import type { AuditLog } from './schemas/audit_log'
 import type { Email } from './schemas/email'
 import type { Invitation } from './schemas/invitation'
 import type { JWK } from './schemas/jwk'
@@ -24,6 +25,7 @@ import type { Verification } from './schemas/verification'
  * that contains table names as keys and table schema interfaces as values.
  */
 export interface Database {
+  audit_logs: AuditLog
   accounts: Account
   emails: Email
   invitations: Invitation
