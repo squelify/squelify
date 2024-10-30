@@ -20,9 +20,9 @@ export default defineEventHandler(async (event) => {
       email: email.email,
       isPrimary: Boolean(email.isPrimary),
       isVerified: Boolean(email.isVerified),
-      verifiedAt: email.verifiedAt ? new Date(email.verifiedAt * 1000).toISOString() : null,
-      createdAt: new Date(email.createdAt * 1000).toISOString(),
-      updatedAt: email.updatedAt ? new Date(email.updatedAt * 1000).toISOString() : null,
+      verifiedAt: toISOString(email.verifiedAt),
+      createdAt: toISOString(email.createdAt),
+      updatedAt: toISOString(email.updatedAt),
     }))
 
     return {

@@ -12,7 +12,7 @@ export async function up(db: Kysely<Database>): Promise<void> {
     .addColumn('algorithm', 'text', (col) =>
       col
         .notNull()
-        .defaultTo('RS256')
+        .defaultTo('ES256')
         .check(
           sql`algorithm IN (
           'RS256', 'RS384', 'RS512',

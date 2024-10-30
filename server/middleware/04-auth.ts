@@ -3,6 +3,8 @@ import * as jose from 'jose'
 import { sha256base64 } from 'ohash'
 import { env } from 'std-env'
 import { z } from 'zod'
+import { getJWKByKeyId } from '~/database/repository/jwk.repo'
+import type { JWTPayload } from '~/utils/jwt'
 
 const HeadersSchema = z.object({
   'x-client-info': z
@@ -19,6 +21,7 @@ const UNPROTECTED_ROUTES = [
   '/auth/email/verify',
   '/auth/password/forgot',
   '/auth/password/reset',
+  '/jwks',
 ]
 
 // Check if pathname is root path (empty or `/`)
@@ -29,8 +32,8 @@ function validateRequiredHeaders(event: H3Event) {
   const headers = getRequestHeaders(event)
   const apiRequestPath = pathname.replace('/api', '')
 
-  // Excllude some paths from validation
-  const excludedPaths = []
+  // Exclude some paths from validation
+  const excludedPaths = ['/jwks']
 
   if (isRootPath(apiRequestPath) || excludedPaths.includes(apiRequestPath)) {
     return
@@ -52,6 +55,20 @@ function validateRequiredHeaders(event: H3Event) {
       },
       message: 'Invalid request',
     })
+  }
+}
+
+declare module 'h3' {
+  interface H3EventContext {
+    auth?: {
+      sessionId: string
+      bearerToken: string
+      payload: JWTPayload
+      session?: {
+        id: string
+        exp: string
+      }
+    }
   }
 }
 
@@ -82,10 +99,10 @@ export default defineEventHandler(async (event) => {
     const sessionId = getCookie(event, 'auth_session')
     const bearerToken = getRequestHeader(event, 'Authorization')?.replace('Bearer ', '')
 
-    logger.debug('[app][mwr]', 'SessionId:', sessionId)
+    logger.debug('[midw]', 'SessionId:', sessionId)
 
     if (String(env.APP_LOG_LEVEL).toLowerCase() === 'trace') {
-      logger.debug('[app][mwr]', 'Bearer Token:', bearerToken)
+      logger.debug('[midw]', 'Bearer Token:', bearerToken)
     }
 
     if (!bearerToken) {
@@ -104,14 +121,7 @@ export default defineEventHandler(async (event) => {
     const now = Math.floor(Date.now() / 1000)
 
     // Get JWK used for signing
-    const jwk = await db
-      .selectFrom('jwks')
-      .where('keyId', '=', decoded.kid)
-      .where('isActive', '=', 1)
-      .where('expiresAt', '>', now)
-      .select(['keyId', 'publicKey', 'algorithm'])
-      .executeTakeFirst()
-
+    const jwk = await getJWKByKeyId(db, decoded.kid)
     if (!jwk) {
       setResponseStatus(event, 401)
       throw createError({ statusCode: 401, message: 'Invalid token signature' })
@@ -121,16 +131,14 @@ export default defineEventHandler(async (event) => {
     const userAgent = headers['user-agent'] || 'unknown'
     const userAgentHash = sha256base64(userAgent)
 
+    // Import public key for verification
+    const publicKey = await jose.importSPKI(jwk.publicKey, jwk.algorithm)
+
     // Verify token and decode payload
-    const payload = await verifyAccessToken(bearerToken, jwk, {
+    const { payload } = await jose.jwtVerify<JWTPayload>(bearerToken, publicKey, {
       issuer: appConfig.baseURL,
       audience: userAgentHash,
     })
-
-    if (!payload) {
-      setResponseStatus(event, 401)
-      throw createError({ statusCode: 401, message: 'Token tidak valid atau telah kadaluarsa' })
-    }
 
     // Check if session is still valid
     const session = await db
@@ -153,39 +161,10 @@ export default defineEventHandler(async (event) => {
       payload,
       session: {
         id: session.id,
-        exp: new Date(session.expiresAt * 1000).toISOString(),
+        exp: toISOString(session.expiresAt),
       },
     }
   } catch (error) {
     return throwErrorResponse(error)
   }
 })
-
-// Interface untuk hasil verifikasi token yang lebih lengkap
-interface VerifiedToken {
-  sub: string
-  sid: string
-  email: string
-  name?: string
-  given_name?: string
-  family_name?: string
-  locale?: string
-  amr?: string[]
-  roles?: string[]
-  perms?: string[]
-  org_id?: string
-}
-
-declare module 'h3' {
-  interface H3EventContext {
-    auth?: {
-      sessionId: string
-      bearerToken: string
-      payload?: VerifiedToken
-      session?: {
-        id: string
-        exp: string
-      }
-    }
-  }
-}

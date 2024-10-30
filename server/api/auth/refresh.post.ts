@@ -1,15 +1,15 @@
 import { sha256base64 } from 'ohash'
 import { typeid } from 'typeid-js'
 import { getActiveJWK } from '~/database/repository/jwk.repo'
+import { type JWTPayload, generateAccessToken } from '~/utils/jwt'
 
 export default defineEventHandler(async (event) => {
-  const appConfig = event.context.appConfig
-
+  const { appConfig, db } = event.context
   const headers = getRequestHeaders(event)
   const userAgent = headers['user-agent'] || 'unknown'
+  const userAgentHash = sha256base64(userAgent)
 
   try {
-    const db = event.context.db
     const { refreshToken } = await readBody(event)
     const now = Math.floor(Date.now() / 1000)
 
@@ -46,9 +46,9 @@ export default defineEventHandler(async (event) => {
 
     // Generate new access token with standard claims
     const payload: JWTPayload = {
-      iss: 'auth-service',
+      iss: appConfig.baseURL,
       sub: session.userId,
-      aud: ['api://default'],
+      aud: [userAgentHash],
       exp: now + 900, // 15 minutes
       nbf: now,
       iat: now,
@@ -57,14 +57,12 @@ export default defineEventHandler(async (event) => {
 
       given_name: session.firstName,
       family_name: session.lastName,
-      name: `${session.firstName} ${session.lastName}`.trim(),
       email: session.email,
       locale: session.locale,
 
       amr: ['refresh_token'],
     }
 
-    const userAgentHash = sha256base64(userAgent)
     const accessToken = await generateAccessToken(payload, activeKey, {
       issuer: appConfig.baseURL,
       audience: userAgentHash,

@@ -35,11 +35,11 @@ export default new Kysely<Database>({
     if (event.level === 'query') {
       // Only log query logs if APP_LOG_LEVEL is set to 'trace'
       if (String(env.APP_LOG_LEVEL).toLowerCase() === 'trace') {
-        logger.query('[app][kysely]', event.query.sql, event.query.parameters)
+        logger.query('[kysely]', event.query.sql, event.query.parameters)
       }
     }
     if (event.level === 'error') {
-      logger.query('[app][kysely]', event.error)
+      logger.query('[kysely]', event.error)
     }
   },
 })

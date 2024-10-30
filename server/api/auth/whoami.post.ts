@@ -48,8 +48,8 @@ export default defineEventHandler(async (event) => {
         // Session & security
         session: {
           id: session?.id || null,
-          exp: session?.exp || null,
-          lastSignInAt: userData?.lastSignInAt,
+          lastSignInAt: toISOString(userData.lastSignInAt),
+          expiresAt: session?.exp || null,
           requires2FA: !!twoFactor,
           type2FA: twoFactor?.type || null,
           amr: payload?.amr || [],
@@ -60,7 +60,6 @@ export default defineEventHandler(async (event) => {
         isBanned: Boolean(userData?.isBanned),
         banReason: userData?.banReason || null,
         bannedUntil: toISOString(userData.bannedUntil),
-        lastSignInAt: toISOString(userData.lastSignInAt),
         createdAt: toISOString(userData.createdAt),
         updatedAt: toISOString(userData.updatedAt),
       },

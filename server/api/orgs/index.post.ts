@@ -83,7 +83,7 @@ export default defineEventHandler(async (event) => {
       ...org,
       isVerified: Boolean(org.isVerified),
       createdAt: new Date(org.createdAt * 1000).toISOString(),
-      updatedAt: org.updatedAt ? new Date(org.updatedAt * 1000).toISOString() : null,
+      updatedAt: toISOString(org.updatedAt),
     }
 
     return {

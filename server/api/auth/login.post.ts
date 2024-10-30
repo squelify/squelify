@@ -24,6 +24,7 @@ export default defineEventHandler(async (event) => {
     const ipAddress = getRequestIP(event)
     const headers = getRequestHeaders(event)
     const userAgent = headers['user-agent'] || 'unknown'
+    const userAgentHash = sha256base64(userAgent)
 
     // Get active JWK for token signing
     const activeKey = await getActiveJWK(db)
@@ -51,10 +52,10 @@ export default defineEventHandler(async (event) => {
     // Generate tokens with key info
     const now = Math.floor(Date.now() / 1000)
     const payload: JWTPayload = {
-      iss: 'auth-service',
+      iss: appConfig.baseURL,
       sub: user.id,
-      aud: ['api://default'],
-      exp: now + 900,
+      aud: [userAgentHash],
+      exp: now + 900, // 15 minutes
       nbf: now,
       iat: now,
       jti: typeid('tok').toString(),
@@ -69,7 +70,6 @@ export default defineEventHandler(async (event) => {
       amr: ['pwd'],
     }
 
-    const userAgentHash = sha256base64(userAgent)
     const accessToken = await generateAccessToken(payload, activeKey, {
       issuer: appConfig.baseURL,
       audience: userAgentHash,

@@ -4,7 +4,7 @@ export default defineNitroPlugin(({ hooks }) => {
     event.context.requestStartTime = performance.now()
 
     const { clientIpAddress, clientIdentifier } = getClientInfo(event)
-    logger.info('[app][req]', event.method, clientIpAddress, event.path, clientIdentifier)
+    logger.info('[reqs]', event.method, clientIpAddress, event.path, clientIdentifier)
   })
 
   hooks.hook('afterResponse', (event) => {
@@ -15,7 +15,7 @@ export default defineNitroPlugin(({ hooks }) => {
     const statusCode = `[${event.node.res.statusCode}]`
 
     logger.info(
-      '[app][res]',
+      '[resp]',
       event.method,
       clientIpAddress,
       event.path,

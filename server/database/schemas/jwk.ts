@@ -41,7 +41,7 @@ export const JWKSchema = z.object({
   keyId: z.string(),
   publicKey: z.string(),
   privateKey: z.string(),
-  algorithm: jwkAlgorithmEnum.default('RS256'),
+  algorithm: jwkAlgorithmEnum.default('ES256'),
   isActive: z.number().min(0).max(1).default(1),
   expiresAt: z.number(),
   createdAt: z.number(),

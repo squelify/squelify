@@ -17,12 +17,12 @@ export default createTransport({
   // Integrate with application logger, make sure not called via cli.
   logger: import.meta.url === `file://${process.argv[1]}` && {
     level: (_level: string) => {}, // Not implemented
-    trace: (...params: any[]) => logger.debug('[app][mailer]', ...params),
-    debug: (...params: any[]) => logger.debug('[app][mailer]', ...params),
-    info: (...params: any[]) => logger.info('[app][mailer]', ...params),
-    warn: (...params: any[]) => logger.warn('[app][mailer]', ...params),
-    error: (...params: any[]) => logger.error('[app][mailer]', ...params),
-    fatal: (...params: any[]) => logger.error('[app][mailer]', ...params),
+    trace: (...params: any[]) => logger.debug('[mailer]', ...params),
+    debug: (...params: any[]) => logger.debug('[mailer]', ...params),
+    info: (...params: any[]) => logger.info('[mailer]', ...params),
+    warn: (...params: any[]) => logger.warn('[mailer]', ...params),
+    error: (...params: any[]) => logger.error('[mailer]', ...params),
+    fatal: (...params: any[]) => logger.error('[mailer]', ...params),
   },
   debug: isDevelopment,
 })

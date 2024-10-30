@@ -39,14 +39,14 @@ export default defineEventHandler((event) => {
   const method = event.method
 
   // Log incoming request
-  logger.debug('[app][cors]', JSON.stringify({ pathname, origin, method, userAgentHash }, null, 1))
+  logger.debug('[cors]', JSON.stringify({ pathname, origin, method, userAgentHash }, null, 1))
 
   const didHandleCors = handleCors(event, {
     preflight: { statusCode: 204 },
     origin(requestOrigin) {
       // Izinkan same-origin requests
       if (!requestOrigin) {
-        logger.debug('[app][cors]', 'Allowing same-origin request')
+        logger.debug('[cors]', 'Allowing same-origin request')
         return true
       }
 
@@ -54,9 +54,9 @@ export default defineEventHandler((event) => {
       const isAllowed = ALLOWED_ORIGIN_PATTERN.test(requestOrigin)
 
       if (!isAllowed) {
-        logger.warn('[app][cors]', `Blocked request from unauthorized origin: ${requestOrigin}`)
+        logger.warn('[cors]', `Blocked request from unauthorized origin: ${requestOrigin}`)
       } else {
-        logger.debug('[app][cors]', `Allowed request from: ${requestOrigin}`)
+        logger.debug('[cors]', `Allowed request from: ${requestOrigin}`)
       }
 
       return isAllowed
