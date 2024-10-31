@@ -1,12 +1,12 @@
 {
     "recommendations": [
+        "biomejs.biome",
         "bradlc.vscode-tailwindcss",
-        "dbaeumer.vscode-eslint",
         "EditorConfig.EditorConfig",
-        "esbenp.prettier-vscode",
         "foxundermoon.shell-format",
-        "matt-meyers.vscode-dbml",
-        "nrwl.angular-console",
+        "ms-playwright.playwright",
+        "tamasfe.even-better-toml",
         "unifiedjs.vscode-mdx"
-    ]
+    ],
+    "unwantedRecommendations": []
 }

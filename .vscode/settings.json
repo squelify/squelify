@@ -1,50 +1,35 @@
 {
-    "typescript.tsdk": "node_modules/typescript/lib",
-    "typescript.enablePromptUseWorkspaceTsdk": true,
-    "editor.defaultFormatter": "esbenp.prettier-vscode",
-    "editor.formatOnSave": true,
-    "editor.codeActionsOnSave": {
-        "source.fixAll": "explicit",
-        "source.fixAll.eslint": "explicit"
-    },
-    "eslint.workingDirectories": [
-        {
-            "mode": "auto"
-        }
-    ],
-    "eslint.format.enable": true,
-    "eslint.validate": ["javascript", "javascriptreact", "typescript", "typescriptreact"],
+    "editor.defaultFormatter": "biomejs.biome",
+    "typescript.enablePromptUseWorkspaceTsdk": false,
     "files.associations": {
-        "*.mdx": "markdown"
-    },
-    "files.watcherExclude": {
-        "**/.github": true,
-        "**/.vscode": true,
-        "**/.next": true,
-        "**/*.gz": true
+        "*.yml.example": "yaml",
+        "*.css": "css"
     },
     "search.exclude": {
-        "**/.github": true,
-        "**/.vscode": true,
-        "**/.next": true,
-        "**/*.gz": true
+        "**/.husky": true,
+        "**/.output": true,
+        "**/build": true,
+        "**/dist": true
     },
-    "tailwindCSS.emmetCompletions": true,
-    "tailwindCSS.experimental.classRegex": [
-        "tw`([^`]*)", // tw`...`
-        "tw\\.[^`]+`([^`]*)`", // tw.xxx<xxx>`...`
-        "tw\\(.*?\\).*?`([^`]*)", // tw(Component)<xxx>`...`
-        "cva\\(([^)]*)\\)"
-    ],
-    "tailwindCSS.includeLanguages": {
-        "javascriptreact": "javascriptreact",
-        "typescriptreact": "javascriptreact"
+    // "tailwindCSS.experimental.classRegex": [
+    //     // https://www.tailwind-variants.org/docs/getting-started#intellisense-setup-optional
+    //     ["([\"'`][^\"'`]*.*?[\"'`])", "[\"'`]([^\"'`]*).*?[\"'`]"],
+    //     "cn\\(([^)]*)\\)", // cn(xxx)
+    //     "clx\\(([^)]*)\\)", // clx(xxx)
+    //     "cx\\(([^)]*)\\)" // cx(xxx)
+    // ],
+    "tailwindCSS.files.exclude": ["**/server/**", "vite.config.ts"],
+    "[css]": {
+        "editor.defaultFormatter": "biomejs.biome"
     },
-    "tailwindCSS.files.exclude": ["**/.github/**", "**/*.{md,js,ts,json}"],
+    "[tailwindcss]": {
+        "editor.defaultFormatter": "biomejs.biome"
+    },
     "[toml]": {
+        "editor.defaultFormatter": "tamasfe.even-better-toml",
         "editor.formatOnSave": false
     },
     "[markdown]": {
-        "editor.formatOnSave": false
+        "editor.defaultFormatter": "darkriszty.markdown-table-prettify"
     }
 }

@@ -1,0 +1,19 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/compose-spec/compose-spec/master/schema/compose-spec.json
+
+services:
+  libsql:
+    # libsql://localhost:8080?tls=0
+    image: ghcr.io/tursodatabase/libsql-server:latest
+    container_name: fastrue_libsql
+    hostname: libsql
+    ports:
+      - 5001:5001 # gRPC connection
+      - 8080:8080 # user HTTP connection
+      - 8081:8081 # admin HTTP connection
+    volumes:
+      - libsql_data:/var/lib/sqld/data
+    command: '/bin/sqld --enable-namespaces --enable-http-console'
+
+volumes:
+  libsql_data:
+    driver: local

@@ -1,0 +1,38 @@
+import { type Kysely } from 'kysely'
+import { typeid } from 'typeid-js'
+import type { Database } from '~/database/db.schema'
+import type { RoleInsert } from '~/database/schemas/role'
+import type { RolePermissionInsert } from '~/database/schemas/role_permission'
+
+export default async function seed(db: Kysely<Database>): Promise<void> {
+  const now = Math.floor(Date.now() / 1000)
+
+  // Create roles
+  const adminRoleId = typeid('role').toString()
+  const roles: RoleInsert[] = [
+    {
+      id: adminRoleId,
+      name: 'admin',
+      description: 'System Administrator',
+      type: 'system',
+      isDefault: 1,
+      // metadata: '{}',
+      createdAt: now,
+    },
+  ]
+
+  await db.insertInto('roles').values(roles).execute()
+
+  // Assign permissions to roles
+  const permissions = await db.selectFrom('permissions').select(['id']).execute()
+
+  const rolePermissions: RolePermissionInsert[] = permissions.map((permission) => ({
+    id: typeid('rper').toString(),
+    roleId: adminRoleId,
+    permissionId: permission.id,
+    // conditions: '{}',
+    createdAt: now,
+  }))
+
+  await db.insertInto('role_permissions').values(rolePermissions).execute()
+}

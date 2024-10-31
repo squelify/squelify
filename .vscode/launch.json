@@ -4,11 +4,11 @@
         {
             "type": "node",
             "request": "launch",
-            "name": "Start Server",
-            "runtimeExecutable": "turbo",
-            "runtimeArgs": ["run", "dev", "--filter=!website"],
+            "name": "Start App",
+            "runtimeExecutable": "pnpm",
+            "runtimeArgs": ["dev"],
             "skipFiles": ["<node_internals>/**"],
-            "console": "integratedTerminal",
+            "console": "internalConsole",
             "internalConsoleOptions": "openOnSessionStart",
             "presentation": {
                 "hidden": true,
@@ -16,73 +16,28 @@
             }
         },
         {
-            "type": "chrome",
+            "type": "msedge",
             "request": "launch",
-            "name": "Debug portal with Chrome",
-            "url": "http://localhost:8091",
-            "webRoot": "${workspaceFolder}",
-            "cleanUp": "wholeBrowser",
-            "userDataDir": true,
-            "runtimeArgs": [
-                "--start-maximized",
-                "--bwsi",
-                "--allow-insecure-localhost",
-                "--disable-component-update",
-                "--disable-crash-reporter",
-                "--disable-extensions",
-                "--disable-hang-monitor",
-                "--disable-background-networking",
-                "--suppress-message-center-popups"
-            ],
-            "preLaunchTask": "Sleepdelay",
-            "internalConsoleOptions": "openOnSessionStart",
-            "presentation": {
-                "hidden": true,
-                "group": "debug"
-            }
-        },
-        {
-            "type": "node",
-            "request": "launch",
-            "name": "Start Website",
-            "runtimeExecutable": "turbo",
-            "runtimeArgs": ["run", "dev", "--filter=website"],
-            "skipFiles": ["<node_internals>/**"],
-            "console": "integratedTerminal",
-            // "serverReadyAction": {
-            //     "action": "debugWithChrome",
-            //     "pattern": "started server on .+, url: (https?://.+)",
-            //     "webRoot": "${workspaceFolder}",
-            //     "killOnServerStop": true,
-            //     "uriFormat": "%s"
-            // },
-            "internalConsoleOptions": "openOnSessionStart",
-            "presentation": {
-                "hidden": true,
-                "group": "debug"
-            }
-        },
-        {
-            "type": "chrome",
-            "request": "launch",
-            "name": "Debug website with Chrome",
+            "name": "Debug with Edge",
             "url": "http://localhost:3000",
             "webRoot": "${workspaceFolder}",
             "cleanUp": "wholeBrowser",
-            "userDataDir": true,
+            // Chrome args: https://peter.sh/experiments/chromium-command-line-switches
             "runtimeArgs": [
                 "--auto-open-devtools-for-tabs",
                 "--start-maximized",
                 "--bwsi",
+                "--no-default-browser-check",
                 "--allow-insecure-localhost",
                 "--disable-component-update",
                 "--disable-crash-reporter",
                 "--disable-extensions",
                 "--disable-hang-monitor",
                 "--disable-background-networking",
-                "--suppress-message-center-popups"
+                "--suppress-message-center-popups",
+                "--show-component-extension-options",
+                "--silent-debugger-extension-api"
             ],
-            "preLaunchTask": "Sleepdelay",
             "internalConsoleOptions": "openOnSessionStart",
             "presentation": {
                 "hidden": true,
@@ -92,13 +47,8 @@
     ],
     "compounds": [
         {
-            "name": "Debug Server",
-            "configurations": ["Start Server", "Debug portal with Chrome"],
-            "stopAll": true
-        },
-        {
-            "name": "Debug Website",
-            "configurations": ["Start Website", "Debug website with Chrome"],
+            "name": "Run Debug",
+            "configurations": ["Start App", "Debug with Edge"],
             "stopAll": true
         }
     ]

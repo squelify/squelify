@@ -1,91 +1,79 @@
-# See http://help.github.com/ignore-files/ for more about ignoring files.
-
-# compiled output
-dist/
-dist-ssr
-/out-tsc
-.dist
-.output
-.build*
-**/builds
-**/build/*
-**/tmp/
-**/temp/
-**/vendor/
-**/.cache
-
-# Essentials
+/node_modules
+/.fleet
+/.idea
+/.pnp
+/.cache
+/.output
+/.husky
+.pnp.js
 .DS_Store
 .DS_Store?
+/coverage
 Thumbs.db
 ehthumbs.db
 Desktop.ini
 $RECYCLE.BIN/
-node_modules/
-coverage.out
-coverage/
-typings/
-lib-cov
-.project
-.classpath
-.nyc_output
-.c9/
-.pnp/
-.pnp.js
-*.sqlite3
-*.db
-*.pem
-logs/
-
-# IDEs and editors
-/.idea
-/.fleet
-.project
-.classpath
-.c9/
-*.launch
-.settings/
-*.sublime-workspace
-
-# IDE - VSCode
+*tsbuildinfo
 .vscode/*
-!.vscode/settings.json
-!.vscode/tasks.json
-!.vscode/launch.json
 !.vscode/extensions.json
+!.vscode/settings.json
+!.vscode/launch.json
 
-# misc
-/.sass-cache
-/connect.lock
-/coverage
-/libpeerconnection.log
-/typings
+*.bak
 
-# debug
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-.pnpm-debug.log*
-lerna-debug.log*
-testem.log
-*.local
-*.tsbuildinfo
+# SQLite
+*.sqlite*
+*.sqlite3*
+*.libsql
+*.db
 
-# monorepo
-.nx/cache
-.turbo
+# Nitro
+_data/
+build/
+dist/
+.data
+.dist
+.nitro
+.cache
+.output
+.client
+.build
+.wrangler
 
-# local env files
-.env*
-!.env*.example
+# envars
+.env.*
+!.env.example
+compose.env*
+!compose.env.example
 
-# vercel
-.vercel
+# Disable this line in your real app
+/playwright/.cache/
+/playwright-report/
+/tests-results/
+/blob-report/
+.playwright/
 
-# contentlayer
-.contentlayer
+# Sentry Config File
+.sentryclirc
 
-# next.js
-.next/
-out/
-build
+# Storybook
+*storybook.log
+/storybook-static/
+
+# fly.toml
+fly*.toml*
+!fly*.example.toml
+
+# Miscellaneous
+vite.config.ts.*
+RELEASE_NOTE.md
+.unikraft/
+slim.report.json
+stats.html
+
+# Terraform
+.terraform/
+.terraform.lock.hcl
+terraform.tfstate*
+terraform.tfvars*
+!terraform.tfvars.example
