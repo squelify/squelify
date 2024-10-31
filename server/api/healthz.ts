@@ -13,6 +13,7 @@ export interface HealthCheckResponse {
   uptime: string
   database: {
     status: 'up' | 'down'
+    mode: 'local' | 'remote'
     version: string
     size: string
     latency: string
@@ -117,6 +118,7 @@ export default defineEventHandler(async (event): Promise<HealthCheckResponse> =>
     uptime: formatUptime(process.uptime()),
     database: {
       status: dbStatus,
+      mode: env.DATABASE_MODE === 'local' ? 'local' : 'remote',
       version: libsqlVersion,
       size: databaseSize,
       latency: `${formatNumber(Math.round(dbLatency))}ms`,
