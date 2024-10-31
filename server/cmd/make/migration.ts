@@ -53,20 +53,54 @@ export default defineCommand({
 
     try {
       const migrationName = args.name.replace(/[^a-zA-Z0-9_]/g, '_')
-      const template = `import type { Kysely } from 'kysely'
+      const template = `import { type Kysely, sql } from 'kysely'
+import { UNIX_TIMESTAMP } from '~/database/db.helper'
 import type { Database } from '~/database/db.schema'
 
+// For more info, see: https://kysely.dev/docs/migrations
+
+// up migration code goes here...
+// note: up migrations are mandatory. you must implement this function.
 export async function up(db: Kysely<Database>): Promise<void> {
-  // up migration code goes here...
-  // note: up migrations are mandatory. you must implement this function.
-  // For more info, see: https://kysely.dev/docs/migrations
+  // Create table
+  await db.schema
+    .createTable('TABLE_NAME')
+    .addColumn('id', 'text', (col) => col.primaryKey())
+    .addColumn('created_at', 'integer', (col) => col.notNull().defaultTo(UNIX_TIMESTAMP))
+    .addColumn('updated_at', 'integer')
+    .modifyEnd(sql\`STRICT\`)
+    .ifNotExists()
+    .execute()
+
+  // Create auto-update trigger
+  await sql\`
+    CREATE TRIGGER IF NOT EXISTS update_TABLE_NAME_timestamp
+    AFTER UPDATE ON TABLE_NAME
+    FOR EACH ROW
+    BEGIN
+      UPDATE TABLE_NAME
+      SET updated_at = strftime('%s', 'now')
+      WHERE id = NEW.id;
+    END;
+  \`.execute(db)
+
+  // Create indexes
+  await db.schema
+    .createIndex('TABLE_NAME_created_at_idx')
+    .on('TABLE_NAME')
+    .column('created_at')
+    .ifNotExists()
+    .execute()
 }
 
+// down migration code goes here...
+// note: down migrations are optional. you can safely delete this function.
 export async function down(db: Kysely<Database>): Promise<void> {
-  // down migration code goes here...
-  // note: down migrations are optional. you can safely delete this function.
-  // For more info, see: https://kysely.dev/docs/migrations
+  await db.schema.dropIndex('TABLE_NAME_created_at_idx').ifExists().execute()
+  await sql\`DROP TRIGGER IF EXISTS update_TABLE_NAME_timestamp;\`.execute(db)
+  await db.schema.dropTable('TABLE_NAME').ifExists().execute()
 }`
+
       // Check migration name uniqueness after folder exists
       if (!(await isMigrationNameUnique(migrationName))) {
         consola.error(`Migration with name "${migrationName}" already exists`)

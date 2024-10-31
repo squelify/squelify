@@ -41,6 +41,8 @@ export class AutomaticMigrateProvider implements MigrationProvider {
         const content = await this.storage.getItem<Migration>(key)
         const migrationKey = key.replace(/\.ts$/, '')
 
+        console.debug('MIGRATION:content', content)
+
         if (!content || typeof content.up !== 'function') {
           logger.warn('[migration]', `Invalid migration file: ${key}`)
           return null
@@ -67,3 +69,32 @@ export class AutomaticMigrateProvider implements MigrationProvider {
     return Object.fromEntries(validEntries)
   }
 }
+
+// export class AutomaticMigrateProvider implements MigrationProvider {
+//   private migrations: Record<string, Migration>
+//   private readonly migrationsPath: string
+
+//   constructor() {
+//     this.migrationsPath = resolve(import.meta.dirname, '../migrations')
+//     this.migrations = {}
+//   }
+
+//   async getMigrations(): Promise<Record<string, Migration>> {
+//     const files = await fs.readdir(this.migrationsPath)
+
+//     this.migrations = Object.fromEntries(
+//       await Promise.all(
+//         files
+//           .filter((fileName) => fileName.endsWith('.ts'))
+//           .map(async (fileName) => {
+//             const migrationKey = fileName.replace('.ts', '')
+//             const importPath = join(this.migrationsPath, fileName).replace(/\\/g, '/')
+//             const migration = await import(/* @vite-ignore */ importPath)
+//             return [migrationKey, migration.default || migration] as const
+//           })
+//       )
+//     )
+
+//     return this.migrations
+//   }
+// }
