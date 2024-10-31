@@ -2,7 +2,6 @@
 
 services:
   libsql:
-    # libsql://localhost:8080?tls=0
     image: ghcr.io/tursodatabase/libsql-server:latest
     container_name: fastrue_libsql
     hostname: libsql
@@ -13,6 +12,16 @@ services:
     volumes:
       - libsql_data:/var/lib/sqld/data
     command: '/bin/sqld --enable-namespaces --enable-http-console'
+
+  mailcrab:
+    image: marlonb/mailcrab:latest
+    container_name: fastrue_mailcrab
+    environment:
+      SMTP_PORT: 2525 # port number for the SMTP server
+      HTTP_PORT: 2580 # port number for the web interface
+    ports:
+      - 2525:2525 # port the SMTP server should be accessible on
+      - 2580:2580 # port the web interface should be accessible on
 
 volumes:
   libsql_data:
