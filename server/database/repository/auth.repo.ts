@@ -69,7 +69,7 @@ export async function createUserSession(
       id: typeid('sess').toString(),
       userId,
       keyId: options.keyId,
-      refreshToken: typeid('tok').toString(),
+      refreshToken: typeid().toString(),
       ipAddress: options.ipAddress,
       userAgent: options.userAgent,
       deviceId: options.deviceId,

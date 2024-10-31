@@ -54,12 +54,10 @@ export default defineEventHandler(async (event) => {
       iat: now,
       jti: typeid('tok').toString(),
       sid: session.sessionId,
-
       given_name: session.firstName,
       family_name: session.lastName,
       email: session.email,
       locale: session.locale,
-
       amr: ['refresh_token'],
     }
 

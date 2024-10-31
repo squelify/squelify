@@ -73,13 +73,11 @@ export default defineEventHandler(async (event) => {
       iat: now,
       jti: typeid('tok').toString(),
       sid: session.id,
-
       given_name: user.firstName,
       family_name: user.lastName,
       name: `${user.firstName} ${user.lastName}`.trim(),
       email: user.email,
       locale: user.locale,
-
       amr: ['pwd'],
     }
 

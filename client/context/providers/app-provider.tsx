@@ -24,7 +24,7 @@ const defaultAuthContext: AuthContextType = {
   role: defaultAuthStoreValues.role,
   login: async () => null,
   signup: async () => null,
-  logout: () => { },
+  logout: () => {},
 }
 
 export const AuthContext = createContext(defaultAuthContext)
