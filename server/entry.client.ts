@@ -1,4 +1,4 @@
-import { process } from 'std-env'
+import { isProduction, process } from 'std-env'
 
 export default defineCachedEventHandler(
   async (event) => {
@@ -66,7 +66,8 @@ export default defineCachedEventHandler(
 `
   },
   {
-    maxAge: 60 * 60 /* 1 hour */,
+    /* cache for 1 hour in production */
+    maxAge: isProduction ? 60 * 60 : 0,
     swr: true /* Stale while revalidate */,
   }
 )
