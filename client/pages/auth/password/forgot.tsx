@@ -35,7 +35,7 @@ export default function Page() {
         </div>
         <div className="mt-6 text-center text-sm">
           Remember your password?{' '}
-          <Link href="/auth/login" className="underline">
+          <Link href="/login" className="underline">
             Sign in
           </Link>
         </div>

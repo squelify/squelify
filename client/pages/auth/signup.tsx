@@ -59,7 +59,7 @@ export default function Page() {
 
         <div className="mt-6 text-center text-sm">
           Already have an account?{' '}
-          <Link href="/auth/login" className="underline">
+          <Link href="/login" className="underline">
             Login
           </Link>
         </div>

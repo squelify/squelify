@@ -18,12 +18,15 @@ export default defineNitroConfig({
   appConfigFiles: ['app.config'],
 
   handlers: [
-    {
-      route: '/**',
-      handler: '~/entry.client',
-      lazy: true,
-    },
+    // TODO: allow index route to be served by the frontend
+    { route: '/ui', handler: '~/entry.client', lazy: true },
+    { route: '/ui/**', handler: '~/entry.client', lazy: true },
   ],
+
+  routeRules: {
+    '/': { redirect: '/ui/**' },
+    '/ui/**': { static: true, prerender: false },
+  },
 
   errorHandler: '~/error.handler',
 

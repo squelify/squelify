@@ -45,7 +45,7 @@ const Routes: RouteObject[] = [
     ],
     errorElement: <InternalError />,
   }),
-  Route('/auth', {
+  Route('/', {
     element: <AuthLayout />,
     children: [
       { path: 'login', element: <SignInPage /> },

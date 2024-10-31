@@ -10,7 +10,7 @@ export default function AppLayout() {
   const { user, role, logout } = useAuth()
 
   if (!user) {
-    return <Navigate to={`/auth/login?redirect_to=${pathname}`} replace />
+    return <Navigate to={`/login?redirect_to=${pathname}`} replace />
   }
 
   return (
