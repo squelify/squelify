@@ -3,7 +3,7 @@ import { join } from 'pathe'
 import { env } from 'std-env'
 import { kyselyConfig } from '~/database/db.client'
 import type { Database } from '~/database/db.schema'
-import { AutomaticMigrateProvider, ESMFileMigrationProvider } from '~/database/provider'
+import { ESMFileMigrationProvider } from '~/database/provider'
 
 const isRunningFromCLI = (): boolean => process.argv.length > 2
 
@@ -22,7 +22,7 @@ export const migrateClient = new Migrator({
   // provider: shouldAutoMigrate
   //   ? new ESMFileMigrationProvider(MIGRATION_FOLDER)
   //   : new AutomaticMigrateProvider(),
-  provider: new AutomaticMigrateProvider(),
+  provider: new ESMFileMigrationProvider(MIGRATION_FOLDER),
   migrationTableName: '_migration',
   migrationLockTableName: '_migration_lock',
 })
