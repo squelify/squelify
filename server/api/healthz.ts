@@ -9,7 +9,6 @@ export interface HealthCheckResponse {
   environment: string
   timestamp: string
   serviceId: string
-  clientIp: string
   uptime: string
   database: {
     status: 'up' | 'down'
@@ -23,6 +22,10 @@ export interface HealthCheckResponse {
     heapTotal: string
     external: string
     cpuUsage: string
+  }
+  clientInfo: {
+    ipAddress: string
+    identifier: string
   }
 }
 
@@ -105,7 +108,8 @@ export default defineEventHandler(async (event): Promise<HealthCheckResponse> =>
   const flyRequestId = event.headers.get('Fly-Request-Id')
   const serviceId = `${flyRegion}::${flyMachineId}::${flyRequestId}`
   const host = event.headers.get('X-Forwarded-Host') ?? event.headers.get('host')
-  const clientIpAddr = getRequestIP(event, { xForwardedFor: true })
+  const { clientIpAddress, clientIdentifier } = getClientInfo(event)
+
   const isHostedOnFly = flyRegion && flyMachineId
 
   return {
@@ -114,8 +118,11 @@ export default defineEventHandler(async (event): Promise<HealthCheckResponse> =>
     environment: process.env.NODE_ENV,
     timestamp: new Date().toISOString(),
     serviceId: isHostedOnFly ? serviceId : host,
-    clientIp: clientIpAddr || 'unknown',
     uptime: formatUptime(process.uptime()),
+    clientInfo: {
+      ipAddress: clientIpAddress,
+      identifier: clientIdentifier.replace(/[\[\]]/g, ''),
+    },
     database: {
       status: dbStatus,
       mode: env.DATABASE_MODE === 'local' ? 'local' : 'remote',

@@ -2,7 +2,6 @@ export default defineNitroPlugin(({ hooks }) => {
   hooks.hook('request', (event) => {
     // Set precise timestamp when request starts
     event.context.requestStartTime = performance.now()
-
     const { clientIpAddress, clientIdentifier } = getClientInfo(event)
     logger.info('[reqs]', event.method, clientIpAddress, event.path, clientIdentifier)
   })

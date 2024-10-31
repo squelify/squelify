@@ -28,30 +28,42 @@ export class ESMFileMigrationProvider implements MigrationProvider {
 }
 
 export class AutomaticMigrateProvider implements MigrationProvider {
-  private migrations: Record<string, Migration>
-  private readonly migrationsPath: string
-
-  constructor() {
-    this.migrationsPath = resolve(import.meta.dirname, '../migrations')
-    this.migrations = {}
-  }
+  private readonly storage = useStorage('assets:migrations')
 
   async getMigrations(): Promise<Record<string, Migration>> {
-    const files = await fs.readdir(this.migrationsPath)
+    const files = await this.storage.getKeys()
 
-    this.migrations = Object.fromEntries(
-      await Promise.all(
-        files
-          .filter((fileName) => fileName.endsWith('.ts'))
-          .map(async (fileName) => {
-            const migrationKey = fileName.replace('.ts', '')
-            const importPath = join(this.migrationsPath, fileName).replace(/\\/g, '/')
-            const migration = await import(/* @vite-ignore */ importPath)
-            return [migrationKey, migration.default || migration] as const
-          })
-      )
+    // Filter hanya file .ts dan urutkan berdasarkan nama
+    const sortedFiles = files.filter((f) => f.endsWith('.ts')).sort((a, b) => a.localeCompare(b))
+
+    const migrationEntries = await Promise.all(
+      sortedFiles.map(async (key) => {
+        const content = await this.storage.getItem<Migration>(key)
+        const migrationKey = key.replace(/\.ts$/, '')
+
+        if (!content || typeof content.up !== 'function') {
+          logger.warn('[migration]', `Invalid migration file: ${key}`)
+          return null
+        }
+
+        // Pastikan method up dan down ada
+        return [
+          migrationKey,
+          {
+            up: content.up,
+            down: content.down || (async () => {}),
+          },
+        ] as const
+      })
     )
 
-    return this.migrations
+    // Filter null entries
+    const validEntries = migrationEntries.filter(
+      (entry): entry is Exclude<typeof entry, null> => entry !== null
+    )
+
+    logger.info('[migration]', `Found ${validEntries.length} valid migrations`)
+
+    return Object.fromEntries(validEntries)
   }
 }

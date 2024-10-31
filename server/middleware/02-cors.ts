@@ -32,9 +32,7 @@ export default defineEventHandler((event) => {
   }
 
   // Get request information
-  const headers = getRequestHeaders(event)
-  const userAgent = headers['user-agent'] || 'unknown'
-  const userAgentHash = sha256base64(userAgent)
+  const { userAgentHash } = getClientInfo(event)
   const origin = requestOrigin || 'same-origin'
   const method = event.method
 

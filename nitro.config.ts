@@ -29,7 +29,7 @@ const viteLogger = {
 export default defineNitroConfig({
   srcDir: 'server',
   preset: 'node-server',
-  serveStatic: 'inline',
+  serveStatic: 'node',
   minify: isProduction,
   sourceMap: isDevelopment,
   appConfigFiles: ['app.config'],
@@ -49,6 +49,7 @@ export default defineNitroConfig({
   serverAssets: [
     // Frontend application assets
     { baseName: 'vite', dir: resolve('.output/client/.vite') },
+    { baseName: 'migrations', dir: resolve('server/database/migrations') },
   ],
 
   output: {
@@ -93,7 +94,6 @@ export default defineNitroConfig({
           outDir: resolve('.output/client'),
         },
         customLogger: !isTest ? viteLogger : undefined,
-        // server: { port: 5173, strictPort: true },
       }).then(() => consola.success('Frontend application built!'))
     },
     compiled: (_nitro) => {

@@ -12,12 +12,6 @@ export const SEEDER_FOLDER = join(process.cwd(), 'server/database/seeders')
 
 type MigrationAction = 'migrate' | 'rollback' | 'reset'
 
-const isMakeCommands = (): boolean => {
-  const command = process.argv[2]
-  const makeCommands = ['make-migration', 'make-seeder']
-  return !!command && makeCommands.includes(command)
-}
-
 const migrateDBClient = new Kysely<Database>({
   ...kyselyConfig,
   log: env.APP_LOG_LEVEL === 'trace' ? ['error', 'query'] : ['error'],
@@ -25,10 +19,10 @@ const migrateDBClient = new Kysely<Database>({
 
 export const migrateClient = new Migrator({
   db: migrateDBClient,
-  provider:
-    isRunningFromCLI() || isMakeCommands()
-      ? new ESMFileMigrationProvider(MIGRATION_FOLDER)
-      : new AutomaticMigrateProvider(),
+  // provider: shouldAutoMigrate
+  //   ? new ESMFileMigrationProvider(MIGRATION_FOLDER)
+  //   : new AutomaticMigrateProvider(),
+  provider: new AutomaticMigrateProvider(),
   migrationTableName: '_migration',
   migrationLockTableName: '_migration_lock',
 })
@@ -159,37 +153,5 @@ export async function runMigration(action: MigrationAction): Promise<void> {
   } catch (error) {
     console.error(`Migration action '${action}' failed:`, error)
     throw error
-  }
-}
-
-// Flag to indicate whether the migration has been carried out.
-let migrationExecuted = false
-
-export async function autoMigrate(): Promise<void> {
-  if (migrationExecuted) return
-
-  // Automatically run migrations on startup, but only once.
-  // Make sure this called when not executed in command line.
-  const migrateCommands = [
-    'migrate',
-    'rollback',
-    'reset',
-    'seed',
-    'make-migration',
-    'make-seeder',
-    'generate',
-  ]
-
-  const isMigrateCliCommand = !!process.argv[2] && migrateCommands.includes(process.argv[2])
-  const shouldAutoMigrate = !isMigrateCliCommand && env.DATABASE_AUTO_MIGRATE
-
-  if (!shouldAutoMigrate) return
-
-  try {
-    logger.info('[app]', 'Running database migrations...')
-    await runMigration('migrate')
-    migrationExecuted = true
-  } catch (err) {
-    logger.error('[app]', `🔥 Database migrations failed: ${(err as Error).message}`)
   }
 }

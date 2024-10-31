@@ -74,7 +74,6 @@ declare module 'h3' {
 
 export default defineEventHandler(async (event) => {
   const pathname = getRequestURL(event).pathname
-  const headers = getRequestHeaders(event)
   const { appConfig, db } = event.context
 
   // Only path that starts with `/api` will be checked, except for `/api/healthz`
@@ -128,8 +127,7 @@ export default defineEventHandler(async (event) => {
     }
 
     // Get client user agent from header
-    const userAgent = headers['user-agent'] || 'unknown'
-    const userAgentHash = sha256base64(userAgent)
+    const { userAgentHash } = getClientInfo(event)
 
     // Import public key for verification
     const publicKey = await jose.importSPKI(jwk.publicKey, jwk.algorithm)

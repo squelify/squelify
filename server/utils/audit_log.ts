@@ -44,7 +44,7 @@ async function executeIfEnabled(fn: () => Promise<void>) {
 export async function auditLog(event: H3Event, params: AuditLogParams) {
   await executeIfEnabled(async () => {
     const ctx = event.context as RequestContext
-    const headers = getRequestHeaders(event)
+    const { clientIpAddress, userAgent } = getClientInfo(event)
 
     await db
       .insertInto('audit_logs')
@@ -58,8 +58,8 @@ export async function auditLog(event: H3Event, params: AuditLogParams) {
         oldValues: JSON.stringify(params.oldValues || {}),
         newValues: JSON.stringify(params.newValues || {}),
         metadata: JSON.stringify(params.metadata || {}),
-        ipAddress: getRequestIP(event, { xForwardedFor: true }),
-        userAgent: headers['user-agent'] || 'unknown',
+        ipAddress: clientIpAddress,
+        userAgent: userAgent || 'unknown',
         createdAt: Math.floor(Date.now() / 1000),
       })
       .execute()
@@ -70,8 +70,7 @@ export async function auditLog(event: H3Event, params: AuditLogParams) {
 export async function auditLogBatch(event: H3Event, logs: AuditLogParams[]) {
   await executeIfEnabled(async () => {
     const ctx = event.context as RequestContext
-    const headers = getRequestHeaders(event)
-    const now = Math.floor(Date.now() / 1000)
+    const { userAgent } = getClientInfo(event)
 
     const values = logs.map((log) => ({
       id: typeid('log').toString(),
@@ -84,8 +83,8 @@ export async function auditLogBatch(event: H3Event, logs: AuditLogParams[]) {
       newValues: JSON.stringify(log.newValues || {}),
       metadata: JSON.stringify(log.metadata || {}),
       ipAddress: getRequestIP(event),
-      userAgent: headers['user-agent'] || 'unknown',
-      createdAt: now,
+      userAgent: userAgent || 'unknown',
+      createdAt: Math.floor(Date.now() / 1000),
     }))
 
     await db.insertInto('audit_logs').values(values).execute()

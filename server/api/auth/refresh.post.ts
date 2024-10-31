@@ -5,11 +5,9 @@ import { type JWTPayload, generateAccessToken } from '~/utils/jwt'
 
 export default defineEventHandler(async (event) => {
   const { appConfig, db } = event.context
-  const headers = getRequestHeaders(event)
-  const userAgent = headers['user-agent'] || 'unknown'
-  const userAgentHash = sha256base64(userAgent)
 
   try {
+    const { userAgentHash } = getClientInfo(event)
     const { refreshToken } = await readBody(event)
     const now = Math.floor(Date.now() / 1000)
 

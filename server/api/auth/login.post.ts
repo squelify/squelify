@@ -1,4 +1,3 @@
-import { sha256base64 } from 'ohash'
 import { isProduction } from 'std-env'
 import { typeid } from 'typeid-js'
 import { z } from 'zod'
@@ -42,14 +41,9 @@ export default defineEventHandler(async (event) => {
   const { appConfig, db } = event.context
 
   try {
+    const { clientIpAddress, userAgent, userAgentHash } = getClientInfo(event)
     const body = await requireValidatedBody(event, LoginRequestSchema)
     const { identity, password, deviceId, deviceType = 'browser' } = body
-
-    // Get client info
-    const ipAddress = getRequestIP(event)
-    const headers = getRequestHeaders(event)
-    const userAgent = headers['user-agent'] || 'unknown'
-    const userAgentHash = sha256base64(userAgent)
 
     // Get active JWK for token signing
     const activeKey = await getActiveJWK(db)
@@ -80,7 +74,7 @@ export default defineEventHandler(async (event) => {
 
     // Create session with key tracking
     const session = await createUserSession(db, user.id, {
-      ipAddress,
+      ipAddress: clientIpAddress,
       userAgent,
       deviceId,
       deviceType,
