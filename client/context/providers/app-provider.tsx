@@ -2,17 +2,17 @@ import { useStore } from '@nanostores/react'
 import { createContext, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { CookiesProvider, useCookies } from 'react-cookie'
 import type { CookieSetOptions } from 'universal-cookie'
+import { LoginResponse } from '~/api/auth/login.post'
 import { useApiClient } from '#/context/hooks/use-api-client'
 import { SEOMetaProvider } from '#/context/providers/seo-provider'
 import { authStore, resetAuthState, saveAuthState } from '#/context/stores/auth.store'
 import { defaultAuthStoreValues } from '#/context/stores/auth.store'
 import type { AuthStore } from '#/context/stores/auth.store'
-import type { User } from '#/services/types/account'
 import { clx } from '#/utils/helper'
 
 export type AuthContextType = {
-  login: (identity: string, password: string) => Promise<User | null>
-  signup: (identity: string, password: string) => Promise<User | null>
+  login: (identity: string, password: string) => Promise<LoginResponse | null>
+  signup: (identity: string, password: string) => Promise<LoginResponse | null>
   logout: () => void
 } & Pick<AuthStore, 'user' | 'role'>
 
@@ -83,10 +83,10 @@ export default function AppProvider({ children, debugScreenSize }: AppProviderPr
       setPendingCheck(true)
 
       try {
-        const result = await apiRef.current.auth.login(identity, password)
+        const result = await apiRef.current.auth.login({ identity, password })
 
         if (result && result.status !== 200) {
-          throw new Error(result.error?.reason || 'An error occurred')
+          throw new Error(result.message || 'An error occurred')
         }
 
         if (!result.data || !result.data.user) {
@@ -116,23 +116,19 @@ export default function AppProvider({ children, debugScreenSize }: AppProviderPr
     setPendingCheck(true)
 
     try {
-      const result = await apiRef.current.auth.signup(identity, password)
+      const result = await apiRef.current.auth.signup({
+        email: identity,
+        password,
+        firstName: 'Admin',
+        lastName: 'Sistem',
+        username: 'admin',
+      })
 
       if (result.status !== 200 || !result.data?.password) {
         throw new Error(result.message || 'Signup failed')
       }
 
-      const user: User = {
-        id: 1,
-        pub_id: 'user_1',
-        email: 'admin@example.com',
-        username: 'admin',
-        first_name: 'Admin',
-        last_name: 'Sistem',
-        preferred_theme: 'system',
-        last_seen_at: 1723130670,
-        created_at: 1723130670,
-      }
+      const user = result.data.user
 
       return user
     } finally {
@@ -141,7 +137,9 @@ export default function AppProvider({ children, debugScreenSize }: AppProviderPr
   }, [])
 
   const logout = useCallback(async () => {
-    await apiRef.current.auth.signout(cookies.auth_session)
+    await apiRef.current.auth.signout({
+      sessionId: cookies.auth_session,
+    })
     removeCookie(COOKIE_NAME)
     resetAuthState()
   }, [removeCookie, cookies.auth_session])

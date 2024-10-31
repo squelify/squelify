@@ -1,5 +1,5 @@
 import { LOG_LEVEL } from '#/utils/logger'
-import type { ApiClientOptions } from './types/base'
+import type { ApiClientOptions } from './types'
 
 /**
  * The default options for the API client.

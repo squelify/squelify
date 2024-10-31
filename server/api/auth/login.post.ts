@@ -13,6 +13,31 @@ export const LoginRequestSchema = z.object({
   deviceType: z.string().optional().nullable(),
 })
 
+interface LoginResponseData {
+  user: {
+    id: string
+    email: string
+    firstName: string
+    lastName: string
+  }
+  session: {
+    id: string
+    refreshToken: string
+  }
+  security: {
+    requires2FA: boolean
+    type: string | null
+  }
+  accessToken: string
+}
+
+export interface LoginResponse {
+  status: number
+  success: boolean
+  message: string
+  data: LoginResponseData
+}
+
 export default defineEventHandler(async (event) => {
   const { appConfig, db } = event.context
 

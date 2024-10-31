@@ -3,7 +3,7 @@ import { sql } from 'kysely'
 import { env, process } from 'std-env'
 import pkg from '~~/package.json' assert { type: 'json' }
 
-interface HealthCheckResponse {
+export interface HealthCheckResponse {
   status: 'healthy' | 'unhealthy'
   appVersion: string
   environment: string

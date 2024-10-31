@@ -13,7 +13,7 @@ export default function Component() {
     <div className="flex min-h-screen items-center justify-center bg-gray-100">
       <div className="w-full max-w-sm rounded-lg bg-white p-8 shadow">
         <h1 className="mb-6 text-center font-bold text-3xl text-gray-800">
-          Hello {ctx.user?.first_name}!
+          Hello {ctx.user?.firstName}!
         </h1>
         <div className="mb-6">
           <button

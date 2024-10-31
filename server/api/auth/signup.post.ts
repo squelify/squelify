@@ -1,7 +1,7 @@
 import { typeid } from 'typeid-js'
 import { z } from 'zod'
 
-const SignupRequestSchema = z
+export const SignupRequestSchema = z
   .object({
     email: z.string().email('Email tidak valid'),
     username: z

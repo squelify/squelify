@@ -1,29 +1,32 @@
+import { z } from 'zod'
 import type ApiClient from '../client'
-import type { LoginData, SignupData } from '../types/account'
-import type { ApiResponse } from '../types/base'
+import type { ApiResponse } from '../types'
+
+import { LoginRequestSchema } from '~/api/auth/login.post'
+import { SignoutRequestSchema } from '~/api/auth/signout.post'
+import { SignupRequestSchema } from '~/api/auth/signup.post'
 
 export default class AuthService {
   constructor(private apiClient: ApiClient) {}
 
-  login(identity: string, password: string) {
-    return this.apiClient._request<ApiResponse<LoginData>>('/auth/login', {
+  login(opts: z.infer<typeof LoginRequestSchema>) {
+    return this.apiClient._request<ApiResponse<any>>('/auth/login', {
       method: 'POST',
-      body: JSON.stringify({ identity, password }),
+      body: JSON.stringify(opts),
     })
   }
 
-  signup(username: string, password: string) {
-    return this.apiClient._request<ApiResponse<SignupData>>('/auth/signup', {
+  signup(opts: z.infer<typeof SignupRequestSchema>) {
+    return this.apiClient._request<ApiResponse<any>>('/auth/signup', {
       method: 'POST',
-      body: JSON.stringify({ username, password }),
+      body: JSON.stringify(opts),
     })
   }
 
-  signout(sessionId: string) {
-    const url = `/auth/signout`
-    return this.apiClient._request<ApiResponse<LoginData>>(url, {
+  signout(opts: z.infer<typeof SignoutRequestSchema>) {
+    return this.apiClient._request<ApiResponse<any>>('/auth/signout', {
       method: 'POST',
-      body: JSON.stringify({ sessionId }),
+      body: JSON.stringify(opts),
     })
   }
 }

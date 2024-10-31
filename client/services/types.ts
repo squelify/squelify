@@ -14,27 +14,4 @@ export interface ApiResponse<T = unknown> {
   success: boolean
   message?: string
   data?: T
-  error?: {
-    hint?: number
-    reason?: string
-  }
-}
-
-// TODO: infer from API response
-export interface HealthCheckData {
-  status: 'healthy' | 'unhealthy'
-  timestamp: string
-  serviceId: string
-  clientIp: string
-  uptime: string
-  database: {
-    status: 'up' | 'down'
-    version: string
-    latency: number
-  }
-  memory: {
-    heapUsed: number
-    heapTotal: number
-    external: number
-  }
 }

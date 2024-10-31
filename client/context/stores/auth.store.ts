@@ -1,11 +1,12 @@
 import { persistentMap } from '@nanostores/persistent'
-import type { User } from '#/services/types/account'
+import { RoleType } from '~/database/schemas/role'
+import { User } from '~/database/schemas/user'
 
 type AuthStore = {
   accessToken: string | null
   refreshToken: string | null
   user: User | null
-  role: 'admin' | 'user' | null
+  role: RoleType
 }
 
 // Default values for the AuthStore

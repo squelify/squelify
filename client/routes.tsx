@@ -6,10 +6,10 @@ import AppLayout from '#/layouts/app-layout'
 import AuthLayout from '#/layouts/auth-layout'
 
 // Authentication pages
-import ForgotPasswordPage from '#/pages/auth/forgot-password'
 import SignInPage from '#/pages/auth/login'
-import SignUpPage from '#/pages/auth/register'
-import ResetPasswordPage from '#/pages/auth/reset-password'
+import ForgotPasswordPage from '#/pages/auth/password/forgot'
+import ResetPasswordPage from '#/pages/auth/password/reset'
+import SignUpPage from '#/pages/auth/signup'
 import InternalError from '#/pages/error/internal-error'
 import NotFound from '#/pages/error/not-found'
 

@@ -1,10 +1,13 @@
 import consola, { type ConsolaInstance, type LogLevel, createConsola } from 'consola'
 import { type $Fetch, FetchError, ofetch } from 'ofetch'
 import { hasWindow, isProduction } from 'std-env'
+import { createStorage } from 'unstorage'
+import localstorageDriver from 'unstorage/drivers/localstorage'
+import { HealthCheckResponse } from '~/api/healthz'
 import { LOG_LEVEL } from '#/utils/logger'
 import AuthService from './modules/auth.service'
 import { DEFAULT_OPTIONS } from './options'
-import type { ApiClientOptions, HealthCheckData } from './types/base'
+import type { ApiClientOptions } from './types'
 
 const HTTPRegexp = /^http:\/\//
 
@@ -24,6 +27,7 @@ export default class ApiClient {
   protected baseURL: string
   protected logLevel: LogLevel
   protected logger: ConsolaInstance
+  protected storage: ReturnType<typeof createStorage>
 
   protected headers: {
     [key: string]: string
@@ -50,6 +54,11 @@ export default class ApiClient {
     this.logLevel = options.logLevel ?? defaultLogLevel
     this.logger = createConsola({
       level: this.logLevel,
+    })
+
+    // Initialize the storage driver
+    this.storage = createStorage({
+      driver: localstorageDriver({}),
     })
 
     if (this.instanceID > 0 && hasWindow) {
@@ -89,9 +98,9 @@ export default class ApiClient {
 
     return ofetch.create({
       baseURL: this.baseURL,
-      async onRequest(_ctx) {
+      async onRequest(ctx) {
         // Do something before request is sent.
-        // logger.debug('onRequest', ctx.request)
+        logger.debug('onRequest', ctx.request)
       },
       async onResponse(ctx) {
         // Extract the request path from the request URL
@@ -128,6 +137,11 @@ export default class ApiClient {
       headers.append('X-Client-Info', this.clientInfo)
     }
 
+    if (this.storage.hasItem('auth:accessToken')) {
+      const accessToken = await this.storage.getItem('auth:accessToken')
+      headers.append('Authorization', `Bearer ${accessToken}`)
+    }
+
     try {
       return await this.fetcher<T>(path, { ...options, headers })
     } catch (error) {
@@ -140,7 +154,7 @@ export default class ApiClient {
     }
   }
 
-  _healthCheck(): Promise<HealthCheckData> {
-    return this._request<HealthCheckData>('/healthz')
+  _healthCheck(): Promise<HealthCheckResponse> {
+    return this._request<HealthCheckResponse>('/healthz')
   }
 }

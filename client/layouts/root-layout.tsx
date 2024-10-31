@@ -2,8 +2,9 @@ import React, { useEffect, useRef } from 'react'
 import { useErrorBoundary } from 'react-error-boundary'
 import { Toaster, toast } from 'sonner'
 import { env } from 'std-env'
+import { HealthCheckResponse } from '~/api/healthz'
 import { useApiClient } from '#/context/hooks/use-api-client'
-import type { ApiResponse, HealthCheckData } from '#/services'
+import type { ApiResponse } from '#/services'
 import { clx } from '#/utils/helper'
 import logger from '#/utils/logger'
 
@@ -29,13 +30,13 @@ export default function RootLayout({ children, className }: RootLayoutProps) {
   const retryCountRef = useRef<number>(0)
 
   useEffect(() => {
-    const handleUnhealthyStatus = (result: HealthCheckData) => {
+    const handleUnhealthyStatus = (result: HealthCheckResponse) => {
       const message =
         result.database.status === 'down' ? 'Database connection is down' : 'API is not healthy'
 
       const description = [
-        `Latency: ${result.database.latency}ms`,
-        `Memory: ${result.memory.heapUsed}MB used of ${result.memory.heapTotal}MB`,
+        `Latency: ${result.database.latency}`,
+        `Memory: ${result.resources.heapUsed} used of ${result.resources.heapTotal}`,
         `Uptime: ${result.uptime}`,
       ].join(' | ')
 

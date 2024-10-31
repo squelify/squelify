@@ -42,7 +42,7 @@ export default defineNitroConfig({
     },
   ],
 
-  errorHandler: '~/error',
+  errorHandler: '~/error.handler',
 
   publicAssets: [{ dir: resolve('public') }],
 
@@ -80,10 +80,8 @@ export default defineNitroConfig({
           exclude: ['react/jsx-runtime'],
         },
         resolve: {
-          alias: [
-            { find: '#', replacement: resolve('client') },
-            // { find: '~', replacement: resolve(__dirname, 'public') },
-          ],
+          alias: [{ find: '#', replacement: resolve('client') }],
+          // alias: [{ find: /^#\/(.*)$/, replacement: '#/$1' }],
         },
         build: {
           manifest: true,
@@ -117,20 +115,36 @@ export default defineNitroConfig({
   //   input: ['./client/main.tsx'],
   //   plugins: [],
   // },
-  // typescript: {
-  //   tsConfig: {
-  //     compilerOptions: {
-  //       jsx: 'react',
-  //       jsxFactory: 'React.createElement',
-  //       jsxFragmentFactory: 'React.Fragment',
-  //       noEmit: true,
-  //       skipLibCheck: true,
-  //       strict: false,
-  //       useDefineForClassFields: true,
-  //       verbatimModuleSyntax: false,
-  //       tsBuildInfoFile: '../../node_modules/.tsbuildinfo',
-  //     },
-  //     exclude: ['../../vite.config.ts', '../../client'],
-  //   },
-  // },
+  typescript: {
+    tsConfig: {
+      compilerOptions: {
+        allowJs: true, // `false` for React
+        allowSyntheticDefaultImports: true,
+        forceConsistentCasingInFileNames: true,
+        jsx: 'preserve', // `react-jsx` for React
+        jsxFactory: 'h', // Disable for React
+        jsxFragmentFactory: 'Fragment', // Disable for React
+        module: 'ESNext',
+        moduleResolution: 'Bundler',
+        noEmit: true,
+        resolveJsonModule: true,
+        strict: false, // `true` for React
+        target: 'ESNext',
+        tsBuildInfoFile: '../../node_modules/.tsbuildinfo',
+        // Extra options for React
+        disableSizeLimit: false,
+        esModuleInterop: true,
+        incremental: true,
+        lib: ['DOM', 'DOM.Iterable', 'ESNext'],
+        moduleDetection: 'auto',
+        noImplicitAny: false, // `true` for React
+        noUncheckedIndexedAccess: true,
+        skipLibCheck: true,
+        useDefineForClassFields: true,
+        verbatimModuleSyntax: false,
+        paths: { '#/*': ['../../client/*'] },
+      },
+      include: ['../../client/**/*'],
+    },
+  },
 })
