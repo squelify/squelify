@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Fastrue
 
 [![Creator Badge](https://badgen.net/badge/icon/Made%20by%20Aris%20Ripandi?icon=bitcoin-lightning&label&color=blue&labelColor=black)](https://ripandis.com)
@@ -45,3 +46,10 @@ See the [license file](./LICENSE) for more information.
 ---
 
 <sub>🤫 Psst! If you like my work you can support me via [GitHub sponsors](https://github.com/sponsors/riipandi).
+=======
+# NTRL Stack
+
+Full-stack Nitro, Tailwind, React, LibSQL.
+
+Look at the [nitro quick start](https://nitro.unjs.io/guide#quick-start) to learn more how to get started.
+>>>>>>> ntrl/main

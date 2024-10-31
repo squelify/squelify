@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # See http://help.github.com/ignore-files/ for more about ignoring files.
 
 # compiled output
@@ -17,10 +18,24 @@ dist-ssr
 # Essentials
 .DS_Store
 .DS_Store?
+=======
+/node_modules
+/.fleet
+/.idea
+/.pnp
+/.cache
+/.output
+/.husky
+.pnp.js
+.DS_Store
+.DS_Store?
+/coverage
+>>>>>>> ntrl/main
 Thumbs.db
 ehthumbs.db
 Desktop.ini
 $RECYCLE.BIN/
+<<<<<<< HEAD
 node_modules/
 coverage.out
 coverage/
@@ -89,3 +104,69 @@ testem.log
 .next/
 out/
 build
+=======
+*tsbuildinfo
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.json
+!.vscode/launch.json
+
+*.bak
+
+# SQLite
+*.sqlite*
+*.sqlite3*
+*.libsql
+*.db
+
+# Nitro
+_data/
+build/
+dist/
+.data
+.dist
+.nitro
+.cache
+.output
+.client
+.build
+.wrangler
+
+# envars
+.env.*
+!.env.example
+compose.env*
+!compose.env.example
+
+# Disable this line in your real app
+/playwright/.cache/
+/playwright-report/
+/tests-results/
+/blob-report/
+.playwright/
+
+# Sentry Config File
+.sentryclirc
+
+# Storybook
+*storybook.log
+/storybook-static/
+
+# fly.toml
+fly*.toml*
+!fly*.example.toml
+
+# Miscellaneous
+vite.config.ts.*
+RELEASE_NOTE.md
+.unikraft/
+slim.report.json
+stats.html
+
+# Terraform
+.terraform/
+.terraform.lock.hcl
+terraform.tfstate*
+terraform.tfvars*
+!terraform.tfvars.example
+>>>>>>> ntrl/main

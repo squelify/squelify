@@ -1,4 +1,5 @@
 {
+<<<<<<< HEAD
     "typescript.tsdk": "node_modules/typescript/lib",
     "typescript.enablePromptUseWorkspaceTsdk": true,
     "editor.defaultFormatter": "esbenp.prettier-vscode",
@@ -46,5 +47,39 @@
     },
     "[markdown]": {
         "editor.formatOnSave": false
+=======
+    "editor.defaultFormatter": "biomejs.biome",
+    "typescript.enablePromptUseWorkspaceTsdk": false,
+    "files.associations": {
+        "*.yml.example": "yaml",
+        "*.css": "css"
+    },
+    "search.exclude": {
+        "**/.husky": true,
+        "**/.output": true,
+        "**/build": true,
+        "**/dist": true
+    },
+    // "tailwindCSS.experimental.classRegex": [
+    //     // https://www.tailwind-variants.org/docs/getting-started#intellisense-setup-optional
+    //     ["([\"'`][^\"'`]*.*?[\"'`])", "[\"'`]([^\"'`]*).*?[\"'`]"],
+    //     "cn\\(([^)]*)\\)", // cn(xxx)
+    //     "clx\\(([^)]*)\\)", // clx(xxx)
+    //     "cx\\(([^)]*)\\)" // cx(xxx)
+    // ],
+    "tailwindCSS.files.exclude": ["**/server/**", "vite.config.ts"],
+    "[css]": {
+        "editor.defaultFormatter": "biomejs.biome"
+    },
+    "[tailwindcss]": {
+        "editor.defaultFormatter": "biomejs.biome"
+    },
+    "[toml]": {
+        "editor.defaultFormatter": "tamasfe.even-better-toml",
+        "editor.formatOnSave": false
+    },
+    "[markdown]": {
+        "editor.defaultFormatter": "darkriszty.markdown-table-prettify"
+>>>>>>> ntrl/main
     }
 }

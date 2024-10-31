@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 .cache/
 build/
 tmp/
@@ -19,3 +20,40 @@ README.md
 *.log
 .env*
 /apps/server/public
+=======
+build/
+dist/
+_data/
+.dist
+.build
+.wrangler
+.cache
+.husky
+.DS_Store
+.DS_Store?
+.dockerignore
+.sentryclirc
+Dockerfile
+compose.env*
+node_modules
+npm-debug.log
+slim.report.json
+playwright-report/
+tests-results/
+/public/build
+.playwright/
+.git
+.gitignore
+*.sqlite*
+*.sqlite3*
+*.libsql*
+*.db
+*.log
+*.md
+.env*
+.meta
+.data
+.nitro
+.output
+.client
+>>>>>>> ntrl/main
