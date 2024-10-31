@@ -1,15 +1,16 @@
 import { env } from 'std-env'
 import { runMigration } from '~/database/migrator'
 
-// Flag to indicate whether the migration has been carried out.
-let migrationExecuted = false
-
 /**
  * Automatically runs database migrations on application startup.
  * This will run by default unless explicitly disabled by setting
  * DATABASE_AUTO_MIGRATE=false. Migration runs only once when the
  * application starts.
+ *
+ * This flag indicate whether the migration has been carried out.
  */
+let migrationExecuted = false
+
 export default defineNitroPlugin(async (_nitroApp) => {
   if (migrationExecuted) return
 
