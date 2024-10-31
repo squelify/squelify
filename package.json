@@ -1,37 +1,16 @@
 {
-<<<<<<< HEAD
     "name": "fastrue",
-    "private": true,
-    "scripts": {
-        "format": "prettier --write \"**/*.{json,js,jsx,ts,tsx,md,mdx}\" --log-level warn",
-        "update-deps": "npm-check-updates --configFileName .ncurc.json",
-        "preinstall": "pnpm dlx only-allow pnpm",
-        "pre-commit": "sh .husky/pre-commit",
-        "prepare": "husky || true"
-    },
-    "devDependencies": {
-        "@nx/js": "17.3.1",
-        "husky": "^9.0.8",
-        "mintlify": "^4.0.119",
-        "npm-check-updates": "^16.14.14",
-        "nx": "17.3.1",
-        "prettier": "^3.2.4",
-        "rimraf": "^5.0.5",
-        "tsup": "^8.0.1"
-    }
-=======
-    "name": "ntrl",
     "version": "0.0.0",
     "type": "module",
-    "private": true,
+    "license": "Apache-2.0",
     "repository": {
         "type": "git",
-        "url": "git+https://github.com/riipandi/ntrl.git"
+        "url": "git+https://github.com/riipandi/fastrue.git"
     },
     "bugs": {
-        "url": "https://github.com/riipandi/ntrl/issues"
+        "url": "https://github.com/riipandi/fastrue/issues"
     },
-    "homepage": "https://github.com/riipandi/ntrl#readme",
+    "homepage": "https://github.com/riipandi/fastrue#readme",
     "scripts": {
         "dev": "nitro dev",
         "build": "nitro build",
@@ -40,7 +19,7 @@
         "format": "biome format . --write",
         "lint": "biome lint . --write",
         "start": "node --env-file .env .output/server/index.mjs",
-        "ntrl": "tsx -r dotenv/config ./server/cmd/index.ts",
+        "fastrue": "tsx -r dotenv/config ./server/cmd/index.ts",
         "docker:build": "docker build -f Dockerfile . -t $npm_package_name:latest -t $npm_package_name:$npm_package_version",
         "docker:images": "docker image list --filter reference=$npm_package_name:$npm_package_version --filter reference=$npm_package_name:latest",
         "docker:run": "pnpm --silent run dockerx --name $npm_package_name $npm_package_name:$npm_package_version",
@@ -150,5 +129,4 @@
         "vite-tsconfig-paths": "5.0.1"
     },
     "packageManager": "pnpm@9.12.3"
->>>>>>> ntrl/main
 }

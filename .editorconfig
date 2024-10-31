@@ -7,15 +7,6 @@ end_of_line = lf
 insert_final_newline = true
 trim_trailing_whitespace = true
 indent_style = space
-<<<<<<< HEAD
-indent_size = 2
-max_line_length = 100
-
-[*.{prettierrc,json,jsonc,swcrc}]
-indent_size = 4
-max_line_length = off
-trim_trailing_whitespace = false
-=======
 indent_size = 4
 max_line_length = 100
 
@@ -24,7 +15,6 @@ max_line_length = off
 
 [*.{js,cjs,mjs,jsx,ts,tsx,html,txt,toml,yml,yaml}]
 indent_size = 2
->>>>>>> ntrl/main
 
 [*.txt]
 insert_final_newline = false

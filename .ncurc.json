@@ -4,16 +4,9 @@
     "upgrade": true,
     "color": true,
     "root": true,
-<<<<<<< HEAD
-    "deep": true,
-    "install": "never",
-    "packageManager": "pnpm",
-    "reject": ["typescript"]
-=======
     "deep": false,
     "silent": false,
     "install": "always",
     "packageManager": "pnpm",
     "reject": []
->>>>>>> ntrl/main
 }

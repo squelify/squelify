@@ -24,7 +24,7 @@ const defaultAuthContext: AuthContextType = {
   role: defaultAuthStoreValues.role,
   login: async () => null,
   signup: async () => null,
-  logout: () => {},
+  logout: () => { },
 }
 
 export const AuthContext = createContext(defaultAuthContext)
@@ -153,7 +153,7 @@ export default function AppProvider({ children, debugScreenSize }: AppProviderPr
 
   return (
     <CookiesProvider defaultSetOptions={COOKIE_OPTIONS}>
-      <SEOMetaProvider defaultSuffix="NTRL Stack" defaultSeparator="|">
+      <SEOMetaProvider defaultSuffix="Fastrue" defaultSeparator="|">
         <AuthContext.Provider value={authContextValues}>
           <div className={clx(debugScreenSize && 'debug-breakpoints')}>{children}</div>
         </AuthContext.Provider>

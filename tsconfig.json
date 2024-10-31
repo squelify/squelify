@@ -1,25 +1,4 @@
 {
-<<<<<<< HEAD
-    "$schema": "https://json.schemastore.org/tsconfig",
-    "display": "Default",
-    "compilerOptions": {
-        "composite": false,
-        "declaration": true,
-        "declarationMap": true,
-        "esModuleInterop": true,
-        "forceConsistentCasingInFileNames": true,
-        "inlineSources": false,
-        "isolatedModules": true,
-        "moduleResolution": "Node",
-        "noUnusedLocals": false,
-        "noUnusedParameters": false,
-        "preserveWatchOutput": true,
-        "skipLibCheck": true,
-        "strict": true,
-        "strictNullChecks": true,
-    },
-    "exclude": ["node_modules"],
-=======
     // https://nitro.unjs.io/guide/typescript
     "$schema": "https://json.schemastore.org/tsconfig",
     "extends": "./.nitro/types/tsconfig.json",
@@ -31,5 +10,4 @@
             "path": "./tsconfig.node.json"
         }
     ]
->>>>>>> ntrl/main
 }

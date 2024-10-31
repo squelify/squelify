@@ -58,7 +58,7 @@ RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --prod \
 # Production image, copy build output files and run the application.
 # -----------------------------------------------------------------------------
 FROM --platform=${PLATFORM} $RUN_IMAGE AS runner
-LABEL org.opencontainers.image.source="https://github.com/riipandi/ntrl"
+LABEL org.opencontainers.image.source="https://github.com/riipandi/fastrue"
 
 # ----- Read application environment variables --------------------------------
 

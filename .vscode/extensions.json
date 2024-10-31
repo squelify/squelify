@@ -1,16 +1,5 @@
 {
     "recommendations": [
-<<<<<<< HEAD
-        "bradlc.vscode-tailwindcss",
-        "dbaeumer.vscode-eslint",
-        "EditorConfig.EditorConfig",
-        "esbenp.prettier-vscode",
-        "foxundermoon.shell-format",
-        "matt-meyers.vscode-dbml",
-        "nrwl.angular-console",
-        "unifiedjs.vscode-mdx"
-    ]
-=======
         "biomejs.biome",
         "bradlc.vscode-tailwindcss",
         "EditorConfig.EditorConfig",
@@ -20,5 +9,4 @@
         "unifiedjs.vscode-mdx"
     ],
     "unwantedRecommendations": []
->>>>>>> ntrl/main
 }

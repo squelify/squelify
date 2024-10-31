@@ -1,26 +1,3 @@
-<<<<<<< HEAD
-.cache/
-build/
-tmp/
-out/
-dist/
-.git
-.github
-.next
-.turbo
-.fleet
-.vscode
-.DS_Store
-.DS_Store?
-.dockerignore
-Dockerfile
-node_modules
-npm-debug.log
-README.md
-*.log
-.env*
-/apps/server/public
-=======
 build/
 dist/
 _data/
@@ -56,4 +33,3 @@ tests-results/
 .nitro
 .output
 .client
->>>>>>> ntrl/main
