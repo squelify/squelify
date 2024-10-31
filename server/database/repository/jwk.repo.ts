@@ -2,13 +2,13 @@ import * as jose from 'jose'
 import { type Kysely } from 'kysely'
 import { typeid } from 'typeid-js'
 import type { Database } from '../db.schema'
-import type { JWKAlgorithm, JWKInsert, JWKSelect } from '../schemas/jwk'
+import type { JWK, JWKAlgorithm, JWKInsert } from '../schemas/jwk'
 
 /**
  * Get currently active JWK for token signing
  * Returns active key or null if no active key exists
  */
-export async function getActiveJWK(db: Kysely<Database>): Promise<Partial<JWKSelect> | null> {
+export async function getActiveJWK(db: Kysely<Database>): Promise<Partial<JWK> | null> {
   const now = Math.floor(Date.now() / 1000)
 
   return await db
@@ -26,7 +26,7 @@ export async function getActiveJWK(db: Kysely<Database>): Promise<Partial<JWKSel
 export async function getJWKByKeyId(
   db: Kysely<Database>,
   keyId: string
-): Promise<Partial<JWKSelect> | null> {
+): Promise<Partial<JWK> | null> {
   const now = Math.floor(Date.now() / 1000)
 
   return await db
@@ -41,7 +41,7 @@ export async function getJWKByKeyId(
 /**
  * Generate new JWK pair and set as active
  */
-export async function rotateJWK(db: Kysely<Database>): Promise<JWKSelect> {
+export async function rotateJWK(db: Kysely<Database>): Promise<JWK> {
   const now = Math.floor(Date.now() / 1000)
 
   // Generate new key pair

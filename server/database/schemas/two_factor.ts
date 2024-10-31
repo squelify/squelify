@@ -22,7 +22,7 @@ export const TwoFactorSchema = z.object({
 })
 
 // Database interface for Kysely
-export interface TwoFactor {
+export interface ITwoFactor {
   id: Generated<string>
   userId: ColumnType<string>
   name: ColumnType<string>
@@ -38,6 +38,6 @@ export interface TwoFactor {
 }
 
 // Kysely types for operations
-export type TwoFactorSelect = Selectable<TwoFactor>
-export type TwoFactorInsert = Insertable<TwoFactor>
-export type TwoFactorUpdate = Updateable<TwoFactor>
+export type TwoFactor = Selectable<ITwoFactor>
+export type TwoFactorInsert = Insertable<ITwoFactor>
+export type TwoFactorUpdate = Updateable<ITwoFactor>

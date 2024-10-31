@@ -15,7 +15,7 @@ export const EmailSchema = z.object({
 })
 
 // Database interface for Kysely
-export interface Email {
+export interface IEmail {
   id: Generated<string>
   userId: ColumnType<string>
   email: ColumnType<string>
@@ -27,6 +27,6 @@ export interface Email {
 }
 
 // Kysely types for operations
-export type EmailSelect = Selectable<Email>
-export type EmailInsert = Insertable<Email>
-export type EmailUpdate = Updateable<Email>
+export type Email = Selectable<IEmail>
+export type EmailInsert = Insertable<IEmail>
+export type EmailUpdate = Updateable<IEmail>

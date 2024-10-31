@@ -15,7 +15,7 @@ export const UserRoleSchema = z.object({
 })
 
 // Database interface for Kysely
-export interface UserRole {
+export interface IUserRole {
   id: Generated<string>
   userId: ColumnType<string>
   roleId: ColumnType<string>
@@ -27,6 +27,6 @@ export interface UserRole {
 }
 
 // Kysely types for operations
-export type UserRoleSelect = Selectable<UserRole>
-export type UserRoleInsert = Insertable<UserRole>
-export type UserRoleUpdate = Updateable<UserRole>
+export type UserRole = Selectable<IUserRole>
+export type UserRoleInsert = Insertable<IUserRole>
+export type UserRoleUpdate = Updateable<IUserRole>

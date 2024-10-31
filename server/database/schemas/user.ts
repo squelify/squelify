@@ -25,7 +25,7 @@ export const UserSchema = z.object({
 })
 
 // Database interface for Kysely
-export interface User {
+export interface IUser {
   id: Generated<string>
   firstName: ColumnType<string>
   lastName: ColumnType<string | null>
@@ -42,6 +42,6 @@ export interface User {
 }
 
 // Kysely types for operations
-export type UserSelect = Selectable<User>
-export type UserInsert = Insertable<User>
-export type UserUpdate = Updateable<User>
+export type User = Selectable<IUser>
+export type UserInsert = Insertable<IUser>
+export type UserUpdate = Updateable<IUser>

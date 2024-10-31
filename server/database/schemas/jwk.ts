@@ -49,7 +49,7 @@ export const JWKSchema = z.object({
 })
 
 // Database interface for Kysely
-export interface JWK {
+export interface IJWK {
   id: Generated<string>
   keyId: ColumnType<string>
   publicKey: ColumnType<string>
@@ -62,9 +62,9 @@ export interface JWK {
 }
 
 // Kysely types for operations
-export type JWKSelect = Selectable<JWK>
-export type JWKInsert = Insertable<JWK>
-export type JWKUpdate = Updateable<JWK>
+export type JWK = Selectable<IJWK>
+export type JWKInsert = Insertable<IJWK>
+export type JWKUpdate = Updateable<IJWK>
 
 // Type for JWT verification that only requires necessary fields
-export type JWKVerifyKey = Pick<JWKSelect, 'keyId' | 'publicKey' | 'algorithm'>
+export type JWKVerifyKey = Pick<JWK, 'keyId' | 'publicKey' | 'algorithm'>

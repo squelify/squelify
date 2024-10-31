@@ -21,7 +21,7 @@ export const PasskeySchema = z.object({
 })
 
 // Database interface for Kysely
-export interface Passkey {
+export interface IPasskey {
   id: Generated<string>
   userId: ColumnType<string>
   webauthnUserId: ColumnType<string>
@@ -38,6 +38,6 @@ export interface Passkey {
 }
 
 // Kysely types for operations
-export type PasskeySelect = Selectable<Passkey>
-export type PasskeyInsert = Insertable<Passkey>
-export type PasskeyUpdate = Updateable<Passkey>
+export type Passkey = Selectable<IPasskey>
+export type PasskeyInsert = Insertable<IPasskey>
+export type PasskeyUpdate = Updateable<IPasskey>

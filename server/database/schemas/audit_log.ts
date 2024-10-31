@@ -103,7 +103,7 @@ export const AuditLogSchema = z.object({
 })
 
 // Database interface for Kysely
-export interface AuditLog {
+export interface IAuditLog {
   id: Generated<string>
   userId: ColumnType<string | null>
   organizationId: ColumnType<string | null>
@@ -119,6 +119,6 @@ export interface AuditLog {
 }
 
 // Kysely types for operations
-export type AuditLogSelect = Selectable<AuditLog>
-export type AuditLogInsert = Insertable<AuditLog>
-export type AuditLogUpdate = Updateable<AuditLog>
+export type AuditLog = Selectable<IAuditLog>
+export type AuditLogInsert = Insertable<IAuditLog>
+export type AuditLogUpdate = Updateable<IAuditLog>

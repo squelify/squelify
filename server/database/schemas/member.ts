@@ -22,7 +22,7 @@ export const MemberSchema = z.object({
 })
 
 // Database interface for Kysely
-export interface Member {
+export interface IMember {
   id: Generated<string>
   organizationId: ColumnType<string>
   userId: ColumnType<string>
@@ -38,6 +38,6 @@ export interface Member {
 }
 
 // Kysely types for operations
-export type MemberSelect = Selectable<Member>
-export type MemberInsert = Insertable<Member>
-export type MemberUpdate = Updateable<Member>
+export type Member = Selectable<IMember>
+export type MemberInsert = Insertable<IMember>
+export type MemberUpdate = Updateable<IMember>

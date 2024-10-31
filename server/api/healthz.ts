@@ -88,8 +88,6 @@ export default defineEventHandler(async (event): Promise<HealthCheckResponse> =>
       `)
       .execute(event.context.db)
 
-    logger.debug('DEBUGSQL', rows)
-
     libsqlVersion = rows[0].dbVersion
     databaseSize = rows[0].dbSize
 

@@ -17,7 +17,7 @@ export const PasswordSchema = z.object({
 })
 
 // Database interface for Kysely
-export interface Password {
+export interface IPassword {
   id: Generated<string>
   userId: ColumnType<string>
   hash: ColumnType<string>
@@ -28,6 +28,6 @@ export interface Password {
 }
 
 // Kysely types for operations
-export type PasswordSelect = Selectable<Password>
-export type PasswordInsert = Insertable<Password>
-export type PasswordUpdate = Updateable<Password>
+export type Password = Selectable<IPassword>
+export type PasswordInsert = Insertable<IPassword>
+export type PasswordUpdate = Updateable<IPassword>

@@ -1,7 +1,7 @@
 import type { SelectExpression } from 'kysely'
 import db from '~/database/db.client'
 import type { Database } from '~/database/db.schema'
-import type { UserSelect } from '~/database/schemas/user'
+import type { User } from '~/database/schemas/user'
 
 /**
  * Finds a user by their unique identifier.
@@ -9,7 +9,7 @@ import type { UserSelect } from '~/database/schemas/user'
 export async function findUserById<SE extends SelectExpression<Database, 'users'>>(
   id: string,
   cols?: readonly SE[]
-): Promise<Partial<UserSelect> | null> {
+): Promise<Partial<User> | null> {
   try {
     const query = db.selectFrom('users').where('id', '=', id)
     const result = cols
@@ -26,7 +26,7 @@ export async function findUserById<SE extends SelectExpression<Database, 'users'
 /**
  * Finds a user by their email address.
  */
-export async function findUserByEmail(email: string): Promise<Partial<UserSelect> | null> {
+export async function findUserByEmail(email: string): Promise<Partial<User> | null> {
   try {
     const result = await db
       .selectFrom('users')
@@ -47,7 +47,7 @@ export async function findUserByEmail(email: string): Promise<Partial<UserSelect
 /**
  * Updates the username of a user in the database.
  */
-export async function updateUsername(userId: string, newUsername: string): Promise<UserSelect> {
+export async function updateUsername(userId: string, newUsername: string): Promise<User> {
   const now = Math.floor(Date.now() / 1000)
 
   try {

@@ -22,7 +22,7 @@ export const VerificationSchema = z.object({
 })
 
 // Database interface for Kysely
-export interface Verification {
+export interface IVerification {
   id: Generated<string>
   userId: ColumnType<string | null>
   type: ColumnType<VerificationType>
@@ -38,6 +38,6 @@ export interface Verification {
 }
 
 // Kysely types for operations
-export type VerificationSelect = Selectable<Verification>
-export type VerificationInsert = Insertable<Verification>
-export type VerificationUpdate = Updateable<Verification>
+export type Verification = Selectable<IVerification>
+export type VerificationInsert = Insertable<IVerification>
+export type VerificationUpdate = Updateable<IVerification>

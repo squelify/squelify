@@ -4,7 +4,7 @@ import { env } from 'std-env'
 import { typeid } from 'typeid-js'
 import db from '~/database/db.client'
 import type { AuditAction, AuditEntity } from '~/database/schemas/audit_log'
-import type { OrganizationSelect } from '~/database/schemas/organization'
+import type { Organization } from '~/database/schemas/organization'
 
 interface AuditLogParams {
   action: AuditAction
@@ -19,7 +19,7 @@ interface AuditLogParams {
 
 interface RequestContext {
   user?: { id: string }
-  organization?: OrganizationSelect | null
+  organization?: Organization | null
 }
 
 interface AuditLogFilters {

@@ -35,7 +35,7 @@ export const OrganizationSchema = z.object({
 })
 
 // Database interface for Kysely
-export interface Organization {
+export interface IOrganization {
   id: Generated<string>
   name: ColumnType<string>
   slug: ColumnType<string>
@@ -55,6 +55,6 @@ export interface Organization {
 }
 
 // Kysely types for operations
-export type OrganizationSelect = Selectable<Organization>
-export type OrganizationInsert = Insertable<Organization>
-export type OrganizationUpdate = Updateable<Organization>
+export type Organization = Selectable<IOrganization>
+export type OrganizationInsert = Insertable<IOrganization>
+export type OrganizationUpdate = Updateable<IOrganization>

@@ -1,7 +1,7 @@
 import * as jose from 'jose'
 import type { JWTHeaderParameters } from 'jose'
 import { env } from 'std-env'
-import type { JWKSelect, JWKVerifyKey } from '~/database/schemas/jwk'
+import type { JWK, JWKVerifyKey } from '~/database/schemas/jwk'
 
 export interface JWTPayload {
   // Standard JWT Claims
@@ -36,7 +36,7 @@ const TOKEN_MAX_AGE = '15m' // 15 minutes
 
 export async function generateAccessToken(
   payload: JWTPayload,
-  key: Partial<JWKSelect>,
+  key: Partial<JWK>,
   opts: {
     issuer: string
     audience: string | string[]

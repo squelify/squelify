@@ -22,7 +22,7 @@ export const AccountSchema = z.object({
 })
 
 // Database interface for Kysely
-export interface Account {
+export interface IAccount {
   id: Generated<string>
   userId: ColumnType<string>
   provider: ColumnType<AccountProvider>
@@ -38,6 +38,6 @@ export interface Account {
 }
 
 // Kysely types for operations
-export type AccountSelect = Selectable<Account>
-export type AccountInsert = Insertable<Account>
-export type AccountUpdate = Updateable<Account>
+export type Account = Selectable<IAccount>
+export type AccountInsert = Insertable<IAccount>
+export type AccountUpdate = Updateable<IAccount>

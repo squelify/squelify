@@ -14,7 +14,7 @@ export const RolePermissionSchema = z.object({
 })
 
 // Database interface for Kysely
-export interface RolePermission {
+export interface IRolePermission {
   id: Generated<string>
   roleId: ColumnType<string>
   permissionId: ColumnType<string>
@@ -25,6 +25,6 @@ export interface RolePermission {
 }
 
 // Kysely types for operations
-export type RolePermissionSelect = Selectable<RolePermission>
-export type RolePermissionInsert = Insertable<RolePermission>
-export type RolePermissionUpdate = Updateable<RolePermission>
+export type RolePermission = Selectable<IRolePermission>
+export type RolePermissionInsert = Insertable<IRolePermission>
+export type RolePermissionUpdate = Updateable<IRolePermission>

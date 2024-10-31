@@ -22,7 +22,7 @@ export const PermissionSchema = z.object({
 })
 
 // Database interface for Kysely
-export interface Permission {
+export interface IPermission {
   id: Generated<string>
   name: ColumnType<string>
   description: ColumnType<string | null>
@@ -35,6 +35,6 @@ export interface Permission {
 }
 
 // Kysely types for operations
-export type PermissionSelect = Selectable<Permission>
-export type PermissionInsert = Insertable<Permission>
-export type PermissionUpdate = Updateable<Permission>
+export type Permission = Selectable<IPermission>
+export type PermissionInsert = Insertable<IPermission>
+export type PermissionUpdate = Updateable<IPermission>

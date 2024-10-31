@@ -20,7 +20,7 @@ export const RateLimitSchema = z.object({
 })
 
 // Database interface for Kysely
-export interface RateLimit {
+export interface IRateLimit {
   id: Generated<string>
   key: ColumnType<string>
   context: ColumnType<RateLimitContext>
@@ -34,6 +34,6 @@ export interface RateLimit {
 }
 
 // Kysely types for operations
-export type RateLimitSelect = Selectable<RateLimit>
-export type RateLimitInsert = Insertable<RateLimit>
-export type RateLimitUpdate = Updateable<RateLimit>
+export type RateLimit = Selectable<IRateLimit>
+export type RateLimitInsert = Insertable<IRateLimit>
+export type RateLimitUpdate = Updateable<IRateLimit>

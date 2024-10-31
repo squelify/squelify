@@ -25,7 +25,7 @@ export const InvitationSchema = z.object({
 })
 
 // Database interface for Kysely
-export interface Invitation {
+export interface IInvitation {
   id: Generated<string>
   organizationId: ColumnType<string>
   email: ColumnType<string>
@@ -41,6 +41,6 @@ export interface Invitation {
 }
 
 // Kysely types for operations
-export type InvitationSelect = Selectable<Invitation>
-export type InvitationInsert = Insertable<Invitation>
-export type InvitationUpdate = Updateable<Invitation>
+export type Invitation = Selectable<IInvitation>
+export type InvitationInsert = Insertable<IInvitation>
+export type InvitationUpdate = Updateable<IInvitation>

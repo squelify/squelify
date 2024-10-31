@@ -21,7 +21,7 @@ export const SessionSchema = z.object({
 })
 
 // Database interface for Kysely
-export interface Session {
+export interface ISession {
   id: Generated<string>
   userId: ColumnType<string>
   keyId: ColumnType<string>
@@ -39,6 +39,6 @@ export interface Session {
 }
 
 // Kysely types for operations
-export type SessionSelect = Selectable<Session>
-export type SessionInsert = Insertable<Session>
-export type SessionUpdate = Updateable<Session>
+export type Session = Selectable<ISession>
+export type SessionInsert = Insertable<ISession>
+export type SessionUpdate = Updateable<ISession>

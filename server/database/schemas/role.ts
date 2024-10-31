@@ -19,7 +19,7 @@ export const RoleSchema = z.object({
 })
 
 // Database interface for Kysely
-export interface Role {
+export interface IRole {
   id: Generated<string>
   name: ColumnType<string>
   description: ColumnType<string | null>
@@ -32,6 +32,6 @@ export interface Role {
 }
 
 // Kysely types for operations
-export type RoleSelect = Selectable<Role>
-export type RoleInsert = Insertable<Role>
-export type RoleUpdate = Updateable<Role>
+export type Role = Selectable<IRole>
+export type RoleInsert = Insertable<IRole>
+export type RoleUpdate = Updateable<IRole>
