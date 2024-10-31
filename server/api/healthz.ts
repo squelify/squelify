@@ -10,6 +10,7 @@ interface HealthCheckResponse {
   database: {
     status: 'up' | 'down'
     version: string
+    size: string
     latency: number
   }
   memory: {
@@ -38,14 +39,31 @@ export default defineEventHandler(async (event): Promise<HealthCheckResponse> =>
   const startTime = performance.now()
   let dbStatus: 'up' | 'down' = 'down'
   let libsqlVersion: string
+  let databaseSize: string
 
   try {
-    // Check database connection by executing a simple query
+    // Check database connection with version and size info
     const { rows } = await sql
-      .raw<{ version: string }>('SELECT sqlite_version() as version')
+      .raw<{ dbVersion: string; dbSize: string }>(`
+        SELECT
+          (SELECT sqlite_version()) as db_version,
+          CASE
+              WHEN size_bytes < 1024 THEN size_bytes || ' B'
+              WHEN size_bytes < 1024*1024 THEN ROUND(size_bytes/1024.0, 2) || ' KB'
+              WHEN size_bytes < 1024*1024*1024 THEN ROUND(size_bytes/(1024.0*1024), 2) || ' MB'
+              ELSE ROUND(size_bytes/(1024.0*1024*1024), 2) || ' GB'
+          END as db_size
+        FROM (
+            SELECT (page_count * page_size) as size_bytes
+            FROM pragma_page_count(), pragma_page_size()
+        )
+      `)
       .execute(event.context.db)
 
-    libsqlVersion = rows[0].version
+    logger.debug('DEBUGSQL', rows)
+
+    libsqlVersion = rows[0].dbVersion
+    databaseSize = rows[0].dbSize
 
     dbStatus = 'up'
   } catch (_error) {
@@ -67,11 +85,12 @@ export default defineEventHandler(async (event): Promise<HealthCheckResponse> =>
     status: dbStatus === 'up' ? 'healthy' : 'unhealthy',
     timestamp: new Date().toISOString(),
     serviceId: isHostedOnFly ? serviceId : host,
-    clientIp: clientIpAddr,
+    clientIp: clientIpAddr || 'unknown',
     uptime: formatUptime(process.uptime()),
     database: {
       status: dbStatus,
       version: libsqlVersion,
+      size: databaseSize,
       latency: Math.round(dbLatency),
     },
     memory: {
