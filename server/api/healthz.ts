@@ -1,8 +1,12 @@
+import os from 'node:os'
 import { sql } from 'kysely'
 import { env, process } from 'std-env'
+import pkg from '~~/package.json' assert { type: 'json' }
 
 interface HealthCheckResponse {
   status: 'healthy' | 'unhealthy'
+  appVersion: string
+  environment: string
   timestamp: string
   serviceId: string
   clientIp: string
@@ -11,13 +15,37 @@ interface HealthCheckResponse {
     status: 'up' | 'down'
     version: string
     size: string
-    latency: number
+    latency: string
   }
-  memory: {
-    heapUsed: number
-    heapTotal: number
-    external: number
+  resources: {
+    heapUsed: string
+    heapTotal: string
+    external: string
+    cpuUsage: string
   }
+}
+
+function getCpuUsage(): number {
+  const cpus = os.cpus()
+  const totalIdle = cpus.reduce((acc, cpu) => acc + cpu.times.idle, 0)
+  const totalTick = cpus.reduce(
+    (acc, cpu) => acc + Object.values(cpu.times).reduce((a, b) => a + b),
+    0
+  )
+  return Math.round((1 - totalIdle / totalTick) * 100)
+}
+
+// Format number to include thousand separators and unit
+function formatNumber(num: number): string {
+  return num.toLocaleString('en-US')
+}
+
+// Format bytes to human readable size
+function formatBytes(bytes: number): string {
+  if (bytes < 1024) return `${bytes} B`
+  if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(2)} KB`
+  if (bytes < 1024 * 1024 * 1024) return `${(bytes / (1024 * 1024)).toFixed(2)} MB`
+  return `${(bytes / (1024 * 1024 * 1024)).toFixed(2)} GB`
 }
 
 function formatUptime(seconds: number): string {
@@ -83,6 +111,8 @@ export default defineEventHandler(async (event): Promise<HealthCheckResponse> =>
 
   return {
     status: dbStatus === 'up' ? 'healthy' : 'unhealthy',
+    appVersion: pkg.version,
+    environment: process.env.NODE_ENV,
     timestamp: new Date().toISOString(),
     serviceId: isHostedOnFly ? serviceId : host,
     clientIp: clientIpAddr || 'unknown',
@@ -91,12 +121,13 @@ export default defineEventHandler(async (event): Promise<HealthCheckResponse> =>
       status: dbStatus,
       version: libsqlVersion,
       size: databaseSize,
-      latency: Math.round(dbLatency),
+      latency: `${formatNumber(Math.round(dbLatency))}ms`,
     },
-    memory: {
-      heapUsed: Math.round(memoryUsage.heapUsed / 1024 / 1024),
-      heapTotal: Math.round(memoryUsage.heapTotal / 1024 / 1024),
-      external: Math.round(memoryUsage.external / 1024 / 1024),
+    resources: {
+      heapUsed: `${formatBytes(memoryUsage.heapUsed)}`,
+      heapTotal: `${formatBytes(memoryUsage.heapTotal)}`,
+      external: `${formatBytes(memoryUsage.external)}`,
+      cpuUsage: `${getCpuUsage()}%`,
     },
   }
 })
