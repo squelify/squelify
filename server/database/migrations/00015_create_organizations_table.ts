@@ -28,11 +28,12 @@ export async function up(db: Kysely<Database>): Promise<void> {
     .addColumn('created_at', 'integer', (col) => col.notNull().defaultTo(UNIX_TIMESTAMP))
     .addColumn('updated_at', 'integer')
     .modifyEnd(sql`STRICT`)
+    .ifNotExists()
     .execute()
 
   // Create auto-update trigger
   await sql`
-    CREATE TRIGGER update_organizations_timestamp
+    CREATE TRIGGER IF NOT EXISTS update_organizations_timestamp
     AFTER UPDATE ON organizations
     FOR EACH ROW
     BEGIN
@@ -43,16 +44,25 @@ export async function up(db: Kysely<Database>): Promise<void> {
   `.execute(db)
 
   // Indexes
-  await db.schema.createIndex('organizations_slug_idx').on('organizations').column('slug').execute()
+  await db.schema
+    .createIndex('organizations_slug_idx')
+    .on('organizations')
+    .column('slug')
+    .ifNotExists()
+    .execute()
+
   await db.schema
     .createIndex('organizations_email_idx')
     .on('organizations')
     .column('email')
+    .ifNotExists()
     .execute()
+
   await db.schema
     .createIndex('organizations_is_verified_idx')
     .on('organizations')
     .column('is_verified')
+    .ifNotExists()
     .execute()
 }
 

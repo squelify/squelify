@@ -16,11 +16,12 @@ export async function up(db: Kysely<Database>): Promise<void> {
     .addColumn('created_at', 'integer', (col) => col.notNull().defaultTo(UNIX_TIMESTAMP))
     .addColumn('updated_at', 'integer')
     .modifyEnd(sql`STRICT`)
+    .ifNotExists()
     .execute()
 
   // Create auto-update trigger
   await sql`
-    CREATE TRIGGER update_user_roles_timestamp
+    CREATE TRIGGER IF NOT EXISTS update_user_roles_timestamp
     AFTER UPDATE ON user_roles
     FOR EACH ROW
     BEGIN
@@ -36,14 +37,28 @@ export async function up(db: Kysely<Database>): Promise<void> {
     .on('user_roles')
     .columns(['user_id', 'role_id', 'organization_id'])
     .unique()
+    .ifNotExists()
     .execute()
 
-  await db.schema.createIndex('user_roles_user_id_idx').on('user_roles').column('user_id').execute()
-  await db.schema.createIndex('user_roles_role_id_idx').on('user_roles').column('role_id').execute()
+  await db.schema
+    .createIndex('user_roles_user_id_idx')
+    .on('user_roles')
+    .column('user_id')
+    .ifNotExists()
+    .execute()
+
+  await db.schema
+    .createIndex('user_roles_role_id_idx')
+    .on('user_roles')
+    .column('role_id')
+    .ifNotExists()
+    .execute()
+
   await db.schema
     .createIndex('user_roles_organization_id_idx')
     .on('user_roles')
     .column('organization_id')
+    .ifNotExists()
     .execute()
 }
 

@@ -22,11 +22,12 @@ export async function up(db: Kysely<Database>): Promise<void> {
     .addColumn('created_at', 'integer', (col) => col.notNull().defaultTo(UNIX_TIMESTAMP))
     .addColumn('updated_at', 'integer')
     .modifyEnd(sql`STRICT`)
+    .ifNotExists()
     .execute()
 
   // Create auto-update trigger
   await sql`
-    CREATE TRIGGER update_two_factors_timestamp
+    CREATE TRIGGER IF NOT EXISTS update_two_factors_timestamp
     AFTER UPDATE ON two_factors
     FOR EACH ROW
     BEGIN
@@ -41,6 +42,7 @@ export async function up(db: Kysely<Database>): Promise<void> {
     .createIndex('two_factors_user_id_idx')
     .on('two_factors')
     .column('user_id')
+    .ifNotExists()
     .execute()
 
   await db.schema
@@ -48,12 +50,14 @@ export async function up(db: Kysely<Database>): Promise<void> {
     .on('two_factors')
     .columns(['user_id', 'type', 'name'])
     .unique()
+    .ifNotExists()
     .execute()
 
   await db.schema
     .createIndex('two_factors_is_primary_idx')
     .on('two_factors')
     .column('is_primary')
+    .ifNotExists()
     .execute()
 }
 

@@ -18,11 +18,12 @@ export async function up(db: Kysely<Database>): Promise<void> {
     .addColumn('created_at', 'integer', (col) => col.notNull().defaultTo(UNIX_TIMESTAMP))
     .addColumn('updated_at', 'integer')
     .modifyEnd(sql`STRICT`)
+    .ifNotExists()
     .execute()
 
   // Create auto-update trigger
   await sql`
-    CREATE TRIGGER update_rate_limits_timestamp
+    CREATE TRIGGER IF NOT EXISTS update_rate_limits_timestamp
     AFTER UPDATE ON rate_limits
     FOR EACH ROW
     BEGIN
@@ -38,18 +39,21 @@ export async function up(db: Kysely<Database>): Promise<void> {
     .on('rate_limits')
     .columns(['key', 'context'])
     .unique()
+    .ifNotExists()
     .execute()
 
   await db.schema
     .createIndex('rate_limits_expires_at_idx')
     .on('rate_limits')
     .column('expires_at')
+    .ifNotExists()
     .execute()
 
   await db.schema
     .createIndex('rate_limits_blocked_until_idx')
     .on('rate_limits')
     .column('blocked_until')
+    .ifNotExists()
     .execute()
 }
 

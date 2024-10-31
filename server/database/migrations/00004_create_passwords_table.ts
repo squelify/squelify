@@ -15,11 +15,13 @@ export async function up(db: Kysely<Database>): Promise<void> {
     .addColumn('created_at', 'integer', (col) => col.notNull().defaultTo(UNIX_TIMESTAMP))
     .addColumn('updated_at', 'integer')
     .modifyEnd(sql`STRICT`)
+    .ifNotExists()
+    .ifNotExists()
     .execute()
 
   // Create auto-update trigger
   await sql`
-    CREATE TRIGGER update_passwords_timestamp
+    CREATE TRIGGER IF NOT EXISTS update_passwords_timestamp
     AFTER UPDATE ON passwords
     FOR EACH ROW
     BEGIN
@@ -30,16 +32,15 @@ export async function up(db: Kysely<Database>): Promise<void> {
   `.execute(db)
 
   // Indexes
-  await db.schema.createIndex('passwords_user_id_idx').on('passwords').column('user_id').execute()
   await db.schema
-    .createIndex('passwords_reset_token_idx')
+    .createIndex('passwords_user_id_idx')
     .on('passwords')
-    .column('reset_token')
+    .column('user_id')
+    .ifNotExists()
     .execute()
 }
 
 export async function down(db: Kysely<Database>): Promise<void> {
-  await db.schema.dropIndex('passwords_reset_token_idx').ifExists().execute()
   await db.schema.dropIndex('passwords_user_id_idx').ifExists().execute()
   await sql`DROP TRIGGER IF EXISTS update_passwords_timestamp;`.execute(db)
   await db.schema.dropTable('passwords').ifExists().execute()

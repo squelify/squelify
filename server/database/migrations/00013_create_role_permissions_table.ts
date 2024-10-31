@@ -15,11 +15,12 @@ export async function up(db: Kysely<Database>): Promise<void> {
     .addColumn('created_at', 'integer', (col) => col.notNull().defaultTo(UNIX_TIMESTAMP))
     .addColumn('updated_at', 'integer')
     .modifyEnd(sql`STRICT`)
+    .ifNotExists()
     .execute()
 
   // Create auto-update trigger
   await sql`
-    CREATE TRIGGER update_role_permissions_timestamp
+    CREATE TRIGGER IF NOT EXISTS update_role_permissions_timestamp
     AFTER UPDATE ON role_permissions
     FOR EACH ROW
     BEGIN
@@ -35,18 +36,21 @@ export async function up(db: Kysely<Database>): Promise<void> {
     .on('role_permissions')
     .columns(['role_id', 'permission_id'])
     .unique()
+    .ifNotExists()
     .execute()
 
   await db.schema
     .createIndex('role_permissions_role_id_idx')
     .on('role_permissions')
     .column('role_id')
+    .ifNotExists()
     .execute()
 
   await db.schema
     .createIndex('role_permissions_permission_id_idx')
     .on('role_permissions')
     .column('permission_id')
+    .ifNotExists()
     .execute()
 }
 

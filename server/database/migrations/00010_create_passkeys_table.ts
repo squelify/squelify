@@ -19,11 +19,12 @@ export async function up(db: Kysely<Database>): Promise<void> {
     .addColumn('created_at', 'integer', (col) => col.notNull().defaultTo(UNIX_TIMESTAMP))
     .addColumn('updated_at', 'integer')
     .modifyEnd(sql`STRICT`)
+    .ifNotExists()
     .execute()
 
   // Create auto-update trigger
   await sql`
-    CREATE TRIGGER update_passkeys_timestamp
+    CREATE TRIGGER IF NOT EXISTS update_passkeys_timestamp
     AFTER UPDATE ON passkeys
     FOR EACH ROW
     BEGIN
@@ -34,12 +35,18 @@ export async function up(db: Kysely<Database>): Promise<void> {
   `.execute(db)
 
   // Indexes
-  await db.schema.createIndex('passkeys_user_id_idx').on('passkeys').column('user_id').execute()
+  await db.schema
+    .createIndex('passkeys_user_id_idx')
+    .on('passkeys')
+    .column('user_id')
+    .ifNotExists()
+    .execute()
 
   await db.schema
     .createIndex('passkeys_credential_id_idx')
     .on('passkeys')
     .column('credential_id')
+    .ifNotExists()
     .execute()
 
   await db.schema
@@ -47,6 +54,7 @@ export async function up(db: Kysely<Database>): Promise<void> {
     .on('passkeys')
     .columns(['user_id', 'name'])
     .unique()
+    .ifNotExists()
     .execute()
 }
 

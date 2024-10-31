@@ -18,27 +18,36 @@ export async function up(db: Kysely<Database>): Promise<void> {
     .addColumn('user_agent', 'text')
     .addColumn('created_at', 'integer', (col) => col.notNull().defaultTo(UNIX_TIMESTAMP))
     .modifyEnd(sql`STRICT`)
+    .ifNotExists()
     .execute()
 
   // Indexes for audit_logs table
-  await db.schema.createIndex('audit_logs_user_id_idx').on('audit_logs').column('user_id').execute()
+  await db.schema
+    .createIndex('audit_logs_user_id_idx')
+    .on('audit_logs')
+    .column('user_id')
+    .ifNotExists()
+    .execute()
 
   await db.schema
     .createIndex('audit_logs_organization_id_idx')
     .on('audit_logs')
     .column('organization_id')
+    .ifNotExists()
     .execute()
 
   await db.schema
     .createIndex('audit_logs_entity_idx')
     .on('audit_logs')
     .columns(['entity', 'entity_id'])
+    .ifNotExists()
     .execute()
 
   await db.schema
     .createIndex('audit_logs_created_at_idx')
     .on('audit_logs')
     .column('created_at')
+    .ifNotExists()
     .execute()
 }
 

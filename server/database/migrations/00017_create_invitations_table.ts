@@ -25,11 +25,12 @@ export async function up(db: Kysely<Database>): Promise<void> {
     .addColumn('created_at', 'integer', (col) => col.notNull().defaultTo(UNIX_TIMESTAMP))
     .addColumn('updated_at', 'integer')
     .modifyEnd(sql`STRICT`)
+    .ifNotExists()
     .execute()
 
   // Create auto-update trigger
   await sql`
-    CREATE TRIGGER update_invitations_timestamp
+    CREATE TRIGGER IF NOT EXISTS update_invitations_timestamp
     AFTER UPDATE ON invitations
     FOR EACH ROW
     BEGIN
@@ -44,14 +45,28 @@ export async function up(db: Kysely<Database>): Promise<void> {
     .createIndex('invitations_org_email_idx')
     .on('invitations')
     .columns(['organization_id', 'email'])
+    .ifNotExists()
     .execute()
 
-  await db.schema.createIndex('invitations_token_idx').on('invitations').column('token').execute()
-  await db.schema.createIndex('invitations_status_idx').on('invitations').column('status').execute()
+  await db.schema
+    .createIndex('invitations_token_idx')
+    .on('invitations')
+    .column('token')
+    .ifNotExists()
+    .execute()
+
+  await db.schema
+    .createIndex('invitations_status_idx')
+    .on('invitations')
+    .column('status')
+    .ifNotExists()
+    .execute()
+
   await db.schema
     .createIndex('invitations_expires_at_idx')
     .on('invitations')
     .column('expires_at')
+    .ifNotExists()
     .execute()
 }
 

@@ -29,11 +29,12 @@ export async function up(db: Kysely<Database>): Promise<void> {
     .addColumn('created_at', 'integer', (col) => col.notNull().defaultTo(UNIX_TIMESTAMP))
     .addColumn('updated_at', 'integer')
     .modifyEnd(sql`STRICT`)
+    .ifNotExists()
     .execute()
 
   // Create auto-update trigger
   await sql`
-    CREATE TRIGGER update_jwks_timestamp
+    CREATE TRIGGER IF NOT EXISTS update_jwks_timestamp
     AFTER UPDATE ON jwks
     FOR EACH ROW
     BEGIN
@@ -44,9 +45,21 @@ export async function up(db: Kysely<Database>): Promise<void> {
   `.execute(db)
 
   // Indexes
-  await db.schema.createIndex('jwks_key_id_idx').on('jwks').column('key_id').execute()
-  await db.schema.createIndex('jwks_is_active_idx').on('jwks').column('is_active').execute()
-  await db.schema.createIndex('jwks_expires_at_idx').on('jwks').column('expires_at').execute()
+  await db.schema.createIndex('jwks_key_id_idx').on('jwks').column('key_id').ifNotExists().execute()
+
+  await db.schema
+    .createIndex('jwks_is_active_idx')
+    .on('jwks')
+    .column('is_active')
+    .ifNotExists()
+    .execute()
+
+  await db.schema
+    .createIndex('jwks_expires_at_idx')
+    .on('jwks')
+    .column('expires_at')
+    .ifNotExists()
+    .execute()
 }
 
 export async function down(db: Kysely<Database>): Promise<void> {
