@@ -10,7 +10,7 @@ import type { ApiClientOptions } from './types/base'
  * If the `APP_BASE_URL` environment variable is set, it will be used as the base URL.
  * Otherwise, if the application is running in development mode (`process.env.NODE_ENV === 'development'`),
  * the base URL will be `/api`. If the application is running in production mode,
- * the base URL will be `http://localhost:3000/api`.
+ * the base URL will be `http://localhost:3278/api`.
  */
 export const DEFAULT_OPTIONS: Omit<Required<ApiClientOptions>, 'headers'> = {
   baseURL: '/api',

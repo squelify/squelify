@@ -15,8 +15,8 @@ export interface AppConfig {
 }
 
 export default {
-  baseURL: 'http://localhost:3000',
-  domain: 'localhost:3000',
+  baseURL: 'http://localhost:3278',
+  domain: 'localhost:3278',
   title: 'Nitro Start',
   description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit',
   imageUrl: '/images/og-image.png',

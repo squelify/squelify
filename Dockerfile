@@ -110,7 +110,7 @@ COPY --from=busybox /bin/ls /bin/ls
 COPY --from=busybox /bin/sh /bin/sh
 
 # Define the host and port to listen on.
-ARG NODE_ENV=production HOST=0.0.0.0 PORT=3000
+ARG NODE_ENV=production HOST=0.0.0.0 PORT=3278
 ENV NODE_ENV=$NODE_ENV HOST=$HOST PORT=$PORT
 ENV TINI_SUBREAPER=true
 

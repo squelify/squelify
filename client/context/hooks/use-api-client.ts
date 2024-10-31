@@ -15,7 +15,7 @@ import { ApiClient } from '#/services'
 const apiClient = ApiClient.getInstance({
   baseURL: process.env.APP_BASE_URL
     ? `${process.env.APP_BASE_URL}/api`
-    : 'http://127.0.0.1:3000/api',
+    : 'http://127.0.0.1:3278/api',
 })
 
 /**

@@ -35,7 +35,7 @@ pnpm fastrue make app-key
 3. Run database migration: `pnpm fastrue migrate up`
 4. Start development: `pnpm dev`
 
-Application will run at `http://localhost:3000`
+Application will run at `http://localhost:3278`
 
 ### Reset Database Migration
 
@@ -52,7 +52,7 @@ TODO
 Using [`hey`](https://github.com/rakyll/hey) to perform a simple load testing.
 
 ```sh
-hey -n 1000 -c 200 -z 30s -m GET -T "application/json" http://localhost:3000/api/healthz
+hey -n 1000 -c 200 -z 30s -m GET -T "application/json" http://localhost:3278/api/healthz
 ```
 
 ## 🚀 Deployment
