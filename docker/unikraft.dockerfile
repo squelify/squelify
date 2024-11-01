@@ -11,7 +11,7 @@ FROM fastrue:builder AS pruner
 # Production image, copy build output files and run the application.
 # -----------------------------------------------------------------------------
 FROM --platform=${PLATFORM} gcr.io/distroless/nodejs20-debian12 AS runner
-LABEL org.opencontainers.image.source="https://github.com/riipandi/fastrue"
+FROM scratch as rootfs
 
 # ----- Read application environment variables --------------------------------
 
@@ -49,28 +49,13 @@ ENV APP_BASE_URL=$APP_BASE_URL \
 
 # ----- Read application environment variables --------------------------------
 
-# Copy the build output files from the pruner stage.
-COPY --chown=nonroot:nonroot --from=pruner /srv/_data /srv/_data
-COPY --chown=nonroot:nonroot --from=pruner /srv/.output /srv
-
-# Copy some necessary system utilities from build stage.
-# To enhance security, consider avoiding the copying of sysutils.
-COPY --from=pruner /usr/bin/tini /usr/bin/tini
-COPY --from=busybox /bin/clear /bin/clear
-COPY --from=busybox /bin/mkdir /bin/mkdir
-COPY --from=busybox /bin/which /bin/which
-COPY --from=busybox /bin/cat /bin/cat
-COPY --from=busybox /bin/ls /bin/ls
-COPY --from=busybox /bin/sh /bin/sh
-
 # Define the host and port to listen on.
 ARG NODE_ENV=production HOST=0.0.0.0 PORT=3278
 ENV NODE_ENV=$NODE_ENV HOST=$HOST PORT=$PORT
-ENV TINI_SUBREAPER=true
 
-WORKDIR /srv
-USER nonroot:nonroot
-EXPOSE $PORT
+# Distribution configuration.
+COPY --from=runner /etc/os-release /etc/os-release
 
-ENTRYPOINT ["/usr/bin/tini", "--"]
-CMD ["/nodejs/bin/node", "/srv/server/index.mjs"]
+# Copy the build output files from the pruner stage.
+COPY --from=pruner /srv/_data /srv/_data
+COPY --from=pruner /srv/.output /srv

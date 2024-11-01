@@ -1,0 +1,30 @@
+spec: v0.6
+
+name: fastrue
+
+runtime: node:20
+
+# Attach a volume to the instance `fastrue-y1xmz` to the path /srv/_data by volume name.
+# kraft cl vol create --size 10Mi
+# kraft cl vol ls
+# kraft cl inst stop fastrue-y1xmz
+# kraft cl vol at vol-cabnh --to fastrue-y1xmz --at /srv/_data
+# kraft cl inst start fastrue-y1xmz
+
+# kraft cl deploy --metro sin0 -p 443:3278 . -M 256M
+# kraft cl inst ls
+# kraft cloud svc ls
+# kraft cl inst get fastrue-y1xmz
+# kraft cl inst logs fastrue-y1xmz
+# kraft cl inst remove fastrue-y1xmz
+
+# kraft cl image ls
+
+labels:
+  cloud.unikraft.v1.instances/scale_to_zero.policy: "on"
+  cloud.unikraft.v1.instances/scale_to_zero.stateful: "false"
+  cloud.unikraft.v1.instances/scale_to_zero.cooldown_time_ms: 1000
+
+rootfs: ./Dockerfile.kraft
+
+cmd: ["/usr/bin/node", "/srv/server/index.mjs"]
