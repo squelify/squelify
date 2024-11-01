@@ -1,7 +1,6 @@
 import { scrypt } from '@noble/hashes/scrypt'
 import { bytesToHex, hexToBytes, randomBytes } from '@noble/hashes/utils'
 import { env } from 'std-env'
-import { getRandomValues } from 'uncrypto'
 
 /**
  * Cleans a string by performing the following operations:
@@ -71,17 +70,10 @@ function getScryptParams() {
 }
 
 /**
- * Generates cryptographically secure random salt
- */
-function generateSalt(): string {
-  return bytesToHex(randomBytes(16))
-}
-
-/**
  * Hashes password using Scrypt with adaptive parameters
  */
 export async function hashPassword(password: string): Promise<string> {
-  const salt = generateSalt()
+  const salt = bytesToHex(randomBytes(16))
   const params = getScryptParams()
 
   const { N, r, p } = params
@@ -138,8 +130,7 @@ export function generateRandomStr(config: RandomStringOptions = {}): string {
   if (config.includeSpecial) allowedChars += specialChars
 
   const size = config.size || 10
-  const bytes = new Uint8Array(size)
-  getRandomValues(bytes)
+  const bytes = randomBytes(size)
 
   let result = ''
   for (let i = 0; i < size; i++) {
