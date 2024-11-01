@@ -83,6 +83,9 @@ importers:
       '@radix-ui/react-tooltip':
         specifier: 1.1.3
         version: 1.1.3(@types/react-dom@18.3.1)(@types/react@18.3.12)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      '@simplewebauthn/browser':
+        specifier: ^11.0.0
+        version: 11.0.0
       '@simplewebauthn/server':
         specifier: ^11.0.0
         version: 11.0.0
@@ -2071,6 +2074,9 @@ packages:
 
   '@shikijs/vscode-textmate@9.3.0':
     resolution: {integrity: sha512-jn7/7ky30idSkd/O5yDBfAnVt+JJpepofP/POZ1iMOxK59cOfqIgg/Dj0eFsjOTMw+4ycJN0uhZH/Eb0bs/EUA==}
+
+  '@simplewebauthn/browser@11.0.0':
+    resolution: {integrity: sha512-KEGCStrl08QC2I561BzxqGiwoknblP6O1YW7jApdXLPtIqZ+vgJYAv8ssLCdm1wD8HGAHd49CJLkUF8X70x/pg==}
 
   '@simplewebauthn/server@11.0.0':
     resolution: {integrity: sha512-zu8dxKcPiRUNSN2kmrnNOzNbRI8VaR/rL4ENCHUfC6PEE7SAAdIql9g5GBOd/wOVZolIsaZz3ccFxuGoVP0iaw==}
@@ -6320,6 +6326,10 @@ snapshots:
       '@types/hast': 3.0.4
 
   '@shikijs/vscode-textmate@9.3.0': {}
+
+  '@simplewebauthn/browser@11.0.0':
+    dependencies:
+      '@simplewebauthn/types': 11.0.0
 
   '@simplewebauthn/server@11.0.0':
     dependencies:

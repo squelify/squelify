@@ -1,8 +1,20 @@
+# @see: https://unikraft.org/docs/cli/reference/kraftfile/v0.6
+
 spec: v0.6
 
 name: fastrue
 
 runtime: node:20
+
+# # Additional third-party libraries
+# libraries:
+#   musl: stable
+
+# List down all the available applications in the registry
+# kraft pkg ls --apps --all --update
+
+# Run the application locally
+# kraft run --arch x86_64 --plat qemu
 
 # Attach a volume to the instance `fastrue-y1xmz` to the path /srv/_data by volume name.
 # kraft cl vol create --size 10Mi

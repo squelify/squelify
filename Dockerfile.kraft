@@ -9,7 +9,7 @@ FROM busybox:1.37-uclibc as busybox
 # -----------------------------------------------------------------------------
 # Base image with pnpm package manager.
 # -----------------------------------------------------------------------------
-FROM --platform=${PLATFORM} node:${NODE_VERSION}-bookworm-slim AS base
+FROM --platform=${PLATFORM} node:${NODE_VERSION}-alpine AS base
 ENV PNPM_HOME="/pnpm" PATH="$PNPM_HOME:$PATH" COREPACK_ENABLE_DOWNLOAD_PROMPT=0
 RUN corepack enable && corepack prepare pnpm@latest-9 --activate
 WORKDIR /srv
@@ -21,7 +21,7 @@ FROM base AS installer
 ENV LEFTHOOK=0 CI=true PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD=true
 
 # Install system dependencies.
-RUN apt-get update && apt-get -yqq install tini
+RUN apk update && apk add --no-cache tini libc6-compat
 
 # Copy the source files
 COPY --chown=node:node . .
@@ -37,21 +37,30 @@ FROM base AS builder
 ENV LEFTHOOK=0 PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD=true NODE_ENV=production
 
 # System utilities
-COPY --from=installer /usr/bin/tini /usr/bin/tini
+COPY --from=installer /sbin/tini /sbin/tini
 
-# Required source files
-COPY --from=installer /srv/package.json /srv/package.json
-COPY --from=installer /srv/.npmrc /srv/.npmrc
+# Copy output from the installer stage.
+COPY --from=installer /srv/.output /srv
 
-# Generated files
-COPY --from=installer /srv/pnpm-lock.yaml /srv/pnpm-lock.yaml
-COPY --from=installer /srv/.output /srv/.output
+# # This is a hack! We need to install the @libsql/linux-x64-musl package.
+# RUN cd /srv/server && npm install --production @libsql/client && npm \
+#     prune --production --ignore-scripts && npx --yes clean-modules \
+#     clean --yes "**/codecov*" "!**/@libsql/**"
 
 # Create the data directory and set permissions.
 RUN mkdir -p /srv/_data && chmod 0775 /srv/_data
 
-# Install production dependencies and cleanup node_modules.
-RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --prod \
-    --frozen-lockfile --ignore-scripts && pnpm prune --prod \
-    --ignore-scripts && pnpm dlx clean-modules clean --yes \
-    "**/codecov*" "!**/@libsql/**"
+# -----------------------------------------------------------------------------
+# Production image, copy build output files and run the application.
+# -----------------------------------------------------------------------------
+FROM --platform=${PLATFORM} gcr.io/distroless/nodejs20-debian12 AS runner
+FROM --platform=${PLATFORM} scratch as rootfs
+
+# Copy the build output files from the builder stage.
+COPY --from=builder /srv /srv
+
+# Copy distro configuration and some utils from the runner images.
+COPY --from=runner /etc/os-release /etc/os-release
+COPY --from=runner /lib/x86_64-linux-gnu/libc.so.6 /lib/x86_64-linux-gnu/libc.so.6
+COPY --from=runner /lib/x86_64-linux-gnu/libm.so.6 /lib/x86_64-linux-gnu/libm.so.6
+COPY --from=runner /lib64/ld-linux-x86-64.so.2 /lib64/ld-linux-x86-64.so.2
