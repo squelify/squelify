@@ -1,4 +1,5 @@
-import { hash, verify } from '@node-rs/argon2'
+import { scrypt } from '@noble/hashes/scrypt'
+import { bytesToHex, hexToBytes, randomBytes } from '@noble/hashes/utils'
 import { env } from 'std-env'
 import { getRandomValues } from 'uncrypto'
 
@@ -21,28 +22,92 @@ export function cleanString(str: string): string {
 }
 
 /**
- * Hashes a password using the Argon2 algorithm with a secret key.
- *
- * @param password - The plaintext password to be hashed.
- * @returns A Promise that resolves to the hashed password.
+ * Scrypt configuration parameters
+ * Can be configured via environment variables:
+ * - SCRYPT_N_FACTOR: CPU/memory cost factor (power of 2)
+ * - SCRYPT_R_FACTOR: Block size factor
+ * - SCRYPT_P_FACTOR: Parallelization factor
+ * - SCRYPT_KEY_LENGTH: Output key length in bytes
  */
-export async function hashPassword(password: string): Promise<string> {
-  return hash(password, {
-    secret: Buffer.from(env.JWT_SECRET_KEY, 'base64'),
-  })
+const SCRYPT_PARAMS = {
+  // High security for powerful servers
+  SECURE: {
+    N: Number.parseInt(env.SCRYPT_N_FACTOR_SECURE || '32768'), // 2^15
+    r: Number.parseInt(env.SCRYPT_R_FACTOR_SECURE || '8'),
+    p: Number.parseInt(env.SCRYPT_P_FACTOR_SECURE || '2'),
+    dkLen: Number.parseInt(env.SCRYPT_KEY_LENGTH || '32'),
+  },
+  // Balanced for standard servers
+  BALANCED: {
+    N: Number.parseInt(env.SCRYPT_N_FACTOR_BALANCED || '16384'), // 2^14
+    r: Number.parseInt(env.SCRYPT_R_FACTOR_BALANCED || '8'),
+    p: Number.parseInt(env.SCRYPT_P_FACTOR_BALANCED || '1'),
+    dkLen: Number.parseInt(env.SCRYPT_KEY_LENGTH || '32'),
+  },
+  // Fast for development or low-power devices
+  FAST: {
+    N: Number.parseInt(env.SCRYPT_N_FACTOR_FAST || '4096'), // 2^12
+    r: Number.parseInt(env.SCRYPT_R_FACTOR_FAST || '8'),
+    p: Number.parseInt(env.SCRYPT_P_FACTOR_FAST || '1'),
+    dkLen: Number.parseInt(env.SCRYPT_KEY_LENGTH || '32'),
+  },
+} as const
+
+/**
+ * Get Scrypt parameters based on environment and server memory
+ */
+function getScryptParams() {
+  // Override with explicit environment setting
+  const mode = env.SCRYPT_MODE?.toUpperCase()
+  if (mode && mode in SCRYPT_PARAMS) {
+    return SCRYPT_PARAMS[mode as keyof typeof SCRYPT_PARAMS]
+  }
+
+  // Auto-select based on environment and memory
+  if (env.dev) return SCRYPT_PARAMS.FAST
+
+  const memory = process.memoryUsage().heapTotal / 1024 / 1024 // MB
+  return memory > 1024 ? SCRYPT_PARAMS.SECURE : SCRYPT_PARAMS.BALANCED
 }
 
 /**
- * Verifies a password against a hashed password using the Argon2 algorithm and a secret key.
- *
- * @param hash - The hashed password to verify against.
- * @param password - The plaintext password to verify.
- * @returns A Promise that resolves to `true` if the password is valid, `false` otherwise.
+ * Generates cryptographically secure random salt
  */
-export async function verifyPassword(password: string, hash: string): Promise<boolean> {
-  return await verify(hash, password, {
-    secret: Buffer.from(env.JWT_SECRET_KEY, 'base64'),
-  })
+function generateSalt(): string {
+  return bytesToHex(randomBytes(16))
+}
+
+/**
+ * Hashes password using Scrypt with adaptive parameters
+ */
+export async function hashPassword(password: string): Promise<string> {
+  const salt = generateSalt()
+  const params = getScryptParams()
+
+  const { N, r, p } = params
+  const paramsStr = `${N}.${r}.${p}`
+
+  const hash = scrypt(new TextEncoder().encode(password), hexToBytes(salt), params)
+
+  return `${paramsStr}.${salt}.${bytesToHex(hash)}`
+}
+
+/**
+ * Verifies password using stored parameters
+ */
+export async function verifyPassword(password: string, hashedPassword: string): Promise<boolean> {
+  const [N, r, p, salt, hash] = hashedPassword.split('.')
+
+  const params = {
+    N: Number.parseInt(N),
+    r: Number.parseInt(r),
+    p: Number.parseInt(p),
+    dkLen: 32,
+  }
+
+  const newHash = scrypt(new TextEncoder().encode(password), hexToBytes(salt), params)
+
+  return bytesToHex(newHash) === hash
 }
 
 /**

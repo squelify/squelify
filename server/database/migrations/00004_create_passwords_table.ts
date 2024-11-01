@@ -9,7 +9,7 @@ export async function up(db: Kysely<Database>): Promise<void> {
     .addColumn('user_id', 'text', (col) => col.notNull().references('users.id').onDelete('cascade'))
     .addColumn('hash', 'text', (col) => col.notNull())
     .addColumn('algorithm', 'text', (col) =>
-      col.notNull().defaultTo('argon2id').check(sql`algorithm IN ('argon2id', 'bcrypt', 'scrypt')`)
+      col.notNull().defaultTo('scrypt').check(sql`algorithm IN ('argon2id', 'bcrypt', 'scrypt')`)
     )
     .addColumn('last_changed_at', 'integer')
     .addColumn('created_at', 'integer', (col) => col.notNull().defaultTo(UNIX_TIMESTAMP))

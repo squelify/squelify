@@ -10,7 +10,7 @@ export const PasswordSchema = z.object({
   id: z.string(),
   userId: z.string(),
   hash: z.string(),
-  algorithm: passwordAlgorithmEnum.default('argon2id'),
+  algorithm: passwordAlgorithmEnum.default('scrypt'),
   lastChangedAt: z.number().nullable(),
   createdAt: z.number(),
   updatedAt: z.number().nullable(),

@@ -70,7 +70,7 @@ export default async function seed(db: Kysely<Database>): Promise<void> {
       id: passwordId,
       userId: userId,
       hash: hashedPassword,
-      algorithm: 'argon2id',
+      algorithm: 'scrypt',
       createdAt: now,
     }
 

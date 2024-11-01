@@ -1,4 +1,3 @@
-import { sha256base64 } from 'ohash'
 import { typeid } from 'typeid-js'
 import { getActiveJWK } from '~/database/repository/jwk.repo'
 import { type JWTPayload, generateAccessToken } from '~/utils/jwt'

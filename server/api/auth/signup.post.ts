@@ -142,7 +142,7 @@ export default defineEventHandler(async (event) => {
           id: typeid('pwd').toString(),
           userId,
           hash: hashedPassword,
-          algorithm: 'argon2id',
+          algorithm: 'scrypt',
           createdAt: now,
         })
         .execute()

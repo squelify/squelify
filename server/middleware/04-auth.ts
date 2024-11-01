@@ -1,6 +1,5 @@
 import type { H3Event } from 'h3'
 import * as jose from 'jose'
-import { sha256base64 } from 'ohash'
 import { env } from 'std-env'
 import { z } from 'zod'
 import { getJWKByKeyId } from '~/database/repository/jwk.repo'
