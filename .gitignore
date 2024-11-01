@@ -60,16 +60,15 @@ compose.env*
 *storybook.log
 /storybook-static/
 
-# fly.toml
+# fly.io
 fly*.toml*
 !fly*.example.toml
 
 # Miscellaneous
 vite.config.ts.*
 RELEASE_NOTE.md
-.unikraft/
 slim.report.json
-stats.html
+.unikraft/
 
 # Terraform
 .terraform/

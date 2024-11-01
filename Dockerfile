@@ -5,7 +5,7 @@ ARG PLATFORM=linux/amd64
 ARG NODE_VERSION=20
 
 FROM busybox:1.37-uclibc as busybox
-FROM fastrue:builder AS pruner
+FROM fastrue:builder AS builder
 
 # -----------------------------------------------------------------------------
 # Production image, copy build output files and run the application.
@@ -49,13 +49,13 @@ ENV APP_BASE_URL=$APP_BASE_URL \
 
 # ----- Read application environment variables --------------------------------
 
-# Copy the build output files from the pruner stage.
-COPY --chown=nonroot:nonroot --from=pruner /srv/_data /srv/_data
-COPY --chown=nonroot:nonroot --from=pruner /srv/.output /srv
+# Copy the build output files from the builder stage.
+COPY --chown=nonroot:nonroot --from=builder /srv/_data /srv/_data
+COPY --chown=nonroot:nonroot --from=builder /srv/.output /srv
 
 # Copy some necessary system utilities from build stage.
 # To enhance security, consider avoiding the copying of sysutils.
-COPY --from=pruner /usr/bin/tini /usr/bin/tini
+COPY --from=builder /usr/bin/tini /usr/bin/tini
 COPY --from=busybox /bin/clear /bin/clear
 COPY --from=busybox /bin/mkdir /bin/mkdir
 COPY --from=busybox /bin/which /bin/which

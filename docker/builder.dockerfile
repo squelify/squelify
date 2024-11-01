@@ -17,7 +17,7 @@ WORKDIR /srv
 # -----------------------------------------------------------------------------
 # Install dependencies and some toolchains.
 # -----------------------------------------------------------------------------
-FROM base AS builder
+FROM base AS installer
 ENV LEFTHOOK=0 CI=true PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD=true
 
 # Install system dependencies.
@@ -33,19 +33,19 @@ RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install \
 # -----------------------------------------------------------------------------
 # Compile the application and install production only dependencies.
 # -----------------------------------------------------------------------------
-FROM base AS pruner
+FROM base AS builder
 ENV LEFTHOOK=0 PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD=true NODE_ENV=production
 
 # System utilities
-COPY --from=builder /usr/bin/tini /usr/bin/tini
+COPY --from=installer /usr/bin/tini /usr/bin/tini
 
 # Required source files
-COPY --from=builder /srv/package.json /srv/package.json
-COPY --from=builder /srv/.npmrc /srv/.npmrc
+COPY --from=installer /srv/package.json /srv/package.json
+COPY --from=installer /srv/.npmrc /srv/.npmrc
 
 # Generated files
-COPY --from=builder /srv/pnpm-lock.yaml /srv/pnpm-lock.yaml
-COPY --from=builder /srv/.output /srv/.output
+COPY --from=installer /srv/pnpm-lock.yaml /srv/pnpm-lock.yaml
+COPY --from=installer /srv/.output /srv/.output
 
 # Create the data directory and set permissions.
 RUN mkdir -p /srv/_data && chmod 0775 /srv/_data

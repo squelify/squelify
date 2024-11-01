@@ -16,7 +16,6 @@
         "prepare": "nitro prepare",
         "dev": "nitro dev --port 3278",
         "start": "PORT=3278 node --env-file .env .output/server/index.mjs",
-        "fastrue": "tsx -r dotenv/config ./server/cmd/index.ts",
         "docker:prebuild": "docker build -f docker/builder.dockerfile . -t $npm_package_name:builder",
         "docker:build": "docker build -f Dockerfile . -t $npm_package_name:latest -t $npm_package_name:$npm_package_version",
         "docker:unikraft": "docker build -f docker/unikraft.dockerfile . -t $npm_package_name:$npm_package_version-unikraft",
@@ -37,6 +36,7 @@
         "cleanup:dev": "pnpm dlx rimraf .{output,client,build,data,dist,nitro}",
         "cleanup:deps": "pnpm dlx rimraf pnpm-lock.yaml node_modules tests-results",
         "changelog-full": "git-cliff -o CHANGELOG.md -c cliff-full.toml",
+        "fastrue": "tsx -r dotenv/config server/cmd/index.ts",
         "typecheck": "tsc -b"
     },
     "dependencies": {
