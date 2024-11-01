@@ -21,34 +21,33 @@ export function cleanString(str: string): string {
 }
 
 /**
- * Scrypt configuration parameters
- * Can be configured via environment variables:
- * - SCRYPT_N_FACTOR: CPU/memory cost factor (power of 2)
- * - SCRYPT_R_FACTOR: Block size factor
- * - SCRYPT_P_FACTOR: Parallelization factor
- * - SCRYPT_KEY_LENGTH: Output key length in bytes
+ * Scrypt configuration parameters for password hashing.
+ * Can be configured via environment variable SCRYPT_MODE:
+ * - SECURE: Server 4+ cores, 2GB+ RAM (High-end cloud/dedicated)
+ * - BALANCED: Server 2+ cores, 512MB+ RAM (Standard VPS/cloud)
+ * - FAST: Server 1+ core, 128MB+ RAM (Development/low-end VPS)
  */
 const SCRYPT_PARAMS = {
   // High security for powerful servers
   SECURE: {
-    N: Number.parseInt(env.SCRYPT_N_FACTOR_SECURE || '32768'), // 2^15
-    r: Number.parseInt(env.SCRYPT_R_FACTOR_SECURE || '8'),
-    p: Number.parseInt(env.SCRYPT_P_FACTOR_SECURE || '2'),
-    dkLen: Number.parseInt(env.SCRYPT_KEY_LENGTH || '32'),
+    N: Number.parseInt(env.SCRYPT_N_FACTOR_SECURE || '65536'), // CPU/memory cost (2^16)
+    r: Number.parseInt(env.SCRYPT_R_FACTOR_SECURE || '8'), // Block size factor
+    p: Number.parseInt(env.SCRYPT_P_FACTOR_SECURE || '1'), // Parallelization factor
+    dkLen: Number.parseInt(env.SCRYPT_KEY_LENGTH || '32'), // Output key length in bytes
   },
   // Balanced for standard servers
   BALANCED: {
-    N: Number.parseInt(env.SCRYPT_N_FACTOR_BALANCED || '16384'), // 2^14
-    r: Number.parseInt(env.SCRYPT_R_FACTOR_BALANCED || '8'),
-    p: Number.parseInt(env.SCRYPT_P_FACTOR_BALANCED || '1'),
-    dkLen: Number.parseInt(env.SCRYPT_KEY_LENGTH || '32'),
+    N: Number.parseInt(env.SCRYPT_N_FACTOR_BALANCED || '4096'), // CPU/memory cost (2^12)
+    r: Number.parseInt(env.SCRYPT_R_FACTOR_BALANCED || '8'), // Block size factor
+    p: Number.parseInt(env.SCRYPT_P_FACTOR_BALANCED || '1'), // Parallelization factor
+    dkLen: Number.parseInt(env.SCRYPT_KEY_LENGTH || '32'), // Output key length in bytes
   },
-  // Fast for development or low-power devices
+  // Fast for development or low-end servers
   FAST: {
-    N: Number.parseInt(env.SCRYPT_N_FACTOR_FAST || '4096'), // 2^12
-    r: Number.parseInt(env.SCRYPT_R_FACTOR_FAST || '8'),
-    p: Number.parseInt(env.SCRYPT_P_FACTOR_FAST || '1'),
-    dkLen: Number.parseInt(env.SCRYPT_KEY_LENGTH || '32'),
+    N: Number.parseInt(env.SCRYPT_N_FACTOR_FAST || '1024'), // CPU/memory cost (2^10)
+    r: Number.parseInt(env.SCRYPT_R_FACTOR_FAST || '8'), // Block size factor
+    p: Number.parseInt(env.SCRYPT_P_FACTOR_FAST || '1'), // Parallelization factor
+    dkLen: Number.parseInt(env.SCRYPT_KEY_LENGTH || '32'), // Output key length in bytes
   },
 } as const
 
@@ -56,17 +55,8 @@ const SCRYPT_PARAMS = {
  * Get Scrypt parameters based on environment and server memory
  */
 function getScryptParams() {
-  // Override with explicit environment setting
-  const mode = env.SCRYPT_MODE?.toUpperCase()
-  if (mode && mode in SCRYPT_PARAMS) {
-    return SCRYPT_PARAMS[mode as keyof typeof SCRYPT_PARAMS]
-  }
-
-  // Auto-select based on environment and memory
-  if (env.dev) return SCRYPT_PARAMS.FAST
-
-  const memory = process.memoryUsage().heapTotal / 1024 / 1024 // MB
-  return memory > 1024 ? SCRYPT_PARAMS.SECURE : SCRYPT_PARAMS.BALANCED
+  const mode = env.SCRYPT_MODE?.toUpperCase() || 'FAST'
+  return SCRYPT_PARAMS[mode as keyof typeof SCRYPT_PARAMS] || SCRYPT_PARAMS.FAST
 }
 
 /**

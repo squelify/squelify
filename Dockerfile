@@ -11,6 +11,7 @@ FROM busybox:1.37-uclibc as busybox
 # -----------------------------------------------------------------------------
 FROM --platform=${PLATFORM} node:${NODE_VERSION}-bookworm-slim AS base
 ENV PNPM_HOME="/pnpm" PATH="$PNPM_HOME:$PATH" COREPACK_ENABLE_DOWNLOAD_PROMPT=0
+ENV LEFTHOOK=0 CI=true PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD=true
 RUN corepack enable && corepack prepare pnpm@latest-9 --activate
 WORKDIR /srv
 
@@ -18,7 +19,6 @@ WORKDIR /srv
 # Install dependencies and some toolchains.
 # -----------------------------------------------------------------------------
 FROM base AS installer
-ENV LEFTHOOK=0 CI=true PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD=true
 
 # Install system dependencies.
 RUN apt-get update && apt-get -yqq install tini
@@ -34,27 +34,13 @@ RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install \
 # Compile the application and install production only dependencies.
 # -----------------------------------------------------------------------------
 FROM base AS builder
-ENV LEFTHOOK=0 PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD=true NODE_ENV=production
 
-# System utilities
+# System utilities and generated output files from the installer stage.
 COPY --from=installer /usr/bin/tini /usr/bin/tini
-
-# Required source files
-COPY --from=installer /srv/package.json /srv/package.json
-COPY --from=installer /srv/.npmrc /srv/.npmrc
-
-# Generated files
-COPY --from=installer /srv/pnpm-lock.yaml /srv/pnpm-lock.yaml
-COPY --from=installer /srv/.output /srv/.output
+COPY --from=installer /srv/.output /srv
 
 # Create the data directory and set permissions.
 RUN mkdir -p /srv/_data && chmod 0775 /srv/_data
-
-# Install production dependencies and cleanup node_modules.
-RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --prod \
-    --frozen-lockfile --ignore-scripts && pnpm prune --prod \
-    --ignore-scripts && pnpm dlx clean-modules clean --yes \
-    "**/codecov*" "!**/@libsql/**"
 
 # -----------------------------------------------------------------------------
 # Production image, copy build output files and run the application.
@@ -99,8 +85,7 @@ ENV APP_BASE_URL=$APP_BASE_URL \
 # ----- Read application environment variables --------------------------------
 
 # Copy the build output files from the builder stage.
-COPY --chown=nonroot:nonroot --from=builder /srv/_data /srv/_data
-COPY --chown=nonroot:nonroot --from=builder /srv/.output /srv
+COPY --chown=nonroot:nonroot --from=builder /srv /srv
 
 # Copy some necessary system utilities from build stage.
 # To enhance security, consider avoiding the copying of sysutils.

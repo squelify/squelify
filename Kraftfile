@@ -39,4 +39,4 @@ labels:
 
 rootfs: ./Dockerfile.kraft
 
-cmd: ["/usr/bin/node", "/srv/server/index.mjs"]
+cmd: ["/usr/bin/tini", "--", "/usr/bin/node", "/srv/server/index.mjs"]
