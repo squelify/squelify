@@ -43,7 +43,6 @@
     },
     "dependencies": {
         "@hookform/resolvers": "3.9.1",
-        "@libsql/client": "^0.14.0",
         "@libsql/kysely-libsql": "0.4.1",
         "@nanostores/persistent": "0.10.2",
         "@nanostores/react": "0.8.0",
