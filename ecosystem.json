@@ -1,0 +1,17 @@
+{
+    "$schema": "https://json.schemastore.org/pm2-ecosystem.json",
+    "apps": [
+        {
+            "name": "fastrue",
+            "script": ".output/server/index.mjs",
+            "interpreter": "node",
+            "interpreter_args": "-r dotenv/config",
+            "exec_mode": "cluster",
+            "instances": -1,
+            "env_production": {
+                "NODE_ENV": "production",
+                "PORT": "3278"
+            }
+        }
+    ]
+}
