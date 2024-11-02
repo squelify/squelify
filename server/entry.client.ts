@@ -1,4 +1,5 @@
 import { isProduction, process } from 'std-env'
+import { useStorage } from '#imports'
 
 export default defineCachedEventHandler(
   async (event) => {

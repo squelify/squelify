@@ -4,6 +4,7 @@ import { makeDirectory } from 'make-dir'
 import { resolve } from 'pathe'
 import { isCI, isDevelopment, isProduction, isTest } from 'std-env'
 import { build as buildVite } from 'vite'
+import pkg from './package.json' assert { type: 'json' }
 
 /**
  * Configures the Nitro server for the application.
@@ -15,6 +16,7 @@ export default defineNitroConfig({
   serveStatic: 'node',
   minify: isProduction,
   sourceMap: isDevelopment,
+  compatibilityDate: '2024-11-02',
   appConfigFiles: ['app.config'],
 
   handlers: [
@@ -29,7 +31,6 @@ export default defineNitroConfig({
   },
 
   errorHandler: '~/error.handler',
-
   publicAssets: [{ dir: resolve('public') }],
 
   serverAssets: [
@@ -61,6 +62,23 @@ export default defineNitroConfig({
     },
   },
 
+  experimental: {
+    openAPI: false,
+  },
+
+  openAPI: {
+    production: 'prerender',
+    meta: {
+      title: 'Fastrue API',
+      description: 'Fastrue API documentation',
+      version: pkg.version,
+    },
+    ui: {
+      scalar: true,
+      swagger: false,
+    },
+  },
+
   // TODO: modify rollupConfig to use React frontend
   // esbuild: {
   //   options: {
@@ -77,9 +95,9 @@ export default defineNitroConfig({
         allowJs: true, // `false` for React
         allowSyntheticDefaultImports: true,
         forceConsistentCasingInFileNames: true,
-        jsx: 'preserve', // `react-jsx` for React
-        jsxFactory: 'h', // Disable for React
-        jsxFragmentFactory: 'Fragment', // Disable for React
+        // jsx: 'react-jsx', // preserve | `react-jsx` for React
+        // jsxFactory: 'React.createElement', // Disable for React or React.createElement
+        // jsxFragmentFactory: 'React.Fragment', // Disable for React or React.Fragment
         module: 'ESNext',
         moduleResolution: 'Bundler',
         noEmit: true,

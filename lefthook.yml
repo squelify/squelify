@@ -32,15 +32,15 @@ pre-commit:
     # test-unit:
     #   glob: "*.{js,ts,jsx,tsx,json},package.json"
     #   exclude: '(^|/)(tests|stories)\.(ts|tsx)$'
-    #   run: pnpm run test
+    #   run: pnpm test
     # test-coverage:
     #   glob: "*.{js,ts,jsx,tsx,json},package.json"
     #   exclude: '(^|/)(tests|stories)\.(ts|tsx)$'
-    #   run: pnpm run test:coverage
+    #   run: pnpm test:coverage
     # test-e2e:
     #   glob: "*.{js,ts,jsx,tsx,json},package.json"
     #   exclude: '(^|/)(tests|stories)\.(ts|tsx)$'
-    #   run: pnpm run e2e-test:chrome
+    #   run: pnpm e2e-test:chrome
   # scripts:
   #   "hello.js":
   #     runner: node
@@ -56,5 +56,5 @@ pre-commit:
 #   commands:
 #     docker-build:
 #       run: |
-#         pnpm run docker:build
-#         pnpm run docker:images
+#         pnpm docker:build
+#         pnpm docker:images
