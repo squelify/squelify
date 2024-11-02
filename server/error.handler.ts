@@ -25,7 +25,9 @@ export default defineNitroErrorHandler((error, event) => {
     return JSON.stringify(cause, null, 2)
   }
 
-  if (event.path.startsWith('/api')) {
+  const isApiDocsRoute = event.path.startsWith('/api-docs') || event.path !== '/api-specs.json'
+
+  if (event.path.startsWith('/api') && !isApiDocsRoute) {
     setResponseHeader(event, 'Content-Type', 'application/json')
     return send(
       event,

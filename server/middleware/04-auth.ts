@@ -20,7 +20,7 @@ const UNPROTECTED_ROUTES = [
   '/auth/email/verify',
   '/auth/password/forgot',
   '/auth/password/reset',
-  '/jwks',
+  '/jwks/keys.json',
 ]
 
 // Check if pathname is root path (empty or `/`)
@@ -32,7 +32,7 @@ function validateRequiredHeaders(event: H3Event) {
   const apiRequestPath = pathname.replace('/api', '')
 
   // Exclude some paths from validation
-  const excludedPaths = ['/jwks']
+  const excludedPaths = ['/jwks/keys.json']
 
   if (isRootPath(apiRequestPath) || excludedPaths.includes(apiRequestPath)) {
     return
@@ -75,11 +75,13 @@ export default defineEventHandler(async (event) => {
   const pathname = getRequestURL(event).pathname
   const { appConfig, db } = event.context
 
-  // Only path that starts with `/api` will be checked, except for `/api/healthz`
+  // Only path that starts with `/api` will be checked, except for some paths.
   if (
     !pathname.startsWith('/api') ||
     pathname.startsWith('/api/healthz') ||
-    pathname.startsWith('/api/settings')
+    pathname.startsWith('/api/settings') ||
+    pathname.startsWith('/api-docs') ||
+    pathname === '/api-specs.json'
   ) {
     return
   }

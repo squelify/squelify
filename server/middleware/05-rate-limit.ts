@@ -45,7 +45,7 @@ const ENDPOINT_RATE_LIMITS: Record<string, typeof DEFAULT_RATE_LIMITS | false> =
 }
 
 // Paths to exclude from rate limiting
-const EXCLUDED_PATHS = ['/api/healthz', '/api/settings']
+const EXCLUDED_PATHS = ['/api/healthz', '/api/settings', '/api/jwks/keys.json']
 
 export default defineEventHandler(async (event) => {
   // Skip rate limiting if disabled globally via environment variable

@@ -24,8 +24,10 @@ export default defineEventHandler((event) => {
   const pathname = getRequestURL(event).pathname
   const requestOrigin = getRequestHeader(event, 'origin')
 
+  const isApiDocsRoute = event.path.startsWith('/api-docs') || event.path !== '/api-specs.json'
+
   // Skip CORS handling untuk path non-API
-  if (!pathname.startsWith('/api')) {
+  if (!pathname.startsWith('/api') || !isApiDocsRoute) {
     return
   }
 
