@@ -42,7 +42,12 @@ export default defineCachedEventHandler(
         status: 200,
         success: true,
         message: null,
-        data: organizations,
+        data: organizations.map((org) => ({
+          ...org,
+          isVerified: Boolean(org.isVerified),
+          createdAt: new Date(org.createdAt * 1000).toISOString(),
+          updatedAt: toISOString(org.updatedAt),
+        })),
         meta: {
           currentPage: page,
           totalPages,

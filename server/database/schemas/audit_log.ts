@@ -2,10 +2,13 @@ import type { Insertable, Selectable, Updateable } from 'kysely'
 import type { ColumnType, Generated } from 'kysely'
 import { z } from 'zod'
 
-const auditActionEnum = z.enum(['create', 'update', 'delete', 'login', 'logout', 'impersonate'], {
-  required_error: 'Action is required',
-  invalid_type_error: 'Invalid action type',
-})
+const auditActionEnum = z.enum(
+  ['create', 'update', 'delete', 'login', 'logout', 'impersonate', 'invite'],
+  {
+    required_error: 'Action is required',
+    invalid_type_error: 'Invalid action type',
+  }
+)
 
 export type AuditAction = z.infer<typeof auditActionEnum>
 
