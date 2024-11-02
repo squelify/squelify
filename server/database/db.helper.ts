@@ -1,11 +1,5 @@
-import type { ColumnType, CreateTableBuilder, Generated, RawBuilder } from 'kysely'
+import type { CreateTableBuilder, RawBuilder } from 'kysely'
 import { sql } from 'kysely'
-import { z } from 'zod'
-
-// Helper to create Zod schema compatible with ColumnType and Generated
-// Example: deletedAt: columnType<Date | null>().nullable(),
-export const columnType = <T>() => z.custom<ColumnType<T, string | undefined, string | undefined>>()
-export const generatedType = <T>() => z.custom<Generated<T>>()
 
 // SQLite-specific function, returns the current Unix timestamp.
 export const UNIX_TIMESTAMP = sql.raw(`(strftime('%s', 'now'))`)

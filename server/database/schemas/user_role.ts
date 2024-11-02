@@ -4,27 +4,18 @@ import { z } from 'zod'
 
 // User role schema with validation rules
 export const UserRoleSchema = z.object({
-  id: z.string(),
+  id: z.custom<Generated<string>>(),
   userId: z.string(),
   roleId: z.string(),
   organizationId: z.string().nullable(),
   grantedBy: z.string().nullable(),
-  expiresAt: z.number().nullable(),
-  createdAt: z.number(),
-  updatedAt: z.number().nullable(),
+  expiresAt: z.custom<ColumnType<number | null>>().nullable(),
+  createdAt: z.custom<ColumnType<number>>().optional(),
+  updatedAt: z.custom<ColumnType<number | null>>().nullable(),
 })
 
-// Database interface for Kysely
-export interface IUserRole {
-  id: Generated<string>
-  userId: ColumnType<string>
-  roleId: ColumnType<string>
-  organizationId: ColumnType<string | null>
-  grantedBy: ColumnType<string | null>
-  expiresAt: ColumnType<number | null>
-  createdAt: ColumnType<number>
-  updatedAt: ColumnType<number | null>
-}
+// Table interface for Kysely
+export type IUserRole = z.infer<typeof UserRoleSchema>
 
 // Kysely types for operations
 export type UserRole = Selectable<IUserRole>

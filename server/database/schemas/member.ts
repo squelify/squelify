@@ -7,35 +7,22 @@ export type MemberRole = z.infer<typeof memberRoleEnum>
 
 // Member schema with validation rules
 export const MemberSchema = z.object({
-  id: z.string(),
+  id: z.custom<Generated<string>>(),
   organizationId: z.string(),
   userId: z.string(),
   role: memberRoleEnum,
   title: z.string().nullable(),
   department: z.string().nullable(),
   invitedBy: z.string().nullable(),
-  invitedAt: z.number().nullable(),
-  joinedAt: z.number().nullable(),
+  invitedAt: z.custom<ColumnType<number | null>>().nullable(),
+  joinedAt: z.custom<ColumnType<number | null>>().nullable(),
   isDefault: z.number().min(0).max(1).default(0),
-  createdAt: z.number(),
-  updatedAt: z.number().nullable(),
+  createdAt: z.custom<ColumnType<number>>().optional(),
+  updatedAt: z.custom<ColumnType<number | null>>().nullable(),
 })
 
-// Database interface for Kysely
-export interface IMember {
-  id: Generated<string>
-  organizationId: ColumnType<string>
-  userId: ColumnType<string>
-  role: ColumnType<MemberRole>
-  title: ColumnType<string | null>
-  department: ColumnType<string | null>
-  invitedBy: ColumnType<string | null>
-  invitedAt: ColumnType<number | null>
-  joinedAt: ColumnType<number | null>
-  isDefault: ColumnType<number>
-  createdAt: ColumnType<number>
-  updatedAt: ColumnType<number | null>
-}
+// Table interface for Kysely
+export type IMember = z.infer<typeof MemberSchema>
 
 // Kysely types for operations
 export type Member = Selectable<IMember>

@@ -10,29 +10,19 @@ export type PermissionAction = z.infer<typeof permissionActionEnum>
 
 // Permission schema with validation rules
 export const PermissionSchema = z.object({
-  id: z.string(),
+  id: z.custom<Generated<string>>(),
   name: z.string().min(3),
   description: z.string().nullable(),
   category: permissionCategoryEnum,
   action: permissionActionEnum,
   resource: z.string(),
   conditions: z.string().default('{}'),
-  createdAt: z.number(),
-  updatedAt: z.number().nullable(),
+  createdAt: z.custom<ColumnType<number>>().optional(),
+  updatedAt: z.custom<ColumnType<number | null>>().nullable(),
 })
 
-// Database interface for Kysely
-export interface IPermission {
-  id: Generated<string>
-  name: ColumnType<string>
-  description: ColumnType<string | null>
-  category: ColumnType<PermissionCategory>
-  action: ColumnType<PermissionAction>
-  resource: ColumnType<string>
-  conditions: ColumnType<string>
-  createdAt: ColumnType<number>
-  updatedAt: ColumnType<number | null>
-}
+// Table interface for Kysely
+export type IPermission = z.infer<typeof PermissionSchema>
 
 // Kysely types for operations
 export type Permission = Selectable<IPermission>

@@ -7,7 +7,7 @@ export type OrganizationStatus = z.infer<typeof organizationStatusEnum>
 
 // Organization schema with validation rules
 export const OrganizationSchema = z.object({
-  id: z.string(),
+  id: z.custom<Generated<string>>(),
   name: z.string().min(3, 'Nama organisasi minimal 3 karakter'),
   slug: z
     .string()
@@ -30,29 +30,12 @@ export const OrganizationSchema = z.object({
   metadata: z.string().default('{}'),
   isVerified: z.number().min(0).max(1).default(0),
   createdBy: z.string(),
-  createdAt: z.number(),
-  updatedAt: z.number().nullable(),
+  createdAt: z.custom<ColumnType<number>>().optional(),
+  updatedAt: z.custom<ColumnType<number | null>>().nullable(),
 })
 
-// Database interface for Kysely
-export interface IOrganization {
-  id: Generated<string>
-  name: ColumnType<string>
-  slug: ColumnType<string>
-  description: ColumnType<string | null>
-  logoUrl: ColumnType<string | null>
-  website: ColumnType<string | null>
-  email: ColumnType<string | null>
-  phone: ColumnType<string | null>
-  address: ColumnType<string | null>
-  status: ColumnType<OrganizationStatus>
-  settings: ColumnType<string>
-  metadata: ColumnType<string>
-  isVerified: ColumnType<number>
-  createdBy: ColumnType<string>
-  createdAt: ColumnType<number>
-  updatedAt: ColumnType<number | null>
-}
+// Table interface for Kysely
+export type IOrganization = z.infer<typeof OrganizationSchema>
 
 // Kysely types for operations
 export type Organization = Selectable<IOrganization>

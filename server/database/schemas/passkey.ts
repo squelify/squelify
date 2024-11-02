@@ -5,7 +5,7 @@ import { z } from 'zod'
 
 // Passkey schema with validation rules
 export const PasskeySchema = z.object({
-  id: z.string(),
+  id: z.custom<Generated<string>>(),
   userId: z.string(),
   webauthnUserId: z.string(),
   name: z.string(),
@@ -15,27 +15,13 @@ export const PasskeySchema = z.object({
   transports: z.array(z.string() as z.ZodType<AuthenticatorTransportFuture>).nullable(),
   rpId: z.string(),
   origin: z.string(),
-  lastUsedAt: z.number().nullable(),
-  createdAt: z.number(),
-  updatedAt: z.number().nullable(),
+  lastUsedAt: z.custom<ColumnType<number | null>>().nullable(),
+  createdAt: z.custom<ColumnType<number>>().optional(),
+  updatedAt: z.custom<ColumnType<number | null>>().nullable(),
 })
 
-// Database interface for Kysely
-export interface IPasskey {
-  id: Generated<string>
-  userId: ColumnType<string>
-  webauthnUserId: ColumnType<string>
-  name: ColumnType<string>
-  credentialId: ColumnType<string>
-  credentialPublicKey: ColumnType<string>
-  counter: ColumnType<number>
-  transports: ColumnType<AuthenticatorTransportFuture[] | null>
-  rpId: ColumnType<string>
-  origin: ColumnType<string>
-  lastUsedAt: ColumnType<number | null>
-  createdAt: ColumnType<number>
-  updatedAt: ColumnType<number | null>
-}
+// Table interface for Kysely
+export type IPasskey = z.infer<typeof PasskeySchema>
 
 // Kysely types for operations
 export type Passkey = Selectable<IPasskey>

@@ -37,11 +37,7 @@ export const AuditLogSchema = z.object({
     invalid_type_error: 'ID must be a string',
   }),
   userId: z.string().nullable(),
-  organizationId: z
-    .string({
-      invalid_type_error: 'Organization ID must be a string',
-    })
-    .nullable(),
+  organizationId: z.string({ invalid_type_error: 'Organization ID must be a string' }).nullable(),
   action: auditActionEnum,
   entity: auditEntityEnum,
   entityId: z.string({
@@ -49,9 +45,7 @@ export const AuditLogSchema = z.object({
     invalid_type_error: 'Entity ID must be a string',
   }),
   oldValues: z
-    .string({
-      invalid_type_error: 'Old values must be a JSON string',
-    })
+    .string({ invalid_type_error: 'Old values must be a JSON string' })
     .default('{}')
     .transform((val) => {
       try {
@@ -62,9 +56,7 @@ export const AuditLogSchema = z.object({
       }
     }),
   newValues: z
-    .string({
-      invalid_type_error: 'New values must be a JSON string',
-    })
+    .string({ invalid_type_error: 'New values must be a JSON string' })
     .default('{}')
     .transform((val) => {
       try {
@@ -75,9 +67,7 @@ export const AuditLogSchema = z.object({
       }
     }),
   metadata: z
-    .string({
-      invalid_type_error: 'Metadata must be a JSON string',
-    })
+    .string({ invalid_type_error: 'Metadata must be a JSON string' })
     .default('{}')
     .transform((val) => {
       try {
@@ -88,35 +78,18 @@ export const AuditLogSchema = z.object({
       }
     }),
   ipAddress: z
-    .string({
-      invalid_type_error: 'IP address must be a string',
-    })
+    .string({ invalid_type_error: 'IP address must be a string' })
     .ip({ message: 'Invalid IP address format' })
     .nullable(),
   userAgent: z
-    .string({
-      invalid_type_error: 'User agent must be a string',
-    })
+    .string({ invalid_type_error: 'User agent must be a string' })
     .max(500, 'User agent too long')
     .nullable(),
-  createdAt: z.number(),
+  createdAt: z.custom<ColumnType<number>>().optional(),
 })
 
-// Database interface for Kysely
-export interface IAuditLog {
-  id: Generated<string>
-  userId: ColumnType<string | null>
-  organizationId: ColumnType<string | null>
-  action: ColumnType<AuditAction>
-  entity: ColumnType<AuditEntity>
-  entityId: ColumnType<string>
-  oldValues: ColumnType<string>
-  newValues: ColumnType<string>
-  metadata: ColumnType<string>
-  ipAddress: ColumnType<string | null>
-  userAgent: ColumnType<string | null>
-  createdAt: ColumnType<number>
-}
+// Table interface for Kysely
+export type IAuditLog = z.infer<typeof AuditLogSchema>
 
 // Kysely types for operations
 export type AuditLog = Selectable<IAuditLog>

@@ -37,7 +37,7 @@ export const kyselyConfig: KyselyConfig = {
       client: createClient({
         url: isLocalMode ? `file:${localDbPath}` : env.DATABASE_URL,
         authToken: isLocalMode ? undefined : env.DATABASE_TOKEN,
-      }),
+      }) as any /* FIXME */,
     })
   })(),
   plugins: [new CamelCasePlugin(), new ParseJSONResultsPlugin()],

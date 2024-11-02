@@ -7,7 +7,7 @@ export type AccountProvider = z.infer<typeof accountProviderEnum>
 
 // Account schema with validation rules
 export const AccountSchema = z.object({
-  id: z.string(),
+  id: z.custom<Generated<string>>(),
   userId: z.string(),
   provider: accountProviderEnum,
   providerAccountId: z.string(),
@@ -16,26 +16,13 @@ export const AccountSchema = z.object({
   providerIdToken: z.string().nullable(),
   providerScope: z.string().nullable(),
   providerTokenType: z.string().nullable(),
-  providerExpiresAt: z.number().nullable(),
-  createdAt: z.number(),
-  updatedAt: z.number().nullable(),
+  providerExpiresAt: z.custom<ColumnType<number | null>>().nullable(),
+  createdAt: z.custom<ColumnType<number>>().optional(),
+  updatedAt: z.custom<ColumnType<number | null>>().nullable(),
 })
 
-// Database interface for Kysely
-export interface IAccount {
-  id: Generated<string>
-  userId: ColumnType<string>
-  provider: ColumnType<AccountProvider>
-  providerAccountId: ColumnType<string>
-  providerRefreshToken: ColumnType<string | null>
-  providerAccessToken: ColumnType<string | null>
-  providerIdToken: ColumnType<string | null>
-  providerScope: ColumnType<string | null>
-  providerTokenType: ColumnType<string | null>
-  providerExpiresAt: ColumnType<number | null>
-  createdAt: ColumnType<number>
-  updatedAt: ColumnType<number | null>
-}
+// Table interface for Kysely
+export type IAccount = z.infer<typeof AccountSchema>
 
 // Kysely types for operations
 export type Account = Selectable<IAccount>

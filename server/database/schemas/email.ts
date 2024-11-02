@@ -4,27 +4,18 @@ import { z } from 'zod'
 
 // Email schema with validation rules
 export const EmailSchema = z.object({
-  id: z.string(),
+  id: z.custom<Generated<string>>(),
   userId: z.string(),
-  email: z.string().email(),
+  email: z.string().email({ message: 'Invalid email address' }),
   isPrimary: z.number().min(0).max(1).default(0),
   isVerified: z.number().min(0).max(1).default(0),
-  verifiedAt: z.number().nullable(),
-  createdAt: z.number(),
-  updatedAt: z.number().nullable(),
+  verifiedAt: z.custom<ColumnType<number | null>>().nullable(),
+  createdAt: z.custom<ColumnType<number>>().optional(),
+  updatedAt: z.custom<ColumnType<number | null>>().nullable(),
 })
 
-// Database interface for Kysely
-export interface IEmail {
-  id: Generated<string>
-  userId: ColumnType<string>
-  email: ColumnType<string>
-  isPrimary: ColumnType<number>
-  isVerified: ColumnType<number>
-  verifiedAt: ColumnType<number | null>
-  createdAt: ColumnType<number>
-  updatedAt: ColumnType<number | null>
-}
+// Table interface for Kysely
+export type IEmail = z.infer<typeof EmailSchema>
 
 // Kysely types for operations
 export type Email = Selectable<IEmail>

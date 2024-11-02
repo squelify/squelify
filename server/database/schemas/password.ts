@@ -7,25 +7,17 @@ export type PasswordAlgorithm = z.infer<typeof passwordAlgorithmEnum>
 
 // Password schema with validation rules
 export const PasswordSchema = z.object({
-  id: z.string(),
+  id: z.custom<Generated<string>>(),
   userId: z.string(),
   hash: z.string(),
   algorithm: passwordAlgorithmEnum.default('scrypt'),
-  lastChangedAt: z.number().nullable(),
-  createdAt: z.number(),
-  updatedAt: z.number().nullable(),
+  lastChangedAt: z.custom<ColumnType<number | null>>().nullable(),
+  createdAt: z.custom<ColumnType<number>>().optional(),
+  updatedAt: z.custom<ColumnType<number | null>>().nullable(),
 })
 
-// Database interface for Kysely
-export interface IPassword {
-  id: Generated<string>
-  userId: ColumnType<string>
-  hash: ColumnType<string>
-  algorithm: ColumnType<PasswordAlgorithm>
-  lastChangedAt: ColumnType<number | null>
-  createdAt: ColumnType<number>
-  updatedAt: ColumnType<number | null>
-}
+// Table interface for Kysely
+export type IPassword = z.infer<typeof PasswordSchema>
 
 // Kysely types for operations
 export type Password = Selectable<IPassword>

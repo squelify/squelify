@@ -4,7 +4,7 @@ import { z } from 'zod'
 
 // User schema with validation rules
 export const UserSchema = z.object({
-  id: z.string(),
+  id: z.custom<Generated<string>>(),
   firstName: z.string().min(2, 'Nama depan minimal 2 karakter'),
   lastName: z.string().nullable(),
   username: z
@@ -18,28 +18,14 @@ export const UserSchema = z.object({
   isActive: z.number().min(0).max(1).default(1),
   isBanned: z.number().min(0).max(1).default(0),
   banReason: z.string().nullable(),
-  bannedUntil: z.number().nullable(),
-  lastSignInAt: z.number().nullable(),
-  createdAt: z.number(),
-  updatedAt: z.number().nullable(),
+  bannedUntil: z.custom<ColumnType<number | null>>().nullable(),
+  lastSignInAt: z.custom<ColumnType<number | null>>().nullable(),
+  createdAt: z.custom<ColumnType<number>>().optional(),
+  updatedAt: z.custom<ColumnType<number | null>>().nullable(),
 })
 
-// Database interface for Kysely
-export interface IUser {
-  id: Generated<string>
-  firstName: ColumnType<string>
-  lastName: ColumnType<string | null>
-  username: ColumnType<string | null>
-  avatarUrl: ColumnType<string | null>
-  locale: ColumnType<string>
-  isActive: ColumnType<number>
-  isBanned: ColumnType<number>
-  banReason: ColumnType<string | null>
-  bannedUntil: ColumnType<number | null>
-  lastSignInAt: ColumnType<number | null>
-  createdAt: ColumnType<number>
-  updatedAt: ColumnType<number | null>
-}
+// Table interface for Kysely
+export type IUser = z.infer<typeof UserSchema>
 
 // Kysely types for operations
 export type User = Selectable<IUser>

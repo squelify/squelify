@@ -7,7 +7,7 @@ export type VerificationType = z.infer<typeof verificationTypeEnum>
 
 // Verification schema with validation rules
 export const VerificationSchema = z.object({
-  id: z.string(),
+  id: z.custom<Generated<string>>(),
   userId: z.string().nullable(),
   type: verificationTypeEnum,
   identifier: z.string(),
@@ -15,27 +15,14 @@ export const VerificationSchema = z.object({
   attempts: z.number().default(0),
   maxAttempts: z.number().default(3),
   metadata: z.string().default('{}'),
-  expiresAt: z.number(),
-  verifiedAt: z.number().nullable(),
-  createdAt: z.number(),
-  updatedAt: z.number().nullable(),
+  expiresAt: z.custom<ColumnType<number>>(),
+  verifiedAt: z.custom<ColumnType<number | null>>().nullable(),
+  createdAt: z.custom<ColumnType<number>>().optional(),
+  updatedAt: z.custom<ColumnType<number | null>>().nullable(),
 })
 
-// Database interface for Kysely
-export interface IVerification {
-  id: Generated<string>
-  userId: ColumnType<string | null>
-  type: ColumnType<VerificationType>
-  identifier: ColumnType<string>
-  token: ColumnType<string>
-  attempts: ColumnType<number>
-  maxAttempts: ColumnType<number>
-  metadata: ColumnType<string>
-  expiresAt: ColumnType<number>
-  verifiedAt: ColumnType<number | null>
-  createdAt: ColumnType<number>
-  updatedAt: ColumnType<number | null>
-}
+// Table interface for Kysely
+export type IVerification = z.infer<typeof VerificationSchema>
 
 // Kysely types for operations
 export type Verification = Selectable<IVerification>

@@ -37,29 +37,19 @@ export type JWKAlgorithm = z.infer<typeof jwkAlgorithmEnum>
 
 // JWK schema with validation rules
 export const JWKSchema = z.object({
-  id: z.string(),
+  id: z.custom<Generated<string>>(),
   keyId: z.string(),
   publicKey: z.string(),
   privateKey: z.string(),
   algorithm: jwkAlgorithmEnum.default('ES256'),
   isActive: z.number().min(0).max(1).default(1),
-  expiresAt: z.number(),
-  createdAt: z.number(),
-  updatedAt: z.number().nullable(),
+  expiresAt: z.custom<ColumnType<number>>(),
+  createdAt: z.custom<ColumnType<number>>().optional(),
+  updatedAt: z.custom<ColumnType<number | null>>().nullable(),
 })
 
-// Database interface for Kysely
-export interface IJWK {
-  id: Generated<string>
-  keyId: ColumnType<string>
-  publicKey: ColumnType<string>
-  privateKey: ColumnType<string>
-  algorithm: ColumnType<JWKAlgorithm>
-  isActive: ColumnType<number>
-  expiresAt: ColumnType<number>
-  createdAt: ColumnType<number>
-  updatedAt: ColumnType<number | null>
-}
+// Table interface for Kysely
+export type IJWK = z.infer<typeof JWKSchema>
 
 // Kysely types for operations
 export type JWK = Selectable<IJWK>
