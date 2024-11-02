@@ -60,7 +60,6 @@ export default defineEventHandler(async (event) => {
         .updateTable('passwords')
         .set({
           hash: hashedPassword,
-          lastChangedAt: now,
           updatedAt: now,
         })
         .where('userId', '=', verification.userId)

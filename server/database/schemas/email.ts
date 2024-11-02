@@ -8,7 +8,6 @@ export const EmailSchema = z.object({
   userId: z.string(),
   email: z.string().email({ message: 'Invalid email address' }),
   isPrimary: z.number().min(0).max(1).default(0),
-  isVerified: z.number().min(0).max(1).default(0),
   verifiedAt: z.custom<ColumnType<number | null>>().nullable(),
   createdAt: z.custom<ColumnType<number>>().optional(),
   updatedAt: z.custom<ColumnType<number | null>>().nullable(),

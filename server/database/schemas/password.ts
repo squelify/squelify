@@ -11,7 +11,6 @@ export const PasswordSchema = z.object({
   userId: z.string(),
   hash: z.string(),
   algorithm: passwordAlgorithmEnum.default('scrypt'),
-  lastChangedAt: z.custom<ColumnType<number | null>>().nullable(),
   createdAt: z.custom<ColumnType<number>>().optional(),
   updatedAt: z.custom<ColumnType<number | null>>().nullable(),
 })

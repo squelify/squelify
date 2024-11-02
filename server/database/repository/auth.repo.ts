@@ -23,7 +23,7 @@ export async function verifyUserCredentials(db: Kysely<Database>, email: string,
     .innerJoin('passwords', 'passwords.userId', 'users.id')
     .where('emails.email', '=', email)
     .where('users.isActive', '=', 1)
-    .where('emails.isVerified', '=', 1)
+    .where('emails.verifiedAt', 'is not', null)
     .select([
       'users.id',
       'users.firstName',

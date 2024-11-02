@@ -132,11 +132,7 @@ export default defineEventHandler(async (event) => {
 
       await trx
         .updateTable('emails')
-        .set({
-          isVerified: 1,
-          verifiedAt: now,
-          updatedAt: now,
-        })
+        .set({ verifiedAt: now, updatedAt: now })
         .where('userId', '=', verification.userId)
         .where('email', '=', verification.identifier)
         .execute()

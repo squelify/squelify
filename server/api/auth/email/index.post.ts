@@ -34,7 +34,6 @@ export default defineEventHandler(async (event) => {
           userId: payload.sub,
           email: body.email,
           isPrimary: 0,
-          isVerified: 0,
           createdAt: now,
         })
         .execute()

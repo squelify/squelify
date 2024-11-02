@@ -1,4 +1,3 @@
-import * as jose from 'jose'
 import { z } from 'zod'
 
 const PrimaryEmailSchema = z
@@ -18,7 +17,7 @@ export default defineEventHandler(async (event) => {
       .selectFrom('emails')
       .where('id', '=', body.emailId)
       .where('userId', '=', payload.sub)
-      .where('isVerified', '=', 1)
+      .where('verifiedAt', 'is not', null)
       .select(['id', 'email'])
       .executeTakeFirst()
 

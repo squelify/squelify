@@ -115,7 +115,6 @@ export default defineEventHandler(async (event) => {
           userId: user.id,
           email: body.email,
           isPrimary: 1,
-          isVerified: 0,
           createdAt: now,
         })
         .execute()

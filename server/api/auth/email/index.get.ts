@@ -9,7 +9,7 @@ export default defineEventHandler(async (event) => {
     const rawEmails = await db
       .selectFrom('emails')
       .where('userId', '=', payload.sub)
-      .select(['id', 'email', 'isPrimary', 'isVerified', 'verifiedAt', 'createdAt', 'updatedAt'])
+      .select(['id', 'email', 'isPrimary', 'verifiedAt', 'createdAt', 'updatedAt'])
       .orderBy('isPrimary', 'desc')
       .orderBy('createdAt', 'desc')
       .execute()
@@ -19,7 +19,7 @@ export default defineEventHandler(async (event) => {
       id: email.id,
       email: email.email,
       isPrimary: Boolean(email.isPrimary),
-      isVerified: Boolean(email.isVerified),
+      isVerified: Boolean(email.verifiedAt != null),
       verifiedAt: toISOString(email.verifiedAt),
       createdAt: toISOString(email.createdAt),
       updatedAt: toISOString(email.updatedAt),

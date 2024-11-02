@@ -3,7 +3,7 @@ import { verifyTOTP } from '~/utils/totp'
 
 const VerifyTOTPSchema = z
   .object({
-    id: z.custom<Generated<string>>(),
+    id: z.string(),
     code: z.string().length(6, 'Kode TOTP harus 6 karakter'),
   })
   .strict()

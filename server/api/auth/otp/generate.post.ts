@@ -1,4 +1,3 @@
-import * as jose from 'jose'
 import { typeid } from 'typeid-js'
 import { z } from 'zod'
 import { generateRandomStr } from '~/utils/string'
@@ -29,7 +28,7 @@ export default defineEventHandler(async (event) => {
       .selectFrom('emails')
       .where('userId', '=', payload.sub)
       .where('isPrimary', '=', 1)
-      .where('isVerified', '=', 1)
+      .where('verifiedAt', 'is not', null)
       .select(['email'])
       .executeTakeFirst()
 

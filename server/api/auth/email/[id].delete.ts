@@ -7,7 +7,7 @@ export default defineEventHandler(async (event) => {
     const emailCount = await db
       .selectFrom('emails')
       .where('userId', '=', payload.sub)
-      .where('isVerified', '=', 1)
+      .where('verifiedAt', 'is not', null)
       .select(({ fn }) => [fn.count<number>('id').as('count')])
       .executeTakeFirst()
 
@@ -21,7 +21,7 @@ export default defineEventHandler(async (event) => {
       .selectFrom('emails')
       .where('id', '=', event.context.params.id)
       .where('userId', '=', payload.sub)
-      .select(['id', 'email', 'isPrimary', 'isVerified'])
+      .select(['id', 'email', 'isPrimary', 'verifiedAt'])
       .executeTakeFirst()
 
     if (!email) {

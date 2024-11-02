@@ -11,9 +11,6 @@ export async function up(db: Kysely<Database>): Promise<void> {
     .addColumn('is_primary', 'integer', (col) =>
       col.notNull().defaultTo(0).check(sql`is_primary IN (0, 1)`)
     )
-    .addColumn('is_verified', 'integer', (col) =>
-      col.notNull().defaultTo(0).check(sql`is_verified IN (0, 1)`)
-    )
     .addColumn('verified_at', 'integer')
     .addColumn('created_at', 'integer', (col) => col.notNull().defaultTo(UNIX_TIMESTAMP))
     .addColumn('updated_at', 'integer')

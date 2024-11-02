@@ -58,7 +58,6 @@ export default async function seed(db: Kysely<Database>): Promise<void> {
       userId: userId,
       email: 'admin@example.com',
       isPrimary: 1,
-      isVerified: 1,
       verifiedAt: now,
       createdAt: now,
     }
