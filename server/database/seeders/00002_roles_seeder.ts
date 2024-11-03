@@ -16,7 +16,10 @@ export default async function seed(db: Kysely<Database>): Promise<void> {
       description: 'System Administrator',
       type: 'system',
       isDefault: 1,
-      // metadata: '{}',
+      metadata: JSON.stringify({
+        scope: 'global',
+        priority: 1,
+      }),
       createdAt: now,
     },
   ]
@@ -30,7 +33,7 @@ export default async function seed(db: Kysely<Database>): Promise<void> {
     id: typeid('rper').toString(),
     roleId: adminRoleId,
     permissionId: permission.id,
-    // conditions: '{}',
+    conditions: JSON.stringify({}),
     createdAt: now,
   }))
 

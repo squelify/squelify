@@ -129,13 +129,11 @@ export function generateRandomStr(config: RandomStringOptions = {}): string {
   return result
 }
 
-export function generateUsername(email: string): string {
+export function generateUsername(email: string, suffix?: string): string {
   const baseUsername = email
     .split('@')[0]
     .toLowerCase()
     .replace(/[^a-z0-9]/g, '')
 
-  const uniqueChars = Math.random().toString(36).substring(2, 6)
-
-  return `${baseUsername}${uniqueChars}`
+  return suffix ? `${baseUsername}_${suffix}` : baseUsername
 }

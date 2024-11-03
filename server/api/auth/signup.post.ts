@@ -58,40 +58,7 @@ export default defineEventHandler(async (event) => {
     if (!username) {
       username = generateUsername(body.email)
 
-      let isUnique = false
-      let attempt = 0
-
-      while (!isUnique && attempt < 5) {
-        const exists = await db
-          .selectFrom('users')
-          .where('username', '=', username)
-          .select(['id'])
-          .executeTakeFirst()
-
-        if (!exists) {
-          isUnique = true
-        } else {
-          username = generateUsername(body.email)
-          attempt++
-        }
-      }
-
-      if (!isUnique) {
-        await auditLog(event, {
-          action: 'create',
-          entity: 'user',
-          entityId: 'anonymous',
-          metadata: {
-            success: false,
-            email: body.email,
-            reason: 'username_generation_failed',
-          },
-        })
-
-        setResponseStatus(event, 500)
-        return createErrorResponse(500, 'Gagal generate username yang unik')
-      }
-    } else {
+      // Check username availability
       const existingUser = await db
         .selectFrom('users')
         .where('username', '=', username)
@@ -99,20 +66,32 @@ export default defineEventHandler(async (event) => {
         .executeTakeFirst()
 
       if (existingUser) {
-        await auditLog(event, {
-          action: 'create',
-          entity: 'user',
-          entityId: 'anonymous',
-          metadata: {
-            success: false,
-            email: body.email,
-            reason: 'username_exists',
-          },
-        })
-
-        setResponseStatus(event, 409)
-        return createErrorResponse(409, `Username '${username}' sudah digunakan`)
+        // Generate unique username with random suffix
+        username = generateUsername(body.email, generateRandomStr({ size: 4 }))
       }
+    }
+
+    // Check final username availability
+    const existingUser = await db
+      .selectFrom('users')
+      .where('username', '=', username)
+      .select(['id'])
+      .executeTakeFirst()
+
+    if (existingUser) {
+      await auditLog(event, {
+        action: 'create',
+        entity: 'user',
+        entityId: 'anonymous',
+        metadata: {
+          success: false,
+          email: body.email,
+          reason: 'username_exists',
+        },
+      })
+
+      setResponseStatus(event, 409)
+      return createErrorResponse(409, `Username '${username}' is already taken`)
     }
 
     // Create user account
@@ -188,7 +167,7 @@ export default defineEventHandler(async (event) => {
 
       // Send verification email
       const verificationUrl = `${appConfig.baseURL}/api/auth/email/verify?token=${verificationToken}`
-      logger.info('[app]', 'Verification email: ', verificationUrl)
+      await sendRawEmail('verify-email', body.email, `Verification URL: ${verificationUrl}`)
 
       // TODO: Send verification email using jsx-email
       // await sendJSXEmail('verify-email', body.email, {

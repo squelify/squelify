@@ -10,7 +10,9 @@ export async function up(db: Kysely<Database>): Promise<void> {
       col.notNull().references('organizations.id').onDelete('cascade')
     )
     .addColumn('email', 'text', (col) => col.notNull())
-    .addColumn('role', 'text', (col) => col.notNull().check(sql`role IN ('admin', 'member')`))
+    .addColumn('role', 'text', (col) =>
+      col.notNull().check(sql`role IN ('org:admin', 'org:member')`)
+    )
     .addColumn('token', 'text', (col) => col.notNull().unique())
     .addColumn('invited_by', 'text', (col) => col.notNull().references('users.id'))
     .addColumn('status', 'text', (col) =>

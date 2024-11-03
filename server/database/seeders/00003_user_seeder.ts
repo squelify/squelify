@@ -81,8 +81,8 @@ export default async function seed(db: Kysely<Database>): Promise<void> {
       slug: 'root-org',
       isVerified: 1,
       status: 'active',
-      // settings: '{}',
-      // metadata: '{}',
+      settings: JSON.stringify({}),
+      metadata: JSON.stringify({}),
       createdBy: userId,
       createdAt: now,
     }
@@ -93,7 +93,7 @@ export default async function seed(db: Kysely<Database>): Promise<void> {
       id: memberId,
       organizationId: orgId,
       userId: userId,
-      role: 'owner',
+      role: 'org:owner',
       isDefault: 1,
       createdAt: now,
     }

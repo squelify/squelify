@@ -14,16 +14,18 @@ export type AuditAction = z.infer<typeof auditActionEnum>
 
 const auditEntityEnum = z.enum(
   [
-    'user',
-    'organization',
-    'member',
-    'role',
-    'permission',
-    'invitation',
     'email',
+    'invitation',
+    'jwk',
+    'org:member',
+    'organization',
+    'passkey',
     'password',
+    'permission',
+    'role',
     'session',
     'two_factor',
+    'user',
   ],
   {
     required_error: 'Entity is required',

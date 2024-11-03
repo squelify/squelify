@@ -2,7 +2,11 @@ import type { Insertable, Selectable, Updateable } from 'kysely'
 import type { ColumnType, Generated } from 'kysely'
 import { z } from 'zod'
 
-const memberRoleEnum = z.enum(['owner', 'admin', 'member'])
+// Admin: Role with elevated permissions in the organization.
+// Member: Role with non-privileged permissions in the organization.
+
+const memberRoleEnum = z.enum(['org:owner', 'org:admin', 'org:member'])
+
 export type MemberRole = z.infer<typeof memberRoleEnum>
 
 // Member schema with validation rules

@@ -2,7 +2,7 @@ import { Body, ColorScheme, Container, Head, Hr, Html, Preview, Section, Text } 
 import { Tailwind } from 'jsx-email'
 import * as React from 'react'
 import { isProduction } from 'std-env'
-import appConfig from '~~/app.config'
+import appConfig from '~/app.config'
 import AppLogo from './app-logo'
 
 interface EmailAuthTemplateProps {

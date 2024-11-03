@@ -38,14 +38,14 @@ export default defineEventHandler(async (event) => {
       .selectFrom('members')
       .where('organizationId', '=', orgId)
       .where('userId', '=', userId)
-      .where('role', 'in', ['owner', 'admin'])
+      .where('role', 'in', ['org:owner', 'org:admin'])
       .select(['id', 'role'])
       .executeTakeFirst()
 
     if (!requester) {
       await auditLog(event, {
         action: 'create',
-        entity: 'member',
+        entity: 'org:member',
         entityId: orgId,
         metadata: {
           success: false,
@@ -63,10 +63,10 @@ export default defineEventHandler(async (event) => {
     }
 
     // Admin cannot add owners
-    if (requester.role === 'admin' && body.role === 'owner') {
+    if (requester.role === 'org:admin' && body.role === 'org:owner') {
       await auditLog(event, {
         action: 'create',
-        entity: 'member',
+        entity: 'org:member',
         entityId: orgId,
         metadata: {
           success: false,
@@ -152,7 +152,7 @@ export default defineEventHandler(async (event) => {
     // Log member creation
     await auditLog(event, {
       action: 'create',
-      entity: 'member',
+      entity: 'org:member',
       entityId: memberId,
       metadata: {
         success: true,

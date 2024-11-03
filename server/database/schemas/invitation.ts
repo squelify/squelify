@@ -2,7 +2,7 @@ import type { Insertable, Selectable, Updateable } from 'kysely'
 import type { ColumnType, Generated } from 'kysely'
 import { z } from 'zod'
 
-const invitationRoleEnum = z.enum(['admin', 'member'])
+const invitationRoleEnum = z.enum(['org:admin', 'org:member'])
 export type InvitationRole = z.infer<typeof invitationRoleEnum>
 
 const invitationStatusEnum = z.enum(['pending', 'accepted', 'expired', 'revoked'])

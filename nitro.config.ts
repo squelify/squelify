@@ -17,7 +17,7 @@ export default defineNitroConfig({
   minify: isProduction,
   sourceMap: isDevelopment,
   compatibilityDate: '2024-11-02',
-  appConfigFiles: ['app.config'],
+  appConfigFiles: ['~/app.config'],
 
   handlers: [
     // TODO: allow index route to be served by the frontend

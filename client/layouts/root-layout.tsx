@@ -2,7 +2,7 @@ import React, { useEffect, useRef } from 'react'
 import { useErrorBoundary } from 'react-error-boundary'
 import { Toaster, toast } from 'sonner'
 import { env } from 'std-env'
-import { HealthCheckResponse } from '~/api/healthz'
+import { HealthCheckResponse } from '~/api/healthz.get'
 import { useApiClient } from '#/context/hooks/use-api-client'
 import type { ApiResponse } from '#/services'
 import { clx } from '#/utils/helper'
@@ -58,9 +58,9 @@ export default function RootLayout({ children, className }: RootLayoutProps) {
 
       if (isApiError(error)) {
         if (BLOCK_ON_ERROR) {
-          showBoundary({ code: 500, message: error.error?.reason || 'Unknown error occurred' })
+          showBoundary({ code: 500, message: error || 'Unknown error occurred' })
         }
-        toast.error('API Error', { description: error.error?.reason || 'Unknown error occurred' })
+        toast.error('API Error', { description: 'Unknown error occurred' })
         return
       }
 
@@ -114,6 +114,6 @@ export default function RootLayout({ children, className }: RootLayoutProps) {
   )
 }
 
-function isApiError(error: unknown): error is { error?: ApiResponse<unknown>['error'] } {
+function isApiError(error: unknown): error is { error?: ApiResponse<unknown>['data'] } {
   return typeof error === 'object' && error !== null && 'error' in error
 }

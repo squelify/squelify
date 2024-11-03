@@ -41,7 +41,7 @@ export default defineEventHandler(async (event) => {
       .selectFrom('members')
       .where('organizationId', '=', orgId)
       .where('userId', '=', userId)
-      .where('role', '=', 'owner')
+      .where('role', '=', 'org:owner')
       .select(['id'])
       .executeTakeFirst()
 

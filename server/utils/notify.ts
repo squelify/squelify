@@ -1,3 +1,5 @@
+// TODO! JSX Email causing increase in bundle size
+
 import { render } from 'jsx-email'
 import { env, isDevelopment } from 'std-env'
 import { EMAIL_CONFIG, type EmailKind, type EmailTemplateProps } from '~/mailer/mailer'
@@ -30,4 +32,15 @@ export async function sendJSXEmail<T extends EmailTemplateProps>(
   })
 
   await smtpTransport.sendMail({ to, subject, from, html })
+}
+
+export async function sendRawEmail(kind: EmailKind, to: string, content: string): Promise<void> {
+  const config = EMAIL_CONFIG[kind]
+
+  const fromName = cleanString(env.SMTP_EMAIL_FROM_NAME)
+  const fromEmail = cleanString(env.SMTP_EMAIL_FROM_EMAIL)
+  const from = `${fromName} <${fromEmail}>`
+  const subject = config.subject
+
+  await smtpTransport.sendMail({ to, subject, from, text: content })
 }

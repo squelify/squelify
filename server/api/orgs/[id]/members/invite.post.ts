@@ -38,7 +38,7 @@ export default defineEventHandler(async (event) => {
       .selectFrom('members')
       .where('organizationId', '=', orgId)
       .where('userId', '=', userId)
-      .where('role', 'in', ['owner', 'admin'])
+      .where('role', 'in', ['org:owner', 'org:admin'])
       .select(['id', 'role'])
       .executeTakeFirst()
 
@@ -63,7 +63,7 @@ export default defineEventHandler(async (event) => {
     }
 
     // Admin cannot invite owners
-    if (requester.role === 'admin' && body.role === 'owner') {
+    if (requester.role === 'org:admin' && body.role === 'org:owner') {
       await auditLog(event, {
         action: 'invite',
         entity: 'organization',
@@ -105,7 +105,7 @@ export default defineEventHandler(async (event) => {
         id: inviteId,
         organizationId: orgId,
         email: body.email,
-        role: (body.role as InvitationRole) || 'member',
+        role: (body.role as InvitationRole) || 'org:member',
         token: typeid('tok').toString(),
         invitedBy: userId,
         status: 'pending',

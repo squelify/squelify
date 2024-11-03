@@ -30,7 +30,7 @@ export default defineEventHandler(async (event) => {
     if (!requesterMember) {
       await auditLog(event, {
         action: 'delete',
-        entity: 'member',
+        entity: 'org:member',
         entityId: memberId,
         metadata: {
           success: false,
@@ -48,10 +48,10 @@ export default defineEventHandler(async (event) => {
     }
 
     // Only owner and admin can remove members
-    if (!['owner', 'admin'].includes(requesterMember.role)) {
+    if (!['org:owner', 'org:admin'].includes(requesterMember.role)) {
       await auditLog(event, {
         action: 'delete',
-        entity: 'member',
+        entity: 'org:member',
         entityId: memberId,
         metadata: {
           success: false,
@@ -69,10 +69,10 @@ export default defineEventHandler(async (event) => {
     }
 
     // Admin cannot remove owner
-    if (requesterMember.role === 'admin' && targetMember.role === 'owner') {
+    if (requesterMember.role === 'org:admin' && targetMember.role === 'org:owner') {
       await auditLog(event, {
         action: 'delete',
-        entity: 'member',
+        entity: 'org:member',
         entityId: memberId,
         metadata: {
           success: false,
@@ -99,7 +99,7 @@ export default defineEventHandler(async (event) => {
     // Log successful removal
     await auditLog(event, {
       action: 'delete',
-      entity: 'member',
+      entity: 'org:member',
       entityId: memberId,
       metadata: {
         success: true,

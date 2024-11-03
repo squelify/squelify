@@ -11,7 +11,7 @@ export async function up(db: Kysely<Database>): Promise<void> {
     )
     .addColumn('user_id', 'text', (col) => col.notNull().references('users.id').onDelete('cascade'))
     .addColumn('role', 'text', (col) =>
-      col.notNull().check(sql`role IN ('owner', 'admin', 'member')`)
+      col.notNull().check(sql`role IN ('org:owner', 'org:admin', 'org:member')`)
     )
     .addColumn('title', 'text')
     .addColumn('department', 'text')

@@ -58,7 +58,7 @@ export default defineEventHandler(async (event) => {
     if (member.organizationId !== orgId) {
       await auditLog(event, {
         action: 'update',
-        entity: 'member',
+        entity: 'org:member',
         entityId: body.memberId,
         metadata: {
           success: false,
@@ -80,7 +80,7 @@ export default defineEventHandler(async (event) => {
     if (org.status === 'suspended') {
       await auditLog(event, {
         action: 'update',
-        entity: 'member',
+        entity: 'org:member',
         entityId: body.memberId,
         metadata: {
           success: false,
@@ -102,14 +102,14 @@ export default defineEventHandler(async (event) => {
       .selectFrom('members')
       .where('organizationId', '=', orgId)
       .where('userId', '=', userId)
-      .where('role', '=', 'owner')
+      .where('role', '=', 'org:owner')
       .select(['id'])
       .executeTakeFirst()
 
     if (!requester) {
       await auditLog(event, {
         action: 'update',
-        entity: 'member',
+        entity: 'org:member',
         entityId: body.memberId,
         metadata: {
           success: false,
@@ -127,18 +127,18 @@ export default defineEventHandler(async (event) => {
     }
 
     // If downgrading from owner, check if there are other owners
-    if (member.role === 'owner' && body.role !== 'owner') {
+    if (member.role === 'org:owner' && body.role !== 'org:owner') {
       const ownerCount = await db
         .selectFrom('members')
         .where('organizationId', '=', orgId)
-        .where('role', '=', 'owner')
+        .where('role', '=', 'org:owner')
         .select((eb) => eb.fn.count<number>('id').as('count'))
         .executeTakeFirst()
 
       if (ownerCount && Number(ownerCount.count) <= 1) {
         await auditLog(event, {
           action: 'update',
-          entity: 'member',
+          entity: 'org:member',
           entityId: body.memberId,
           metadata: {
             success: false,
@@ -167,7 +167,7 @@ export default defineEventHandler(async (event) => {
     // Log role update
     await auditLog(event, {
       action: 'update',
-      entity: 'member',
+      entity: 'org:member',
       entityId: member.id,
       metadata: {
         success: true,

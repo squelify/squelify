@@ -14,7 +14,7 @@ export default async function seed(db: Kysely<Database>): Promise<void> {
       category: 'system',
       action: 'manage',
       resource: '*',
-      conditions: '{}',
+      conditions: JSON.stringify({}),
       createdAt: now,
     },
     {
@@ -24,7 +24,7 @@ export default async function seed(db: Kysely<Database>): Promise<void> {
       category: 'user',
       action: 'manage',
       resource: 'users',
-      conditions: '{}',
+      conditions: JSON.stringify({}),
       createdAt: now,
     },
   ]

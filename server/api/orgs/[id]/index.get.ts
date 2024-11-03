@@ -50,7 +50,7 @@ export default defineCachedEventHandler(
           join.onRef('e.userId', '=', 'u.id').on('e.isPrimary', '=', 1)
         )
         .where('m.organizationId', '=', orgId)
-        .where('m.role', '=', 'owner')
+        .where('m.role', '=', 'org:owner')
         .select(['u.id as userId', 'u.firstName', 'u.lastName', 'e.email', 'm.joinedAt'])
         .execute()
 

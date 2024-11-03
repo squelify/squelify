@@ -15,7 +15,7 @@ export const CreateRoleSchema = RoleSchema.pick({
   })
   .transform((data) => ({
     ...data,
-    metadata: data.metadata ? JSON.stringify(data.metadata) : '{}',
+    metadata: data.metadata ? JSON.stringify(data.metadata) : JSON.stringify({}),
   }))
 
 export default defineEventHandler(async (event) => {
@@ -40,7 +40,7 @@ export default defineEventHandler(async (event) => {
           .selectFrom('members')
           .where('organizationId', '=', body.organizationId)
           .where('userId', '=', userId)
-          .where('role', '=', 'owner')
+          .where('role', '=', 'org:owner')
           .select(['id'])
           .executeTakeFirst(),
       ])

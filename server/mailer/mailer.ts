@@ -1,3 +1,4 @@
+import appConfig from '~/app.config'
 import MagicLink, { type MagicLinkProps } from '~/mailer/templates/magic-link'
 import OnboardingEmail, { type OnboardingEmailProps } from '~/mailer/templates/onboarding'
 import OtpCode, { type OtpCodeProps } from '~/mailer/templates/otp-code'
@@ -5,7 +6,6 @@ import type { PasswordChangedEmailProps } from '~/mailer/templates/password-chan
 import PasswordChangedEmail from '~/mailer/templates/password-changed'
 import ResetPassword, { type ResetPasswordEmailProps } from '~/mailer/templates/reset-password'
 import VerifyEmail, { type VerifyEmailProps } from '~/mailer/templates/verify-email'
-import appConfig from '~~/app.config'
 
 const EmailTemplates = {
   VerifyEmail,
