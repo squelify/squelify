@@ -1,12 +1,36 @@
 import { z } from 'zod'
 
-// Query params schema
+export interface IListMembersResponse {
+  members: Array<{
+    id: string
+    role: string
+    title: string | null
+    department: string | null
+    isDefault: boolean
+    joinedAt: string
+    invitedAt: string
+    user: {
+      id: string
+      email: string
+      firstName: string
+      lastName: string | null
+    }
+  }>
+  pagination: {
+    currentPage: number
+    totalPages: number
+    totalItems: number
+    itemsPerPage: number
+  }
+}
+
 const QueryParamSchema = z.object({
-  page: z.coerce.number().min(1, 'Page must be greater than 0'),
+  page: z.coerce.number().min(1, 'Page must be greater than 0').default(1),
   limit: z.coerce
     .number()
     .min(1, 'Limit must be greater than 0')
-    .max(100, 'Limit must not exceed 100'),
+    .max(100, 'Limit must not exceed 100')
+    .default(10),
 })
 
 export default defineCachedEventHandler(
@@ -53,6 +77,10 @@ export default defineCachedEventHandler(
         .offset(offset)
         .execute()
 
+      if (!members?.length) {
+        return createErrorResponse(event, 'No members found', 404)
+      }
+
       const totalPages = Math.ceil(Number(totalCount?.count || 0) / limit)
 
       const membersData = members.map((member) => ({
@@ -71,18 +99,15 @@ export default defineCachedEventHandler(
         },
       }))
 
-      return {
-        status: 200,
-        success: true,
-        message: null,
-        data: membersData,
-        meta: {
+      return createSuccessResponse<IListMembersResponse>(event, 'Members retrieved successfully', {
+        members: membersData,
+        pagination: {
           currentPage: page,
           totalPages,
           totalItems: Number(totalCount?.count || 0),
           itemsPerPage: limit,
         },
-      }
+      })
     } catch (error) {
       return throwErrorResponse(event, error)
     }

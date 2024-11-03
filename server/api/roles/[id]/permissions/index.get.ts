@@ -1,6 +1,71 @@
-export default defineEventHandler(async (_event) => {
+export interface IListRolePermissionsResponse {
+  role: {
+    id: string
+    name: string
+    type: string
+    organizationId: string | null
+  }
+  permissions: Array<{
+    id: string
+    name: string
+    description: string | null
+    category: string
+    action: string
+    resource: string
+    conditions: Record<string, any>
+    createdAt: string
+    updatedAt: string | null
+  }>
+}
+
+export default defineEventHandler(async (event) => {
+  const db = event.context.db
+  const roleId = event.context.params.id
+
   try {
-    return { message: 'Not yet implemented' }
+    // Get role with its permissions
+    const role = await db
+      .selectFrom('roles')
+      .where('id', '=', roleId)
+      .select(['id', 'name', 'type', 'organizationId'])
+      .executeTakeFirst()
+
+    if (!role) {
+      return createErrorResponse(event, 'Role not found', 404)
+    }
+
+    const permissions = await db
+      .selectFrom('permissions as p')
+      .innerJoin('role_permissions as rp', 'rp.permissionId', 'p.id')
+      .where('rp.roleId', '=', roleId)
+      .select([
+        'p.id',
+        'p.name',
+        'p.description',
+        'p.category',
+        'p.action',
+        'p.resource',
+        'p.conditions',
+        'p.createdAt',
+        'p.updatedAt',
+      ])
+      .execute()
+
+    const permissionsData = permissions.map((permission) => ({
+      ...permission,
+      conditions: JSON.parse(permission.conditions),
+      createdAt: toISOString(permission.createdAt),
+      updatedAt: toISOString(permission.updatedAt),
+    }))
+
+    return createSuccessResponse<IListRolePermissionsResponse>(
+      event,
+      'Role permissions retrieved successfully',
+      {
+        role,
+        permissions: permissionsData,
+      }
+    )
   } catch (error) {
     return throwErrorResponse(event, error)
   }

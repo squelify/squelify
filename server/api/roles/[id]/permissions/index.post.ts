@@ -1,6 +1,20 @@
 import { typeid } from 'typeid-js'
 import { PermissionSchema } from '~/database/schemas/permission'
 
+export interface ICreateRolePermissionResponse {
+  permission: {
+    id: string
+    name: string
+    description: string | null
+    category: string
+    action: string
+    resource: string
+    conditions: Record<string, any>
+    createdAt: string
+    updatedAt: string | null
+  }
+}
+
 export const CreatePermissionSchema = PermissionSchema.pick({
   name: true,
   description: true,
@@ -31,8 +45,7 @@ export default defineEventHandler(async (event) => {
       .executeTakeFirst()
 
     if (!role) {
-      setResponseStatus(event, 404)
-      return createErrorResponse(404, 'Role not found')
+      return createErrorResponse(event, 'Role not found', 404)
     }
 
     // Check existing permission
@@ -109,22 +122,18 @@ export default defineEventHandler(async (event) => {
       },
     })
 
-    return {
-      status: 200,
-      success: true,
-      message: 'Permission assigned successfully',
-      data: {
-        id: permission.id,
-        name: permission.name,
-        description: permission.description,
-        category: permission.category,
-        action: permission.action,
-        resource: permission.resource,
-        conditions: JSON.parse(permission.conditions),
-        createdAt: toISOString(permission.createdAt),
-        updatedAt: toISOString(permission.updatedAt),
-      },
-    }
+    return createSuccessResponse<ICreateRolePermissionResponse>(
+      event,
+      'Permission assigned successfully',
+      {
+        permission: {
+          ...permission,
+          conditions: JSON.parse(permission.conditions),
+          createdAt: toISOString(permission.createdAt),
+          updatedAt: toISOString(permission.updatedAt),
+        },
+      }
+    )
   } catch (error) {
     return throwErrorResponse(event, error)
   }

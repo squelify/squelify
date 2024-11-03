@@ -34,16 +34,16 @@ export default defineEventHandler(async (event) => {
       .executeTakeFirst()
 
     if (!verification) {
-      setResponseStatus(event, 400)
-      return createErrorResponse(400, 'Token verifikasi tidak valid atau sudah kadaluarsa')
+      return createErrorResponse(event, 'Token verifikasi tidak valid atau sudah kadaluarsa', 400)
     }
 
     if (verification.attempts >= verification.maxAttempts) {
       setResponseStatus(event, 400)
       const waitTimeMinutes = Math.ceil((verification.expiresAt - now) / 60)
       return createErrorResponse(
-        400,
-        `Melebihi batas maksimal percobaan. Silakan coba lagi dalam ${waitTimeMinutes} menit.`
+        event,
+        `Melebihi batas maksimal percobaan. Silakan coba lagi dalam ${waitTimeMinutes} menit`,
+        400
       )
     }
 
@@ -60,8 +60,7 @@ export default defineEventHandler(async (event) => {
 
       metadata = parsedMetadata
     } catch {
-      setResponseStatus(event, 400)
-      return createErrorResponse(400, 'Format metadata tidak valid')
+      return createErrorResponse(event, 'Format metadata tidak valid', 400)
     }
 
     if (metadata.code !== body.code) {
@@ -76,8 +75,12 @@ export default defineEventHandler(async (event) => {
         .execute()
 
       const remainingAttempts = verification.maxAttempts - (verification.attempts + 1)
-      setResponseStatus(event, 400)
-      return createErrorResponse(400, `Kode OTP tidak valid. Sisa percobaan: ${remainingAttempts}`)
+
+      return createErrorResponse(
+        event,
+        `Kode OTP tidak valid. Sisa percobaan: ${remainingAttempts}`,
+        400
+      )
     }
 
     // Mark as verified

@@ -1,3 +1,11 @@
+export interface IDeleteMemberResponse {
+  member: {
+    id: string
+    organizationId: string
+    role: string
+  }
+}
+
 export default defineEventHandler(async (event) => {
   const db = event.context.db
   const orgId = event.context.params.id
@@ -15,8 +23,7 @@ export default defineEventHandler(async (event) => {
       .executeTakeFirst()
 
     if (!targetMember) {
-      setResponseStatus(event, 404)
-      return createErrorResponse(404, 'Member not found')
+      return createErrorResponse(event, 'Member not found', 404)
     }
 
     // Get requester's role
@@ -34,7 +41,7 @@ export default defineEventHandler(async (event) => {
         entityId: memberId,
         metadata: {
           success: false,
-          reason: 'not_member',
+          reason: 'unauthorized_deletion',
           organizationId: orgId,
           deletedBy: {
             id: userId,
@@ -43,8 +50,7 @@ export default defineEventHandler(async (event) => {
         },
       })
 
-      setResponseStatus(event, 403)
-      return createErrorResponse(403, 'You are not a member of this organization')
+      return createErrorResponse(event, 'You are not a member of this organization', 403)
     }
 
     // Only owner and admin can remove members
@@ -64,8 +70,7 @@ export default defineEventHandler(async (event) => {
         },
       })
 
-      setResponseStatus(event, 403)
-      return createErrorResponse(403, 'Insufficient permission to remove members')
+      return createErrorResponse(event, 'Only owners or admins can remove members', 403)
     }
 
     // Admin cannot remove owner
@@ -76,7 +81,7 @@ export default defineEventHandler(async (event) => {
         entityId: memberId,
         metadata: {
           success: false,
-          reason: 'cannot_remove_owner',
+          reason: 'admin_cannot_remove_owner',
           organizationId: orgId,
           deletedBy: {
             id: userId,
@@ -85,8 +90,7 @@ export default defineEventHandler(async (event) => {
         },
       })
 
-      setResponseStatus(event, 403)
-      return createErrorResponse(403, 'Admin cannot remove organization owner')
+      return createErrorResponse(event, 'Administrators cannot remove organization owners', 403)
     }
 
     // Delete member
@@ -112,15 +116,13 @@ export default defineEventHandler(async (event) => {
       },
     })
 
-    return {
-      status: 200,
-      success: true,
-      message: 'Member removed successfully',
-      data: {
-        memberId: targetMember.id,
+    return createSuccessResponse<IDeleteMemberResponse>(event, 'Member removed successfully', {
+      member: {
+        id: targetMember.id,
         organizationId: orgId,
+        role: targetMember.role,
       },
-    }
+    })
   } catch (error) {
     return throwErrorResponse(event, error)
   }

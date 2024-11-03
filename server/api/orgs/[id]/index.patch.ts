@@ -1,5 +1,23 @@
 import { OrganizationSchema } from '~/database/schemas/organization'
 
+export interface IUpdateOrganizationResponse {
+  organization: {
+    id: string
+    name: string
+    description: string | null
+    logoUrl: string | null
+    website: string | null
+    email: string | null
+    phone: string | null
+    address: string | null
+    status: string
+    settings: Record<string, any>
+    metadata: Record<string, any>
+    isVerified: boolean
+    updatedAt: string
+  }
+}
+
 const UpdateOrgSchema = OrganizationSchema.pick({
   name: true,
   description: true,
@@ -21,7 +39,6 @@ export default defineEventHandler(async (event) => {
   const now = Math.floor(Date.now() / 1000)
 
   try {
-    // Validate update payload
     const body = await requireValidatedBody(event, UpdateOrgSchema)
 
     // Get organization and verify existence
@@ -32,8 +49,7 @@ export default defineEventHandler(async (event) => {
       .executeTakeFirst()
 
     if (!org) {
-      setResponseStatus(event, 404)
-      return createErrorResponse(404, 'Organization not found')
+      return createErrorResponse(event, 'Organization not found', 404)
     }
 
     // Verify user is an owner
@@ -52,7 +68,7 @@ export default defineEventHandler(async (event) => {
         entityId: orgId,
         metadata: {
           success: false,
-          reason: 'not_owner',
+          reason: 'unauthorized_update',
           organizationName: org.name,
           updatedBy: {
             id: userId,
@@ -61,8 +77,11 @@ export default defineEventHandler(async (event) => {
         },
       })
 
-      setResponseStatus(event, 403)
-      return createErrorResponse(403, 'Only organization owner can update organization')
+      return createErrorResponse(
+        event,
+        'Only organization owners can update organization details',
+        403
+      )
     }
 
     // Update organization
@@ -76,7 +95,6 @@ export default defineEventHandler(async (event) => {
       .returning([
         'id',
         'name',
-        'slug',
         'description',
         'logoUrl',
         'website',
@@ -107,18 +125,19 @@ export default defineEventHandler(async (event) => {
       },
     })
 
-    return {
-      status: 200,
-      success: true,
-      message: 'Organization updated successfully',
-      data: {
-        ...updatedOrg,
-        settings: updatedOrg.settings,
-        metadata: updatedOrg.metadata,
-        isVerified: Boolean(updatedOrg.isVerified),
-        updatedAt: toISOString(updatedOrg.updatedAt),
-      },
-    }
+    return createSuccessResponse<IUpdateOrganizationResponse>(
+      event,
+      'Organization updated successfully',
+      {
+        organization: {
+          ...updatedOrg,
+          settings: JSON.parse(updatedOrg.settings),
+          metadata: JSON.parse(updatedOrg.metadata),
+          isVerified: Boolean(updatedOrg.isVerified),
+          updatedAt: toISOString(updatedOrg.updatedAt),
+        },
+      }
+    )
   } catch (error) {
     return throwErrorResponse(event, error)
   }

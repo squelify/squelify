@@ -2,12 +2,27 @@ import { typeid } from 'typeid-js'
 import { getActiveJWK } from '~/database/repository/jwk.repo'
 import { type JWTPayload, generateAccessToken } from '~/utils/jwt'
 
+export interface IRefreshTokenResponse {
+  token: {
+    accessToken: string
+    expiresIn: number
+  }
+  session: {
+    id: string
+    lastActiveAt: number
+  }
+}
+
+export interface IRefreshTokenRequest {
+  refreshToken: string
+}
+
 export default defineEventHandler(async (event) => {
   const { appConfig, db } = event.context
 
   try {
     const { userAgentHash } = getClientInfo(event)
-    const { refreshToken } = await readBody(event)
+    const { refreshToken } = await readBody<IRefreshTokenRequest>(event)
     const now = Math.floor(Date.now() / 1000)
 
     // Get session by refresh token
@@ -30,15 +45,13 @@ export default defineEventHandler(async (event) => {
       .executeTakeFirst()
 
     if (!session) {
-      setResponseStatus(event, 401)
-      return createErrorResponse(401, 'Invalid refresh token')
+      return createErrorResponse(event, 'Invalid refresh token', 401)
     }
 
     // Get active JWK
     const activeKey = await getActiveJWK(db)
     if (!activeKey) {
-      setResponseStatus(event, 500)
-      return createErrorResponse(500, 'No active signing key available')
+      return createErrorResponse(event, 'No active signing key available', 500)
     }
 
     // Generate new access token with standard claims
@@ -70,11 +83,28 @@ export default defineEventHandler(async (event) => {
       .where('id', '=', session.sessionId)
       .execute()
 
-    return {
-      status: 200,
-      success: true,
-      data: { accessToken },
-    }
+    // Log successful token refresh
+    await auditLog(event, {
+      action: 'refresh',
+      entity: 'token',
+      entityId: session.sessionId,
+      metadata: {
+        success: true,
+        userId: session.userId,
+        sessionId: session.sessionId,
+      },
+    })
+
+    return createSuccessResponse<IRefreshTokenResponse>(event, 'Token refreshed successfully', {
+      token: {
+        accessToken,
+        expiresIn: 900,
+      },
+      session: {
+        id: session.sessionId,
+        lastActiveAt: now,
+      },
+    })
   } catch (error) {
     return throwErrorResponse(event, error)
   }

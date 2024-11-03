@@ -1,3 +1,12 @@
+export interface IDeleteOrganizationResponse {
+  organization: {
+    id: string
+    name: string
+    slug: string
+    createdBy: string
+  }
+}
+
 export default defineEventHandler(async (event) => {
   const db = event.context.db
   const orgId = event.context.params.id
@@ -13,8 +22,7 @@ export default defineEventHandler(async (event) => {
       .executeTakeFirst()
 
     if (!org) {
-      setResponseStatus(event, 404)
-      return createErrorResponse(404, 'Organization not found')
+      return createErrorResponse(event, 'Organization not found', 404)
     }
 
     // Verify user is an owner
@@ -33,7 +41,7 @@ export default defineEventHandler(async (event) => {
         entityId: org.id,
         metadata: {
           success: false,
-          reason: 'not_owner',
+          reason: 'unauthorized_deletion',
           organizationName: org.name,
           organizationSlug: org.slug,
           deletedBy: {
@@ -43,8 +51,7 @@ export default defineEventHandler(async (event) => {
         },
       })
 
-      setResponseStatus(event, 403)
-      return createErrorResponse(403, 'Only organization owner can delete organization')
+      return createErrorResponse(event, 'Only organization owners can delete organization', 403)
     }
 
     // Check if organization is suspended
@@ -65,8 +72,7 @@ export default defineEventHandler(async (event) => {
         },
       })
 
-      setResponseStatus(event, 400)
-      return createErrorResponse(400, 'Cannot delete suspended organization')
+      return createErrorResponse(event, 'Cannot delete suspended organization', 400)
     }
 
     // Count organization members
@@ -93,16 +99,12 @@ export default defineEventHandler(async (event) => {
         },
       })
 
-      setResponseStatus(event, 400)
-      return createErrorResponse(400, 'Cannot delete organization with single member')
+      return createErrorResponse(event, 'Cannot delete organization with single member', 400)
     }
 
     // Hard delete organization and related data
     await db.transaction().execute(async (trx) => {
-      // Delete organization members first
       await trx.deleteFrom('members').where('organizationId', '=', orgId).execute()
-
-      // Delete organization
       await trx.deleteFrom('organizations').where('id', '=', orgId).execute()
     })
 
@@ -123,16 +125,18 @@ export default defineEventHandler(async (event) => {
       },
     })
 
-    return {
-      status: 200,
-      success: true,
-      message: `Organization ${org.name} deleted successfully`,
-      data: {
-        id: org.id,
-        name: org.name,
-        slug: org.slug,
-      },
-    }
+    return createSuccessResponse<IDeleteOrganizationResponse>(
+      event,
+      'Organization deleted successfully',
+      {
+        organization: {
+          id: org.id,
+          name: org.name,
+          slug: org.slug,
+          createdBy: org.createdBy,
+        },
+      }
+    )
   } catch (error) {
     return throwErrorResponse(event, error)
   }

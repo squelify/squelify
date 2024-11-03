@@ -1,6 +1,26 @@
 import { typeid } from 'typeid-js'
 import { OrganizationSchema } from '~/database/schemas/organization'
 
+export interface ICreateOrganizationResponse {
+  organization: {
+    id: string
+    name: string
+    slug: string
+    description: string | null
+    logoUrl: string | null
+    website: string | null
+    email: string | null
+    phone: string | null
+    address: string | null
+    status: string
+    settings: Record<string, any>
+    metadata: Record<string, any>
+    isVerified: boolean
+    createdAt: string
+    updatedAt: string | null
+  }
+}
+
 export const CreateOrgSchema = OrganizationSchema.pick({
   name: true,
   slug: true,
@@ -42,16 +62,17 @@ export default defineEventHandler(async (event) => {
 
     if (existingOrg) {
       if (existingOrg.slug === body.slug) {
-        setResponseStatus(event, 409)
-        return createErrorResponse(409, `Organization slug '${body.slug}' is already taken`)
+        return createErrorResponse(event, `Organization slug '${body.slug}' is already taken`, 409)
       }
       if (existingOrg.name === body.name) {
-        setResponseStatus(event, 409)
-        return createErrorResponse(409, `Organization name '${body.name}' is not available`)
+        return createErrorResponse(event, `Organization name '${body.name}' is not available`, 409)
       }
       if (existingOrg.email === body.email) {
-        setResponseStatus(event, 409)
-        return createErrorResponse(409, `Organization email '${body.email}' is already registered`)
+        return createErrorResponse(
+          event,
+          `Organization email '${body.email}' is already registered`,
+          409
+        )
       }
     }
 
@@ -120,19 +141,20 @@ export default defineEventHandler(async (event) => {
       },
     })
 
-    return {
-      status: 200,
-      success: true,
-      message: 'Organization created successfully',
-      data: {
-        ...org,
-        settings: org.settings,
-        metadata: org.metadata,
-        isVerified: Boolean(org.isVerified),
-        createdAt: toISOString(org.createdAt),
-        updatedAt: toISOString(org.updatedAt),
-      },
-    }
+    return createSuccessResponse<ICreateOrganizationResponse>(
+      event,
+      'Organization created successfully',
+      {
+        organization: {
+          ...org,
+          settings: JSON.parse(org.settings),
+          metadata: JSON.parse(org.metadata),
+          isVerified: Boolean(org.isVerified),
+          createdAt: toISOString(org.createdAt),
+          updatedAt: toISOString(org.updatedAt),
+        },
+      }
+    )
   } catch (error) {
     return throwErrorResponse(event, error)
   }

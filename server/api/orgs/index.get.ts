@@ -1,12 +1,38 @@
 import { z } from 'zod'
 
-// Query params schema
+export interface IListOrganizationsResponse {
+  organizations: Array<{
+    id: string
+    name: string
+    slug: string
+    description: string | null
+    logoUrl: string | null
+    website: string | null
+    email: string | null
+    phone: string | null
+    address: string | null
+    status: string
+    settings: Record<string, any>
+    metadata: Record<string, any>
+    isVerified: boolean
+    createdAt: string
+    updatedAt: string | null
+  }>
+  pagination: {
+    currentPage: number
+    totalPages: number
+    totalItems: number
+    itemsPerPage: number
+  }
+}
+
 const QueryParamSchema = z.object({
-  page: z.coerce.number().min(1, 'Page must be greater than 0'),
+  page: z.coerce.number().min(1, 'Page must be greater than 0').default(1),
   limit: z.coerce
     .number()
     .min(1, 'Limit must be greater than 0')
-    .max(100, 'Limit must not exceed 100'),
+    .max(100, 'Limit must not exceed 100')
+    .default(10),
 })
 
 export default defineCachedEventHandler(
@@ -31,30 +57,34 @@ export default defineCachedEventHandler(
         .offset(offset)
         .execute()
 
-      if (!organizations) {
-        setResponseStatus(event, 400)
-        return createErrorResponse(400, 'No organization found')
+      if (!organizations?.length) {
+        return createErrorResponse(event, 'No organizations found', 404)
       }
 
       const totalPages = Math.ceil(Number(totalCount?.count || 0) / limit)
 
-      return {
-        status: 200,
-        success: true,
-        message: null,
-        data: organizations.map((org) => ({
-          ...org,
-          isVerified: Boolean(org.isVerified),
-          createdAt: new Date(org.createdAt * 1000).toISOString(),
-          updatedAt: toISOString(org.updatedAt),
-        })),
-        meta: {
-          currentPage: page,
-          totalPages,
-          totalItems: Number(totalCount?.count || 0),
-          itemsPerPage: limit,
-        },
-      }
+      const organizationsData = organizations.map((org) => ({
+        ...org,
+        settings: JSON.parse(org.settings),
+        metadata: JSON.parse(org.metadata),
+        isVerified: Boolean(org.isVerified),
+        createdAt: toISOString(org.createdAt),
+        updatedAt: toISOString(org.updatedAt),
+      }))
+
+      return createSuccessResponse<IListOrganizationsResponse>(
+        event,
+        'Organizations retrieved successfully',
+        {
+          organizations: organizationsData,
+          pagination: {
+            currentPage: page,
+            totalPages,
+            totalItems: Number(totalCount?.count || 0),
+            itemsPerPage: limit,
+          },
+        }
+      )
     } catch (error) {
       return throwErrorResponse(event, error)
     }

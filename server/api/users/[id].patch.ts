@@ -1,5 +1,17 @@
 import { UserSchema } from '~/database/schemas/user'
 
+export interface IUpdateUserResponse {
+  user: {
+    id: string
+    firstName: string
+    lastName: string | null
+    username: string
+    avatarUrl: string | null
+    locale: string | null
+    updatedAt: string
+  }
+}
+
 const UpdateUserSchema = UserSchema.pick({
   firstName: true,
   lastName: true,
@@ -26,8 +38,7 @@ export default defineEventHandler(async (event) => {
       .executeTakeFirst()
 
     if (!user) {
-      setResponseStatus(event, 404)
-      return createErrorResponse(404, 'User not found')
+      return createErrorResponse(event, 'User not found', 404)
     }
 
     // Only allow self update
@@ -38,7 +49,7 @@ export default defineEventHandler(async (event) => {
         entityId: userId,
         metadata: {
           success: false,
-          reason: 'not_self',
+          reason: 'unauthorized_update',
           updatedBy: {
             id: currentUserId,
             email: userEmail,
@@ -46,8 +57,7 @@ export default defineEventHandler(async (event) => {
         },
       })
 
-      setResponseStatus(event, 403)
-      return createErrorResponse(403, 'Can only update own profile')
+      return createErrorResponse(event, 'You can only update your own profile', 403)
     }
 
     // Filter out null values to keep existing data
@@ -81,15 +91,12 @@ export default defineEventHandler(async (event) => {
       },
     })
 
-    return {
-      status: 200,
-      success: true,
-      message: 'User updated successfully',
-      data: {
+    return createSuccessResponse<IUpdateUserResponse>(event, 'User profile updated successfully', {
+      user: {
         ...updatedUser,
         updatedAt: toISOString(updatedUser.updatedAt),
       },
-    }
+    })
   } catch (error) {
     return throwErrorResponse(event, error)
   }

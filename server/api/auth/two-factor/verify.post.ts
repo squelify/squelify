@@ -1,10 +1,20 @@
 import { z } from 'zod'
 import { verifyTOTP } from '~/utils/totp'
 
+export interface IVerifyTOTPResponse {
+  verification: {
+    id: string
+    type: 'totp'
+    isVerified: boolean
+    verifiedAt: string
+    lastUsedAt: string
+  }
+}
+
 const VerifyTOTPSchema = z
   .object({
-    id: z.string(),
-    code: z.string().length(6, 'Kode TOTP harus 6 karakter'),
+    id: z.string({ required_error: 'TOTP ID is required' }),
+    code: z.string().length(6, 'TOTP code must be 6 characters'),
   })
   .strict()
 
@@ -26,15 +36,24 @@ export default defineEventHandler(async (event) => {
       .executeTakeFirst()
 
     if (!twoFactor) {
-      setResponseStatus(event, 404)
-      return createErrorResponse(404, 'TOTP tidak ditemukan')
+      return createErrorResponse(event, 'TOTP not found', 404)
     }
 
     // Verify TOTP code
     const isValid = verifyTOTP(twoFactor.secret, body.code)
     if (!isValid) {
-      setResponseStatus(event, 400)
-      return createErrorResponse(400, 'Kode TOTP tidak valid')
+      await auditLog(event, {
+        action: 'verify',
+        entity: 'two_factor',
+        entityId: body.id,
+        metadata: {
+          success: false,
+          reason: 'invalid_code',
+          userId: payload.sub,
+        },
+      })
+
+      return createErrorResponse(event, 'Invalid TOTP code', 400)
     }
 
     // Update TOTP status if not verified
@@ -61,14 +80,25 @@ export default defineEventHandler(async (event) => {
         .execute()
     }
 
-    return {
-      status: 200,
-      success: true,
-      message: 'Verifikasi TOTP berhasil',
-      data: {
-        verifiedAt: new Date(now * 1000).toISOString(),
+    await auditLog(event, {
+      action: 'verify',
+      entity: 'two_factor',
+      entityId: body.id,
+      metadata: {
+        success: true,
+        userId: payload.sub,
       },
-    }
+    })
+
+    return createSuccessResponse<IVerifyTOTPResponse>(event, 'TOTP verification successful', {
+      verification: {
+        id: twoFactor.id,
+        type: 'totp',
+        isVerified: true,
+        verifiedAt: toISOString(now),
+        lastUsedAt: toISOString(now),
+      },
+    })
   } catch (error) {
     return throwErrorResponse(event, error)
   }

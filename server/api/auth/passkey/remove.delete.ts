@@ -1,13 +1,25 @@
 import { z } from 'zod'
 
-const RemovePasskeySchema = z.object({
-  credentialId: z.string(),
-})
+export interface IRemovePasskeyResponse {
+  passkey: {
+    id: string
+    name: string
+    credentialId: string
+    removedAt: string
+  }
+}
+
+const RemovePasskeySchema = z
+  .object({
+    credentialId: z.string({ required_error: 'Credential ID is required' }),
+  })
+  .strict()
 
 export default defineEventHandler(async (event) => {
   const db = event.context.db
   const userId = event.context.auth.payload.sub
   const userEmail = event.context.auth.payload.email
+  const now = Math.floor(Date.now() / 1000)
 
   try {
     const body = await requireValidatedBody(event, RemovePasskeySchema)
@@ -21,8 +33,7 @@ export default defineEventHandler(async (event) => {
       .executeTakeFirst()
 
     if (!passkey) {
-      setResponseStatus(event, 404)
-      return createErrorResponse(404, 'Passkey not found')
+      return createErrorResponse(event, 'Passkey not found', 404)
     }
 
     // Check if this is the last passkey
@@ -33,8 +44,7 @@ export default defineEventHandler(async (event) => {
       .executeTakeFirst()
 
     if (Number(passkeyCount?.count) === 1) {
-      setResponseStatus(event, 400)
-      return createErrorResponse(400, 'Cannot remove last passkey')
+      return createErrorResponse(event, 'Cannot remove last passkey', 400)
     }
 
     // Delete passkey
@@ -56,11 +66,14 @@ export default defineEventHandler(async (event) => {
       },
     })
 
-    return {
-      status: 200,
-      success: true,
-      message: 'Passkey removed successfully',
-    }
+    return createSuccessResponse<IRemovePasskeyResponse>(event, 'Passkey removed successfully', {
+      passkey: {
+        id: passkey.id,
+        name: passkey.name,
+        credentialId: passkey.credentialId,
+        removedAt: toISOString(now),
+      },
+    })
   } catch (error) {
     return throwErrorResponse(event, error)
   }

@@ -1,9 +1,18 @@
 import { z } from 'zod'
+import { verifyTOTP } from '~/utils/totp'
+
+export interface IDisable2FAResponse {
+  authenticator: {
+    id: string
+    name: string
+    disabledAt: string
+  }
+}
 
 const DisableTOTPSchema = z
   .object({
-    id: z.string({ required_error: 'ID authenticator diperlukan' }),
-    code: z.string().length(6, 'Kode TOTP harus 6 karakter'),
+    id: z.string({ required_error: 'Authenticator ID is required' }),
+    code: z.string().length(6, 'TOTP code must be 6 characters'),
   })
   .strict()
 
@@ -25,20 +34,28 @@ export default defineEventHandler(async (event) => {
       .executeTakeFirst()
 
     if (!twoFactor) {
-      setResponseStatus(event, 404)
-      return createErrorResponse(404, 'Authenticator tidak ditemukan')
+      return createErrorResponse(event, 'Authenticator not found', 404)
     }
 
     if (!twoFactor.isVerified) {
-      setResponseStatus(event, 400)
-      return createErrorResponse(400, 'Authenticator belum diverifikasi')
+      return createErrorResponse(event, 'Authenticator is not verified', 400)
     }
 
     // Verify TOTP code first
     const isValid = verifyTOTP(twoFactor.secret, body.code)
     if (!isValid) {
-      setResponseStatus(event, 400)
-      return createErrorResponse(400, 'Kode TOTP tidak valid')
+      await auditLog(event, {
+        action: 'disable',
+        entity: 'two_factor',
+        entityId: body.id,
+        metadata: {
+          success: false,
+          reason: 'invalid_code',
+          userId: payload.sub,
+        },
+      })
+
+      return createErrorResponse(event, 'Invalid TOTP code', 400)
     }
 
     // Check if this is the last verified 2FA
@@ -52,10 +69,10 @@ export default defineEventHandler(async (event) => {
         .executeTakeFirst()
 
       if (!otherVerified2FA) {
-        setResponseStatus(event, 400)
         return createErrorResponse(
-          400,
-          'Tidak dapat menonaktifkan authenticator utama. Aktifkan authenticator lain terlebih dahulu.'
+          event,
+          'Cannot disable primary authenticator. Enable another authenticator first.',
+          400
         )
       }
 
@@ -73,16 +90,28 @@ export default defineEventHandler(async (event) => {
     // Delete the TOTP record
     await db.deleteFrom('two_factors').where('id', '=', twoFactor.id).execute()
 
-    return {
-      status: 200,
-      success: true,
-      message: `Authenticator "${twoFactor.name}" berhasil dinonaktifkan`,
-      data: {
-        id: twoFactor.id,
+    await auditLog(event, {
+      action: 'disable',
+      entity: 'two_factor',
+      entityId: body.id,
+      metadata: {
+        success: true,
+        userId: payload.sub,
         name: twoFactor.name,
-        disabledAt: new Date(now * 1000).toISOString(),
       },
-    }
+    })
+
+    return createSuccessResponse<IDisable2FAResponse>(
+      event,
+      `Authenticator "${twoFactor.name}" disabled successfully`,
+      {
+        authenticator: {
+          id: twoFactor.id,
+          name: twoFactor.name,
+          disabledAt: toISOString(now),
+        },
+      }
+    )
   } catch (error) {
     return throwErrorResponse(event, error)
   }

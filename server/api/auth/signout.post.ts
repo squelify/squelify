@@ -1,5 +1,10 @@
 import { z } from 'zod'
 
+export interface ISignoutResponse {
+  sessionId: string
+  deviceId?: string | null
+}
+
 export const SignoutRequestSchema = z.object({
   sessionId: z.string({ required_error: 'Session ID is required' }),
   deviceId: z.string().optional().nullable(),
@@ -7,10 +12,12 @@ export const SignoutRequestSchema = z.object({
 
 export default defineEventHandler(async (event) => {
   const db = event.context.db
+  const userId = event.context.auth.payload.sub
+  const userEmail = event.context.auth.payload.email
+  const now = Math.floor(Date.now() / 1000)
 
   try {
     const body = await requireValidatedBody(event, SignoutRequestSchema)
-    const now = Math.floor(Date.now() / 1000)
 
     // Check if session exists and still valid
     const session = await db
@@ -20,18 +27,15 @@ export default defineEventHandler(async (event) => {
       .executeTakeFirst()
 
     if (!session) {
-      setResponseStatus(event, 404)
-      return createErrorResponse(404, 'Session tidak ditemukan')
+      return createErrorResponse(event, 'Session not found', 404)
     }
 
     if (session.expiresAt < now) {
-      setResponseStatus(event, 400)
-      return createErrorResponse(400, 'Session sudah tidak berlaku')
+      return createErrorResponse(event, 'Session has expired', 400)
     }
 
     if (!session.isActive) {
-      setResponseStatus(event, 400)
-      return createErrorResponse(400, 'Session sudah tidak aktif')
+      return createErrorResponse(event, 'Session is already inactive', 400)
     }
 
     // Deactivate session
@@ -58,14 +62,28 @@ export default defineEventHandler(async (event) => {
         .execute()
     }
 
+    // Log successful signout
+    await auditLog(event, {
+      action: 'logout',
+      entity: 'session',
+      entityId: body.sessionId,
+      metadata: {
+        success: true,
+        deviceId: body.deviceId,
+        signedOutBy: {
+          id: userId,
+          email: userEmail,
+        },
+      },
+    })
+
     // Remove session cookie
     deleteCookie(event, 'auth_session')
 
-    return {
-      status: 200,
-      success: true,
-      message: 'Signed out successfully',
-    }
+    return createSuccessResponse<ISignoutResponse>(event, 'Signed out successfully', {
+      sessionId: body.sessionId,
+      deviceId: body.deviceId,
+    })
   } catch (error) {
     return throwErrorResponse(event, error)
   }

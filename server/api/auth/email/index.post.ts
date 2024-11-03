@@ -1,7 +1,20 @@
+import { isProduction } from 'std-env'
 import { typeid } from 'typeid-js'
 import { z } from 'zod'
 
-const AddEmailSchema = z.object({ email: z.string().email('Email tidak valid') }).strict()
+export interface IAddEmailResponse {
+  email: {
+    address: string
+    token: string
+    verificationUrl?: string // Only in development
+  }
+}
+
+const AddEmailSchema = z
+  .object({
+    email: z.string().email('Invalid email address'),
+  })
+  .strict()
 
 export default defineEventHandler(async (event) => {
   const payload = event.context.auth.payload
@@ -19,8 +32,7 @@ export default defineEventHandler(async (event) => {
       .executeTakeFirst()
 
     if (existingEmail) {
-      setResponseStatus(event, 400)
-      return createErrorResponse(400, 'Email sudah terdaftar')
+      return createErrorResponse(event, 'Email address already registered', 400)
     }
 
     // Create verification token
@@ -55,18 +67,36 @@ export default defineEventHandler(async (event) => {
         .execute()
     })
 
-    // Log verification URL for development
-    logger.info('[auth]', `Email verification URL: /auth/email/verify?token=${verificationToken}`)
+    const verificationUrl = `/auth/email/verify?token=${verificationToken}`
+    logger.info('[auth]', `Email verification URL: ${verificationUrl}`)
 
-    return {
-      status: 200,
-      success: true,
-      message: 'Email berhasil ditambahkan, silakan cek inbox untuk verifikasi',
-      data: {
+    await auditLog(event, {
+      action: 'create',
+      entity: 'email',
+      entityId: payload.sub,
+      metadata: {
+        success: true,
         email: body.email,
+      },
+    })
+
+    const response: IAddEmailResponse = {
+      email: {
+        address: body.email,
         token: verificationToken,
       },
     }
+
+    // Include verification URL in development
+    if (!isProduction) {
+      response.email.verificationUrl = verificationUrl
+    }
+
+    return createSuccessResponse<IAddEmailResponse>(
+      event,
+      'Email added successfully, check your inbox for verification',
+      response
+    )
   } catch (error) {
     return throwErrorResponse(event, error)
   }

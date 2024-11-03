@@ -1,6 +1,15 @@
+export interface IDeleteEmailResponse {
+  email: {
+    id: string
+    address: string
+    deletedAt: string
+  }
+}
+
 export default defineEventHandler(async (event) => {
   const payload = event.context.auth.payload
   const db = event.context.db
+  const now = Math.floor(Date.now() / 1000)
 
   try {
     // Count user's verified emails
@@ -12,8 +21,7 @@ export default defineEventHandler(async (event) => {
       .executeTakeFirst()
 
     if (emailCount && Number(emailCount.count) <= 1) {
-      setResponseStatus(event, 400)
-      return createErrorResponse(400, 'Tidak dapat menghapus email terakhir yang terverifikasi')
+      return createErrorResponse(event, 'Cannot delete last verified email', 400)
     }
 
     // Get email record
@@ -25,13 +33,11 @@ export default defineEventHandler(async (event) => {
       .executeTakeFirst()
 
     if (!email) {
-      setResponseStatus(event, 404)
-      return createErrorResponse(404, 'Email tidak ditemukan')
+      return createErrorResponse(event, 'Email not found', 404)
     }
 
     if (email.isPrimary) {
-      setResponseStatus(event, 400)
-      return createErrorResponse(400, 'Email utama tidak dapat dihapus')
+      return createErrorResponse(event, 'Cannot delete primary email', 400)
     }
 
     // Delete email and related verifications
@@ -52,15 +58,24 @@ export default defineEventHandler(async (event) => {
         .execute()
     })
 
-    return {
-      status: 200,
-      success: true,
-      message: 'Email berhasil dihapus',
-      data: {
-        emailId: email.id,
+    await auditLog(event, {
+      action: 'delete',
+      entity: 'email',
+      entityId: email.id,
+      metadata: {
+        success: true,
+        userId: payload.sub,
         email: email.email,
       },
-    }
+    })
+
+    return createSuccessResponse<IDeleteEmailResponse>(event, 'Email deleted successfully', {
+      email: {
+        id: email.id,
+        address: email.email,
+        deletedAt: toISOString(now),
+      },
+    })
   } catch (error) {
     return throwErrorResponse(event, error)
   }

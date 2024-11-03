@@ -1,10 +1,24 @@
 import { z } from 'zod'
 import { MemberSchema } from '~/database/schemas/member'
 
+export interface IUpdateMemberRoleResponse {
+  member: {
+    id: string
+    role: string
+    user: {
+      id: string
+      email: string
+      firstName: string
+      lastName: string | null
+    }
+    updatedAt: string
+  }
+}
+
 const UpdateMemberRoleSchema = MemberSchema.pick({
   role: true,
 }).extend({
-  memberId: z.string(),
+  memberId: z.string().min(1, 'Member ID is required'),
 })
 
 export default defineEventHandler(async (event) => {
@@ -45,13 +59,11 @@ export default defineEventHandler(async (event) => {
     ])
 
     if (!org) {
-      setResponseStatus(event, 404)
-      return createErrorResponse(404, 'Organization not found')
+      return createErrorResponse(event, 'Organization not found', 404)
     }
 
     if (!member) {
-      setResponseStatus(event, 404)
-      return createErrorResponse(404, 'Member not found')
+      return createErrorResponse(event, 'Member not found', 404)
     }
 
     // Verify member belongs to this organization
@@ -62,7 +74,7 @@ export default defineEventHandler(async (event) => {
         entityId: body.memberId,
         metadata: {
           success: false,
-          reason: 'wrong_organization',
+          reason: 'member_not_in_organization',
           organizationName: org.name,
           memberId: body.memberId,
           updatedBy: {
@@ -72,8 +84,7 @@ export default defineEventHandler(async (event) => {
         },
       })
 
-      setResponseStatus(event, 404)
-      return createErrorResponse(404, 'Member not found in this organization')
+      return createErrorResponse(event, 'Member not found in this organization', 404)
     }
 
     // Check organization status
@@ -93,8 +104,7 @@ export default defineEventHandler(async (event) => {
         },
       })
 
-      setResponseStatus(event, 400)
-      return createErrorResponse(400, 'Cannot update roles in suspended organization')
+      return createErrorResponse(event, 'Cannot update roles in suspended organization', 400)
     }
 
     // Verify requester is an owner
@@ -113,7 +123,7 @@ export default defineEventHandler(async (event) => {
         entityId: body.memberId,
         metadata: {
           success: false,
-          reason: 'not_owner',
+          reason: 'unauthorized_update',
           organizationName: org.name,
           updatedBy: {
             id: userId,
@@ -122,8 +132,7 @@ export default defineEventHandler(async (event) => {
         },
       })
 
-      setResponseStatus(event, 403)
-      return createErrorResponse(403, 'Only organization owner can update member roles')
+      return createErrorResponse(event, 'Only organization owners can update member roles', 403)
     }
 
     // If downgrading from owner, check if there are other owners
@@ -151,8 +160,7 @@ export default defineEventHandler(async (event) => {
           },
         })
 
-        setResponseStatus(event, 400)
-        return createErrorResponse(400, 'Cannot remove the last owner')
+        return createErrorResponse(event, 'Cannot remove the last owner', 400)
       }
     }
 
@@ -186,22 +194,23 @@ export default defineEventHandler(async (event) => {
       },
     })
 
-    return {
-      status: 200,
-      success: true,
-      message: 'Member role updated successfully',
-      data: {
-        id: member.id,
-        role: updatedMember.role,
-        user: {
-          id: member.userId,
-          email: member.email,
-          firstName: member.firstName,
-          lastName: member.lastName,
+    return createSuccessResponse<IUpdateMemberRoleResponse>(
+      event,
+      'Member role updated successfully',
+      {
+        member: {
+          id: member.id,
+          role: updatedMember.role,
+          user: {
+            id: member.userId,
+            email: member.email,
+            firstName: member.firstName,
+            lastName: member.lastName,
+          },
+          updatedAt: toISOString(updatedMember.updatedAt),
         },
-        updatedAt: toISOString(updatedMember.updatedAt),
-      },
-    }
+      }
+    )
   } catch (error) {
     return throwErrorResponse(event, error)
   }

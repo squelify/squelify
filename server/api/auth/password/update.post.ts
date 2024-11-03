@@ -2,16 +2,22 @@ import * as jose from 'jose'
 import { z } from 'zod'
 import { hashPassword, verifyPassword } from '~/utils/string'
 
+export interface IUpdatePasswordResponse {
+  password: {
+    updatedAt: string
+  }
+}
+
 const PasswordUpdateSchema = z
   .object({
-    currentPassword: z.string({ required_error: 'Password saat ini diperlukan' }),
+    currentPassword: z.string({ required_error: 'Current password is required' }),
     newPassword: z
       .string()
-      .min(8, 'Password minimal 8 karakter')
-      .regex(/[A-Z]/, 'Password harus mengandung huruf kapital')
-      .regex(/[a-z]/, 'Password harus mengandung huruf kecil')
-      .regex(/[0-9]/, 'Password harus mengandung angka')
-      .regex(/[^A-Za-z0-9]/, 'Password harus mengandung karakter spesial'),
+      .min(8, 'Password must be at least 8 characters')
+      .regex(/[A-Z]/, 'Password must contain uppercase letters')
+      .regex(/[a-z]/, 'Password must contain lowercase letters')
+      .regex(/[0-9]/, 'Password must contain numbers')
+      .regex(/[^A-Za-z0-9]/, 'Password must contain special characters'),
   })
   .strict()
 
@@ -31,15 +37,24 @@ export default defineEventHandler(async (event) => {
       .executeTakeFirst()
 
     if (!currentPassword) {
-      setResponseStatus(event, 400)
-      return createErrorResponse(400, 'Password tidak ditemukan')
+      return createErrorResponse(event, 'Password not found', 404)
     }
 
     // Verify current password
     const isValid = await verifyPassword(body.currentPassword, currentPassword.hash)
     if (!isValid) {
-      setResponseStatus(event, 400)
-      return createErrorResponse(400, 'Password saat ini tidak valid')
+      await auditLog(event, {
+        action: 'update',
+        entity: 'password',
+        entityId: currentPassword.id,
+        metadata: {
+          success: false,
+          reason: 'invalid_current_password',
+          userId: payload.sub,
+        },
+      })
+
+      return createErrorResponse(event, 'Invalid current password', 400)
     }
 
     // Hash new password
@@ -55,11 +70,21 @@ export default defineEventHandler(async (event) => {
       .where('id', '=', currentPassword.id)
       .execute()
 
-    return {
-      status: 200,
-      success: true,
-      message: 'Password berhasil diubah',
-    }
+    await auditLog(event, {
+      action: 'update',
+      entity: 'password',
+      entityId: currentPassword.id,
+      metadata: {
+        success: true,
+        userId: payload.sub,
+      },
+    })
+
+    return createSuccessResponse<IUpdatePasswordResponse>(event, 'Password updated successfully', {
+      password: {
+        updatedAt: toISOString(now),
+      },
+    })
   } catch (error) {
     return throwErrorResponse(event, error)
   }

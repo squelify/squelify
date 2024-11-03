@@ -1,6 +1,24 @@
 import { typeid } from 'typeid-js'
 import { MemberSchema } from '~/database/schemas/member'
 
+export interface ICreateMemberResponse {
+  member: {
+    id: string
+    role: string
+    title: string | null
+    department: string | null
+    isDefault: boolean
+    invitedAt: string
+    joinedAt: string
+    user: {
+      id: string
+      email: string
+      firstName: string
+      lastName: string | null
+    }
+  }
+}
+
 export const CreateMemberSchema = MemberSchema.pick({
   userId: true,
   role: true,
@@ -29,8 +47,7 @@ export default defineEventHandler(async (event) => {
       .executeTakeFirst()
 
     if (!org) {
-      setResponseStatus(event, 404)
-      return createErrorResponse(404, 'Organization not found')
+      return createErrorResponse(event, 'Organization not found', 404)
     }
 
     // Verify requester is an owner or admin
@@ -49,7 +66,7 @@ export default defineEventHandler(async (event) => {
         entityId: orgId,
         metadata: {
           success: false,
-          reason: 'insufficient_permission',
+          reason: 'unauthorized_creation',
           organizationName: org.name,
           createdBy: {
             id: userId,
@@ -58,8 +75,7 @@ export default defineEventHandler(async (event) => {
         },
       })
 
-      setResponseStatus(event, 403)
-      return createErrorResponse(403, 'Only owner or admin can add members')
+      return createErrorResponse(event, 'Only owners or admins can add members', 403)
     }
 
     // Admin cannot add owners
@@ -79,8 +95,7 @@ export default defineEventHandler(async (event) => {
         },
       })
 
-      setResponseStatus(event, 403)
-      return createErrorResponse(403, 'Admin cannot add organization owner')
+      return createErrorResponse(event, 'Administrators cannot add organization owners', 403)
     }
 
     // Check if user is already a member
@@ -92,8 +107,7 @@ export default defineEventHandler(async (event) => {
       .executeTakeFirst()
 
     if (existingMember) {
-      setResponseStatus(event, 409)
-      return createErrorResponse(409, 'User is already a member of this organization')
+      return createErrorResponse(event, 'User is already a member of this organization', 409)
     }
 
     // Create member
@@ -113,17 +127,7 @@ export default defineEventHandler(async (event) => {
         joinedAt: now,
         createdAt: now,
       })
-      .returning([
-        'id',
-        'role',
-        'title',
-        'department',
-        'isDefault',
-        'invitedBy',
-        'invitedAt',
-        'joinedAt',
-      ])
-      .executeTakeFirst()
+      .execute()
 
     // Get member with user info
     const memberWithUser = await db
@@ -139,7 +143,6 @@ export default defineEventHandler(async (event) => {
         'm.title',
         'm.department',
         'm.isDefault',
-        'm.invitedBy',
         'm.invitedAt',
         'm.joinedAt',
         'u.id as userId',
@@ -166,11 +169,8 @@ export default defineEventHandler(async (event) => {
       },
     })
 
-    return {
-      status: 200,
-      success: true,
-      message: 'Member added successfully',
-      data: {
+    return createSuccessResponse<ICreateMemberResponse>(event, 'Member added successfully', {
+      member: {
         id: memberWithUser.id,
         role: memberWithUser.role,
         title: memberWithUser.title,
@@ -185,7 +185,7 @@ export default defineEventHandler(async (event) => {
           lastName: memberWithUser.lastName,
         },
       },
-    }
+    })
   } catch (error) {
     return throwErrorResponse(event, error)
   }

@@ -3,6 +3,18 @@ import { z } from 'zod'
 import { InvitationRole } from '~/database/schemas/invitation'
 import { MemberSchema } from '~/database/schemas/member'
 
+export interface IInviteMemberResponse {
+  invitation: {
+    id: string
+    token: string
+    email: string
+    status: string
+    role: string
+    metadata: Record<string, any>
+    expiresAt: string
+  }
+}
+
 const InviteMemberSchema = MemberSchema.pick({
   role: true,
   title: true,
@@ -29,8 +41,7 @@ export default defineEventHandler(async (event) => {
       .executeTakeFirst()
 
     if (!org) {
-      setResponseStatus(event, 404)
-      return createErrorResponse(404, 'Organization not found')
+      return createErrorResponse(event, 'Organization not found', 404)
     }
 
     // Verify requester is an owner or admin
@@ -49,7 +60,7 @@ export default defineEventHandler(async (event) => {
         entityId: orgId,
         metadata: {
           success: false,
-          reason: 'insufficient_permission',
+          reason: 'unauthorized_invitation',
           organizationName: org.name,
           invitedBy: {
             id: userId,
@@ -58,8 +69,7 @@ export default defineEventHandler(async (event) => {
         },
       })
 
-      setResponseStatus(event, 403)
-      return createErrorResponse(403, 'Only owner or admin can invite members')
+      return createErrorResponse(event, 'Only owners or admins can invite members', 403)
     }
 
     // Admin cannot invite owners
@@ -79,8 +89,7 @@ export default defineEventHandler(async (event) => {
         },
       })
 
-      setResponseStatus(event, 403)
-      return createErrorResponse(403, 'Admin cannot invite organization owner')
+      return createErrorResponse(event, 'Administrators cannot invite organization owners', 403)
     }
 
     // Check existing invitation
@@ -93,8 +102,7 @@ export default defineEventHandler(async (event) => {
       .executeTakeFirst()
 
     if (existingInvite) {
-      setResponseStatus(event, 409)
-      return createErrorResponse(409, 'Invitation already sent to this email')
+      return createErrorResponse(event, 'An invitation has already been sent to this email', 409)
     }
 
     // Create invitation
@@ -137,20 +145,13 @@ export default defineEventHandler(async (event) => {
       },
     })
 
-    return {
-      status: 200,
-      success: true,
-      message: 'Invitation sent successfully',
-      data: {
-        id: invitation.id,
-        token: invitation.token,
-        email: invitation.email,
-        status: invitation.status,
-        role: invitation.role,
-        metadata: invitation.metadata,
+    return createSuccessResponse<IInviteMemberResponse>(event, 'Invitation sent successfully', {
+      invitation: {
+        ...invitation,
+        metadata: JSON.parse(invitation.metadata),
         expiresAt: toISOString(invitation.expiresAt),
       },
-    }
+    })
   } catch (error) {
     return throwErrorResponse(event, error)
   }

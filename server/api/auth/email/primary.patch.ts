@@ -1,7 +1,17 @@
 import { z } from 'zod'
 
+export interface IUpdatePrimaryEmailResponse {
+  email: {
+    id: string
+    address: string
+    updatedAt: string
+  }
+}
+
 const PrimaryEmailSchema = z
-  .object({ emailId: z.string({ required_error: 'Email ID diperlukan' }) })
+  .object({
+    emailId: z.string({ required_error: 'Email ID is required' }),
+  })
   .strict()
 
 export default defineEventHandler(async (event) => {
@@ -22,8 +32,7 @@ export default defineEventHandler(async (event) => {
       .executeTakeFirst()
 
     if (!email) {
-      setResponseStatus(event, 404)
-      return createErrorResponse(404, 'Email tidak ditemukan atau belum terverifikasi')
+      return createErrorResponse(event, 'Email not found or not verified', 404)
     }
 
     await db.transaction().execute(async (trx) => {
@@ -48,15 +57,28 @@ export default defineEventHandler(async (event) => {
         .execute()
     })
 
-    return {
-      status: 200,
-      success: true,
-      message: 'Email utama berhasil diubah',
-      data: {
-        emailId: email.id,
+    await auditLog(event, {
+      action: 'update',
+      entity: 'email',
+      entityId: email.id,
+      metadata: {
+        success: true,
+        userId: payload.sub,
         email: email.email,
       },
-    }
+    })
+
+    return createSuccessResponse<IUpdatePrimaryEmailResponse>(
+      event,
+      'Primary email updated successfully',
+      {
+        email: {
+          id: email.id,
+          address: email.email,
+          updatedAt: toISOString(now),
+        },
+      }
+    )
   } catch (error) {
     return throwErrorResponse(event, error)
   }

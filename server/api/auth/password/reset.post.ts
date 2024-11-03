@@ -1,16 +1,22 @@
 import { z } from 'zod'
 import { hashPassword } from '~/utils/string'
 
+export interface IResetPasswordResponse {
+  password: {
+    resetAt: string
+  }
+}
+
 const PasswordResetSchema = z
   .object({
-    token: z.string({ required_error: 'Token diperlukan' }),
+    token: z.string({ required_error: 'Reset token is required' }),
     password: z
       .string()
-      .min(8, 'Password minimal 8 karakter')
-      .regex(/[A-Z]/, 'Password harus mengandung huruf kapital')
-      .regex(/[a-z]/, 'Password harus mengandung huruf kecil')
-      .regex(/[0-9]/, 'Password harus mengandung angka')
-      .regex(/[^A-Za-z0-9]/, 'Password harus mengandung karakter spesial'),
+      .min(8, 'Password must be at least 8 characters')
+      .regex(/[A-Z]/, 'Password must contain uppercase letters')
+      .regex(/[a-z]/, 'Password must contain lowercase letters')
+      .regex(/[0-9]/, 'Password must contain numbers')
+      .regex(/[^A-Za-z0-9]/, 'Password must contain special characters'),
   })
   .strict()
 
@@ -31,13 +37,11 @@ export default defineEventHandler(async (event) => {
       .executeTakeFirst()
 
     if (!verification) {
-      setResponseStatus(event, 400)
-      return createErrorResponse(400, 'Token tidak valid atau sudah kadaluarsa')
+      return createErrorResponse(event, 'Invalid or expired reset token', 400)
     }
 
     if (verification.attempts >= verification.maxAttempts) {
-      setResponseStatus(event, 400)
-      return createErrorResponse(400, 'Token sudah melebihi batas percobaan')
+      return createErrorResponse(event, 'Maximum reset attempts exceeded', 400)
     }
 
     // Hash new password
@@ -66,11 +70,21 @@ export default defineEventHandler(async (event) => {
         .execute()
     })
 
-    return {
-      status: 200,
-      success: true,
-      message: 'Password berhasil diubah',
-    }
+    await auditLog(event, {
+      action: 'reset',
+      entity: 'password',
+      entityId: verification.userId,
+      metadata: {
+        success: true,
+        userId: verification.userId,
+      },
+    })
+
+    return createSuccessResponse<IResetPasswordResponse>(event, 'Password reset successful', {
+      password: {
+        resetAt: toISOString(now),
+      },
+    })
   } catch (error) {
     return throwErrorResponse(event, error)
   }

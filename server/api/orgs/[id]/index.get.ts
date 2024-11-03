@@ -1,3 +1,35 @@
+export interface IGetOrganizationResponse {
+  organization: {
+    id: string
+    name: string
+    slug: string
+    description: string | null
+    logoUrl: string | null
+    website: string | null
+    email: string | null
+    phone: string | null
+    address: string | null
+    status: string
+    settings: Record<string, any>
+    metadata: Record<string, any>
+    isVerified: boolean
+    createdBy: string
+    createdAt: string
+    updatedAt: string | null
+    members: {
+      total: number
+      stats: Record<string, number>
+    }
+    owners: Array<{
+      id: string
+      email: string
+      firstName: string
+      lastName: string | null
+      joinedAt: string
+    }>
+  }
+}
+
 export default defineCachedEventHandler(
   async (event) => {
     const db = event.context.db
@@ -8,29 +40,11 @@ export default defineCachedEventHandler(
       const org = await db
         .selectFrom('organizations')
         .where('id', '=', orgId)
-        .select([
-          'id',
-          'name',
-          'slug',
-          'description',
-          'logoUrl',
-          'website',
-          'email',
-          'phone',
-          'address',
-          'status',
-          'settings',
-          'metadata',
-          'isVerified',
-          'createdBy',
-          'createdAt',
-          'updatedAt',
-        ])
+        .selectAll()
         .executeTakeFirst()
 
       if (!org) {
-        setResponseStatus(event, 404)
-        return createErrorResponse(404, 'Organization not found')
+        return createErrorResponse(event, 'Organization not found', 404)
       }
 
       // Get member count by role
@@ -54,11 +68,10 @@ export default defineCachedEventHandler(
         .select(['u.id as userId', 'u.firstName', 'u.lastName', 'e.email', 'm.joinedAt'])
         .execute()
 
-      // Transform data
-      const orgData = {
+      const organizationData = {
         ...org,
-        settings: org.settings,
-        metadata: org.metadata,
+        settings: JSON.parse(org.settings),
+        metadata: JSON.parse(org.metadata),
         isVerified: Boolean(org.isVerified),
         createdAt: toISOString(org.createdAt),
         updatedAt: toISOString(org.updatedAt),
@@ -78,12 +91,13 @@ export default defineCachedEventHandler(
         })),
       }
 
-      return {
-        status: 200,
-        success: true,
-        message: null,
-        data: orgData,
-      }
+      return createSuccessResponse<IGetOrganizationResponse>(
+        event,
+        'Organization retrieved successfully',
+        {
+          organization: organizationData,
+        }
+      )
     } catch (error) {
       return throwErrorResponse(event, error)
     }

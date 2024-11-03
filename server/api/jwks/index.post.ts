@@ -1,6 +1,18 @@
 import { typeid } from 'typeid-js'
 import { JWKSchema } from '~/database/schemas/jwk'
 
+export interface ICreateJWKResponse {
+  jwk: {
+    id: string
+    keyId: string
+    publicKey: string
+    algorithm: string
+    isActive: boolean
+    expiresAt: string
+    createdAt: string
+  }
+}
+
 const CreateJWKSchema = JWKSchema.pick({
   keyId: true,
   publicKey: true,
@@ -11,6 +23,7 @@ const CreateJWKSchema = JWKSchema.pick({
   algorithm: true,
   keyId: true,
 })
+
 export default defineEventHandler(async (event) => {
   const db = event.context.db
   const userId = event.context.auth.payload.sub
@@ -29,14 +42,12 @@ export default defineEventHandler(async (event) => {
       .executeTakeFirst()
 
     if (existingKey) {
-      setResponseStatus(event, 409)
-      return createErrorResponse(409, 'Key ID already exists')
+      return createErrorResponse(event, 'Key ID already exists', 409)
     }
 
     // Validate expiration time
     if (Number(body.expiresAt) <= now) {
-      setResponseStatus(event, 400)
-      return createErrorResponse(400, 'Expiration time must be in the future')
+      return createErrorResponse(event, 'Expiration time must be in the future', 400)
     }
 
     // Create JWK
@@ -71,20 +82,14 @@ export default defineEventHandler(async (event) => {
       },
     })
 
-    return {
-      status: 200,
-      success: true,
-      message: 'JWK created successfully',
-      data: {
-        id: jwk.id,
-        keyId: jwk.keyId,
-        publicKey: jwk.publicKey,
-        algorithm: jwk.algorithm,
+    return createSuccessResponse<ICreateJWKResponse>(event, 'JWK created successfully', {
+      jwk: {
+        ...jwk,
         isActive: Boolean(jwk.isActive),
         expiresAt: toISOString(jwk.expiresAt),
         createdAt: toISOString(jwk.createdAt),
       },
-    }
+    })
   } catch (error) {
     return throwErrorResponse(event, error)
   }
@@ -92,7 +97,7 @@ export default defineEventHandler(async (event) => {
 
 defineRouteMeta({
   openAPI: {
-    summary: 'Details of a JWK',
+    summary: 'Create a new JWK',
     tags: ['Administration'],
   },
 })

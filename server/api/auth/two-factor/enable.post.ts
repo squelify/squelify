@@ -2,10 +2,20 @@ import { typeid } from 'typeid-js'
 import { z } from 'zod'
 import { generateTOTPSecret, generateTOTPUri } from '~/utils/totp'
 
+export interface IEnable2FAResponse {
+  authenticator: {
+    id: string
+    secret: string
+    backupCodes: string[]
+    totpUri: string
+    qrCodeUrl: string
+  }
+}
+
 const Enable2FASchema = z
   .object({
     type: z.literal('totp'),
-    name: z.string().min(1, 'Nama authenticator diperlukan'),
+    name: z.string().min(1, 'Authenticator name is required'),
   })
   .strict()
 
@@ -28,8 +38,7 @@ export default defineEventHandler(async (event) => {
       .executeTakeFirst()
 
     if (!user) {
-      setResponseStatus(event, 404)
-      return createErrorResponse(404, 'User tidak ditemukan')
+      return createErrorResponse(event, 'User not found', 404)
     }
 
     // Check if authenticator name already exists
@@ -41,8 +50,7 @@ export default defineEventHandler(async (event) => {
       .executeTakeFirst()
 
     if (existingAuth) {
-      setResponseStatus(event, 400)
-      return createErrorResponse(400, 'Nama authenticator sudah digunakan')
+      return createErrorResponse(event, 'Authenticator name already in use', 400)
     }
 
     // Generate TOTP secret and backup codes
@@ -83,18 +91,31 @@ export default defineEventHandler(async (event) => {
 
     const qrCodeUrl = `${appConfig.baseURL}/api/qrcode?chl=${encodeURIComponent(totpUri)}`
 
-    return {
-      status: 200,
-      success: true,
-      message: 'TOTP berhasil dibuat, verifikasi kode TOTP untuk mengaktifkan 2FA',
-      data: {
-        id: id,
-        secret,
-        backupCodes,
-        totpUri,
-        qrCodeUrl,
+    await auditLog(event, {
+      action: 'enable',
+      entity: 'two_factor',
+      entityId: id,
+      metadata: {
+        success: true,
+        userId: user.id,
+        type: 'totp',
+        name: body.name,
       },
-    }
+    })
+
+    return createSuccessResponse<IEnable2FAResponse>(
+      event,
+      'TOTP created successfully, verify TOTP code to enable 2FA',
+      {
+        authenticator: {
+          id,
+          secret,
+          backupCodes,
+          totpUri,
+          qrCodeUrl,
+        },
+      }
+    )
   } catch (error) {
     return throwErrorResponse(event, error)
   }

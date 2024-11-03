@@ -1,11 +1,31 @@
 import { z } from 'zod'
 
+export interface IListJWKSResponse {
+  jwks: Array<{
+    id: string
+    keyId: string
+    publicKey: string
+    algorithm: string
+    isActive: boolean
+    expiresAt: string
+    createdAt: string
+    updatedAt: string | null
+  }>
+  pagination: {
+    currentPage: number
+    totalPages: number
+    totalItems: number
+    itemsPerPage: number
+  }
+}
+
 const QueryParamSchema = z.object({
-  page: z.coerce.number().min(1, 'Page must be greater than 0'),
+  page: z.coerce.number().min(1, 'Page must be greater than 0').default(1),
   limit: z.coerce
     .number()
     .min(1, 'Limit must be greater than 0')
-    .max(100, 'Limit must not exceed 100'),
+    .max(100, 'Limit must not exceed 100')
+    .default(10),
 })
 
 export default defineCachedEventHandler(
@@ -45,29 +65,21 @@ export default defineCachedEventHandler(
 
       const totalPages = Math.ceil(Number(totalCount?.count || 0) / limit)
 
-      const jwksData = jwks.map((jwk) => ({
-        id: jwk.id,
-        keyId: jwk.keyId,
-        publicKey: jwk.publicKey,
-        algorithm: jwk.algorithm,
-        isActive: Boolean(jwk.isActive),
-        expiresAt: toISOString(jwk.expiresAt),
-        createdAt: toISOString(jwk.createdAt),
-        updatedAt: toISOString(jwk.updatedAt),
-      }))
-
-      return {
-        status: 200,
-        success: true,
-        message: null,
-        data: jwksData,
-        meta: {
+      return createSuccessResponse<IListJWKSResponse>(event, 'JWKs retrieved successfully', {
+        jwks: jwks.map((jwk) => ({
+          ...jwk,
+          isActive: Boolean(jwk.isActive),
+          expiresAt: toISOString(jwk.expiresAt),
+          createdAt: toISOString(jwk.createdAt),
+          updatedAt: toISOString(jwk.updatedAt),
+        })),
+        pagination: {
           currentPage: page,
           totalPages,
           totalItems: Number(totalCount?.count || 0),
           itemsPerPage: limit,
         },
-      }
+      })
     } catch (error) {
       return throwErrorResponse(event, error)
     }

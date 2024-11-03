@@ -1,6 +1,19 @@
 import { typeid } from 'typeid-js'
 import { RoleSchema } from '~/database/schemas/role'
 
+export interface ICreateRoleResponse {
+  role: {
+    id: string
+    name: string
+    description: string | null
+    type: string
+    organizationId: string | null
+    isDefault: boolean
+    metadata: Record<string, any>
+    createdAt: string
+  }
+}
+
 export const CreateRoleSchema = RoleSchema.pick({
   name: true,
   description: true,
@@ -46,13 +59,11 @@ export default defineEventHandler(async (event) => {
       ])
 
       if (!org) {
-        setResponseStatus(event, 404)
-        return createErrorResponse(404, 'Organization not found')
+        return createErrorResponse(event, 'Organization not found', 404)
       }
 
       if (org.status === 'suspended') {
-        setResponseStatus(event, 400)
-        return createErrorResponse(400, 'Cannot create role for suspended organization')
+        return createErrorResponse(event, 'Cannot create role for suspended organization', 400)
       }
 
       if (!member) {
@@ -62,7 +73,7 @@ export default defineEventHandler(async (event) => {
           entityId: body.organizationId,
           metadata: {
             success: false,
-            reason: 'not_owner',
+            reason: 'unauthorized_creation',
             organizationName: org.name,
             createdBy: {
               id: userId,
@@ -71,8 +82,7 @@ export default defineEventHandler(async (event) => {
           },
         })
 
-        setResponseStatus(event, 403)
-        return createErrorResponse(403, 'Only organization owner can create roles')
+        return createErrorResponse(event, 'Only organization owners can create roles', 403)
       }
     }
 
@@ -90,8 +100,7 @@ export default defineEventHandler(async (event) => {
       .executeTakeFirst()
 
     if (existingRole) {
-      setResponseStatus(event, 409)
-      return createErrorResponse(409, `Role '${body.name}' already exists`)
+      return createErrorResponse(event, `Role '${body.name}' already exists in this scope`, 409)
     }
 
     // Create role
@@ -136,17 +145,14 @@ export default defineEventHandler(async (event) => {
       },
     })
 
-    return {
-      status: 200,
-      success: true,
-      message: 'Role created successfully',
-      data: {
+    return createSuccessResponse<ICreateRoleResponse>(event, 'Role created successfully', {
+      role: {
         ...role,
         isDefault: Boolean(role.isDefault),
         metadata: JSON.parse(role.metadata),
         createdAt: toISOString(role.createdAt),
       },
-    }
+    })
   } catch (error) {
     return throwErrorResponse(event, error)
   }

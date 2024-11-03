@@ -5,31 +5,36 @@ import { createUserSession, verifyUserCredentials } from '~/database/repository/
 import { getActiveJWK } from '~/database/repository/jwk.repo'
 import { JWTPayload } from '~/utils/jwt'
 
-// Login request validation schema
-export const LoginRequestSchema = z.object({
-  identity: z.string().email('Invalid email address format'),
-  password: z.string().min(8, 'Password must be at least 8 characters'),
-  deviceId: z.string().optional().nullable(),
-  deviceType: z.enum(['browser', 'mobile', 'desktop', 'tablet']).default('browser'),
-})
-
 export interface ILoginResponse {
   user: {
     id: string
     email: string
-    firstName: string
-    lastName: string
+    firstName: string | null
+    lastName: string | null
+    fullName: string
   }
   session: {
     id: string
     refreshToken: string
+    expiresAt: number
   }
   security: {
     requires2FA: boolean
-    type: string | null
+    type2FA: string | null
+    amr: string[]
   }
-  accessToken: string
+  token: {
+    accessToken: string
+    expiresIn: number
+  }
 }
+
+export const LoginRequestSchema = z.object({
+  identity: z.string().email('Invalid email address'),
+  password: z.string().min(8, 'Password must be at least 8 characters'),
+  deviceId: z.string().optional().nullable(),
+  deviceType: z.enum(['browser', 'mobile', 'desktop', 'tablet']).default('browser'),
+})
 
 export default defineEventHandler(async (event) => {
   const { appConfig, db } = event.context
@@ -179,16 +184,22 @@ export default defineEventHandler(async (event) => {
         email: user.email,
         firstName: user.firstName,
         lastName: user.lastName,
+        fullName: `${user.firstName} ${user.lastName}`.trim(),
       },
       session: {
         id: session.id,
         refreshToken: session.refreshToken,
+        expiresAt: session.expiresAt,
       },
       security: {
         requires2FA: !!twoFactor,
-        type: twoFactor?.type || null,
+        type2FA: twoFactor?.type || null,
+        amr: ['pwd'],
       },
-      accessToken,
+      token: {
+        accessToken,
+        expiresIn: 900,
+      },
     })
   } catch (error) {
     if (error instanceof JWTGenerationError) {

@@ -1,9 +1,20 @@
 import { z } from 'zod'
 
+export interface IRecoveryResponse {
+  recovery: {
+    id: string
+    name: string
+    type: string
+    remainingCodes: number
+    lastUsedAt: string
+    recoveredAt: string
+  }
+}
+
 const RecoverySchema = z
   .object({
-    id: z.string({ required_error: 'ID authenticator diperlukan' }),
-    code: z.string().length(8, 'Kode backup harus 8 karakter'),
+    id: z.string({ required_error: 'Authenticator ID is required' }),
+    code: z.string().length(8, 'Recovery code must be 8 characters'),
   })
   .strict()
 
@@ -24,13 +35,11 @@ export default defineEventHandler(async (event) => {
       .executeTakeFirst()
 
     if (!twoFactor) {
-      setResponseStatus(event, 404)
-      return createErrorResponse(404, 'Authenticator tidak ditemukan')
+      return createErrorResponse(event, 'Authenticator not found', 404)
     }
 
     if (!twoFactor.isVerified) {
-      setResponseStatus(event, 400)
-      return createErrorResponse(400, 'Authenticator belum diverifikasi')
+      return createErrorResponse(event, 'Authenticator is not verified', 400)
     }
 
     // Parse and verify backup codes
@@ -43,19 +52,27 @@ export default defineEventHandler(async (event) => {
         throw new Error('Invalid backup codes format')
       }
     } catch {
-      setResponseStatus(event, 500)
-      return createErrorResponse(500, 'Format backup codes tidak valid')
+      return createErrorResponse(event, 'Invalid backup codes format', 500)
     }
 
     if (backupCodes.length === 0) {
-      setResponseStatus(event, 400)
-      return createErrorResponse(400, 'Tidak ada kode backup yang tersedia')
+      return createErrorResponse(event, 'No backup codes available', 400)
     }
 
     const codeIndex = backupCodes.indexOf(body.code)
     if (codeIndex === -1) {
-      setResponseStatus(event, 400)
-      return createErrorResponse(400, 'Kode backup tidak valid atau sudah digunakan')
+      await auditLog(event, {
+        action: 'recovery',
+        entity: 'two_factor',
+        entityId: body.id,
+        metadata: {
+          success: false,
+          reason: 'invalid_code',
+          userId: payload.sub,
+        },
+      })
+
+      return createErrorResponse(event, 'Invalid or used recovery code', 400)
     }
 
     // Remove used backup code
@@ -72,19 +89,31 @@ export default defineEventHandler(async (event) => {
       .where('id', '=', twoFactor.id)
       .execute()
 
-    return {
-      status: 200,
-      success: true,
-      message: `Recovery berhasil untuk authenticator '${twoFactor.name}'`,
-      data: {
-        id: twoFactor.id,
-        name: twoFactor.name,
-        type: twoFactor.type,
+    await auditLog(event, {
+      action: 'recovery',
+      entity: 'two_factor',
+      entityId: body.id,
+      metadata: {
+        success: true,
+        userId: payload.sub,
         remainingCodes: backupCodes.length,
-        lastUsedAt: new Date(now * 1000).toISOString(),
-        recoveredAt: new Date(now * 1000).toISOString(),
       },
-    }
+    })
+
+    return createSuccessResponse<IRecoveryResponse>(
+      event,
+      `Recovery successful for authenticator '${twoFactor.name}'`,
+      {
+        recovery: {
+          id: twoFactor.id,
+          name: twoFactor.name,
+          type: twoFactor.type,
+          remainingCodes: backupCodes.length,
+          lastUsedAt: toISOString(now),
+          recoveredAt: toISOString(now),
+        },
+      }
+    )
   } catch (error) {
     return throwErrorResponse(event, error)
   }

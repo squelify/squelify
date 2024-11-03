@@ -1,3 +1,20 @@
+export interface IGetUserResponse {
+  user: {
+    id: string
+    firstName: string
+    lastName: string | null
+    username: string
+    avatarUrl: string | null
+    locale: string | null
+    isActive: boolean
+    isBanned: boolean
+    bannedUntil: string | null
+    lastSignInAt: string | null
+    createdAt: string
+    updatedAt: string | null
+  }
+}
+
 export default defineCachedEventHandler(
   async (event) => {
     const db = event.context.db
@@ -11,8 +28,7 @@ export default defineCachedEventHandler(
         .executeTakeFirst()
 
       if (!user) {
-        setResponseStatus(event, 400)
-        return createErrorResponse(400, 'No user found')
+        return createErrorResponse(event, 'User not found', 404)
       }
 
       const userData = {
@@ -25,7 +41,9 @@ export default defineCachedEventHandler(
         updatedAt: toISOString(user.updatedAt),
       }
 
-      return { status: 200, success: true, message: null, data: userData }
+      return createSuccessResponse<IGetUserResponse>(event, 'User retrieved successfully', {
+        user: userData,
+      })
     } catch (error) {
       return throwErrorResponse(event, error)
     }

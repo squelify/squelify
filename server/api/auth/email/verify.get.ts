@@ -1,5 +1,13 @@
 import { typeid } from 'typeid-js'
 
+export interface IVerifyEmailResponse {
+  verification: {
+    callbackURL: string | null
+    shouldRedirect: boolean
+    verifiedAt: string
+  }
+}
+
 export default defineEventHandler(async (event) => {
   const appConfig = event.context.appConfig
   const db = event.context.db
@@ -12,7 +20,7 @@ export default defineEventHandler(async (event) => {
     const now = Math.floor(Date.now() / 1000)
 
     if (!token) {
-      return createErrorResponse(400, 'Token verifikasi diperlukan')
+      return createErrorResponse(event, 'Verification token is required', 400)
     }
 
     const verification = await db
@@ -23,13 +31,11 @@ export default defineEventHandler(async (event) => {
       .executeTakeFirst()
 
     if (!verification) {
-      setResponseStatus(event, 404)
-      return createErrorResponse(404, 'Token verifikasi tidak ditemukan')
+      return createErrorResponse(event, 'Verification token not found', 404)
     }
 
     if (verification.verifiedAt) {
-      setResponseStatus(event, 400)
-      return createErrorResponse(400, 'Email sudah terverifikasi')
+      return createErrorResponse(event, 'Email already verified', 400)
     }
 
     // Check rate limit for token requests
@@ -42,11 +48,11 @@ export default defineEventHandler(async (event) => {
       .executeTakeFirst()
 
     if (rateLimit?.blockedUntil && rateLimit.blockedUntil > now) {
-      setResponseStatus(event, 429)
       const waitTimeMinutes = Math.ceil((rateLimit.blockedUntil - now) / 60)
       return createErrorResponse(
-        429,
-        `Terlalu banyak permintaan verifikasi email. Silakan coba lagi dalam ${waitTimeMinutes} menit`
+        event,
+        `Too many verification attempts. Please try again in ${waitTimeMinutes} minutes`,
+        429
       )
     }
 
@@ -69,11 +75,7 @@ export default defineEventHandler(async (event) => {
           .execute()
 
         if (blocked) {
-          setResponseStatus(event, 429)
-          return createErrorResponse(
-            429,
-            'Terlalu banyak permintaan token, coba lagi dalam 30 menit'
-          )
+          return createErrorResponse(event, 'Too many requests, try again in 30 minutes', 429)
         }
       } else {
         await db
@@ -111,10 +113,10 @@ export default defineEventHandler(async (event) => {
       const verificationUrl = `${appConfig.baseURL}/api/auth/email/verify?token=${newToken}`
       logger.info('[app]', 'New verification email:', verificationUrl)
 
-      setResponseStatus(event, 410)
       return createErrorResponse(
-        410,
-        'Token sudah kadaluarsa, silakan cek email untuk verifikasi ulang'
+        event,
+        'Token expired, check your email for a new verification link',
+        410
       )
     }
 
@@ -132,27 +134,37 @@ export default defineEventHandler(async (event) => {
 
       await trx
         .updateTable('emails')
-        .set({ verifiedAt: now, updatedAt: now })
+        .set({
+          verifiedAt: now,
+          updatedAt: now,
+        })
         .where('userId', '=', verification.userId)
         .where('email', '=', verification.identifier)
         .execute()
     })
 
-    const response = {
-      status: 200,
-      success: true,
-      message: 'Email berhasil diverifikasi',
-      data: {
-        callbackURL: callbackURL || null,
-        shouldRedirect: redirect && !!callbackURL,
+    await auditLog(event, {
+      action: 'verify',
+      entity: 'email',
+      entityId: verification.id,
+      userId: verification.userId,
+      metadata: {
+        success: true,
+        email: verification.identifier,
       },
-    }
+    })
 
     if (redirect && callbackURL) {
       return sendRedirect(event, callbackURL)
     }
 
-    return response
+    return createSuccessResponse<IVerifyEmailResponse>(event, 'Email verification successful', {
+      verification: {
+        callbackURL: callbackURL || null,
+        shouldRedirect: redirect && !!callbackURL,
+        verifiedAt: toISOString(now),
+      },
+    })
   } catch (error) {
     return throwErrorResponse(event, error)
   }

@@ -3,7 +3,23 @@ import type { ColumnType, Generated } from 'kysely'
 import { z } from 'zod'
 
 const auditActionEnum = z.enum(
-  ['create', 'update', 'delete', 'login', 'logout', 'impersonate', 'invite'],
+  [
+    'create',
+    'delete',
+    'disable',
+    'authenticate',
+    'enable',
+    'forgot',
+    'impersonate',
+    'invite',
+    'login',
+    'logout',
+    'recovery',
+    'refresh',
+    'reset',
+    'update',
+    'verify',
+  ],
   {
     required_error: 'Action is required',
     invalid_type_error: 'Invalid action type',
@@ -22,6 +38,7 @@ const auditEntityEnum = z.enum(
     'passkey',
     'password',
     'permission',
+    'token',
     'role',
     'session',
     'two_factor',

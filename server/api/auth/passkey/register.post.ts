@@ -1,5 +1,3 @@
-// FIXME -- this is not working yet
-
 import {
   VerifiedRegistrationResponse,
   generateRegistrationOptions,
@@ -17,6 +15,13 @@ import * as jose from 'jose'
 import { typeid } from 'typeid-js'
 import { z } from 'zod'
 
+export interface IRegisterPasskeyResponse {
+  passkey: {
+    name: string
+    registeredAt: string
+  }
+}
+
 const authenticatorAttestationResponseJSON = z.object({
   clientDataJSON: z.string() as z.ZodType<Base64URLString>,
   attestationObject: z.string() as z.ZodType<Base64URLString>,
@@ -31,16 +36,16 @@ const authenticatorAttestationResponseJSON = z.object({
 const registerResponseJSON = z.object({
   id: z.string() as z.ZodType<Base64URLString>,
   rawId: z.string() as z.ZodType<Base64URLString>,
-  response: authenticatorAttestationResponseJSON, // as z.ZodType<AuthenticatorAttestationResponseJSON>
-  authenticatorAttachment: z.enum(['platform', 'cross-platform']).optional(), //  as z.ZodType<AuthenticatorAttachment>
-  clientExtensionResults: z.record(z.any()), // as z.ZodType<AuthenticationExtensionsClientOutputs>
+  response: authenticatorAttestationResponseJSON,
+  authenticatorAttachment: z.enum(['platform', 'cross-platform']).optional(),
+  clientExtensionResults: z.record(z.any()),
   type: z.literal('public-key') as z.ZodType<PublicKeyCredentialType>,
 })
 
 const RegisterPasskeySchema = z
   .object({
-    name: z.string().min(1, 'Nama passkey diperlukan'),
-    response: registerResponseJSON, // satisfies z.ZodType<RegistrationResponseJSON>
+    name: z.string().min(1, 'Passkey name is required'),
+    response: registerResponseJSON,
   })
   .strict()
 
@@ -61,8 +66,7 @@ export default defineEventHandler(async (event) => {
       .executeTakeFirst()
 
     if (!user) {
-      setResponseStatus(event, 404)
-      return createErrorResponse(404, 'User tidak ditemukan')
+      return createErrorResponse(event, 'User not found', 404)
     }
 
     // Check if passkey name already exists
@@ -74,8 +78,7 @@ export default defineEventHandler(async (event) => {
       .executeTakeFirst()
 
     if (existingPasskey) {
-      setResponseStatus(event, 400)
-      return createErrorResponse(400, 'Nama passkey sudah digunakan')
+      return createErrorResponse(event, 'Passkey name already in use', 400)
     }
 
     // Get existing passkeys for exclusion
@@ -115,24 +118,24 @@ export default defineEventHandler(async (event) => {
 
     // Verify registration response
     const verification: VerifiedRegistrationResponse = await verifyRegistrationResponse({
-      response: body.response.response,
+      response: body.response.response as any, // FIXME - fix type
       expectedChallenge: options.challenge,
       expectedOrigin: appConfig.baseURL,
       expectedRPID: appConfig.domain,
     })
 
     if (!verification.verified || !verification.registrationInfo) {
-      setResponseStatus(event, 400)
-      return createErrorResponse(400, 'Verifikasi passkey gagal')
+      return createErrorResponse(event, 'Passkey verification failed', 400)
     }
 
     const { credential } = verification.registrationInfo
 
     // Store the passkey
+    const passkeyId = typeid('pass').toString()
     await db
       .insertInto('passkeys')
       .values({
-        id: typeid('pass').toString(),
+        id: passkeyId,
         userId: user.id,
         webauthnUserId: webauthnUserIdString,
         name: body.name,
@@ -146,15 +149,27 @@ export default defineEventHandler(async (event) => {
       })
       .execute()
 
-    return {
-      status: 200,
-      success: true,
-      message: 'Passkey berhasil didaftarkan',
-      data: {
+    await auditLog(event, {
+      action: 'create',
+      entity: 'passkey',
+      entityId: passkeyId,
+      metadata: {
+        success: true,
+        userId: user.id,
         name: body.name,
-        registeredAt: new Date(now * 1000).toISOString(),
       },
-    }
+    })
+
+    return createSuccessResponse<IRegisterPasskeyResponse>(
+      event,
+      'Passkey registered successfully',
+      {
+        passkey: {
+          name: body.name,
+          registeredAt: toISOString(now),
+        },
+      }
+    )
   } catch (error) {
     return throwErrorResponse(event, error)
   }

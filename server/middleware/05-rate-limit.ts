@@ -77,8 +77,9 @@ export default defineEventHandler(async (event) => {
       const waitMinutes = Math.ceil((ipLimitInfo.resetAt - Math.floor(Date.now() / 1000)) / 60)
       setResponseStatus(event, 429)
       return createErrorResponse(
-        429,
-        `Terlalu banyak request. Silakan coba lagi dalam ${waitMinutes} menit.`
+        event,
+        `Too many requests. Please try again in ${waitMinutes} minute(s)`,
+        429
       )
     }
 
@@ -95,8 +96,9 @@ export default defineEventHandler(async (event) => {
           )
           setResponseStatus(event, 429)
           return createErrorResponse(
-            429,
-            `Terlalu banyak request untuk email ini. Silakan coba lagi dalam ${waitMinutes} menit.`
+            event,
+            `Too many requests for this email. Please try again in ${waitMinutes} minute(s)`,
+            429
           )
         }
         await createRateLimit(db, email, 'email', rateLimits.user.points, rateLimits.user.window)
@@ -109,8 +111,9 @@ export default defineEventHandler(async (event) => {
         const waitMinutes = Math.ceil((userLimitInfo.resetAt - Math.floor(Date.now() / 1000)) / 60)
         setResponseStatus(event, 429)
         return createErrorResponse(
-          429,
-          `Terlalu banyak request. Silakan coba lagi dalam ${waitMinutes} menit.`
+          event,
+          `Too many requests. Please try again in ${waitMinutes} minutes`,
+          429
         )
       }
       await createRateLimit(db, userId, 'user', rateLimits.user.points, rateLimits.user.window)

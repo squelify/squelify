@@ -1,4 +1,14 @@
-import * as jose from 'jose'
+export interface IGetEmailsResponse {
+  emails: Array<{
+    id: string
+    address: string
+    isPrimary: boolean
+    isVerified: boolean
+    verifiedAt: string | null
+    createdAt: string
+    updatedAt: string
+  }>
+}
 
 export default defineEventHandler(async (event) => {
   const payload = event.context.auth.payload
@@ -17,19 +27,17 @@ export default defineEventHandler(async (event) => {
     // Transform data for response
     const emails = rawEmails.map((email) => ({
       id: email.id,
-      email: email.email,
+      address: email.email,
       isPrimary: Boolean(email.isPrimary),
       isVerified: Boolean(email.verifiedAt != null),
-      verifiedAt: toISOString(email.verifiedAt),
+      verifiedAt: email.verifiedAt ? toISOString(email.verifiedAt) : null,
       createdAt: toISOString(email.createdAt),
       updatedAt: toISOString(email.updatedAt),
     }))
 
-    return {
-      status: 200,
-      success: true,
-      data: emails,
-    }
+    return createSuccessResponse<IGetEmailsResponse>(event, null, {
+      emails,
+    })
   } catch (error) {
     return throwErrorResponse(event, error)
   }

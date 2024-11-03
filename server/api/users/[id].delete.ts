@@ -1,3 +1,11 @@
+export interface IDeleteUserResponse {
+  user: {
+    id: string
+    email: string
+    name: string
+  }
+}
+
 export default defineEventHandler(async (event) => {
   const db = event.context.db
   const userId = event.context.params.id
@@ -31,8 +39,7 @@ export default defineEventHandler(async (event) => {
         },
       })
 
-      setResponseStatus(event, 403)
-      return createErrorResponse(403, 'Insufficient permissions to delete users')
+      return createErrorResponse(event, 'You do not have permission to delete users', 403)
     }
 
     // Get user with primary email
@@ -46,8 +53,7 @@ export default defineEventHandler(async (event) => {
       .executeTakeFirst()
 
     if (!user) {
-      setResponseStatus(event, 404)
-      return createErrorResponse(404, 'User not found')
+      return createErrorResponse(event, 'User not found', 404)
     }
 
     // Prevent admin from deleting themselves
@@ -66,12 +72,17 @@ export default defineEventHandler(async (event) => {
         },
       })
 
-      setResponseStatus(event, 400)
-      return createErrorResponse(400, 'Admin cannot delete their own account')
+      return createErrorResponse(event, 'Administrators cannot delete their own account', 400)
     }
 
     // Delete user - cascading will handle all related records
     await db.deleteFrom('users').where('id', '=', userId).execute()
+
+    const userData = {
+      id: user.id,
+      email: user.email,
+      name: `${user.firstName} ${user.lastName}`.trim(),
+    }
 
     // Log successful deletion
     await auditLog(event, {
@@ -80,11 +91,7 @@ export default defineEventHandler(async (event) => {
       entityId: userId,
       metadata: {
         success: true,
-        deletedUser: {
-          id: user.id,
-          email: user.email,
-          name: `${user.firstName} ${user.lastName}`.trim(),
-        },
+        deletedUser: userData,
         deletedBy: {
           id: adminId,
           email: adminEmail,
@@ -92,16 +99,9 @@ export default defineEventHandler(async (event) => {
       },
     })
 
-    return {
-      status: 200,
-      success: true,
-      message: 'User deleted successfully',
-      data: {
-        id: user.id,
-        email: user.email,
-        name: `${user.firstName} ${user.lastName}`.trim(),
-      },
-    }
+    return createSuccessResponse<IDeleteUserResponse>(event, 'User deleted successfully', {
+      user: userData,
+    })
   } catch (error) {
     return throwErrorResponse(event, error)
   }

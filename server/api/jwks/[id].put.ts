@@ -1,6 +1,18 @@
 import { z } from 'zod'
 import { JWKSchema } from '~/database/schemas/jwk'
 
+export interface IUpdateJWKResponse {
+  jwk: {
+    id: string
+    keyId: string
+    publicKey: string
+    algorithm: string
+    isActive: boolean
+    expiresAt: string
+    updatedAt: string
+  }
+}
+
 const UpdateJWKSchema = JWKSchema.pick({
   keyId: true,
   publicKey: true,
@@ -29,8 +41,7 @@ export default defineEventHandler(async (event) => {
       .executeTakeFirst()
 
     if (!jwk) {
-      setResponseStatus(event, 404)
-      return createErrorResponse(404, 'JWK not found')
+      return createErrorResponse(event, 'JWK not found', 404)
     }
 
     // Check if keyId exists when updating
@@ -42,15 +53,13 @@ export default defineEventHandler(async (event) => {
         .executeTakeFirst()
 
       if (existingKey) {
-        setResponseStatus(event, 409)
-        return createErrorResponse(409, 'Key ID already exists')
+        return createErrorResponse(event, 'Key ID already exists', 409)
       }
     }
 
     // Validate expiration time
     if (body.expiresAt && Number(body.expiresAt) <= now) {
-      setResponseStatus(event, 400)
-      return createErrorResponse(400, 'Expiration time must be in the future')
+      return createErrorResponse(event, 'Expiration time must be in the future', 400)
     }
 
     // Prepare update data with boolean to integer conversion
@@ -92,20 +101,14 @@ export default defineEventHandler(async (event) => {
       },
     })
 
-    return {
-      status: 200,
-      success: true,
-      message: 'JWK updated successfully',
-      data: {
-        id: updatedJwk.id,
-        keyId: updatedJwk.keyId,
-        publicKey: updatedJwk.publicKey,
-        algorithm: updatedJwk.algorithm,
+    return createSuccessResponse<IUpdateJWKResponse>(event, 'JWK updated successfully', {
+      jwk: {
+        ...updatedJwk,
         isActive: Boolean(updatedJwk.isActive),
         expiresAt: toISOString(updatedJwk.expiresAt),
         updatedAt: toISOString(updatedJwk.updatedAt),
       },
-    }
+    })
   } catch (error) {
     return throwErrorResponse(event, error)
   }

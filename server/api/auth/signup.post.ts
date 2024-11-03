@@ -1,23 +1,31 @@
+import { isProduction } from 'std-env'
 import { typeid } from 'typeid-js'
 import { z } from 'zod'
 
+export interface ISignupResponse {
+  message: string
+  verificationUrl?: string // Only in development
+}
+
 export const SignupRequestSchema = z
   .object({
-    email: z.string().email('Email tidak valid'),
+    email: z.string().email('Invalid email address'),
     username: z
       .string()
-      .min(3, 'Username minimal 3 karakter')
-      .max(50, 'Username maksimal 50 karakter')
-      .regex(/^[a-z0-9_]+$/, 'Username hanya boleh mengandung huruf kecil, angka, dan underscore')
-      .optional(),
+      .min(3, 'Username must be at least 3 characters')
+      .max(50, 'Username must not exceed 50 characters')
+      .regex(
+        /^[a-z0-9_]+$/,
+        'Username can only contain lowercase letters, numbers, and underscores'
+      ),
     password: z
       .string()
-      .min(8, 'Password minimal 8 karakter')
-      .regex(/[A-Z]/, 'Password harus mengandung huruf kapital')
-      .regex(/[a-z]/, 'Password harus mengandung huruf kecil')
-      .regex(/[0-9]/, 'Password harus mengandung angka')
-      .regex(/[^A-Za-z0-9]/, 'Password harus mengandung karakter spesial'),
-    firstName: z.string().min(2, 'Nama depan minimal 2 karakter'),
+      .min(8, 'Password must be at least 8 characters')
+      .regex(/[A-Z]/, 'Password must contain uppercase letters')
+      .regex(/[a-z]/, 'Password must contain lowercase letters')
+      .regex(/[0-9]/, 'Password must contain numbers')
+      .regex(/[^A-Za-z0-9]/, 'Password must contain special characters'),
+    firstName: z.string().min(2, 'First name must be at least 2 characters'),
     lastName: z.string().optional(),
   })
   .strict()
@@ -96,10 +104,10 @@ export default defineEventHandler(async (event) => {
     const userId = typeid('user').toString()
     const hashedPassword = await hashPassword(body.password)
     const now = Math.floor(Date.now() / 1000)
+    const verificationToken = typeid().toString()
 
     // Create user account transaction
     await db.transaction().execute(async (trx) => {
-      // Create user first
       await trx
         .insertInto('users')
         .values({
@@ -112,7 +120,6 @@ export default defineEventHandler(async (event) => {
         })
         .execute()
 
-      // Create password record
       await trx
         .insertInto('passwords')
         .values({
@@ -124,7 +131,6 @@ export default defineEventHandler(async (event) => {
         })
         .execute()
 
-      // Create account
       await trx
         .insertInto('accounts')
         .values({
@@ -136,7 +142,6 @@ export default defineEventHandler(async (event) => {
         })
         .execute()
 
-      // Create email
       await trx
         .insertInto('emails')
         .values({
@@ -148,8 +153,6 @@ export default defineEventHandler(async (event) => {
         })
         .execute()
 
-      // Create verification token
-      const verificationToken = typeid().toString()
       await trx
         .insertInto('verifications')
         .values({
@@ -158,25 +161,13 @@ export default defineEventHandler(async (event) => {
           type: 'email',
           identifier: body.email,
           token: verificationToken,
-          expiresAt: now,
+          expiresAt: now + 24 * 60 * 60, // 24 hours
           createdAt: now,
         })
         .execute()
-
-      // Send verification email
-      const verificationUrl = `${appConfig.baseURL}/api/auth/email/verify?token=${verificationToken}`
-      // await sendRawEmail('verify-email', body.email, `Verification URL: ${verificationUrl}`)
-      logger.debug('[app]', `Verification URL: ${verificationUrl}`)
-
-      // TODO: Send verification email using jsx-email
-      // await sendJSXEmail('verify-email', body.email, {
-      //   email: body.email,
-      //   token: verificationToken,
-      //   url: verificationUrl,
-      // })
     })
 
-    // Log successful signup after transaction
+    // Log successful signup
     await auditLog(event, {
       action: 'create',
       entity: 'user',
@@ -194,10 +185,19 @@ export default defineEventHandler(async (event) => {
       },
     })
 
-    return createSuccessResponse(
-      event,
-      'Registration is successful, please check your email for verification'
-    )
+    const verificationUrl = `${appConfig.baseURL}/api/auth/email/verify?token=${verificationToken}`
+    logger.debug('[app]', `Verification URL: ${verificationUrl}`)
+
+    const response: ISignupResponse = {
+      message: 'Registration successful, please check your email for verification',
+    }
+
+    // Include verification URL in development
+    if (!isProduction) {
+      response.verificationUrl = verificationUrl
+    }
+
+    return createSuccessResponse<ISignupResponse>(event, response.message, response)
   } catch (error) {
     await auditLog(event, {
       action: 'create',
