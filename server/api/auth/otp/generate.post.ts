@@ -78,6 +78,6 @@ export default defineEventHandler(async (event) => {
       },
     }
   } catch (error) {
-    return throwErrorResponse(error)
+    return throwErrorResponse(event, error)
   }
 })

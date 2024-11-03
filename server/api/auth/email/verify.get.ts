@@ -154,6 +154,6 @@ export default defineEventHandler(async (event) => {
 
     return response
   } catch (error) {
-    return throwErrorResponse(error)
+    return throwErrorResponse(event, error)
   }
 })

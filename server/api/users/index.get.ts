@@ -1,12 +1,36 @@
 import { z } from 'zod'
 
+export interface IListUsersResponse {
+  users: Array<{
+    id: string
+    firstName: string
+    lastName: string | null
+    username: string
+    avatarUrl: string | null
+    locale: string | null
+    isActive: boolean
+    isBanned: boolean
+    bannedUntil: string | null
+    lastSignInAt: string | null
+    createdAt: string
+    updatedAt: string | null
+  }>
+  pagination: {
+    currentPage: number
+    totalPages: number
+    totalItems: number
+    itemsPerPage: number
+  }
+}
+
 // Query params schema
 const QueryParamSchema = z.object({
-  page: z.coerce.number().min(1, 'Page must be greater than 0'),
+  page: z.coerce.number().min(1, 'Page must be greater than 0').default(1),
   limit: z.coerce
     .number()
     .min(1, 'Limit must be greater than 0')
-    .max(100, 'Limit must not exceed 100'),
+    .max(100, 'Limit must not exceed 100')
+    .default(10),
 })
 
 export default defineCachedEventHandler(
@@ -28,9 +52,8 @@ export default defineCachedEventHandler(
       // Get paginated users
       const users = await db.selectFrom('users').selectAll().limit(limit).offset(offset).execute()
 
-      if (!users) {
-        setResponseStatus(event, 400)
-        return createErrorResponse(400, 'No user found')
+      if (!users?.length) {
+        return createErrorResponse(event, 'No users found', 404)
       }
 
       const totalPages = Math.ceil(Number(totalCount?.count || 0) / limit)
@@ -45,20 +68,17 @@ export default defineCachedEventHandler(
         updatedAt: toISOString(user.updatedAt),
       }))
 
-      return {
-        status: 200,
-        success: true,
-        message: null,
-        data: usersData,
-        meta: {
+      return createSuccessResponse<IListUsersResponse>(event, 'Users retrieved successfully', {
+        users: usersData,
+        pagination: {
           currentPage: page,
           totalPages,
           totalItems: Number(totalCount?.count || 0),
           itemsPerPage: limit,
         },
-      }
+      })
     } catch (error) {
-      return throwErrorResponse(error)
+      return throwErrorResponse(event, error)
     }
   },
   {

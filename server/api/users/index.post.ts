@@ -2,6 +2,25 @@ import { typeid } from 'typeid-js'
 import { z } from 'zod'
 import { UserSchema } from '~/database/schemas/user'
 
+// Response interface
+export interface ICreateUserResponse {
+  user: {
+    id: string
+    firstName: string
+    lastName: string | null
+    username: string
+    email: string
+    avatarUrl: string | null
+    locale: string | null
+    isActive: boolean
+    isBanned: boolean
+    bannedUntil: string | null
+    lastSignInAt: string | null
+    createdAt: string
+    updatedAt: string | null
+  }
+}
+
 export const CreateUserSchema = UserSchema.pick({
   firstName: true,
   lastName: true,
@@ -16,14 +35,14 @@ export const CreateUserSchema = UserSchema.pick({
     locale: true,
   })
   .extend({
-    email: z.string().email('Email tidak valid'),
+    email: z.string().email('Invalid email format'),
     password: z
       .string()
-      .min(8, 'Password minimal 8 karakter')
-      .regex(/[A-Z]/, 'Password harus mengandung huruf kapital')
-      .regex(/[a-z]/, 'Password harus mengandung huruf kecil')
-      .regex(/[0-9]/, 'Password harus mengandung angka')
-      .regex(/[^A-Za-z0-9]/, 'Password harus mengandung karakter spesial')
+      .min(8, 'Password must be at least 8 characters')
+      .regex(/[A-Z]/, 'Password must contain uppercase letter')
+      .regex(/[a-z]/, 'Password must contain lowercase letter')
+      .regex(/[0-9]/, 'Password must contain number')
+      .regex(/[^A-Za-z0-9]/, 'Password must contain special character')
       .optional()
       .nullable(),
   })
@@ -43,8 +62,7 @@ export default defineEventHandler(async (event) => {
       .executeTakeFirst()
 
     if (existingEmail) {
-      setResponseStatus(event, 409)
-      return createErrorResponse(409, `Email '${body.email}' sudah terdaftar`)
+      return createErrorResponse(event, `Email address '${body.email}' is already registered`, 409)
     }
 
     let username = body.username
@@ -72,8 +90,7 @@ export default defineEventHandler(async (event) => {
       }
 
       if (!isUnique) {
-        setResponseStatus(event, 500)
-        return createErrorResponse(500, 'Gagal generate username yang unik')
+        return createErrorResponse(event, 'Failed to generate unique username', 500)
       }
     } else {
       const existingUser = await db
@@ -83,8 +100,7 @@ export default defineEventHandler(async (event) => {
         .executeTakeFirst()
 
       if (existingUser) {
-        setResponseStatus(event, 409)
-        return createErrorResponse(409, `Username '${username}' sudah digunakan`)
+        return createErrorResponse(event, `Username '${username}' is already taken`, 409)
       }
     }
 
@@ -135,6 +151,7 @@ export default defineEventHandler(async (event) => {
 
       return {
         ...user,
+        email: body.email,
         isActive: Boolean(user.isActive),
         isBanned: Boolean(user.isBanned),
         bannedUntil: toISOString(user.bannedUntil),
@@ -144,14 +161,11 @@ export default defineEventHandler(async (event) => {
       }
     })
 
-    return {
-      status: 200,
-      success: true,
-      message: 'User berhasil dibuat',
-      data: result,
-    }
+    return createSuccessResponse<ICreateUserResponse>(event, 'User created successfully', {
+      user: result,
+    })
   } catch (error) {
-    return throwErrorResponse(error)
+    return throwErrorResponse(event, error)
   }
 })
 

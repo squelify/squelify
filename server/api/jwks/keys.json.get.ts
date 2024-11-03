@@ -66,7 +66,7 @@ export default defineCachedEventHandler(
 
       return jwks
     } catch (error) {
-      return throwErrorResponse(error)
+      return throwErrorResponse(event, error)
     }
   },
   {

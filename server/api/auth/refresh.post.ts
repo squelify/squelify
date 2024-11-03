@@ -76,6 +76,6 @@ export default defineEventHandler(async (event) => {
       data: { accessToken },
     }
   } catch (error) {
-    return throwErrorResponse(error)
+    return throwErrorResponse(event, error)
   }
 })

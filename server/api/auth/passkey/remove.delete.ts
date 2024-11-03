@@ -62,6 +62,6 @@ export default defineEventHandler(async (event) => {
       message: 'Passkey removed successfully',
     }
   } catch (error) {
-    return throwErrorResponse(error)
+    return throwErrorResponse(event, error)
   }
 })

@@ -11,7 +11,7 @@ import type { JWK, JWKAlgorithm, JWKInsert } from '../schemas/jwk'
 export async function getActiveJWK(db: Kysely<Database>): Promise<Partial<JWK> | null> {
   const now = Math.floor(Date.now() / 1000)
 
-  // Get the most recently created active JWK
+  // Get the most recently created active JWK with specific algorithm
   return await db
     .selectFrom('jwks')
     .where('isActive', '=', 1)

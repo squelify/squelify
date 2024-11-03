@@ -13,6 +13,6 @@ export default defineEventHandler(async (event) => {
     logger.debug('[app]', 'Update role permissions payload:', body)
     return { message: 'Not yet implemented' }
   } catch (error) {
-    return throwErrorResponse(error)
+    return throwErrorResponse(event, error)
   }
 })

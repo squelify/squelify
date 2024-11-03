@@ -48,8 +48,7 @@ export default defineEventHandler(async (event) => {
         },
       })
 
-      setResponseStatus(event, 400)
-      return createErrorResponse(400, 'Email sudah terdaftar')
+      return createErrorResponse(event, 'Email address already registered', 400)
     }
 
     let username = body.username
@@ -90,8 +89,7 @@ export default defineEventHandler(async (event) => {
         },
       })
 
-      setResponseStatus(event, 409)
-      return createErrorResponse(409, `Username '${username}' is already taken`)
+      return createErrorResponse(event, `Username '${username}' is already taken`, 409)
     }
 
     // Create user account
@@ -196,11 +194,10 @@ export default defineEventHandler(async (event) => {
       },
     })
 
-    return {
-      status: 200,
-      success: true,
-      message: 'Pendaftaran berhasil, silakan cek email untuk verifikasi',
-    }
+    return createSuccessResponse(
+      event,
+      'Registration is successful, please check your email for verification'
+    )
   } catch (error) {
     await auditLog(event, {
       action: 'create',
@@ -212,6 +209,6 @@ export default defineEventHandler(async (event) => {
       },
     })
 
-    return throwErrorResponse(error)
+    return throwErrorResponse(event, error)
   }
 })

@@ -2,17 +2,18 @@ import { useStore } from '@nanostores/react'
 import { createContext, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { CookiesProvider, useCookies } from 'react-cookie'
 import type { CookieSetOptions } from 'universal-cookie'
-import { LoginResponse } from '~/api/auth/login.post'
+import { ILoginResponse } from '~/api/auth/login.post'
 import { useApiClient } from '#/context/hooks/use-api-client'
 import { SEOMetaProvider } from '#/context/providers/seo-provider'
 import { authStore, resetAuthState, saveAuthState } from '#/context/stores/auth.store'
 import { defaultAuthStoreValues } from '#/context/stores/auth.store'
 import type { AuthStore } from '#/context/stores/auth.store'
+import type { ApiResponse } from '#/services/types'
 import { clx } from '#/utils/helper'
 
 export type AuthContextType = {
-  login: (identity: string, password: string) => Promise<LoginResponse | null>
-  signup: (identity: string, password: string) => Promise<LoginResponse | null>
+  login: (identity: string, password: string) => Promise<ApiResponse<ILoginResponse> | null>
+  signup: (identity: string, password: string) => Promise<ApiResponse<ILoginResponse> | null>
   logout: () => void
 } & Pick<AuthStore, 'user' | 'role'>
 

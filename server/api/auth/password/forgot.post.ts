@@ -70,6 +70,6 @@ export default defineEventHandler(async (event) => {
       message: 'Link reset password telah dikirim ke email Anda',
     }
   } catch (error) {
-    return throwErrorResponse(error)
+    return throwErrorResponse(event, error)
   }
 })

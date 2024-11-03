@@ -85,7 +85,7 @@ export default defineCachedEventHandler(
         data: orgData,
       }
     } catch (error) {
-      return throwErrorResponse(error)
+      return throwErrorResponse(event, error)
     }
   },
   {

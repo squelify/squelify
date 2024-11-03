@@ -27,7 +27,7 @@ export default defineCachedEventHandler(
 
       return { status: 200, success: true, message: null, data: userData }
     } catch (error) {
-      return throwErrorResponse(error)
+      return throwErrorResponse(event, error)
     }
   },
   {

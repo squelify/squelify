@@ -13,60 +13,43 @@ export const LoginRequestSchema = z.object({
   deviceType: z.enum(['browser', 'mobile', 'desktop', 'tablet']).default('browser'),
 })
 
+export interface ILoginResponse {
+  user: {
+    id: string
+    email: string
+    firstName: string
+    lastName: string
+  }
+  session: {
+    id: string
+    refreshToken: string
+  }
+  security: {
+    requires2FA: boolean
+    type: string | null
+  }
+  accessToken: string
+}
+
 export default defineEventHandler(async (event) => {
   const { appConfig, db } = event.context
   const requestId = typeid('req').toString()
 
   try {
     const startTime = Date.now()
-    logger.info('[auth/login]', {
-      requestId,
-      message: 'Processing login request',
-      timestamp: new Date().toISOString(),
-    })
-
     const { clientIpAddress, userAgent, userAgentHash } = getClientInfo(event)
     const body = await requireValidatedBody(event, LoginRequestSchema)
     const { identity, password, deviceId, deviceType } = body
 
-    // Enhanced request logging
-    logger.debug('[auth/login]', {
-      requestId,
-      message: 'Login attempt details',
-      data: {
-        email: identity,
-        deviceType,
-        ipAddress: clientIpAddress,
-        userAgent: userAgent?.slice(0, 50),
-        timestamp: new Date().toISOString(),
-      },
-    })
-
     // Get active JWK
     const activeKey = await getActiveJWK(db)
     if (!activeKey) {
-      logger.error('[auth/login]', {
-        requestId,
-        message: 'Authentication service unavailable - No active JWK',
-        timestamp: new Date().toISOString(),
-      })
-      setResponseStatus(event, 503)
-      return createErrorResponse(503, 'Authentication service temporarily unavailable')
+      return createErrorResponse(event, 'Authentication service temporarily unavailable', 503)
     }
 
     // Verify credentials
     const user = await verifyUserCredentials(db, identity, password)
     if (!user) {
-      logger.warn('[auth/login]', {
-        requestId,
-        message: 'Invalid credentials',
-        data: {
-          email: identity,
-          ipAddress: clientIpAddress,
-          timestamp: new Date().toISOString(),
-        },
-      })
-
       await auditLog(event, {
         action: 'login',
         entity: 'user',
@@ -81,22 +64,11 @@ export default defineEventHandler(async (event) => {
         },
       })
 
-      setResponseStatus(event, 401)
-      return createErrorResponse(401, 'Invalid email or password')
+      return createErrorResponse(event, 'Invalid email or password', 401)
     }
 
     // Account status checks
     if (!user.isActive) {
-      logger.warn('[auth/login]', {
-        requestId,
-        message: 'Inactive account login attempt',
-        data: {
-          userId: user.id,
-          email: user.email,
-          timestamp: new Date().toISOString(),
-        },
-      })
-
       await auditLog(event, {
         action: 'login',
         entity: 'user',
@@ -109,26 +81,13 @@ export default defineEventHandler(async (event) => {
         },
       })
 
-      setResponseStatus(event, 403)
-      return createErrorResponse(403, 'Account is currently inactive')
+      return createErrorResponse(event, 'Account is currently inactive', 403)
     }
 
     if (user.isBanned) {
       const banMessage = user.banReason
         ? `Account access restricted: ${user.banReason}`
         : 'Account access has been restricted'
-
-      logger.warn('[auth/login]', {
-        requestId,
-        message: 'Banned account login attempt',
-        data: {
-          userId: user.id,
-          email: user.email,
-          banReason: user.banReason,
-          bannedUntil: user.bannedUntil,
-          timestamp: new Date().toISOString(),
-        },
-      })
 
       await auditLog(event, {
         action: 'login',
@@ -144,8 +103,7 @@ export default defineEventHandler(async (event) => {
         },
       })
 
-      setResponseStatus(event, 403)
-      return createErrorResponse(403, banMessage)
+      return createErrorResponse(event, banMessage, 403)
     }
 
     // Create session with enhanced logging
@@ -199,20 +157,6 @@ export default defineEventHandler(async (event) => {
     })
 
     const processingTime = Date.now() - startTime
-    logger.info('[auth/login]', {
-      requestId,
-      message: 'Login successful',
-      data: {
-        userId: user.id,
-        email: user.email,
-        sessionId: session.id,
-        requires2FA: !!twoFactor,
-        deviceType,
-        ipAddress: clientIpAddress,
-        processingTime,
-        timestamp: new Date().toISOString(),
-      },
-    })
 
     await auditLog(event, {
       action: 'login',
@@ -229,44 +173,27 @@ export default defineEventHandler(async (event) => {
       },
     })
 
-    return {
-      status: 200,
-      success: true,
-      message: 'Authentication successful',
-      data: {
-        user: {
-          id: user.id,
-          email: user.email,
-          firstName: user.firstName,
-          lastName: user.lastName,
-        },
-        session: {
-          id: session.id,
-          refreshToken: session.refreshToken,
-        },
-        security: {
-          requires2FA: !!twoFactor,
-          type: twoFactor?.type || null,
-        },
-        accessToken,
+    return createSuccessResponse<ILoginResponse>(event, 'Authentication successful', {
+      user: {
+        id: user.id,
+        email: user.email,
+        firstName: user.firstName,
+        lastName: user.lastName,
       },
-    }
-  } catch (error) {
-    logger.error('[auth/login]', {
-      requestId,
-      message: 'Login process failed',
-      error: {
-        name: error.name,
-        message: error.message,
-        stack: error.stack,
+      session: {
+        id: session.id,
+        refreshToken: session.refreshToken,
       },
-      timestamp: new Date().toISOString(),
+      security: {
+        requires2FA: !!twoFactor,
+        type: twoFactor?.type || null,
+      },
+      accessToken,
     })
-
+  } catch (error) {
     if (error instanceof JWTGenerationError) {
-      setResponseStatus(event, 401)
-      return createErrorResponse(401, 'Token generation failed')
+      return createErrorResponse(event, 'Token generation failed', 401)
     }
-    return throwErrorResponse(error)
+    return throwErrorResponse(event, error)
   }
 })

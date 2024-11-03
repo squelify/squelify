@@ -1,56 +1,61 @@
 import { H3Error, type H3Event } from 'h3'
 import { sha256base64 } from 'ohash'
-import { isProduction } from 'std-env'
+import { isDevelopment, isProduction } from 'std-env'
 import { UAParser } from 'ua-parser-js'
 import { z } from 'zod'
 
-interface ErrorDetails {
-  issues?: Array<{ field: string; message: string }>
-  message?: string
+export interface ApiResponse<T = unknown> {
+  status: number
+  success: boolean
+  message: string | null
+  data?: T
+  error?: {
+    issues?: Array<{ field: string; message: string }>
+    stack?: string
+  }
 }
 
-/**
- * Creates an error response object with the specified status code, error message, and optional error details.
- *
- * @param statusCode - The HTTP status code for the error response.
- * @param error - The error message.
- * @param details - Optional additional error details, including a list of issues with field and message properties.
- * @returns An object with the status code, error message, and optional error details.
- */
-export function createErrorResponse(statusCode: number, message: string, details?: ErrorDetails) {
-  return { status: statusCode, success: false, message, ...details }
+export function createSuccessResponse<T>(
+  event: H3Event,
+  message: string | null = null,
+  data?: T,
+  status = 200
+): ApiResponse<T> {
+  setResponseStatus(event, status)
+  return { status, success: true, message, ...(data && { data }) }
 }
 
-/**
- * Standardized error response handler
- */
-export function throwErrorResponse(error: unknown) {
-  // If error already in correct format, return as is
+export function createErrorResponse(
+  event: H3Event,
+  message: string,
+  status: number,
+  error?: {
+    issues?: Array<{ field: string; message: string }>
+    stack?: string
+  }
+): ApiResponse {
+  setResponseStatus(event, status)
+  return { status, success: false, message, error }
+}
+
+export function throwErrorResponse(event: H3Event, error: unknown) {
   if (isErrorResponse(error)) {
     return error
   }
 
-  // Handle H3Error with data property
   if (error instanceof H3Error && error.data) {
-    return {
-      status: error.statusCode,
-      success: false,
-      message: error.message,
-      data: error.data,
-    }
+    return createErrorResponse(event, error.message, error.statusCode, {
+      issues: error.data.issues,
+      ...(isDevelopment && { stack: error.stack }),
+    })
   }
 
-  // Handle known errors with status code
-  if (error instanceof Error && 'statusCode' in error) {
-    return createErrorResponse((error as any).statusCode || 500, error.message)
-  }
-
-  // Default error response
   const err = error as Error
   return createErrorResponse(
-    500,
+    event,
     err.message || 'Internal server error',
-    !isProduction ? { message: err.message } : undefined
+    500,
+    isDevelopment ? { stack: err.stack } : undefined
   )
 }
 

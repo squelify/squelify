@@ -31,6 +31,6 @@ export default defineEventHandler(async (event) => {
       data: emails,
     }
   } catch (error) {
-    return throwErrorResponse(error)
+    return throwErrorResponse(event, error)
   }
 })

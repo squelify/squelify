@@ -67,6 +67,6 @@ export default defineEventHandler(async (event) => {
       message: 'Signed out successfully',
     }
   } catch (error) {
-    return throwErrorResponse(error)
+    return throwErrorResponse(event, error)
   }
 })

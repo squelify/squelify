@@ -44,39 +44,34 @@ export async function generateAccessToken(
 ) {
   try {
     if (!key.privateKey || !key.algorithm || !key.keyId) {
-      throw new Error('Invalid JWK configuration: missing required fields')
+      throw new Error('Invalid JWK configuration')
     }
 
-    const privateKey = await jose.importPKCS8(key.privateKey, key.algorithm).catch((err) => {
-      throw new Error(`Failed to import private key: ${err.message}`)
-    })
+    const privateKey = await jose.importPKCS8(key.privateKey, key.algorithm)
 
-    const now = Math.floor(Date.now() / 1000)
-    const jwtPayload = { ...payload, type: 'access_token', iat: now }
     const headerParams: JWTHeaderParameters = {
       alg: key.algorithm,
       kid: key.keyId,
       typ: 'JWT',
     }
 
-    const token = await new jose.SignJWT(jwtPayload)
+    return await new jose.SignJWT({
+      ...payload,
+      iss: opts.issuer,
+      aud: opts.audience,
+      exp: payload.exp,
+      nbf: payload.nbf,
+      iat: payload.iat,
+    })
       .setProtectedHeader(headerParams)
-      .setIssuedAt()
-      .setIssuer(opts.issuer)
-      .setAudience(opts.audience)
-      .setExpirationTime(TOKEN_MAX_AGE)
-      .setNotBefore(0)
       .sign(privateKey)
-      .catch((err) => {
-        throw new Error(`Failed to sign JWT: ${err.message}`)
-      })
-
-    return token
   } catch (error) {
-    if (env.APP_LOG_LEVEL === 'trace') {
-      logger.error('[jwt]', 'Failed to generate access token:', error)
-    }
-    throw new JWTGenerationError('Failed to generate access token', { cause: error })
+    logger.error('[jwt]', 'Token generation failed', {
+      error: error.message,
+      keyId: key.keyId,
+      algorithm: key.algorithm,
+    })
+    throw new JWTGenerationError('Token generation failed')
   }
 }
 

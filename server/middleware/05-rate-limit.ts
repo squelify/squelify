@@ -1,4 +1,3 @@
-import { H3Event } from 'h3'
 import { env } from 'std-env'
 import { createRateLimit, getRateLimitInfo } from '~/database/repository/rate_limit.repo'
 

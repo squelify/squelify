@@ -72,6 +72,6 @@ export default defineEventHandler(async (event) => {
       message: 'Password berhasil diubah',
     }
   } catch (error) {
-    return throwErrorResponse(error)
+    return throwErrorResponse(event, error)
   }
 })
