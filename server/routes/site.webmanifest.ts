@@ -7,8 +7,8 @@ export default defineCachedEventHandler(
     return {
       lang: 'en',
       dir: 'ltr',
-      name: 'Nitro Start',
-      short_name: 'nitro-start',
+      name: 'Fastrue',
+      short_name: 'fastrue',
       description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit sed do eiusmod aliqua',
       theme_color: '#2563eb',
       background_color: '#0c0a09',

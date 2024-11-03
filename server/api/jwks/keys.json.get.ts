@@ -74,3 +74,10 @@ export default defineCachedEventHandler(
     maxAge: 60 * 60 * 12 * 30 /* 30 days */,
   }
 )
+
+defineRouteMeta({
+  openAPI: {
+    summary: 'JWKS Endpoint',
+    tags: ['General'],
+  },
+})

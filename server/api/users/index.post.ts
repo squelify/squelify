@@ -154,3 +154,10 @@ export default defineEventHandler(async (event) => {
     return throwErrorResponse(error)
   }
 })
+
+defineRouteMeta({
+  openAPI: {
+    summary: 'Create a user',
+    tags: ['User Management'],
+  },
+})

@@ -66,3 +66,60 @@ export default defineCachedEventHandler(
     maxAge: 60 * 60 /* 1 hour */,
   }
 )
+
+defineRouteMeta({
+  openAPI: {
+    summary: 'List users',
+    tags: ['User Management'],
+    requestBody: {
+      content: {},
+    },
+    security: [
+      {
+        bearerAuth: [],
+      },
+    ],
+    parameters: [
+      {
+        name: 'X-Client-Info',
+        in: 'header',
+        required: true,
+        example: 'Scalar',
+      },
+      {
+        name: 'page',
+        in: 'query',
+        required: false,
+        schema: { type: 'integer', minimum: 1 },
+        example: 1,
+      },
+      {
+        name: 'limit',
+        in: 'query',
+        required: false,
+        schema: { type: 'integer', minimum: 1, maximum: 100 },
+        example: 10,
+      },
+      {
+        name: 'nocache',
+        in: 'query',
+        required: false,
+        example: false,
+      },
+    ],
+    responses: {
+      200: {
+        description: 'OK',
+        content: {},
+      },
+      400: {
+        description: 'Bad Request',
+        content: {},
+      },
+      401: {
+        description: 'Unauthorized',
+        content: {},
+      },
+    },
+  },
+})

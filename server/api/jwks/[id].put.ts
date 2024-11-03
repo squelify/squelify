@@ -110,3 +110,10 @@ export default defineEventHandler(async (event) => {
     return throwErrorResponse(error)
   }
 })
+
+defineRouteMeta({
+  openAPI: {
+    summary: 'Update a JWK',
+    tags: ['Administration'],
+  },
+})

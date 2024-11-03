@@ -37,3 +37,10 @@ export default defineEventHandler(async (event) => {
     return throwErrorResponse(error)
   }
 })
+
+defineRouteMeta({
+  openAPI: {
+    summary: 'Delete a JWK',
+    tags: ['Administration'],
+  },
+})

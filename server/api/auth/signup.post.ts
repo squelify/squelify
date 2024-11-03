@@ -167,7 +167,8 @@ export default defineEventHandler(async (event) => {
 
       // Send verification email
       const verificationUrl = `${appConfig.baseURL}/api/auth/email/verify?token=${verificationToken}`
-      await sendRawEmail('verify-email', body.email, `Verification URL: ${verificationUrl}`)
+      // await sendRawEmail('verify-email', body.email, `Verification URL: ${verificationUrl}`)
+      logger.debug('[app]', `Verification URL: ${verificationUrl}`)
 
       // TODO: Send verification email using jsx-email
       // await sendJSXEmail('verify-email', body.email, {

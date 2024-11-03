@@ -18,19 +18,24 @@ interface CreateSessionOptions {
  */
 export async function verifyUserCredentials(db: Kysely<Database>, email: string, password: string) {
   const user = await db
-    .selectFrom('users')
-    .innerJoin('emails', 'emails.userId', 'users.id')
-    .innerJoin('passwords', 'passwords.userId', 'users.id')
-    .where('emails.email', '=', email)
-    .where('users.isActive', '=', 1)
-    .where('emails.verifiedAt', 'is not', null)
+    .selectFrom('users as u')
+    .innerJoin('emails as e', (join) =>
+      join.onRef('e.userId', '=', 'u.id').on('e.isPrimary', '=', 1)
+    )
+    .innerJoin('passwords as p', 'p.userId', 'u.id')
+    .where('e.email', '=', email)
+    .where('e.verifiedAt', 'is not', null)
     .select([
-      'users.id',
-      'users.firstName',
-      'users.lastName',
-      'users.locale',
-      'emails.email',
-      'passwords.hash',
+      'u.id',
+      'u.firstName',
+      'u.lastName',
+      'u.locale',
+      'u.isActive',
+      'u.isBanned',
+      'u.banReason',
+      'u.bannedUntil',
+      'e.email',
+      'p.hash',
     ])
     .executeTakeFirst()
 
@@ -45,6 +50,10 @@ export async function verifyUserCredentials(db: Kysely<Database>, email: string,
     firstName: user.firstName,
     lastName: user.lastName,
     locale: user.locale,
+    isActive: Boolean(user.isActive),
+    isBanned: Boolean(user.isBanned),
+    bannedUntil: user.bannedUntil,
+    banReason: user.banReason,
   }
 }
 
@@ -69,7 +78,7 @@ export async function createUserSession(
       id: typeid('sess').toString(),
       userId,
       keyId: options.keyId,
-      refreshToken: typeid().toString(),
+      refreshToken: typeid('rtok').toString(),
       ipAddress: options.ipAddress,
       userAgent: options.userAgent,
       deviceId: options.deviceId,

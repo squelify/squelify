@@ -19,16 +19,16 @@ export default defineNitroConfig({
   compatibilityDate: '2024-11-02',
   appConfigFiles: ['~/app.config'],
 
-  handlers: [
-    // TODO: allow index route to be served by the frontend
-    { route: '/ui', handler: '~/entry.client', lazy: true },
-    { route: '/ui/**', handler: '~/entry.client', lazy: true },
-  ],
+  // handlers: [
+  //   // TODO: allow index route to be served by the frontend
+  //   { route: '/ui', handler: '~/entry.client', lazy: true },
+  //   { route: '/ui/**', handler: '~/entry.client', lazy: true },
+  // ],
 
-  routeRules: {
-    '/': { redirect: '/ui/**' },
-    '/ui/**': { static: true, prerender: false },
-  },
+  // routeRules: {
+  //   '/': { redirect: '/ui/**' },
+  //   '/ui/**': { static: true, prerender: false },
+  // },
 
   errorHandler: '~/error.handler',
   publicAssets: [{ dir: resolve('public') }],
@@ -68,13 +68,18 @@ export default defineNitroConfig({
 
   openAPI: {
     production: 'prerender',
+    route: '/api-specs.json',
     meta: {
       title: 'Fastrue API',
       description: 'Fastrue API documentation',
       version: pkg.version,
     },
     ui: {
-      scalar: true,
+      scalar: {
+        route: '/api-docs',
+        layout: 'modern',
+        theme: 'purple',
+      },
       swagger: false,
     },
   },

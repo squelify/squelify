@@ -35,3 +35,10 @@ export default defineCachedEventHandler(
     maxAge: 60 * 60 /* 1 hour */,
   }
 )
+
+defineRouteMeta({
+  openAPI: {
+    summary: 'Get a user',
+    tags: ['User Management'],
+  },
+})
