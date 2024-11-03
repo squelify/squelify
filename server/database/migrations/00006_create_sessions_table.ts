@@ -66,6 +66,14 @@ export async function up(db: Kysely<Database>): Promise<void> {
     .column('device_id')
     .ifNotExists()
     .execute()
+
+  // Index untuk session cleanup
+  await db.schema
+    .createIndex('sessions_cleanup_idx')
+    .on('sessions')
+    .columns(['is_active', 'expires_at'])
+    .ifNotExists()
+    .execute()
 }
 
 export async function down(db: Kysely<Database>): Promise<void> {
@@ -73,6 +81,7 @@ export async function down(db: Kysely<Database>): Promise<void> {
   await db.schema.dropIndex('sessions_expires_at_idx').ifExists().execute()
   await db.schema.dropIndex('sessions_refresh_token_idx').ifExists().execute()
   await db.schema.dropIndex('sessions_user_id_idx').ifExists().execute()
+  await db.schema.dropIndex('sessions_cleanup_idx').ifExists().execute()
   await sql`DROP TRIGGER IF EXISTS update_sessions_timestamp;`.execute(db)
   await db.schema.dropTable('sessions').ifExists().execute()
 }

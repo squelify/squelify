@@ -68,6 +68,14 @@ export async function up(db: Kysely<Database>): Promise<void> {
     .column('role')
     .ifNotExists()
     .execute()
+
+  // Index for foreign key lookup
+  await db.schema
+    .createIndex('members_user_role_idx')
+    .on('members')
+    .columns(['user_id', 'role'])
+    .ifNotExists()
+    .execute()
 }
 
 export async function down(db: Kysely<Database>): Promise<void> {
@@ -75,6 +83,7 @@ export async function down(db: Kysely<Database>): Promise<void> {
   await db.schema.dropIndex('members_user_id_idx').ifExists().execute()
   await db.schema.dropIndex('members_organization_id_idx').ifExists().execute()
   await db.schema.dropIndex('members_org_user_idx').ifExists().execute()
+  await db.schema.dropIndex('members_user_role_idx').ifExists().execute()
   await sql`DROP TRIGGER IF EXISTS update_members_timestamp;`.execute(db)
   await db.schema.dropTable('members').ifExists().execute()
 }

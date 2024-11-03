@@ -55,12 +55,21 @@ export async function up(db: Kysely<Database>): Promise<void> {
     .column('blocked_until')
     .ifNotExists()
     .execute()
+
+  // Index for rate limit checks
+  await db.schema
+    .createIndex('rate_limits_check_idx')
+    .on('rate_limits')
+    .columns(['key', 'context', 'expires_at'])
+    .ifNotExists()
+    .execute()
 }
 
 export async function down(db: Kysely<Database>): Promise<void> {
   await db.schema.dropIndex('rate_limits_blocked_until_idx').ifExists().execute()
   await db.schema.dropIndex('rate_limits_expires_at_idx').ifExists().execute()
   await db.schema.dropIndex('rate_limits_key_context_idx').ifExists().execute()
+  await db.schema.dropIndex('rate_limits_check_idx').ifExists().execute()
   await sql`DROP TRIGGER IF EXISTS update_rate_limits_timestamp;`.execute(db)
   await db.schema.dropTable('rate_limits').ifExists().execute()
 }

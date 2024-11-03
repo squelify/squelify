@@ -60,12 +60,21 @@ export async function up(db: Kysely<Database>): Promise<void> {
     .column('created_at')
     .ifNotExists()
     .execute()
+
+  // Index for searching by name
+  await db.schema
+    .createIndex('users_name_search_idx')
+    .on('users')
+    .columns(['first_name', 'last_name'])
+    .ifNotExists()
+    .execute()
 }
 
 export async function down(db: Kysely<Database>): Promise<void> {
   await db.schema.dropIndex('users_created_at_idx').ifExists().execute()
   await db.schema.dropIndex('users_is_active_idx').ifExists().execute()
   await db.schema.dropIndex('users_username_idx').ifExists().execute()
+  await db.schema.dropIndex('users_name_search_idx').ifExists().execute()
   await sql`DROP TRIGGER IF EXISTS update_users_timestamp;`.execute(db)
   await db.schema.dropTable('users').ifExists().execute()
 }

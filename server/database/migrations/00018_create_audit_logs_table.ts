@@ -49,6 +49,14 @@ export async function up(db: Kysely<Database>): Promise<void> {
     .column('created_at')
     .ifNotExists()
     .execute()
+
+  // Index for range queries
+  await db.schema
+    .createIndex('audit_logs_date_range_idx')
+    .on('audit_logs')
+    .columns(['created_at', 'entity'])
+    .ifNotExists()
+    .execute()
 }
 
 export async function down(db: Kysely<Database>): Promise<void> {
@@ -56,5 +64,6 @@ export async function down(db: Kysely<Database>): Promise<void> {
   await db.schema.dropIndex('audit_logs_entity_idx').ifExists().execute()
   await db.schema.dropIndex('audit_logs_organization_id_idx').ifExists().execute()
   await db.schema.dropIndex('audit_logs_user_id_idx').ifExists().execute()
+  await db.schema.dropIndex('audit_logs_date_range_idx').ifExists().execute()
   await db.schema.dropTable('audit_logs').ifExists().execute()
 }
