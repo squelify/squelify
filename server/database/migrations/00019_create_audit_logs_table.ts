@@ -16,6 +16,7 @@ export async function up(db: Kysely<Database>): Promise<void> {
     .addColumn('metadata', 'text', (col) => col.notNull().defaultTo('{}'))
     .addColumn('ip_address', 'text')
     .addColumn('user_agent', 'text')
+    .addColumn('retention', 'integer', (col) => col.notNull().defaultTo(90 * 86400))
     .addColumn('created_at', 'integer', (col) => col.notNull().defaultTo(UNIX_TIMESTAMP))
     .modifyEnd(sql`STRICT`)
     .ifNotExists()
@@ -55,6 +56,14 @@ export async function up(db: Kysely<Database>): Promise<void> {
     .createIndex('audit_logs_date_range_idx')
     .on('audit_logs')
     .columns(['created_at', 'entity'])
+    .ifNotExists()
+    .execute()
+
+  // Optimized indexes for cleanup
+  await db.schema
+    .createIndex('audit_logs_retention_idx')
+    .on('audit_logs')
+    .columns(['created_at', 'retention'])
     .ifNotExists()
     .execute()
 }

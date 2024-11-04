@@ -34,7 +34,6 @@ export default defineEventHandler(async (event) => {
     const body = await requireValidatedBody(event, CreateJWKSchema)
     const keyId = body.keyId || typeid('kid').toString()
 
-    // Check if keyId already exists
     const existingKey = await db
       .selectFrom('jwks')
       .where('keyId', '=', keyId)
@@ -42,15 +41,35 @@ export default defineEventHandler(async (event) => {
       .executeTakeFirst()
 
     if (existingKey) {
+      await auditLog(event, {
+        action: 'create',
+        entity: 'jwk',
+        entityId: keyId,
+        metadata: {
+          success: false,
+          reason: 'key_id_exists',
+          keyId,
+        },
+        retention: 'CRITICAL',
+      })
       return createErrorResponse(event, 'Key ID already exists', 409)
     }
 
-    // Validate expiration time
     if (Number(body.expiresAt) <= now) {
+      await auditLog(event, {
+        action: 'create',
+        entity: 'jwk',
+        entityId: keyId,
+        metadata: {
+          success: false,
+          reason: 'invalid_expiration',
+          expiresAt: body.expiresAt,
+        },
+        retention: 'CRITICAL',
+      })
       return createErrorResponse(event, 'Expiration time must be in the future', 400)
     }
 
-    // Create JWK
     const jwk = await db
       .insertInto('jwks')
       .values({
@@ -66,7 +85,6 @@ export default defineEventHandler(async (event) => {
       .returning(['id', 'keyId', 'publicKey', 'algorithm', 'isActive', 'expiresAt', 'createdAt'])
       .executeTakeFirst()
 
-    // Log JWK creation
     await auditLog(event, {
       action: 'create',
       entity: 'jwk',
@@ -80,6 +98,7 @@ export default defineEventHandler(async (event) => {
           email: userEmail,
         },
       },
+      retention: 'CRITICAL',
     })
 
     return createSuccessResponse<ICreateJWKResponse>(event, 'JWK created successfully', {
@@ -93,11 +112,4 @@ export default defineEventHandler(async (event) => {
   } catch (error) {
     return throwErrorResponse(event, error)
   }
-})
-
-defineRouteMeta({
-  openAPI: {
-    summary: 'Create a new JWK',
-    tags: ['Administration'],
-  },
 })

@@ -24,7 +24,6 @@ export default defineEventHandler(async (event) => {
   try {
     const body = await requireValidatedBody(event, RemovePasskeySchema)
 
-    // Get passkey
     const passkey = await db
       .selectFrom('passkeys')
       .where('credentialId', '=', body.credentialId)
@@ -33,10 +32,20 @@ export default defineEventHandler(async (event) => {
       .executeTakeFirst()
 
     if (!passkey) {
+      await auditLog(event, {
+        action: 'delete',
+        entity: 'passkey',
+        entityId: body.credentialId,
+        metadata: {
+          success: false,
+          reason: 'passkey_not_found',
+          credentialId: body.credentialId,
+        },
+        retention: 'CRITICAL',
+      })
       return createErrorResponse(event, 'Passkey not found', 404)
     }
 
-    // Check if this is the last passkey
     const passkeyCount = await db
       .selectFrom('passkeys')
       .where('userId', '=', userId)
@@ -44,13 +53,23 @@ export default defineEventHandler(async (event) => {
       .executeTakeFirst()
 
     if (Number(passkeyCount?.count) === 1) {
+      await auditLog(event, {
+        action: 'delete',
+        entity: 'passkey',
+        entityId: passkey.id,
+        metadata: {
+          success: false,
+          reason: 'last_passkey',
+          name: passkey.name,
+          credentialId: passkey.credentialId,
+        },
+        retention: 'CRITICAL',
+      })
       return createErrorResponse(event, 'Cannot remove last passkey', 400)
     }
 
-    // Delete passkey
     await db.deleteFrom('passkeys').where('id', '=', passkey.id).execute()
 
-    // Log passkey removal
     await auditLog(event, {
       action: 'delete',
       entity: 'passkey',
@@ -64,6 +83,7 @@ export default defineEventHandler(async (event) => {
           email: userEmail,
         },
       },
+      retention: 'CRITICAL',
     })
 
     return createSuccessResponse<IRemovePasskeyResponse>(event, 'Passkey removed successfully', {

@@ -12,7 +12,6 @@ export default defineEventHandler(async (event) => {
   const now = Math.floor(Date.now() / 1000)
 
   try {
-    // Count user's verified emails
     const emailCount = await db
       .selectFrom('emails')
       .where('userId', '=', payload.sub)
@@ -21,10 +20,21 @@ export default defineEventHandler(async (event) => {
       .executeTakeFirst()
 
     if (emailCount && Number(emailCount.count) <= 1) {
+      await auditLog(event, {
+        action: 'delete',
+        entity: 'email',
+        entityId: event.context.params.id,
+        userId: payload.sub,
+        metadata: {
+          success: false,
+          reason: 'last_verified_email',
+        },
+        retention: 'CRITICAL',
+      })
+
       return createErrorResponse(event, 'Cannot delete last verified email', 400)
     }
 
-    // Get email record
     const email = await db
       .selectFrom('emails')
       .where('id', '=', event.context.params.id)
@@ -33,16 +43,39 @@ export default defineEventHandler(async (event) => {
       .executeTakeFirst()
 
     if (!email) {
+      await auditLog(event, {
+        action: 'delete',
+        entity: 'email',
+        entityId: event.context.params.id,
+        userId: payload.sub,
+        metadata: {
+          success: false,
+          reason: 'email_not_found',
+        },
+        retention: 'CRITICAL',
+      })
+
       return createErrorResponse(event, 'Email not found', 404)
     }
 
     if (email.isPrimary) {
+      await auditLog(event, {
+        action: 'delete',
+        entity: 'email',
+        entityId: email.id,
+        userId: payload.sub,
+        metadata: {
+          success: false,
+          reason: 'primary_email',
+          email: email.email,
+        },
+        retention: 'CRITICAL',
+      })
+
       return createErrorResponse(event, 'Cannot delete primary email', 400)
     }
 
-    // Delete email and related verifications
     await db.transaction().execute(async (trx) => {
-      // Delete verifications
       await trx
         .deleteFrom('verifications')
         .where('userId', '=', payload.sub)
@@ -50,7 +83,6 @@ export default defineEventHandler(async (event) => {
         .where('type', '=', 'email')
         .execute()
 
-      // Delete email
       await trx
         .deleteFrom('emails')
         .where('id', '=', event.context.params.id)
@@ -67,6 +99,7 @@ export default defineEventHandler(async (event) => {
         userId: payload.sub,
         email: email.email,
       },
+      retention: 'CRITICAL',
     })
 
     return createSuccessResponse<IDeleteEmailResponse>(event, 'Email deleted successfully', {

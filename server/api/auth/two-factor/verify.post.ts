@@ -26,7 +26,6 @@ export default defineEventHandler(async (event) => {
     const body = await requireValidatedBody(event, VerifyTOTPSchema)
     const now = Math.floor(Date.now() / 1000)
 
-    // Get TOTP record
     const twoFactor = await db
       .selectFrom('two_factors')
       .where('id', '=', body.id)
@@ -36,10 +35,19 @@ export default defineEventHandler(async (event) => {
       .executeTakeFirst()
 
     if (!twoFactor) {
+      await auditLog(event, {
+        action: 'verify',
+        entity: 'two_factor',
+        entityId: body.id,
+        metadata: {
+          success: false,
+          reason: 'totp_not_found',
+        },
+        retention: 'CRITICAL',
+      })
       return createErrorResponse(event, 'TOTP not found', 404)
     }
 
-    // Verify TOTP code
     const isValid = verifyTOTP(twoFactor.secret, body.code)
     if (!isValid) {
       await auditLog(event, {
@@ -51,12 +59,11 @@ export default defineEventHandler(async (event) => {
           reason: 'invalid_code',
           userId: payload.sub,
         },
+        retention: 'CRITICAL',
       })
-
       return createErrorResponse(event, 'Invalid TOTP code', 400)
     }
 
-    // Update TOTP status if not verified
     if (!twoFactor.isVerified) {
       await db
         .updateTable('two_factors')
@@ -69,7 +76,6 @@ export default defineEventHandler(async (event) => {
         .where('id', '=', twoFactor.id)
         .execute()
     } else {
-      // Just update last used timestamp
       await db
         .updateTable('two_factors')
         .set({
@@ -88,6 +94,7 @@ export default defineEventHandler(async (event) => {
         success: true,
         userId: payload.sub,
       },
+      retention: 'CRITICAL',
     })
 
     return createSuccessResponse<IVerifyTOTPResponse>(event, 'TOTP verification successful', {

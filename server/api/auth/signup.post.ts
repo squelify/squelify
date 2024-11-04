@@ -3,7 +3,6 @@ import { typeid } from 'typeid-js'
 import { z } from 'zod'
 
 export interface ISignupResponse {
-  message: string
   verificationUrl?: string // Only in development
 }
 
@@ -37,7 +36,6 @@ export default defineEventHandler(async (event) => {
   try {
     const body = await requireValidatedBody(event, SignupRequestSchema)
 
-    // Check if email already exists
     const existingEmail = await db
       .selectFrom('emails')
       .where('email', '=', body.email)
@@ -54,6 +52,7 @@ export default defineEventHandler(async (event) => {
           email: body.email,
           reason: 'email_exists',
         },
+        retention: 'CRITICAL',
       })
 
       return createErrorResponse(event, 'Email address already registered', 400)
@@ -61,11 +60,9 @@ export default defineEventHandler(async (event) => {
 
     let username = body.username
 
-    // Generate username if not provided
     if (!username) {
       username = generateUsername(body.email)
 
-      // Check username availability
       const existingUser = await db
         .selectFrom('users')
         .where('username', '=', username)
@@ -74,12 +71,10 @@ export default defineEventHandler(async (event) => {
         .executeTakeFirst()
 
       if (existingUser) {
-        // Generate unique username with random suffix
         username = generateUsername(body.email, generateRandomStr({ size: 4 }))
       }
     }
 
-    // Check final username availability
     const existingUser = await db
       .selectFrom('users')
       .where('username', '=', username)
@@ -97,18 +92,17 @@ export default defineEventHandler(async (event) => {
           email: body.email,
           reason: 'username_exists',
         },
+        retention: 'CRITICAL',
       })
 
       return createErrorResponse(event, `Username '${username}' is already taken`, 409)
     }
 
-    // Create user account
     const userId = typeid('user').toString()
     const hashedPassword = await hashPassword(body.password)
     const now = Math.floor(Date.now() / 1000)
     const verificationToken = typeid().toString()
 
-    // Create user account transaction
     await db.transaction().execute(async (trx) => {
       await trx
         .insertInto('users')
@@ -122,7 +116,6 @@ export default defineEventHandler(async (event) => {
         })
         .execute()
 
-      // Add initial user metadata
       await trx
         .insertInto('user_metadata')
         .values({
@@ -176,13 +169,12 @@ export default defineEventHandler(async (event) => {
           type: 'email',
           identifier: body.email,
           token: verificationToken,
-          expiresAt: now + DURATION.DAY, // 24 hours
+          expiresAt: now + DURATION.DAY,
           createdAt: now,
         })
         .execute()
     })
 
-    // Log successful signup
     await auditLog(event, {
       action: 'create',
       entity: 'user',
@@ -198,21 +190,20 @@ export default defineEventHandler(async (event) => {
       metadata: {
         success: true,
       },
+      retention: 'CRITICAL',
     })
 
     const verificationUrl = `${appConfig.baseURL}/api/auth/email/verify?token=${verificationToken}`
     logger.debug('[app]', `Verification URL: ${verificationUrl}`)
 
-    const response: ISignupResponse = {
-      message: 'Registration successful, please check your email for verification',
-    }
+    const response: ISignupResponse = null
+    const message = 'Registration successful, please check your email for verification'
 
-    // Include verification URL in development
     if (!isProduction) {
       response.verificationUrl = verificationUrl
     }
 
-    return createSuccessResponse<ISignupResponse>(event, response.message, response)
+    return createSuccessResponse<ISignupResponse>(event, message, response)
   } catch (error) {
     await auditLog(event, {
       action: 'create',
@@ -222,6 +213,7 @@ export default defineEventHandler(async (event) => {
         success: false,
         error: error.message,
       },
+      retention: 'CRITICAL',
     })
 
     return throwErrorResponse(event, error)

@@ -4,6 +4,7 @@ import { env } from 'std-env'
 import { typeid } from 'typeid-js'
 import db from '~/database/db.client'
 import type { AuditAction, AuditEntity } from '~/database/schemas/audit_log'
+import { AUDIT_RETENTION } from '~/database/schemas/audit_log'
 import type { Organization } from '~/database/schemas/organization'
 
 interface AuditLogParams {
@@ -14,7 +15,11 @@ interface AuditLogParams {
   organizationId?: string
   oldValues?: Record<string, unknown>
   newValues?: Record<string, unknown>
-  metadata?: Record<string, unknown>
+  metadata: {
+    success: boolean
+    [key: string]: unknown
+  }
+  retention?: keyof typeof AUDIT_RETENTION
 }
 
 interface RequestContext {
@@ -30,21 +35,41 @@ interface AuditLogFilters {
   entity?: AuditEntity
 }
 
-// Get audit log configuration from environment
 const isAuditEnabled = env.AUDIT_LOG_ENABLE !== 'false'
 
-// Wrapper function to check if audit is enabled
 async function executeIfEnabled(fn: () => Promise<void>) {
   if (isAuditEnabled) {
     await fn()
   }
 }
 
-// Single audit log insert
+function getRetentionPeriod(
+  action: AuditAction,
+  entity: AuditEntity,
+  retention?: keyof typeof AUDIT_RETENTION
+): number {
+  if (retention) {
+    return AUDIT_RETENTION[retention]
+  }
+
+  if (action === 'delete' || action === 'update') {
+    if (['user', 'organization', 'role'].includes(entity)) {
+      return AUDIT_RETENTION.CRITICAL
+    }
+  }
+
+  if (['authenticate', 'login', 'logout'].includes(action)) {
+    return AUDIT_RETENTION.COMPLIANCE
+  }
+
+  return AUDIT_RETENTION.DEFAULT
+}
+
 export async function auditLog(event: H3Event, params: AuditLogParams) {
   await executeIfEnabled(async () => {
     const ctx = event.context as RequestContext
     const { clientIpAddress, userAgent } = getClientInfo(event)
+    const retention = getRetentionPeriod(params.action, params.entity, params.retention)
 
     await db
       .insertInto('audit_logs')
@@ -60,13 +85,13 @@ export async function auditLog(event: H3Event, params: AuditLogParams) {
         metadata: JSON.stringify(params.metadata || {}),
         ipAddress: clientIpAddress,
         userAgent: userAgent || 'unknown',
+        retention,
         createdAt: Math.floor(Date.now() / 1000),
       })
       .execute()
   })
 }
 
-// Batch insert for multiple audit logs
 export async function auditLogBatch(event: H3Event, logs: AuditLogParams[]) {
   await executeIfEnabled(async () => {
     const ctx = event.context as RequestContext
@@ -84,6 +109,7 @@ export async function auditLogBatch(event: H3Event, logs: AuditLogParams[]) {
       metadata: JSON.stringify(log.metadata || {}),
       ipAddress: getRequestIP(event),
       userAgent: userAgent || 'unknown',
+      retention: getRetentionPeriod(log.action, log.entity, log.retention),
       createdAt: Math.floor(Date.now() / 1000),
     }))
 
@@ -91,15 +117,6 @@ export async function auditLogBatch(event: H3Event, logs: AuditLogParams[]) {
   })
 }
 
-// Cleanup old audit logs
-export async function cleanupAuditLogs(retentionDays = 90) {
-  await executeIfEnabled(async () => {
-    const cutoff = Math.floor(Date.now() / 1000) - retentionDays * 24 * 60 * 60
-    await db.deleteFrom('audit_logs').where('createdAt', '<', cutoff).execute()
-  })
-}
-
-// Export audit logs
 export async function exportAuditLogs(filters: AuditLogFilters) {
   if (!isAuditEnabled) return []
 
@@ -124,7 +141,6 @@ export async function exportAuditLogs(filters: AuditLogFilters) {
   return await query.selectAll().orderBy('createdAt', 'desc').execute()
 }
 
-// Query builder for flexible searching
 export class AuditLogQuery {
   private query = db.selectFrom('audit_logs')
 
@@ -154,7 +170,6 @@ export class AuditLogQuery {
   }
 }
 
-// Get audit statistics
 export async function getAuditStats(timeframe: number) {
   if (!isAuditEnabled) return []
 

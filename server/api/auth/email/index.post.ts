@@ -24,7 +24,6 @@ export default defineEventHandler(async (event) => {
     const body = await requireValidatedBody(event, AddEmailSchema)
     const now = Math.floor(Date.now() / 1000)
 
-    // Check if email already exists
     const existingEmail = await db
       .selectFrom('emails')
       .where('email', '=', body.email)
@@ -32,13 +31,23 @@ export default defineEventHandler(async (event) => {
       .executeTakeFirst()
 
     if (existingEmail) {
+      await auditLog(event, {
+        action: 'create',
+        entity: 'email',
+        entityId: payload.sub,
+        metadata: {
+          success: false,
+          reason: 'email_exists',
+          email: body.email,
+        },
+        retention: 'CRITICAL',
+      })
+
       return createErrorResponse(event, 'Email address already registered', 400)
     }
 
-    // Create verification token
     const verificationToken = typeid().toString()
     await db.transaction().execute(async (trx) => {
-      // Add new email
       await trx
         .insertInto('emails')
         .values({
@@ -50,7 +59,6 @@ export default defineEventHandler(async (event) => {
         })
         .execute()
 
-      // Create verification record
       await trx
         .insertInto('verifications')
         .values({
@@ -78,6 +86,7 @@ export default defineEventHandler(async (event) => {
         success: true,
         email: body.email,
       },
+      retention: 'CRITICAL',
     })
 
     const response: IAddEmailResponse = {
@@ -87,16 +96,13 @@ export default defineEventHandler(async (event) => {
       },
     }
 
-    // Include verification URL in development
     if (!isProduction) {
       response.email.verificationUrl = verificationUrl
     }
 
-    return createSuccessResponse<IAddEmailResponse>(
-      event,
-      'Email added successfully, check your inbox for verification',
-      response
-    )
+    const message = 'Email added successfully, check your inbox for verification'
+
+    return createSuccessResponse<IAddEmailResponse>(event, message, response)
   } catch (error) {
     return throwErrorResponse(event, error)
   }

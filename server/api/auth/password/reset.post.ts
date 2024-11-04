@@ -26,7 +26,6 @@ export default defineEventHandler(async (event) => {
     const body = await requireValidatedBody(event, PasswordResetSchema)
     const now = Math.floor(Date.now() / 1000)
 
-    // Get verification record
     const verification = await db
       .selectFrom('verifications')
       .where('token', '=', body.token)
@@ -37,18 +36,36 @@ export default defineEventHandler(async (event) => {
       .executeTakeFirst()
 
     if (!verification) {
+      await auditLog(event, {
+        action: 'reset',
+        entity: 'password',
+        entityId: 'anonymous',
+        metadata: {
+          success: false,
+          reason: 'invalid_token',
+        },
+        retention: 'CRITICAL',
+      })
       return createErrorResponse(event, 'Invalid or expired reset token', 400)
     }
 
     if (verification.attempts >= verification.maxAttempts) {
+      await auditLog(event, {
+        action: 'reset',
+        entity: 'password',
+        entityId: verification.userId,
+        metadata: {
+          success: false,
+          reason: 'max_attempts_exceeded',
+        },
+        retention: 'CRITICAL',
+      })
       return createErrorResponse(event, 'Maximum reset attempts exceeded', 400)
     }
 
-    // Hash new password
     const hashedPassword = await hashPassword(body.password)
 
     await db.transaction().execute(async (trx) => {
-      // Update verification record
       await trx
         .updateTable('verifications')
         .set({
@@ -59,7 +76,6 @@ export default defineEventHandler(async (event) => {
         .where('id', '=', verification.id)
         .execute()
 
-      // Update password
       await trx
         .updateTable('passwords')
         .set({
@@ -78,6 +94,7 @@ export default defineEventHandler(async (event) => {
         success: true,
         userId: verification.userId,
       },
+      retention: 'CRITICAL',
     })
 
     return createSuccessResponse<IResetPasswordResponse>(event, 'Password reset successful', {

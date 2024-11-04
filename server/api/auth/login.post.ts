@@ -47,13 +47,11 @@ export default defineEventHandler(async (event) => {
     const body = await requireValidatedBody(event, LoginRequestSchema)
     const { identity, password, deviceId, deviceType } = body
 
-    // Get active JWK
     const activeKey = await getActiveJWK(db)
     if (!activeKey) {
       return createErrorResponse(event, 'Authentication service temporarily unavailable', 503)
     }
 
-    // Verify credentials
     const user = await verifyUserCredentials(db, identity, password)
     if (!user) {
       await auditLog(event, {
@@ -68,12 +66,12 @@ export default defineEventHandler(async (event) => {
           ipAddress: clientIpAddress,
           userAgent: userAgent?.slice(0, 100),
         },
+        retention: 'COMPLIANCE', // Store failed attempts for compliance
       })
 
       return createErrorResponse(event, 'Invalid email or password', 401)
     }
 
-    // Account status checks
     if (!user.isActive) {
       await auditLog(event, {
         action: 'login',
@@ -85,6 +83,7 @@ export default defineEventHandler(async (event) => {
           reason: 'inactive_account',
           ipAddress: clientIpAddress,
         },
+        retention: 'CRITICAL', // Store inactive account attempts longer
       })
 
       return createErrorResponse(event, 'Account is currently inactive', 403)
@@ -107,12 +106,12 @@ export default defineEventHandler(async (event) => {
           bannedUntil: user.bannedUntil,
           ipAddress: clientIpAddress,
         },
+        retention: 'CRITICAL', // Store banned account attempts longer
       })
 
       return createErrorResponse(event, banMessage, 403)
     }
 
-    // Create session with enhanced logging
     const session = await createUserSession(db, user.id, {
       ipAddress: clientIpAddress,
       userAgent,
@@ -121,7 +120,6 @@ export default defineEventHandler(async (event) => {
       keyId: activeKey.id,
     })
 
-    // JWT generation
     const now = Math.floor(Date.now() / 1000)
     const payload: JWTPayload = {
       iss: appConfig.baseURL,
@@ -144,7 +142,6 @@ export default defineEventHandler(async (event) => {
       audience: userAgentHash,
     })
 
-    // 2FA check
     const twoFactor = await db
       .selectFrom('two_factors')
       .where('userId', '=', user.id)
@@ -152,7 +149,6 @@ export default defineEventHandler(async (event) => {
       .select(['type'])
       .executeTakeFirst()
 
-    // Set secure session
     setCookie(event, 'auth_session', session.id, {
       httpOnly: true,
       secure: isProduction,
@@ -176,6 +172,7 @@ export default defineEventHandler(async (event) => {
         requires2FA: !!twoFactor,
         processingTime,
       },
+      retention: 'COMPLIANCE', // Store successful logins for compliance
     })
 
     return createSuccessResponse<ILoginResponse>(event, 'Authentication successful', {

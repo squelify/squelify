@@ -24,7 +24,6 @@ export default defineEventHandler(async (event) => {
     const body = await requireValidatedBody(event, DisableTOTPSchema)
     const now = Math.floor(Date.now() / 1000)
 
-    // Get TOTP record with complete status check
     const twoFactor = await db
       .selectFrom('two_factors')
       .where('id', '=', body.id)
@@ -34,14 +33,33 @@ export default defineEventHandler(async (event) => {
       .executeTakeFirst()
 
     if (!twoFactor) {
+      await auditLog(event, {
+        action: 'disable',
+        entity: 'two_factor',
+        entityId: body.id,
+        metadata: {
+          success: false,
+          reason: 'authenticator_not_found',
+        },
+        retention: 'CRITICAL',
+      })
       return createErrorResponse(event, 'Authenticator not found', 404)
     }
 
     if (!twoFactor.isVerified) {
+      await auditLog(event, {
+        action: 'disable',
+        entity: 'two_factor',
+        entityId: body.id,
+        metadata: {
+          success: false,
+          reason: 'not_verified',
+        },
+        retention: 'CRITICAL',
+      })
       return createErrorResponse(event, 'Authenticator is not verified', 400)
     }
 
-    // Verify TOTP code first
     const isValid = verifyTOTP(twoFactor.secret, body.code)
     if (!isValid) {
       await auditLog(event, {
@@ -53,12 +71,11 @@ export default defineEventHandler(async (event) => {
           reason: 'invalid_code',
           userId: payload.sub,
         },
+        retention: 'CRITICAL',
       })
-
       return createErrorResponse(event, 'Invalid TOTP code', 400)
     }
 
-    // Check if this is the last verified 2FA
     if (twoFactor.isPrimary) {
       const otherVerified2FA = await db
         .selectFrom('two_factors')
@@ -69,6 +86,16 @@ export default defineEventHandler(async (event) => {
         .executeTakeFirst()
 
       if (!otherVerified2FA) {
+        await auditLog(event, {
+          action: 'disable',
+          entity: 'two_factor',
+          entityId: body.id,
+          metadata: {
+            success: false,
+            reason: 'primary_no_backup',
+          },
+          retention: 'CRITICAL',
+        })
         return createErrorResponse(
           event,
           'Cannot disable primary authenticator. Enable another authenticator first.',
@@ -76,7 +103,6 @@ export default defineEventHandler(async (event) => {
         )
       }
 
-      // Set other 2FA as primary
       await db
         .updateTable('two_factors')
         .set({
@@ -87,7 +113,6 @@ export default defineEventHandler(async (event) => {
         .execute()
     }
 
-    // Delete the TOTP record
     await db.deleteFrom('two_factors').where('id', '=', twoFactor.id).execute()
 
     await auditLog(event, {
@@ -99,6 +124,7 @@ export default defineEventHandler(async (event) => {
         userId: payload.sub,
         name: twoFactor.name,
       },
+      retention: 'CRITICAL',
     })
 
     return createSuccessResponse<IDisable2FAResponse>(

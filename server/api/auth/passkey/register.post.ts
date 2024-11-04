@@ -58,7 +58,6 @@ export default defineEventHandler(async (event) => {
     const body = await requireValidatedBody(event, RegisterPasskeySchema)
     const now = Math.floor(Date.now() / 1000)
 
-    // Get user info
     const user = await db
       .selectFrom('users')
       .where('id', '=', payload.sub)
@@ -66,10 +65,19 @@ export default defineEventHandler(async (event) => {
       .executeTakeFirst()
 
     if (!user) {
+      await auditLog(event, {
+        action: 'create',
+        entity: 'passkey',
+        entityId: 'anonymous',
+        metadata: {
+          success: false,
+          reason: 'user_not_found',
+        },
+        retention: 'CRITICAL',
+      })
       return createErrorResponse(event, 'User not found', 404)
     }
 
-    // Check if passkey name already exists
     const existingPasskey = await db
       .selectFrom('passkeys')
       .where('userId', '=', user.id)
@@ -78,21 +86,29 @@ export default defineEventHandler(async (event) => {
       .executeTakeFirst()
 
     if (existingPasskey) {
+      await auditLog(event, {
+        action: 'create',
+        entity: 'passkey',
+        entityId: user.id,
+        metadata: {
+          success: false,
+          reason: 'name_exists',
+          name: body.name,
+        },
+        retention: 'CRITICAL',
+      })
       return createErrorResponse(event, 'Passkey name already in use', 400)
     }
 
-    // Get existing passkeys for exclusion
     const existingPasskeys = await db
       .selectFrom('passkeys')
       .where('userId', '=', user.id)
       .select(['credentialId', 'transports'])
       .execute()
 
-    // Generate WebAuthn user ID as Uint8Array
     const webauthnUserId = new Uint8Array(16)
     crypto.getRandomValues(webauthnUserId)
 
-    // Generate registration options
     const options: PublicKeyCredentialCreationOptionsJSON = await generateRegistrationOptions({
       rpName: appConfig.title,
       rpID: appConfig.domain,
@@ -113,24 +129,32 @@ export default defineEventHandler(async (event) => {
       })),
     })
 
-    // Store webauthnUserId as base64url string
     const webauthnUserIdString = Buffer.from(webauthnUserId).toString('base64url')
 
-    // Verify registration response
     const verification: VerifiedRegistrationResponse = await verifyRegistrationResponse({
-      response: body.response.response as any, // FIXME - fix type
+      response: body.response.response as any,
       expectedChallenge: options.challenge,
       expectedOrigin: appConfig.baseURL,
       expectedRPID: appConfig.domain,
     })
 
     if (!verification.verified || !verification.registrationInfo) {
+      await auditLog(event, {
+        action: 'create',
+        entity: 'passkey',
+        entityId: user.id,
+        metadata: {
+          success: false,
+          reason: 'verification_failed',
+          name: body.name,
+        },
+        retention: 'CRITICAL',
+      })
       return createErrorResponse(event, 'Passkey verification failed', 400)
     }
 
     const { credential } = verification.registrationInfo
 
-    // Store the passkey
     const passkeyId = typeid('pass').toString()
     await db
       .insertInto('passkeys')
@@ -158,6 +182,7 @@ export default defineEventHandler(async (event) => {
         userId: user.id,
         name: body.name,
       },
+      retention: 'CRITICAL',
     })
 
     return createSuccessResponse<IRegisterPasskeyResponse>(

@@ -29,7 +29,6 @@ export default defineEventHandler(async (event) => {
     const body = await requireValidatedBody(event, Enable2FASchema)
     const now = Math.floor(Date.now() / 1000)
 
-    // Get user info for TOTP setup
     const user = await db
       .selectFrom('users')
       .leftJoin('emails', 'emails.userId', 'users.id')
@@ -40,10 +39,19 @@ export default defineEventHandler(async (event) => {
       .executeTakeFirst()
 
     if (!user) {
+      await auditLog(event, {
+        action: 'enable',
+        entity: 'two_factor',
+        entityId: 'anonymous',
+        metadata: {
+          success: false,
+          reason: 'user_not_found',
+        },
+        retention: 'CRITICAL',
+      })
       return createErrorResponse(event, 'User not found', 404)
     }
 
-    // Check if authenticator name already exists
     const existingAuth = await db
       .selectFrom('two_factors')
       .where('userId', '=', user.id)
@@ -52,14 +60,23 @@ export default defineEventHandler(async (event) => {
       .executeTakeFirst()
 
     if (existingAuth) {
+      await auditLog(event, {
+        action: 'enable',
+        entity: 'two_factor',
+        entityId: user.id,
+        metadata: {
+          success: false,
+          reason: 'name_exists',
+          name: body.name,
+        },
+        retention: 'CRITICAL',
+      })
       return createErrorResponse(event, 'Authenticator name already in use', 400)
     }
 
-    // Generate TOTP secret and backup codes
     const secret = generateTOTPSecret()
     const backupCodes = Array.from({ length: 10 }, () => generateRandomStr({ size: 8 }))
 
-    // Check if this is first 2FA setup
     const existing2FA = await db
       .selectFrom('two_factors')
       .where('userId', '=', user.id)
@@ -69,7 +86,6 @@ export default defineEventHandler(async (event) => {
 
     const id = typeid('totp').toString()
 
-    // Create TOTP record and metadata in transaction
     await db.transaction().execute(async (trx) => {
       await trx
         .insertInto('two_factors')
@@ -99,7 +115,6 @@ export default defineEventHandler(async (event) => {
         .execute()
     })
 
-    // Generate TOTP URI for QR code
     const totpUri = generateTOTPUri({
       secret,
       accountName: user.email || user.username,
@@ -108,7 +123,6 @@ export default defineEventHandler(async (event) => {
 
     const qrCodeUrl = `${appConfig.baseURL}/api/qrcode?chl=${encodeURIComponent(totpUri)}`
 
-    // Get public metadata
     const metadata = await db
       .selectFrom('user_metadata')
       .where('userId', '=', user.id)
@@ -126,6 +140,7 @@ export default defineEventHandler(async (event) => {
         type: 'totp',
         name: body.name,
       },
+      retention: 'CRITICAL',
     })
 
     return createSuccessResponse<IEnable2FAResponse>(

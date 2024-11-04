@@ -19,7 +19,6 @@ export default defineEventHandler(async (event) => {
   try {
     const body = await requireValidatedBody(event, SignoutRequestSchema)
 
-    // Check if session exists and still valid
     const session = await db
       .selectFrom('sessions')
       .where('id', '=', body.sessionId)
@@ -27,18 +26,53 @@ export default defineEventHandler(async (event) => {
       .executeTakeFirst()
 
     if (!session) {
+      await auditLog(event, {
+        action: 'logout',
+        entity: 'session',
+        entityId: body.sessionId,
+        metadata: {
+          success: false,
+          reason: 'session_not_found',
+          deviceId: body.deviceId,
+        },
+        retention: 'COMPLIANCE',
+      })
+
       return createErrorResponse(event, 'Session not found', 404)
     }
 
     if (session.expiresAt < now) {
+      await auditLog(event, {
+        action: 'logout',
+        entity: 'session',
+        entityId: body.sessionId,
+        metadata: {
+          success: false,
+          reason: 'session_expired',
+          deviceId: body.deviceId,
+        },
+        retention: 'COMPLIANCE',
+      })
+
       return createErrorResponse(event, 'Session has expired', 400)
     }
 
     if (!session.isActive) {
+      await auditLog(event, {
+        action: 'logout',
+        entity: 'session',
+        entityId: body.sessionId,
+        metadata: {
+          success: false,
+          reason: 'session_inactive',
+          deviceId: body.deviceId,
+        },
+        retention: 'COMPLIANCE',
+      })
+
       return createErrorResponse(event, 'Session is already inactive', 400)
     }
 
-    // Deactivate session
     await db
       .updateTable('sessions')
       .set({
@@ -48,7 +82,6 @@ export default defineEventHandler(async (event) => {
       .where('id', '=', body.sessionId)
       .execute()
 
-    // If deviceId provided, deactivate all sessions for that device
     if (body.deviceId) {
       await db
         .updateTable('sessions')
@@ -62,7 +95,6 @@ export default defineEventHandler(async (event) => {
         .execute()
     }
 
-    // Log successful signout
     await auditLog(event, {
       action: 'logout',
       entity: 'session',
@@ -75,9 +107,9 @@ export default defineEventHandler(async (event) => {
           email: userEmail,
         },
       },
+      retention: 'COMPLIANCE',
     })
 
-    // Remove session cookie
     deleteCookie(event, 'auth_session')
 
     return createSuccessResponse<ISignoutResponse>(event, 'Signed out successfully', {

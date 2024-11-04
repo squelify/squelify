@@ -23,7 +23,6 @@ export default defineEventHandler(async (event) => {
     const body = await requireValidatedBody(event, GenerateOTPSchema)
     const now = Math.floor(Date.now() / 1000)
 
-    // Get user's primary email
     const userEmail = await db
       .selectFrom('emails')
       .where('userId', '=', payload.sub)
@@ -33,10 +32,21 @@ export default defineEventHandler(async (event) => {
       .executeTakeFirst()
 
     if (!userEmail) {
-      return createErrorResponse(event, 'Email utama tidak ditemukan atau belum terverifikasi', 404)
+      await auditLog(event, {
+        action: 'create',
+        entity: 'two_factor',
+        entityId: payload.sub,
+        metadata: {
+          success: false,
+          reason: 'primary_email_not_found',
+          type: body.type,
+          purpose: body.purpose,
+        },
+        retention: 'CRITICAL',
+      })
+      return createErrorResponse(event, 'Primary email not found or not verified', 404)
     }
 
-    // Generate OTP code
     const otpCode = generateRandomStr({ size: 6, digitsOnly: true })
     const verificationToken = typeid().toString()
 
@@ -46,7 +56,6 @@ export default defineEventHandler(async (event) => {
       purpose: body.purpose,
     }
 
-    // Create verification record
     await db
       .insertInto('verifications')
       .values({
@@ -63,13 +72,26 @@ export default defineEventHandler(async (event) => {
       })
       .execute()
 
-    // Log OTP for development
     logger.info('[auth]', `OTP Code: ${otpCode}`)
+
+    await auditLog(event, {
+      action: 'create',
+      entity: 'two_factor',
+      entityId: verificationToken,
+      metadata: {
+        success: true,
+        userId: payload.sub,
+        type: body.type,
+        purpose: body.purpose,
+        email: userEmail.email,
+      },
+      retention: 'CRITICAL',
+    })
 
     return {
       status: 200,
       success: true,
-      message: 'Kode OTP telah dikirim',
+      message: 'OTP code has been sent',
       data: {
         token: verificationToken,
         identifier: userEmail.email,

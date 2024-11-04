@@ -25,14 +25,23 @@ export default defineEventHandler(async (event) => {
     const body = await requireValidatedBody(event, PasswordRecoverySchema)
     const now = Math.floor(Date.now() / 1000)
 
-    // Find user by email
     const user = await findUserByEmail(body.email)
 
     if (!user) {
+      await auditLog(event, {
+        action: 'forgot',
+        entity: 'password',
+        entityId: 'anonymous',
+        metadata: {
+          success: false,
+          reason: 'email_not_found',
+          email: body.email,
+        },
+        retention: 'CRITICAL',
+      })
       return createErrorResponse(event, 'Email address not registered', 400)
     }
 
-    // Check existing verification attempts in last 30 minutes
     const existingVerification = await db
       .selectFrom('verifications')
       .where('userId', '=', user.id)
@@ -43,9 +52,20 @@ export default defineEventHandler(async (event) => {
       .orderBy('createdAt', 'desc')
       .executeTakeFirst()
 
-    // Max 3 attempts per 30 minutes
     if (existingVerification && existingVerification.attempts >= 3) {
       const waitTimeMinutes = Math.ceil((existingVerification.createdAt + 60 * 30 - now) / 60)
+      await auditLog(event, {
+        action: 'forgot',
+        entity: 'password',
+        entityId: user.id,
+        metadata: {
+          success: false,
+          reason: 'too_many_attempts',
+          email: body.email,
+          waitTime: waitTimeMinutes,
+        },
+        retention: 'CRITICAL',
+      })
       return createErrorResponse(
         event,
         `Too many reset attempts. Please try again in ${waitTimeMinutes} minutes`,
@@ -53,7 +73,6 @@ export default defineEventHandler(async (event) => {
       )
     }
 
-    // Create verification token
     const token = typeid().toString()
     const attempts = existingVerification ? existingVerification.attempts + 1 : 1
     const expiresIn = DURATION.MINUTE * 30
@@ -73,7 +92,6 @@ export default defineEventHandler(async (event) => {
       })
       .execute()
 
-    // Generate verification URL
     const verificationUrl = `${appConfig.baseURL}/auth/password/reset?token=${token}`
     logger.info('[app]', 'Reset password URL: ', verificationUrl)
 
@@ -85,6 +103,7 @@ export default defineEventHandler(async (event) => {
         success: true,
         email: body.email,
       },
+      retention: 'CRITICAL',
     })
 
     const response: IForgotPasswordResponse = {
@@ -94,7 +113,6 @@ export default defineEventHandler(async (event) => {
       },
     }
 
-    // Include verification URL in development
     if (!isProduction) {
       response.verification.verificationUrl = verificationUrl
     }

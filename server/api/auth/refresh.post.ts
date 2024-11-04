@@ -25,7 +25,6 @@ export default defineEventHandler(async (event) => {
     const { refreshToken } = await readBody<IRefreshTokenRequest>(event)
     const now = Math.floor(Date.now() / 1000)
 
-    // Get session by refresh token
     const session = await db
       .selectFrom('sessions')
       .innerJoin('users', 'users.id', 'sessions.userId')
@@ -44,16 +43,25 @@ export default defineEventHandler(async (event) => {
       .executeTakeFirst()
 
     if (!session) {
+      await auditLog(event, {
+        action: 'refresh',
+        entity: 'token',
+        entityId: refreshToken,
+        metadata: {
+          success: false,
+          reason: 'invalid_token',
+        },
+        retention: 'COMPLIANCE',
+      })
+
       return createErrorResponse(event, 'Invalid refresh token', 401)
     }
 
-    // Get active JWK
     const activeKey = await getActiveJWK(db)
     if (!activeKey) {
       return createErrorResponse(event, 'No active signing key available', 500)
     }
 
-    // Generate new access token with standard claims
     const payload: JWTPayload = {
       iss: appConfig.baseURL,
       sub: session.userId,
@@ -74,14 +82,12 @@ export default defineEventHandler(async (event) => {
       audience: userAgentHash,
     })
 
-    // Update session last active timestamp
     await db
       .updateTable('sessions')
       .set({ lastActiveAt: now })
       .where('id', '=', session.sessionId)
       .execute()
 
-    // Log successful token refresh
     await auditLog(event, {
       action: 'refresh',
       entity: 'token',
@@ -91,6 +97,7 @@ export default defineEventHandler(async (event) => {
         userId: session.userId,
         sessionId: session.sessionId,
       },
+      retention: 'COMPLIANCE',
     })
 
     return createSuccessResponse<IRefreshTokenResponse>(event, 'Token refreshed successfully', {

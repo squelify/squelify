@@ -33,7 +33,6 @@ export default defineEventHandler(async (event) => {
   try {
     const body = await requireValidatedBody(event, InviteMemberSchema)
 
-    // Verify organization exists
     const org = await db
       .selectFrom('organizations')
       .where('id', '=', orgId)
@@ -41,10 +40,20 @@ export default defineEventHandler(async (event) => {
       .executeTakeFirst()
 
     if (!org) {
+      await auditLog(event, {
+        action: 'invite',
+        entity: 'organization',
+        entityId: orgId,
+        metadata: {
+          success: false,
+          reason: 'org_not_found',
+          email: body.email,
+        },
+        retention: 'CRITICAL',
+      })
       return createErrorResponse(event, 'Organization not found', 404)
     }
 
-    // Verify requester is an owner or admin
     const requester = await db
       .selectFrom('members')
       .where('organizationId', '=', orgId)
@@ -67,12 +76,11 @@ export default defineEventHandler(async (event) => {
             email: userEmail,
           },
         },
+        retention: 'CRITICAL',
       })
-
       return createErrorResponse(event, 'Only owners or admins can invite members', 403)
     }
 
-    // Admin cannot invite owners
     if (requester.role === 'org:admin' && body.role === 'org:owner') {
       await auditLog(event, {
         action: 'invite',
@@ -87,12 +95,11 @@ export default defineEventHandler(async (event) => {
             email: userEmail,
           },
         },
+        retention: 'CRITICAL',
       })
-
       return createErrorResponse(event, 'Administrators cannot invite organization owners', 403)
     }
 
-    // Check existing invitation
     const existingInvite = await db
       .selectFrom('invitations')
       .where('organizationId', '=', orgId)
@@ -102,10 +109,20 @@ export default defineEventHandler(async (event) => {
       .executeTakeFirst()
 
     if (existingInvite) {
+      await auditLog(event, {
+        action: 'invite',
+        entity: 'organization',
+        entityId: orgId,
+        metadata: {
+          success: false,
+          reason: 'invitation_exists',
+          email: body.email,
+        },
+        retention: 'CRITICAL',
+      })
       return createErrorResponse(event, 'An invitation has already been sent to this email', 409)
     }
 
-    // Create invitation
     const inviteId = typeid('inv').toString()
     const invitation = await db
       .insertInto('invitations')
@@ -127,7 +144,6 @@ export default defineEventHandler(async (event) => {
       .returning(['id', 'email', 'role', 'token', 'status', 'expiresAt', 'metadata'])
       .executeTakeFirst()
 
-    // Log invitation
     await auditLog(event, {
       action: 'invite',
       entity: 'organization',
@@ -143,6 +159,7 @@ export default defineEventHandler(async (event) => {
           email: userEmail,
         },
       },
+      retention: 'CRITICAL',
     })
 
     return createSuccessResponse<IInviteMemberResponse>(event, 'Invitation sent successfully', {

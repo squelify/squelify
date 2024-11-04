@@ -22,7 +22,6 @@ export default defineEventHandler(async (event) => {
     const body = await requireValidatedBody(event, VerifyOTPSchema)
     const now = Math.floor(Date.now() / 1000)
 
-    // Get verification record with complete check
     const verification = await db
       .selectFrom('verifications')
       .where('token', '=', body.token)
@@ -34,10 +33,33 @@ export default defineEventHandler(async (event) => {
       .executeTakeFirst()
 
     if (!verification) {
+      await auditLog(event, {
+        action: 'verify',
+        entity: 'two_factor',
+        entityId: body.token,
+        metadata: {
+          success: false,
+          reason: 'invalid_token',
+          userId: payload.sub,
+        },
+        retention: 'CRITICAL',
+      })
       return createErrorResponse(event, 'Token verifikasi tidak valid atau sudah kadaluarsa', 400)
     }
 
     if (verification.attempts >= verification.maxAttempts) {
+      await auditLog(event, {
+        action: 'verify',
+        entity: 'two_factor',
+        entityId: verification.id,
+        metadata: {
+          success: false,
+          reason: 'max_attempts_exceeded',
+          userId: payload.sub,
+        },
+        retention: 'CRITICAL',
+      })
+
       setResponseStatus(event, 400)
       const waitTimeMinutes = Math.ceil((verification.expiresAt - now) / 60)
       return createErrorResponse(
@@ -48,23 +70,28 @@ export default defineEventHandler(async (event) => {
     }
 
     let metadata: OTPMetadata
-
     try {
-      // Parse metadata from JSON string
       const parsedMetadata = JSON.parse(JSON.stringify(verification.metadata))
-
-      // Validate metadata structure
       if (!parsedMetadata.code || !parsedMetadata.type || !parsedMetadata.purpose) {
         throw new Error('Invalid metadata structure')
       }
-
       metadata = parsedMetadata
     } catch {
+      await auditLog(event, {
+        action: 'verify',
+        entity: 'two_factor',
+        entityId: verification.id,
+        metadata: {
+          success: false,
+          reason: 'invalid_metadata',
+          userId: payload.sub,
+        },
+        retention: 'CRITICAL',
+      })
       return createErrorResponse(event, 'Format metadata tidak valid', 400)
     }
 
     if (metadata.code !== body.code) {
-      // Increment attempts
       await db
         .updateTable('verifications')
         .set({
@@ -74,8 +101,20 @@ export default defineEventHandler(async (event) => {
         .where('id', '=', verification.id)
         .execute()
 
-      const remainingAttempts = verification.maxAttempts - (verification.attempts + 1)
+      await auditLog(event, {
+        action: 'verify',
+        entity: 'two_factor',
+        entityId: verification.id,
+        metadata: {
+          success: false,
+          reason: 'invalid_code',
+          userId: payload.sub,
+          remainingAttempts: verification.maxAttempts - (verification.attempts + 1),
+        },
+        retention: 'CRITICAL',
+      })
 
+      const remainingAttempts = verification.maxAttempts - (verification.attempts + 1)
       return createErrorResponse(
         event,
         `Kode OTP tidak valid. Sisa percobaan: ${remainingAttempts}`,
@@ -83,7 +122,6 @@ export default defineEventHandler(async (event) => {
       )
     }
 
-    // Mark as verified
     await db
       .updateTable('verifications')
       .set({
@@ -92,6 +130,19 @@ export default defineEventHandler(async (event) => {
       })
       .where('id', '=', verification.id)
       .execute()
+
+    await auditLog(event, {
+      action: 'verify',
+      entity: 'two_factor',
+      entityId: verification.id,
+      metadata: {
+        success: true,
+        userId: payload.sub,
+        type: metadata.type,
+        purpose: metadata.purpose,
+      },
+      retention: 'CRITICAL',
+    })
 
     return {
       status: 200,

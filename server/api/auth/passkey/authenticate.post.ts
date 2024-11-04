@@ -42,7 +42,6 @@ export default defineEventHandler(async (event) => {
   try {
     const body = await requireValidatedBody(event, AuthenticatePasskeySchema)
 
-    // Get passkey by credential ID
     const passkey = await db
       .selectFrom('passkeys')
       .where('credentialId', '=', body.response.id)
@@ -50,10 +49,19 @@ export default defineEventHandler(async (event) => {
       .executeTakeFirst()
 
     if (!passkey) {
+      await auditLog(event, {
+        action: 'authenticate',
+        entity: 'passkey',
+        entityId: body.response.id,
+        metadata: {
+          success: false,
+          reason: 'passkey_not_found',
+        },
+        retention: 'COMPLIANCE',
+      })
       return createErrorResponse(event, 'Passkey not found', 404)
     }
 
-    // Get user info
     const user = await db
       .selectFrom('users')
       .where('id', '=', passkey.userId)
@@ -61,13 +69,22 @@ export default defineEventHandler(async (event) => {
       .executeTakeFirst()
 
     if (!user) {
+      await auditLog(event, {
+        action: 'authenticate',
+        entity: 'passkey',
+        entityId: passkey.id,
+        metadata: {
+          success: false,
+          reason: 'user_not_found',
+        },
+        retention: 'COMPLIANCE',
+      })
       return createErrorResponse(event, 'User not found', 404)
     }
 
-    // Verify authentication response
     const verification = await verifyAuthenticationResponse({
       response: body.response as AuthenticationResponseJSON,
-      expectedChallenge: '', // From session
+      expectedChallenge: '',
       expectedOrigin: passkey.origin,
       expectedRPID: passkey.rpId,
       authenticator: {
@@ -75,7 +92,7 @@ export default defineEventHandler(async (event) => {
         credentialID: Buffer.from(body.response.id, 'base64url'),
         counter: passkey.counter,
       },
-    } as any) // FIXME: Remove 'as any' when types are updated
+    } as any) // TODO: fix type
 
     if (!verification.verified) {
       await auditLog(event, {
@@ -87,12 +104,11 @@ export default defineEventHandler(async (event) => {
           reason: 'verification_failed',
           userId: user.id,
         },
+        retention: 'COMPLIANCE',
       })
-
       return createErrorResponse(event, 'Passkey verification failed', 400)
     }
 
-    // Update counter
     await db
       .updateTable('passkeys')
       .set({
@@ -110,6 +126,7 @@ export default defineEventHandler(async (event) => {
         success: true,
         userId: user.id,
       },
+      retention: 'COMPLIANCE',
     })
 
     return createSuccessResponse<IAuthenticatePasskeyResponse>(

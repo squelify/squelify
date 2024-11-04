@@ -12,7 +12,6 @@ export default defineEventHandler(async (event) => {
   const userEmail = event.context.auth.payload.email
 
   try {
-    // Get JWK record first
     const jwk = await db
       .selectFrom('jwks')
       .where('id', '=', jwkId)
@@ -20,10 +19,19 @@ export default defineEventHandler(async (event) => {
       .executeTakeFirst()
 
     if (!jwk) {
+      await auditLog(event, {
+        action: 'delete',
+        entity: 'jwk',
+        entityId: jwkId,
+        metadata: {
+          success: false,
+          reason: 'jwk_not_found',
+        },
+        retention: 'CRITICAL',
+      })
       return createErrorResponse(event, 'JWK not found', 404)
     }
 
-    // Cannot delete active JWK for security reasons
     if (jwk.isActive) {
       await auditLog(event, {
         action: 'delete',
@@ -38,15 +46,13 @@ export default defineEventHandler(async (event) => {
             email: userEmail,
           },
         },
+        retention: 'CRITICAL',
       })
-
       return createErrorResponse(event, 'Cannot delete active JWK', 400)
     }
 
-    // Delete the JWK record
     await db.deleteFrom('jwks').where('id', '=', jwkId).execute()
 
-    // Log successful deletion
     await auditLog(event, {
       action: 'delete',
       entity: 'jwk',
@@ -59,6 +65,7 @@ export default defineEventHandler(async (event) => {
           email: userEmail,
         },
       },
+      retention: 'CRITICAL',
     })
 
     return createSuccessResponse<IDeleteJWKResponse>(event, 'JWK deleted successfully', {
@@ -70,11 +77,4 @@ export default defineEventHandler(async (event) => {
   } catch (error) {
     return throwErrorResponse(event, error)
   }
-})
-
-defineRouteMeta({
-  openAPI: {
-    summary: 'Delete a JWK',
-    tags: ['Administration'],
-  },
 })

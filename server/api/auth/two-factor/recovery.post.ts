@@ -26,7 +26,6 @@ export default defineEventHandler(async (event) => {
     const body = await requireValidatedBody(event, RecoverySchema)
     const now = Math.floor(Date.now() / 1000)
 
-    // Get 2FA record with complete status check
     const twoFactor = await db
       .selectFrom('two_factors')
       .where('id', '=', body.id)
@@ -35,27 +34,64 @@ export default defineEventHandler(async (event) => {
       .executeTakeFirst()
 
     if (!twoFactor) {
+      await auditLog(event, {
+        action: 'recovery',
+        entity: 'two_factor',
+        entityId: body.id,
+        metadata: {
+          success: false,
+          reason: 'authenticator_not_found',
+        },
+        retention: 'CRITICAL',
+      })
       return createErrorResponse(event, 'Authenticator not found', 404)
     }
 
     if (!twoFactor.isVerified) {
+      await auditLog(event, {
+        action: 'recovery',
+        entity: 'two_factor',
+        entityId: body.id,
+        metadata: {
+          success: false,
+          reason: 'not_verified',
+        },
+        retention: 'CRITICAL',
+      })
       return createErrorResponse(event, 'Authenticator is not verified', 400)
     }
 
-    // Parse and verify backup codes
     let backupCodes: string[]
-
     try {
       backupCodes = JSON.parse(JSON.stringify(twoFactor.backupCodes))
-
       if (!Array.isArray(backupCodes)) {
         throw new Error('Invalid backup codes format')
       }
     } catch {
+      await auditLog(event, {
+        action: 'recovery',
+        entity: 'two_factor',
+        entityId: body.id,
+        metadata: {
+          success: false,
+          reason: 'invalid_backup_codes',
+        },
+        retention: 'CRITICAL',
+      })
       return createErrorResponse(event, 'Invalid backup codes format', 500)
     }
 
     if (backupCodes.length === 0) {
+      await auditLog(event, {
+        action: 'recovery',
+        entity: 'two_factor',
+        entityId: body.id,
+        metadata: {
+          success: false,
+          reason: 'no_backup_codes',
+        },
+        retention: 'CRITICAL',
+      })
       return createErrorResponse(event, 'No backup codes available', 400)
     }
 
@@ -70,15 +106,13 @@ export default defineEventHandler(async (event) => {
           reason: 'invalid_code',
           userId: payload.sub,
         },
+        retention: 'CRITICAL',
       })
-
       return createErrorResponse(event, 'Invalid or used recovery code', 400)
     }
 
-    // Remove used backup code
     backupCodes.splice(codeIndex, 1)
 
-    // Update backup codes and usage info
     await db
       .updateTable('two_factors')
       .set({
@@ -98,6 +132,7 @@ export default defineEventHandler(async (event) => {
         userId: payload.sub,
         remainingCodes: backupCodes.length,
       },
+      retention: 'CRITICAL',
     })
 
     return createSuccessResponse<IRecoveryResponse>(

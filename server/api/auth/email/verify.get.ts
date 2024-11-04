@@ -20,6 +20,16 @@ export default defineEventHandler(async (event) => {
     const now = Math.floor(Date.now() / 1000)
 
     if (!token) {
+      await auditLog(event, {
+        action: 'verify',
+        entity: 'email',
+        entityId: 'anonymous',
+        metadata: {
+          success: false,
+          reason: 'missing_token',
+        },
+        retention: 'COMPLIANCE',
+      })
       return createErrorResponse(event, 'Verification token is required', 400)
     }
 
@@ -31,14 +41,35 @@ export default defineEventHandler(async (event) => {
       .executeTakeFirst()
 
     if (!verification) {
+      await auditLog(event, {
+        action: 'verify',
+        entity: 'email',
+        entityId: token,
+        metadata: {
+          success: false,
+          reason: 'invalid_token',
+        },
+        retention: 'COMPLIANCE',
+      })
       return createErrorResponse(event, 'Verification token not found', 404)
     }
 
     if (verification.verifiedAt) {
+      await auditLog(event, {
+        action: 'verify',
+        entity: 'email',
+        entityId: verification.id,
+        userId: verification.userId,
+        metadata: {
+          success: false,
+          reason: 'already_verified',
+          email: verification.identifier,
+        },
+        retention: 'COMPLIANCE',
+      })
       return createErrorResponse(event, 'Email already verified', 400)
     }
 
-    // Check rate limit for token requests
     const rateLimit = await db
       .selectFrom('rate_limits')
       .where('key', '=', verification.identifier)
@@ -56,9 +87,7 @@ export default defineEventHandler(async (event) => {
       )
     }
 
-    // Handle expired token
     if (verification.expiresAt <= now) {
-      // Update or create rate limit
       if (rateLimit) {
         const newPoints = rateLimit.points + 1
         const blocked = newPoints >= 3
@@ -67,7 +96,7 @@ export default defineEventHandler(async (event) => {
           .updateTable('rate_limits')
           .set({
             points: newPoints,
-            blockedUntil: blocked ? now + 30 * 60 : null, // Block for 30 minutes
+            blockedUntil: blocked ? now + 30 * 60 : null,
             updatedAt: now,
           })
           .where('key', '=', verification.identifier)
@@ -86,14 +115,13 @@ export default defineEventHandler(async (event) => {
             context: 'email',
             points: 1,
             limit: 3,
-            window: DURATION.HOUR, // 1 hour window
+            window: DURATION.HOUR,
             expiresAt: now + DURATION.HOUR,
             createdAt: now,
           })
           .execute()
       }
 
-      // Generate new token
       const newToken = typeid().toString()
       await db
         .insertInto('verifications')
@@ -113,6 +141,20 @@ export default defineEventHandler(async (event) => {
       const verificationUrl = `${appConfig.baseURL}/api/auth/email/verify?token=${newToken}`
       logger.info('[app]', 'New verification email:', verificationUrl)
 
+      await auditLog(event, {
+        action: 'verify',
+        entity: 'email',
+        entityId: verification.id,
+        userId: verification.userId,
+        metadata: {
+          success: false,
+          reason: 'token_expired',
+          email: verification.identifier,
+          newToken,
+        },
+        retention: 'COMPLIANCE',
+      })
+
       return createErrorResponse(
         event,
         'Token expired, check your email for a new verification link',
@@ -120,7 +162,6 @@ export default defineEventHandler(async (event) => {
       )
     }
 
-    // Verify email
     await db.transaction().execute(async (trx) => {
       await trx
         .updateTable('verifications')
@@ -152,6 +193,7 @@ export default defineEventHandler(async (event) => {
         success: true,
         email: verification.identifier,
       },
+      retention: 'COMPLIANCE',
     })
 
     if (redirect && callbackURL) {

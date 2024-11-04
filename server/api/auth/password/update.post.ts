@@ -1,4 +1,3 @@
-import * as jose from 'jose'
 import { z } from 'zod'
 import { hashPassword, verifyPassword } from '~/utils/string'
 
@@ -29,7 +28,6 @@ export default defineEventHandler(async (event) => {
     const body = await requireValidatedBody(event, PasswordUpdateSchema)
     const now = Math.floor(Date.now() / 1000)
 
-    // Get current password
     const currentPassword = await db
       .selectFrom('passwords')
       .where('userId', '=', payload.sub)
@@ -37,10 +35,19 @@ export default defineEventHandler(async (event) => {
       .executeTakeFirst()
 
     if (!currentPassword) {
+      await auditLog(event, {
+        action: 'update',
+        entity: 'password',
+        entityId: payload.sub,
+        metadata: {
+          success: false,
+          reason: 'password_not_found',
+        },
+        retention: 'CRITICAL',
+      })
       return createErrorResponse(event, 'Password not found', 404)
     }
 
-    // Verify current password
     const isValid = await verifyPassword(body.currentPassword, currentPassword.hash)
     if (!isValid) {
       await auditLog(event, {
@@ -52,15 +59,13 @@ export default defineEventHandler(async (event) => {
           reason: 'invalid_current_password',
           userId: payload.sub,
         },
+        retention: 'CRITICAL',
       })
-
       return createErrorResponse(event, 'Invalid current password', 400)
     }
 
-    // Hash new password
     const hashedPassword = await hashPassword(body.newPassword)
 
-    // Update password
     await db
       .updateTable('passwords')
       .set({
@@ -78,6 +83,7 @@ export default defineEventHandler(async (event) => {
         success: true,
         userId: payload.sub,
       },
+      retention: 'CRITICAL',
     })
 
     return createSuccessResponse<IUpdatePasswordResponse>(event, 'Password updated successfully', {

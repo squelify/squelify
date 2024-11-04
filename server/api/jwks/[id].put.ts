@@ -33,7 +33,6 @@ export default defineEventHandler(async (event) => {
   try {
     const body = await requireValidatedBody(event, UpdateJWKSchema)
 
-    // Get JWK
     const jwk = await db
       .selectFrom('jwks')
       .where('id', '=', jwkId)
@@ -41,10 +40,19 @@ export default defineEventHandler(async (event) => {
       .executeTakeFirst()
 
     if (!jwk) {
+      await auditLog(event, {
+        action: 'update',
+        entity: 'jwk',
+        entityId: jwkId,
+        metadata: {
+          success: false,
+          reason: 'jwk_not_found',
+        },
+        retention: 'CRITICAL',
+      })
       return createErrorResponse(event, 'JWK not found', 404)
     }
 
-    // Check if keyId exists when updating
     if (body.keyId && body.keyId !== jwk.keyId) {
       const existingKey = await db
         .selectFrom('jwks')
@@ -53,30 +61,48 @@ export default defineEventHandler(async (event) => {
         .executeTakeFirst()
 
       if (existingKey) {
+        await auditLog(event, {
+          action: 'update',
+          entity: 'jwk',
+          entityId: jwkId,
+          metadata: {
+            success: false,
+            reason: 'key_id_exists',
+            keyId: body.keyId,
+          },
+          retention: 'CRITICAL',
+        })
         return createErrorResponse(event, 'Key ID already exists', 409)
       }
     }
 
-    // Validate expiration time
     if (body.expiresAt && Number(body.expiresAt) <= now) {
+      await auditLog(event, {
+        action: 'update',
+        entity: 'jwk',
+        entityId: jwkId,
+        metadata: {
+          success: false,
+          reason: 'invalid_expiration',
+          expiresAt: body.expiresAt,
+        },
+        retention: 'CRITICAL',
+      })
       return createErrorResponse(event, 'Expiration time must be in the future', 400)
     }
 
-    // Prepare update data with boolean to integer conversion
     const updateData: any = {
       ...body,
       isActive: body.isActive !== undefined ? Number(body.isActive) : undefined,
       updatedAt: now,
     }
 
-    // Remove undefined properties
     for (const key of Object.keys(updateData)) {
       if (updateData[key] === undefined) {
         delete updateData[key]
       }
     }
 
-    // Update JWK
     const updatedJwk = await db
       .updateTable('jwks')
       .set(updateData)
@@ -84,7 +110,6 @@ export default defineEventHandler(async (event) => {
       .returning(['id', 'keyId', 'publicKey', 'algorithm', 'isActive', 'expiresAt', 'updatedAt'])
       .executeTakeFirst()
 
-    // Log JWK update
     await auditLog(event, {
       action: 'update',
       entity: 'jwk',
@@ -99,6 +124,7 @@ export default defineEventHandler(async (event) => {
           email: userEmail,
         },
       },
+      retention: 'CRITICAL',
     })
 
     return createSuccessResponse<IUpdateJWKResponse>(event, 'JWK updated successfully', {
@@ -112,11 +138,4 @@ export default defineEventHandler(async (event) => {
   } catch (error) {
     return throwErrorResponse(event, error)
   }
-})
-
-defineRouteMeta({
-  openAPI: {
-    summary: 'Update a JWK',
-    tags: ['Administration'],
-  },
 })

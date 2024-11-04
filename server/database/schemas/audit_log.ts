@@ -2,6 +2,13 @@ import type { Insertable, Selectable, Updateable } from 'kysely'
 import type { ColumnType, Generated } from 'kysely'
 import { z } from 'zod'
 
+// Audit log retention in seconds
+export const AUDIT_RETENTION = {
+  DEFAULT: 90 * 86400, // 90 days in seconds
+  CRITICAL: 365 * 86400, // 1 year for critical events
+  COMPLIANCE: 730 * 86400, // 2 years for compliance
+} as const
+
 const auditActionEnum = z.enum(
   [
     'create',
@@ -107,6 +114,7 @@ export const AuditLogSchema = z.object({
     .string({ invalid_type_error: 'User agent must be a string' })
     .max(500, 'User agent too long')
     .nullable(),
+  retention: z.number().default(AUDIT_RETENTION.DEFAULT),
   createdAt: z.custom<ColumnType<number>>().optional(),
 })
 

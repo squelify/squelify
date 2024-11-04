@@ -22,7 +22,6 @@ export default defineEventHandler(async (event) => {
     const body = await requireValidatedBody(event, PrimaryEmailSchema)
     const now = Math.floor(Date.now() / 1000)
 
-    // Get email record
     const email = await db
       .selectFrom('emails')
       .where('id', '=', body.emailId)
@@ -32,11 +31,21 @@ export default defineEventHandler(async (event) => {
       .executeTakeFirst()
 
     if (!email) {
+      await auditLog(event, {
+        action: 'update',
+        entity: 'email',
+        entityId: body.emailId,
+        metadata: {
+          success: false,
+          reason: 'email_not_found',
+        },
+        retention: 'CRITICAL',
+      })
+
       return createErrorResponse(event, 'Email not found or not verified', 404)
     }
 
     await db.transaction().execute(async (trx) => {
-      // Reset all primary emails
       await trx
         .updateTable('emails')
         .set({
@@ -46,7 +55,6 @@ export default defineEventHandler(async (event) => {
         .where('userId', '=', payload.sub)
         .execute()
 
-      // Set new primary email
       await trx
         .updateTable('emails')
         .set({
@@ -66,6 +74,7 @@ export default defineEventHandler(async (event) => {
         userId: payload.sub,
         email: email.email,
       },
+      retention: 'CRITICAL',
     })
 
     return createSuccessResponse<IUpdatePrimaryEmailResponse>(
