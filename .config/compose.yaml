@@ -25,4 +25,5 @@ services:
 
 volumes:
   libsql_data:
+    name: fastrue_libsql_data
     driver: local
