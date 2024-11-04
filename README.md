@@ -49,10 +49,10 @@ TODO
 
 ### Simple Load Testing
 
-Using [`hey`](https://github.com/rakyll/hey) to perform a simple load testing.
+Using [`oha`](https://github.com/hatoo/oha) to perform a simple load testing.
 
 ```sh
-hey -n 1000 -c 200 -z 30s -m GET -T "application/json" http://localhost:3278/api/healthz
+oha -z 10s -m GET http://localhost:3278/api/healthz -c 350 -n 10000
 ```
 
 ## 🚀 Deployment
