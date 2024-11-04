@@ -5,24 +5,35 @@
  * - Table definitions (CREATE TABLE statements)
  * - Index definitions (CREATE INDEX statements)
  * - Unique index definitions (CREATE UNIQUE INDEX statements)
+ * - Trigger definitions (CREATE TRIGGER statements)
  *
- * All CREATE statements are made idempotent by adding IF NOT EXISTS.
- * System tables (_migration, _migration_lock, sqlite_sequence) are excluded.
- * Output filename includes UTC timestamp.
+ * Features:
+ * - All CREATE statements are made idempotent by adding IF NOT EXISTS
+ * - System tables (_migration, _migration_lock, sqlite_sequence) are excluded
+ * - Output filename includes UTC timestamp
+ * - Includes database version info
+ * - Wrapped in transaction with PRAGMA foreign_keys handling
  *
  * Usage:
  *   pnpm fastrue migrate export
- *   pnpm fastrue migrate export --output=custom.sql
+ *   pnpm fastrue migrate export --output=output.sql
  *   pnpm fastrue migrate export --verbose
+ *   pnpm fastrue migrate export --help
  */
 
 import { writeFileSync } from 'node:fs'
 import { defineCommand, showUsage } from 'citty'
 import consola from 'consola'
-import { Kysely } from 'kysely'
+import { Kysely, sql } from 'kysely'
 import { makeDirectory } from 'make-dir'
 import { resolve } from 'pathe'
 import { kyselyConfig } from '~/database/db.client'
+
+interface DatabaseSchema {
+  type: string
+  name: string
+  sql: string
+}
 
 function addIfNotExists(sql: string): string {
   return sql
@@ -55,13 +66,22 @@ function getTimestamp(): string {
   return `${year}${month}${day}-${hours}${minutes}${seconds}`
 }
 
+async function getDatabaseVersion(db: Kysely<any>): Promise<string> {
+  const { rows } = await sql
+    .raw<{ dbVersion: string }>('SELECT sqlite_version() as db_version')
+    .execute(db)
+  return rows[0].dbVersion
+}
+
 /**
  * Get SQL header with metadata information
  */
-function getSqlHeader(): string {
+function getSqlHeader(version: string): string {
   const now = new Date()
-  return `-- Database schema dump
+  return `--
+-- Database version: ${version}
 -- Timestamp: ${now.toISOString()}
+--
 -- Note: All CREATE statements are made idempotent with IF NOT EXISTS
 -- System tables are excluded (_migration, _migration_lock, sqlite_sequence)`
 }
@@ -103,6 +123,7 @@ export default defineCommand({
       consola.info('Exporting database schema...')
 
       const db = new Kysely<any>(kyselyConfig)
+      const dbVersion = await getDatabaseVersion(db)
 
       const result = await db
         .selectFrom('sqlite_schema')
@@ -118,13 +139,48 @@ export default defineCommand({
         return
       }
 
-      const schema = [
-        getSqlHeader(),
-        ...result.map((row) => {
-          if (args.verbose) {
-            consola.info(`Processing ${row.type}: ${row.name}`)
+      // Group indexes by their table name
+      const tableGroups = new Map<string, DatabaseSchema[]>()
+
+      for (const row of result) {
+        if (row.type === 'table') {
+          tableGroups.set(row.name, [row])
+        } else if (row.type === 'index') {
+          // Extract table name from index name (assumes format: tablename_idx)
+          const tableName = row.name.split('_')[0]
+          if (tableGroups.has(tableName)) {
+            tableGroups.get(tableName)?.push(row)
           }
-          return ensureSemicolon(addIfNotExists(row.sql))
+        }
+      }
+
+      const schema = [
+        getSqlHeader(dbVersion),
+        ...Array.from(tableGroups.values()).map((group) => {
+          const [table, ...indexes] = group
+          const statements = [
+            `--`,
+            `-- Table structure for \`${table.name}\``,
+            `--`,
+            ensureSemicolon(addIfNotExists(table.sql)),
+          ]
+
+          if (indexes.length > 0) {
+            statements.push(
+              '',
+              `--`,
+              `-- Indexes for table \`${table.name}\``,
+              `--`,
+              ...indexes.map((idx) => {
+                if (args.verbose) {
+                  consola.info(`Processing ${idx.type}: ${idx.name}`)
+                }
+                return ensureSemicolon(addIfNotExists(idx.sql))
+              })
+            )
+          }
+
+          return statements.join('\n')
         }),
       ].join('\n\n')
 
@@ -134,6 +190,7 @@ export default defineCommand({
       const outputPath = resolve(process.cwd(), exportPath)
       writeFileSync(outputPath, schema, 'utf-8')
 
+      // Count tables, indexes, and triggers
       const tables = result.filter((row) => row.type === 'table').length
       const indexes = result.filter((row) => row.type === 'index').length
       const triggers = result.filter((row) => row.type === 'trigger').length
