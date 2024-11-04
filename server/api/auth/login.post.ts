@@ -120,6 +120,13 @@ export default defineEventHandler(async (event) => {
       keyId: activeKey.id,
     })
 
+    const roles = await db
+      .selectFrom('roles')
+      .innerJoin('user_roles', 'roles.id', 'user_roles.roleId')
+      .where('user_roles.userId', '=', user.id)
+      .select(['roles.name'])
+      .execute()
+
     const now = Math.floor(Date.now() / 1000)
     const payload: JWTPayload = {
       iss: appConfig.baseURL,
@@ -135,6 +142,7 @@ export default defineEventHandler(async (event) => {
       name: `${user.firstName} ${user.lastName}`.trim(),
       email: user.email,
       amr: ['pwd'],
+      roles: roles.map((r) => r.name),
     }
 
     const accessToken = await generateAccessToken(payload, activeKey, {

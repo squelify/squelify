@@ -76,9 +76,7 @@ export default defineCachedEventHandler(
         'Content-Type': 'application/json',
       })
 
-      return createSuccessResponse<IJWKSResponse>(event, 'JWKS retrieved successfully', {
-        keys: jwksData,
-      })
+      return { keys: jwksData }
     } catch (error) {
       return throwErrorResponse(event, error)
     }

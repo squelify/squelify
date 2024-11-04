@@ -16,7 +16,8 @@ export const SignupRequestSchema = z
       .regex(
         /^[a-z0-9_]+$/,
         'Username can only contain lowercase letters, numbers, and underscores'
-      ),
+      )
+      .optional(),
     password: z
       .string()
       .min(8, 'Password must be at least 8 characters')
@@ -173,6 +174,24 @@ export default defineEventHandler(async (event) => {
           createdAt: now,
         })
         .execute()
+
+      const defaultRole = await trx
+        .selectFrom('roles')
+        .where('isDefault', '=', 1)
+        .select(['id'])
+        .executeTakeFirst()
+
+      if (defaultRole) {
+        await trx
+          .insertInto('user_roles')
+          .values({
+            id: typeid('urol').toString(),
+            userId,
+            roleId: defaultRole.id,
+            createdAt: now,
+          })
+          .execute()
+      }
     })
 
     await auditLog(event, {

@@ -39,17 +39,6 @@ export default async function seed(db: Kysely<Database>): Promise<void> {
       createdAt: now,
     }
 
-    // Create admin metadata
-    const metadataId = typeid('meta').toString()
-    const newMetadata: UserMetadataInsert = {
-      id: metadataId,
-      userId: userId,
-      key: 'role',
-      value: 'administrator',
-      isPublic: 1,
-      createdAt: now,
-    }
-
     // Create admin email
     const emailId = typeid('eml').toString()
     const newEmail: EmailInsert = {
@@ -129,7 +118,6 @@ export default async function seed(db: Kysely<Database>): Promise<void> {
 
     // Execute all inserts
     await trx.insertInto('users').values(newUser).execute()
-    await trx.insertInto('user_metadata').values(newMetadata).execute()
     await trx.insertInto('emails').values(newEmail).execute()
     await trx.insertInto('passwords').values(newPassword).execute()
     await trx.insertInto('organizations').values(newOrg).execute()
