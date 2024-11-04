@@ -15,14 +15,14 @@ export type AuthContextType = {
   login: (identity: string, password: string) => Promise<ApiResponse<ILoginResponse> | null>
   signup: (identity: string, password: string) => Promise<ApiResponse<ILoginResponse> | null>
   logout: () => void
-} & Pick<AuthStore, 'user' | 'role'>
+} & Pick<AuthStore, 'user' | 'roles'>
 
 // Used for useOutletContext<AppContextType>()
-export type AppContextType = Pick<AuthContextType, 'user' | 'role' | 'logout'>
+export type AppContextType = Pick<AuthContextType, 'user' | 'roles' | 'logout'>
 
 const defaultAuthContext: AuthContextType = {
   user: defaultAuthStoreValues.user,
-  role: defaultAuthStoreValues.role,
+  roles: defaultAuthStoreValues.roles,
   login: async () => null,
   signup: async () => null,
   logout: () => {},
@@ -56,7 +56,6 @@ export default function AppProvider({ children, debugScreenSize }: AppProviderPr
   const apiRef = useRef(useApiClient())
   const authState = useStore(authStore)
 
-  // Prevents saveAuthState values from being overridden during token validation from cookies.
   const [pendingCheck, setPendingCheck] = useState<boolean>(false)
 
   const checkAuth = useCallback(() => {
@@ -70,17 +69,16 @@ export default function AppProvider({ children, debugScreenSize }: AppProviderPr
 
     saveAuthState({
       user: isLoggedIn ? authState.user : null,
-      role: isLoggedIn ? authState.role : null,
+      roles: isLoggedIn ? authState.roles : null,
       accessToken: isLoggedIn ? cookies.auth_session : null,
       refreshToken: isLoggedIn ? cookies.auth_session : null,
     })
-  }, [pendingCheck, cookies.auth_session, authState.accessToken, authState.user, authState.role])
+  }, [pendingCheck, cookies.auth_session, authState.accessToken, authState.user, authState.roles])
 
-  // Check the authentication state from cookies and the auth store
   useEffect(() => checkAuth(), [checkAuth])
 
   const login = useCallback(
-    async (identity: string, password: string) => {
+    async (identity: string, password: string): Promise<ApiResponse<ILoginResponse> | null> => {
       setPendingCheck(true)
 
       try {
@@ -94,18 +92,32 @@ export default function AppProvider({ children, debugScreenSize }: AppProviderPr
           throw new Error('User data is missing from the response')
         }
 
-        // Save the authentication state in the localstorage.
-        // This is used by the frontend to check the authentication status.
-        saveAuthState({ ...result.data })
+        saveAuthState({
+          user: {
+            id: result.data.user.id,
+            firstName: result.data.user.firstName,
+            lastName: result.data.user.lastName,
+            username: result.data.user.email,
+            avatarUrl: '',
+            isActive: 1,
+            createdAt: Date.now(),
+            updatedAt: Date.now(),
+            deletedAt: 0,
+          },
+          roles: result.data.user.roles,
+          accessToken: result.data.credentials.accessToken,
+          refreshToken: result.data.credentials.refreshToken,
+        })
 
-        // Set the cookie with a maxAge of 7 days.
-        // This is used by the backend to validate the authentication status.
-        setCookie(COOKIE_NAME, result.data.accessToken, {
+        setCookie(COOKIE_NAME, result.data.credentials.accessToken, {
           maxAge: COOKIE_LIFETIME,
           ...COOKIE_OPTIONS,
         })
 
-        return result.data.user
+        return result
+      } catch (error) {
+        console.error('Login error:', error)
+        return null
       } finally {
         setPendingCheck(false)
       }
@@ -113,29 +125,33 @@ export default function AppProvider({ children, debugScreenSize }: AppProviderPr
     [setCookie]
   )
 
-  const signup = useCallback(async (identity: string, password: string) => {
-    setPendingCheck(true)
+  const signup = useCallback(
+    async (identity: string, password: string): Promise<ApiResponse<ILoginResponse> | null> => {
+      setPendingCheck(true)
 
-    try {
-      const result = await apiRef.current.auth.signup({
-        email: identity,
-        password,
-        firstName: 'Admin',
-        lastName: 'Sistem',
-        username: 'admin',
-      })
+      try {
+        const result = await apiRef.current.auth.signup({
+          email: identity,
+          password,
+          firstName: 'Admin',
+          lastName: 'Sistem',
+          username: 'admin',
+        })
 
-      if (result.status !== 200 || !result.data?.password) {
-        throw new Error(result.message || 'Signup failed')
+        if (result.status !== 200 || !result.data?.password) {
+          throw new Error(result.message || 'Signup failed')
+        }
+
+        return result
+      } catch (error) {
+        console.error('Signup error:', error)
+        return null
+      } finally {
+        setPendingCheck(false)
       }
-
-      const user = result.data.user
-
-      return user
-    } finally {
-      setPendingCheck(false)
-    }
-  }, [])
+    },
+    []
+  )
 
   const logout = useCallback(async () => {
     await apiRef.current.auth.signout({
@@ -145,9 +161,15 @@ export default function AppProvider({ children, debugScreenSize }: AppProviderPr
     resetAuthState()
   }, [removeCookie, cookies.auth_session])
 
-  const authContextValues = useMemo(
-    () => ({ ...authState, login, logout, signup }),
-    [authState, login, logout, signup]
+  const authContextValues: AuthContextType = useMemo(
+    () => ({
+      user: authState.user,
+      roles: authState.roles,
+      login,
+      logout,
+      signup,
+    }),
+    [authState.user, authState.roles, login, logout, signup]
   )
 
   return (

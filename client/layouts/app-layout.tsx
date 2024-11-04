@@ -7,7 +7,7 @@ import RootLayout from './root-layout'
 
 export default function AppLayout() {
   const { pathname } = useLocation()
-  const { user, role, logout } = useAuth()
+  const { user, roles, logout } = useAuth()
 
   if (!user) {
     return <Navigate to={`/login?redirect_to=${pathname}`} replace />
@@ -16,7 +16,7 @@ export default function AppLayout() {
   return (
     <ErrorBoundary FallbackComponent={ErrorBoundaryFallback}>
       <RootLayout className="size-full min-h-screen">
-        <Outlet context={{ user, role, logout } satisfies AppContextType} />
+        <Outlet context={{ user, roles, logout } satisfies AppContextType} />
       </RootLayout>
     </ErrorBoundary>
   )

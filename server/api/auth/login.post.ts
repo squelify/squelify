@@ -11,22 +11,22 @@ export interface ILoginResponse {
     email: string
     firstName: string | null
     lastName: string | null
-    fullName: string
-    metadata: Record<string, any>
+    displayName: string
+    roles: string[]
+    permissions: string[]
+    organizationId: string | null
+    isAdmin: boolean
   }
-  session: {
-    id: string
-    refreshToken: string
-    expiresAt: number
+  mfa: {
+    required: boolean
+    method: string | null
   }
-  security: {
-    requires2FA: boolean
-    type2FA: string | null
-    amr: string[]
-  }
-  token: {
+  credentials: {
+    sessionId: string
     accessToken: string
-    expiresIn: number
+    refreshToken: string
+    validUntil: number
+    validityPeriod: number
   }
 }
 
@@ -40,13 +40,14 @@ export const LoginRequestSchema = z.object({
 export default defineEventHandler(async (event) => {
   const { appConfig, db } = event.context
   const requestId = typeid('req').toString()
+  const startTime = Date.now()
 
   try {
-    const startTime = Date.now()
     const { clientIpAddress, userAgent, userAgentHash } = getClientInfo(event)
     const body = await requireValidatedBody(event, LoginRequestSchema)
     const { identity, password, deviceId, deviceType } = body
 
+    // Query non-transactional
     const activeKey = await getActiveJWK(db)
     if (!activeKey) {
       return createErrorResponse(event, 'Authentication service temporarily unavailable', 503)
@@ -66,52 +67,12 @@ export default defineEventHandler(async (event) => {
           ipAddress: clientIpAddress,
           userAgent: userAgent?.slice(0, 100),
         },
-        retention: 'COMPLIANCE', // Store failed attempts for compliance
+        retention: 'COMPLIANCE',
       })
-
       return createErrorResponse(event, 'Invalid email or password', 401)
     }
 
-    if (!user.isActive) {
-      await auditLog(event, {
-        action: 'login',
-        entity: 'user',
-        entityId: user.id,
-        metadata: {
-          success: false,
-          requestId,
-          reason: 'inactive_account',
-          ipAddress: clientIpAddress,
-        },
-        retention: 'CRITICAL', // Store inactive account attempts longer
-      })
-
-      return createErrorResponse(event, 'Account is currently inactive', 403)
-    }
-
-    if (user.isBanned) {
-      const banMessage = user.banReason
-        ? `Account access restricted: ${user.banReason}`
-        : 'Account access has been restricted'
-
-      await auditLog(event, {
-        action: 'login',
-        entity: 'user',
-        entityId: user.id,
-        metadata: {
-          success: false,
-          requestId,
-          reason: 'banned_account',
-          banReason: user.banReason,
-          bannedUntil: user.bannedUntil,
-          ipAddress: clientIpAddress,
-        },
-        retention: 'CRITICAL', // Store banned account attempts longer
-      })
-
-      return createErrorResponse(event, banMessage, 403)
-    }
-
+    // Create session first
     const session = await createUserSession(db, user.id, {
       ipAddress: clientIpAddress,
       userAgent,
@@ -120,12 +81,44 @@ export default defineEventHandler(async (event) => {
       keyId: activeKey.id,
     })
 
-    const roles = await db
-      .selectFrom('roles')
-      .innerJoin('user_roles', 'roles.id', 'user_roles.roleId')
-      .where('user_roles.userId', '=', user.id)
-      .select(['roles.name'])
-      .execute()
+    // Query user data in parallel
+    const [roles, permissions, twoFactor] = await Promise.all([
+      db
+        .selectFrom('roles')
+        .innerJoin('user_roles', 'roles.id', 'user_roles.roleId')
+        .where('user_roles.userId', '=', user.id)
+        .select(['roles.id', 'roles.name', 'roles.type', 'roles.organizationId'])
+        .execute(),
+
+      db
+        .selectFrom('permissions')
+        .innerJoin('role_permissions', 'permissions.id', 'role_permissions.permissionId')
+        .innerJoin('user_roles', 'role_permissions.roleId', 'user_roles.roleId')
+        .where('user_roles.userId', '=', user.id)
+        .select([
+          'permissions.id',
+          'permissions.name',
+          'permissions.category',
+          'permissions.action',
+          'permissions.resource',
+          'permissions.conditions',
+        ])
+        .execute(),
+
+      db
+        .selectFrom('two_factors')
+        .where('userId', '=', user.id)
+        .where('isVerified', '=', 1)
+        .select(['type'])
+        .executeTakeFirst(),
+
+      db
+        .selectFrom('user_metadata')
+        .where('userId', '=', user.id)
+        .where('isPublic', '=', 1)
+        .select(['key', 'value'])
+        .execute(),
+    ])
 
     const now = Math.floor(Date.now() / 1000)
     const payload: JWTPayload = {
@@ -143,19 +136,14 @@ export default defineEventHandler(async (event) => {
       email: user.email,
       amr: ['pwd'],
       roles: roles.map((r) => r.name),
+      perms: permissions.map((p) => `${p.action}:${p.resource}`),
+      org_id: roles.find((r) => r.type === 'organization')?.organizationId,
     }
 
     const accessToken = await generateAccessToken(payload, activeKey, {
       issuer: appConfig.baseURL,
       audience: userAgentHash,
     })
-
-    const twoFactor = await db
-      .selectFrom('two_factors')
-      .where('userId', '=', user.id)
-      .where('isVerified', '=', 1)
-      .select(['type'])
-      .executeTakeFirst()
 
     setCookie(event, 'auth_session', session.id, {
       httpOnly: true,
@@ -164,8 +152,6 @@ export default defineEventHandler(async (event) => {
       path: '/',
       maxAge: 60 * 60 * 24 * 7,
     })
-
-    const processingTime = Date.now() - startTime
 
     await auditLog(event, {
       action: 'login',
@@ -178,9 +164,9 @@ export default defineEventHandler(async (event) => {
         deviceType,
         ipAddress: clientIpAddress,
         requires2FA: !!twoFactor,
-        processingTime,
+        processingTime: Date.now() - startTime,
       },
-      retention: 'COMPLIANCE', // Store successful logins for compliance
+      retention: 'COMPLIANCE',
     })
 
     return createSuccessResponse<ILoginResponse>(event, 'Authentication successful', {
@@ -189,22 +175,22 @@ export default defineEventHandler(async (event) => {
         email: user.email,
         firstName: user.firstName,
         lastName: user.lastName,
-        fullName: `${user.firstName} ${user.lastName}`.trim(),
-        metadata: user.metadata || {},
+        displayName: `${user.firstName} ${user.lastName}`.trim(),
+        roles: roles.map((r) => r.name),
+        permissions: permissions.map((p) => `${p.action}:${p.resource}`),
+        organizationId: roles.find((r) => r.type === 'organization')?.organizationId || null,
+        isAdmin: roles.some((r) => r.name === 'admin'),
       },
-      session: {
-        id: session.id,
-        refreshToken: session.refreshToken,
-        expiresAt: session.expiresAt,
+      mfa: {
+        required: !!twoFactor,
+        method: twoFactor?.type || null,
       },
-      security: {
-        requires2FA: !!twoFactor,
-        type2FA: twoFactor?.type || null,
-        amr: ['pwd'],
-      },
-      token: {
+      credentials: {
+        sessionId: session.id,
         accessToken,
-        expiresIn: DURATION.MINUTE * 15,
+        refreshToken: session.refreshToken,
+        validUntil: session.expiresAt,
+        validityPeriod: DURATION.MINUTE * 15,
       },
     })
   } catch (error) {

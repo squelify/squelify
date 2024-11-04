@@ -1,10 +1,5 @@
 import { z } from 'zod'
 
-export interface ISignoutResponse {
-  sessionId: string
-  deviceId?: string | null
-}
-
 export const SignoutRequestSchema = z.object({
   sessionId: z.string({ required_error: 'Session ID is required' }),
   deviceId: z.string().optional().nullable(),
@@ -38,7 +33,7 @@ export default defineEventHandler(async (event) => {
         retention: 'COMPLIANCE',
       })
 
-      return createErrorResponse(event, 'Session not found', 404)
+      return createErrorResponse(event, 'Session not found', 400)
     }
 
     if (session.expiresAt < now) {
@@ -112,10 +107,7 @@ export default defineEventHandler(async (event) => {
 
     deleteCookie(event, 'auth_session')
 
-    return createSuccessResponse<ISignoutResponse>(event, 'Signed out successfully', {
-      sessionId: body.sessionId,
-      deviceId: body.deviceId,
-    })
+    return createSuccessResponse(event, 'Signed out successfully')
   } catch (error) {
     return throwErrorResponse(event, error)
   }

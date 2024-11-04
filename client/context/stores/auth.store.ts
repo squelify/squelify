@@ -6,7 +6,7 @@ type AuthStore = {
   accessToken: string | null
   refreshToken: string | null
   user: User | null
-  role: RoleType
+  roles: string[]
 }
 
 // Default values for the AuthStore
@@ -14,7 +14,7 @@ const defaultAuthStoreValues: AuthStore = {
   accessToken: null,
   refreshToken: null,
   user: null,
-  role: null,
+  roles: null,
 }
 
 /**

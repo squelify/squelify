@@ -3,18 +3,10 @@ import { getActiveJWK } from '~/database/repository/jwk.repo'
 import { type JWTPayload, generateAccessToken } from '~/utils/jwt'
 
 export interface IRefreshTokenResponse {
-  token: {
-    accessToken: string
-    expiresIn: number
-  }
-  session: {
-    id: string
-    lastActiveAt: number
-  }
-}
-
-export interface IRefreshTokenRequest {
-  refreshToken: string
+  sessionId: string
+  accessToken: string
+  validUntil: number
+  validityPeriod: number
 }
 
 export default defineEventHandler(async (event) => {
@@ -22,10 +14,10 @@ export default defineEventHandler(async (event) => {
 
   try {
     const { userAgentHash } = getClientInfo(event)
-    const { refreshToken } = await readBody<IRefreshTokenRequest>(event)
+    const { refreshToken } = await readBody<{ refreshToken: string }>(event)
     const now = Math.floor(Date.now() / 1000)
 
-    const session = await db
+    const sessionQuery = db
       .selectFrom('sessions')
       .innerJoin('users', 'users.id', 'sessions.userId')
       .innerJoin('emails', 'emails.userId', 'users.id')
@@ -36,11 +28,14 @@ export default defineEventHandler(async (event) => {
       .select([
         'sessions.id as sessionId',
         'sessions.userId',
+        'sessions.expiresAt',
         'users.firstName',
         'users.lastName',
         'emails.email',
       ])
       .executeTakeFirst()
+
+    const [session] = await Promise.all([sessionQuery])
 
     if (!session) {
       await auditLog(event, {
@@ -57,6 +52,23 @@ export default defineEventHandler(async (event) => {
       return createErrorResponse(event, 'Invalid refresh token', 401)
     }
 
+    const [roles, permissions] = await Promise.all([
+      db
+        .selectFrom('roles')
+        .innerJoin('user_roles', 'roles.id', 'user_roles.roleId')
+        .where('user_roles.userId', '=', session.userId)
+        .select(['roles.name', 'roles.type', 'roles.organizationId'])
+        .execute(),
+
+      db
+        .selectFrom('permissions')
+        .innerJoin('role_permissions', 'permissions.id', 'role_permissions.permissionId')
+        .innerJoin('user_roles', 'role_permissions.roleId', 'user_roles.roleId')
+        .where('user_roles.userId', '=', session.userId)
+        .select(['permissions.action', 'permissions.resource'])
+        .execute(),
+    ])
+
     const activeKey = await getActiveJWK(db)
     if (!activeKey) {
       return createErrorResponse(event, 'No active signing key available', 500)
@@ -66,7 +78,7 @@ export default defineEventHandler(async (event) => {
       iss: appConfig.baseURL,
       sub: session.userId,
       aud: [userAgentHash],
-      exp: now + DURATION.MINUTE * 15,
+      exp: now + TOKEN_DURATION.accessToken,
       nbf: now,
       iat: now,
       jti: typeid('tok').toString(),
@@ -75,6 +87,9 @@ export default defineEventHandler(async (event) => {
       family_name: session.lastName,
       email: session.email,
       amr: ['refresh_token'],
+      roles: roles.map((r) => r.name),
+      perms: permissions.map((p) => `${p.action}:${p.resource}`),
+      org_id: roles.find((r) => r.type === 'organization')?.organizationId,
     }
 
     const accessToken = await generateAccessToken(payload, activeKey, {
@@ -101,14 +116,10 @@ export default defineEventHandler(async (event) => {
     })
 
     return createSuccessResponse<IRefreshTokenResponse>(event, 'Token refreshed successfully', {
-      token: {
-        accessToken,
-        expiresIn: 900,
-      },
-      session: {
-        id: session.sessionId,
-        lastActiveAt: now,
-      },
+      sessionId: session.sessionId,
+      accessToken,
+      validUntil: session.expiresAt,
+      validityPeriod: DURATION.MINUTE * 15,
     })
   } catch (error) {
     return throwErrorResponse(event, error)

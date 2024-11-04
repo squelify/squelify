@@ -32,17 +32,20 @@ export default defineNitroErrorHandler((error, event) => {
     return send(
       event,
       JSON.stringify({
-        statusCode: error.statusCode || 500,
+        status: error.statusCode || 500,
+        success: false,
         message:
           error.statusCode === 404
             ? 'Resource not found'
             : error.message || 'Internal Server Error',
-        ...(process.dev && {
-          issues: error.stack
-            ?.split('\n')
-            .map((line) => line.trim())
-            .filter(Boolean),
-        }),
+        error: {
+          ...(process.dev && {
+            issues: error.stack
+              ?.split('\n')
+              .map((line) => line.trim())
+              .filter(Boolean),
+          }),
+        },
       })
     )
   }
