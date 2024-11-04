@@ -35,8 +35,8 @@ RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install \
 # -----------------------------------------------------------------------------
 FROM base AS builder
 
-# System utilities and generated output files from the installer stage.
-COPY --from=installer /usr/bin/tini /usr/bin/tini
+# Copy output files and config file from the installer stage.
+COPY --from=installer /srv/.config/ecosystem.json /srv/ecosystem.json
 COPY --from=installer /srv/.output /srv
 
 # Create the data directory and set permissions.
@@ -87,9 +87,9 @@ ENV APP_BASE_URL=$APP_BASE_URL \
 # Copy the build output files from the builder stage.
 COPY --chown=nonroot:nonroot --from=builder /srv /srv
 
-# Copy some necessary system utilities from build stage.
+# Copy some necessary system utilities from previous stage.
 # To enhance security, consider avoiding the copying of sysutils.
-COPY --from=builder /usr/bin/tini /usr/bin/tini
+COPY --from=installer /usr/bin/tini /usr/bin/tini
 COPY --from=busybox /bin/clear /bin/clear
 COPY --from=busybox /bin/mkdir /bin/mkdir
 COPY --from=busybox /bin/which /bin/which
