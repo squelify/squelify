@@ -69,6 +69,7 @@ export default defineEventHandler(async (event) => {
       const existingUser = await db
         .selectFrom('users')
         .where('username', '=', username)
+        .where('deletedAt', 'is', null)
         .select(['id'])
         .executeTakeFirst()
 
@@ -82,6 +83,7 @@ export default defineEventHandler(async (event) => {
     const existingUser = await db
       .selectFrom('users')
       .where('username', '=', username)
+      .where('deletedAt', 'is', null)
       .select(['id'])
       .executeTakeFirst()
 
@@ -116,6 +118,19 @@ export default defineEventHandler(async (event) => {
           lastName: body.lastName || null,
           username,
           isActive: 1,
+          createdAt: now,
+        })
+        .execute()
+
+      // Add initial user metadata
+      await trx
+        .insertInto('user_metadata')
+        .values({
+          id: typeid('meta').toString(),
+          userId,
+          key: 'signup_date',
+          value: String(now),
+          isPublic: 1,
           createdAt: now,
         })
         .execute()
@@ -161,7 +176,7 @@ export default defineEventHandler(async (event) => {
           type: 'email',
           identifier: body.email,
           token: verificationToken,
-          expiresAt: now + 24 * 60 * 60, // 24 hours
+          expiresAt: now + DURATION.DAY, // 24 hours
           createdAt: now,
         })
         .execute()

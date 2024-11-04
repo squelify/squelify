@@ -16,6 +16,8 @@ import type { IRolePermission } from './schemas/role_permission'
 import type { ISession } from './schemas/session'
 import type { ITwoFactor } from './schemas/two_factor'
 import type { IUser } from './schemas/user'
+import type { IUserBan } from './schemas/user_ban'
+import type { IUserMetadata } from './schemas/user_metadata'
 import type { IUserRole } from './schemas/user_role'
 import type { IVerification } from './schemas/verification'
 
@@ -43,6 +45,8 @@ export interface Database {
   sessions: ISession
   two_factors: ITwoFactor
   user_roles: IUserRole
+  user_bans: IUserBan
+  user_metadata: IUserMetadata
   users: IUser
   verifications: IVerification
 }

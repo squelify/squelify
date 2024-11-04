@@ -7,13 +7,16 @@ export interface IListUsersResponse {
     lastName: string | null
     username: string
     avatarUrl: string | null
-    locale: string | null
     isActive: boolean
-    isBanned: boolean
-    bannedUntil: string | null
+    metadata: Record<string, any>
+    ban?: {
+      reason: string
+      expiresAt: string | null
+    }
     lastSignInAt: string | null
     createdAt: string
     updatedAt: string | null
+    deletedAt: string | null
   }>
   pagination: {
     currentPage: number
@@ -23,7 +26,6 @@ export interface IListUsersResponse {
   }
 }
 
-// Query params schema
 const QueryParamSchema = z.object({
   page: z.coerce.number().min(1, 'Page must be greater than 0').default(1),
   limit: z.coerce
@@ -38,7 +40,6 @@ export default defineCachedEventHandler(
     const db = event.context.db
 
     try {
-      // Validate query params
       const query = getQuery(event)
       const { page, limit } = QueryParamSchema.parse(query)
       const offset = (page - 1) * limit
@@ -46,11 +47,44 @@ export default defineCachedEventHandler(
       // Get total count for pagination
       const totalCount = await db
         .selectFrom('users')
+        .where('deletedAt', 'is', null)
         .select((eb) => eb.fn.countAll().as('count'))
         .executeTakeFirst()
 
-      // Get paginated users
-      const users = await db.selectFrom('users').selectAll().limit(limit).offset(offset).execute()
+      // Get paginated users with metadata and bans
+      const [users, metadata, bans] = await db.transaction().execute(async (trx) => {
+        const users = await trx
+          .selectFrom('users')
+          .where('deletedAt', 'is', null)
+          .selectAll()
+          .limit(limit)
+          .offset(offset)
+          .execute()
+
+        const userIds = users.map((u) => u.id)
+
+        const metadataPromise = trx
+          .selectFrom('user_metadata')
+          .where('userId', 'in', userIds)
+          .where('isPublic', '=', 1)
+          .select(['userId', 'key', 'value'])
+          .execute()
+
+        const bansPromise = trx
+          .selectFrom('user_bans')
+          .where('userId', 'in', userIds)
+          .where((eb) =>
+            eb.or([
+              eb('expiresAt', '>', Math.floor(Date.now() / 1000)),
+              eb('expiresAt', 'is', null),
+            ])
+          )
+          .select(['userId', 'reason', 'expiresAt'])
+          .execute()
+
+        const [metadata, bans] = await Promise.all([metadataPromise, bansPromise])
+        return [users, metadata, bans]
+      })
 
       if (!users?.length) {
         return createErrorResponse(event, 'No users found', 404)
@@ -58,14 +92,33 @@ export default defineCachedEventHandler(
 
       const totalPages = Math.ceil(Number(totalCount?.count || 0) / limit)
 
+      // Group metadata by userId
+      const metadataByUser = metadata.reduce((acc, meta) => {
+        acc[meta.userId] = acc[meta.userId] || {}
+        acc[meta.userId][meta.key] = meta.value
+        return acc
+      }, {})
+
+      // Group bans by userId
+      const bansByUser = bans.reduce((acc, ban) => {
+        acc[ban.userId] = {
+          reason: ban.reason,
+          expiresAt: ban.expiresAt,
+        }
+        return acc
+      }, {})
+
       const usersData = users.map((user) => ({
         ...user,
         isActive: Boolean(user.isActive),
-        isBanned: Boolean(user.isBanned),
-        bannedUntil: toISOString(user.bannedUntil),
-        lastSignInAt: toISOString(user.lastSignInAt),
+        metadata: metadataByUser[user.id] || {},
+        ban: bansByUser[user.id],
+        lastSignInAt: metadataByUser[user.id]?.last_sign_in_at
+          ? toISOString(Number(metadataByUser[user.id].last_sign_in_at))
+          : null,
         createdAt: toISOString(user.createdAt),
         updatedAt: toISOString(user.updatedAt),
+        deletedAt: toISOString(user.deletedAt),
       }))
 
       return createSuccessResponse<IListUsersResponse>(event, 'Users retrieved successfully', {
@@ -86,60 +139,3 @@ export default defineCachedEventHandler(
     maxAge: 60 * 60 /* 1 hour */,
   }
 )
-
-defineRouteMeta({
-  openAPI: {
-    summary: 'List users',
-    tags: ['User Management'],
-    requestBody: {
-      content: {},
-    },
-    security: [
-      {
-        bearerAuth: [],
-      },
-    ],
-    parameters: [
-      {
-        name: 'X-Client-Info',
-        in: 'header',
-        required: true,
-        example: 'Scalar',
-      },
-      {
-        name: 'page',
-        in: 'query',
-        required: false,
-        schema: { type: 'integer', minimum: 1 },
-        example: 1,
-      },
-      {
-        name: 'limit',
-        in: 'query',
-        required: false,
-        schema: { type: 'integer', minimum: 1, maximum: 100 },
-        example: 10,
-      },
-      {
-        name: 'nocache',
-        in: 'query',
-        required: false,
-        example: false,
-      },
-    ],
-    responses: {
-      200: {
-        description: 'OK',
-        content: {},
-      },
-      400: {
-        description: 'Bad Request',
-        content: {},
-      },
-      401: {
-        description: 'Unauthorized',
-        content: {},
-      },
-    },
-  },
-})

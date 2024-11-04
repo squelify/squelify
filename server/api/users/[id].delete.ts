@@ -3,6 +3,7 @@ export interface IDeleteUserResponse {
     id: string
     email: string
     name: string
+    deletedAt: number | null
   }
 }
 
@@ -11,37 +12,9 @@ export default defineEventHandler(async (event) => {
   const userId = event.context.params.id
   const adminId = event.context.auth.payload.sub
   const adminEmail = event.context.auth.payload.email
+  const hardDelete = event.context.query.hard === 'true'
 
   try {
-    // Verify admin permissions
-    const adminRoles = await db
-      .selectFrom('roles as r')
-      .innerJoin('role_permissions as rp', 'rp.roleId', 'r.id')
-      .innerJoin('permissions as p', 'p.id', 'rp.permissionId')
-      .where('r.type', '=', 'system')
-      .where('p.action', '=', 'delete')
-      .where('p.resource', '=', 'user')
-      .select(['r.id', 'r.name'])
-      .execute()
-
-    if (!adminRoles.length) {
-      await auditLog(event, {
-        action: 'delete',
-        entity: 'user',
-        entityId: userId,
-        metadata: {
-          success: false,
-          reason: 'insufficient_permission',
-          deletedBy: {
-            id: adminId,
-            email: adminEmail,
-          },
-        },
-      })
-
-      return createErrorResponse(event, 'You do not have permission to delete users', 403)
-    }
-
     // Get user with primary email
     const user = await db
       .selectFrom('users as u')
@@ -49,6 +22,7 @@ export default defineEventHandler(async (event) => {
         join.onRef('e.userId', '=', 'u.id').on('e.isPrimary', '=', 1)
       )
       .where('u.id', '=', userId)
+      .where('u.deletedAt', 'is', null)
       .select(['u.id', 'u.firstName', 'u.lastName', 'e.email'])
       .executeTakeFirst()
 
@@ -65,26 +39,33 @@ export default defineEventHandler(async (event) => {
         metadata: {
           success: false,
           reason: 'self_deletion_prevented',
-          deletedBy: {
-            id: adminId,
-            email: adminEmail,
-          },
+          deletedBy: { id: adminId, email: adminEmail },
         },
       })
-
       return createErrorResponse(event, 'Administrators cannot delete their own account', 400)
     }
 
-    // Delete user - cascading will handle all related records
-    await db.deleteFrom('users').where('id', '=', userId).execute()
+    const now = Math.floor(Date.now() / 1000)
+
+    if (hardDelete) {
+      // Hard delete - remove all records
+      await db.deleteFrom('users').where('id', '=', userId).execute()
+    } else {
+      // Soft delete - update deletedAt timestamp
+      await db
+        .updateTable('users')
+        .set({ deletedAt: now, updatedAt: now })
+        .where('id', '=', userId)
+        .execute()
+    }
 
     const userData = {
       id: user.id,
       email: user.email,
       name: `${user.firstName} ${user.lastName}`.trim(),
+      deletedAt: hardDelete ? null : now,
     }
 
-    // Log successful deletion
     await auditLog(event, {
       action: 'delete',
       entity: 'user',
@@ -92,24 +73,17 @@ export default defineEventHandler(async (event) => {
       metadata: {
         success: true,
         deletedUser: userData,
-        deletedBy: {
-          id: adminId,
-          email: adminEmail,
-        },
+        deletedBy: { id: adminId, email: adminEmail },
+        deleteType: hardDelete ? 'hard' : 'soft',
       },
     })
 
-    return createSuccessResponse<IDeleteUserResponse>(event, 'User deleted successfully', {
-      user: userData,
-    })
+    return createSuccessResponse<IDeleteUserResponse>(
+      event,
+      `User ${hardDelete ? 'permanently deleted' : 'deleted'} successfully`,
+      { user: userData }
+    )
   } catch (error) {
     return throwErrorResponse(event, error)
   }
-})
-
-defineRouteMeta({
-  openAPI: {
-    summary: 'Delete a user',
-    tags: ['User Management'],
-  },
 })

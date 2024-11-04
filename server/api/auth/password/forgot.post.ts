@@ -56,7 +56,7 @@ export default defineEventHandler(async (event) => {
     // Create verification token
     const token = typeid().toString()
     const attempts = existingVerification ? existingVerification.attempts + 1 : 1
-    const expiresIn = 60 * 30 // 30 minutes
+    const expiresIn = DURATION.MINUTE * 30
 
     await db
       .insertInto('verifications')

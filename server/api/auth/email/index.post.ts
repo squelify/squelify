@@ -61,7 +61,7 @@ export default defineEventHandler(async (event) => {
           token: verificationToken,
           attempts: 0,
           maxAttempts: 3,
-          expiresAt: now + 60 * 30, // 30 minutes
+          expiresAt: now + DURATION.MINUTE * 30,
           createdAt: now,
         })
         .execute()

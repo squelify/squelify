@@ -8,6 +8,7 @@ import type { MemberInsert } from '~/database/schemas/member'
 import type { OrganizationInsert } from '~/database/schemas/organization'
 import type { PasswordInsert } from '~/database/schemas/password'
 import type { UserInsert } from '~/database/schemas/user'
+import type { UserMetadataInsert } from '~/database/schemas/user_metadata'
 import type { UserRoleInsert } from '~/database/schemas/user_role'
 import { hashPassword } from '~/utils/string'
 
@@ -27,18 +28,6 @@ export default async function seed(db: Kysely<Database>): Promise<void> {
       return
     }
 
-    // Check for existing root organization
-    const existingOrg = await trx
-      .selectFrom('organizations')
-      .where('slug', '=', 'root-org')
-      .select('id')
-      .executeTakeFirst()
-
-    if (existingOrg) {
-      consola.warn('Root organization already exists, skipping organization seed')
-      return
-    }
-
     // Create admin user
     const userId = typeid('user').toString()
     const newUser: UserInsert = {
@@ -46,8 +35,18 @@ export default async function seed(db: Kysely<Database>): Promise<void> {
       username: 'admin',
       firstName: 'Admin',
       lastName: 'Sistem',
-      locale: 'en',
       isActive: 1,
+      createdAt: now,
+    }
+
+    // Create admin metadata
+    const metadataId = typeid('meta').toString()
+    const newMetadata: UserMetadataInsert = {
+      id: metadataId,
+      userId: userId,
+      key: 'role',
+      value: 'administrator',
+      isPublic: 1,
       createdAt: now,
     }
 
@@ -130,6 +129,7 @@ export default async function seed(db: Kysely<Database>): Promise<void> {
 
     // Execute all inserts
     await trx.insertInto('users').values(newUser).execute()
+    await trx.insertInto('user_metadata').values(newMetadata).execute()
     await trx.insertInto('emails').values(newEmail).execute()
     await trx.insertInto('passwords').values(newPassword).execute()
     await trx.insertInto('organizations').values(newOrg).execute()

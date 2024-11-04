@@ -7,7 +7,6 @@ export interface IWhoAmIResponse {
     lastName: string | null
     fullName: string
     avatarUrl: string | null
-    locale: string | null
     roles: string[]
     permissions: string[]
     organizationId: string | null
@@ -24,6 +23,7 @@ export interface IWhoAmIResponse {
     isBanned: boolean
     banReason: string | null
     bannedUntil: string | null
+    metadata: Record<string, any>
     createdAt: string
     updatedAt: string | null
   }
@@ -35,10 +35,11 @@ export default defineEventHandler(async (event) => {
 
   try {
     // Execute queries in parallel using Promise.all within transaction
-    const [userData, twoFactor] = await db.transaction().execute(async (trx) => {
+    const [userData, twoFactor, userBan, metadata] = await db.transaction().execute(async (trx) => {
       const userPromise = trx
         .selectFrom('users')
         .where('id', '=', payload.sub)
+        .where('deletedAt', 'is', null)
         .selectAll()
         .executeTakeFirst()
 
@@ -49,12 +50,30 @@ export default defineEventHandler(async (event) => {
         .select(['type'])
         .executeTakeFirst()
 
-      return Promise.all([userPromise, twoFactorPromise])
+      const userBanPromise = trx
+        .selectFrom('user_bans')
+        .where('userId', '=', payload.sub)
+        .where((eb) =>
+          eb.or([eb('expiresAt', '>', Math.floor(Date.now() / 1000)), eb('expiresAt', 'is', null)])
+        )
+        .selectAll()
+        .executeTakeFirst()
+
+      const metadataPromise = trx
+        .selectFrom('user_metadata')
+        .where('userId', '=', payload.sub)
+        .where('isPublic', '=', 1)
+        .select(['key', 'value'])
+        .execute()
+
+      return Promise.all([userPromise, twoFactorPromise, userBanPromise, metadataPromise])
     })
 
     if (!userData) {
       return createErrorResponse(event, 'User not found', 404)
     }
+
+    const lastSignInMeta = metadata.find((m) => m.key === 'last_sign_in_at')
 
     return createSuccessResponse<IWhoAmIResponse>(
       event,
@@ -69,7 +88,6 @@ export default defineEventHandler(async (event) => {
           lastName: userData?.lastName,
           fullName: `${userData?.firstName || ''} ${userData?.lastName || ''}`.trim(),
           avatarUrl: userData?.avatarUrl,
-          locale: userData?.locale,
 
           // Access & permissions
           roles: payload?.roles || [],
@@ -80,7 +98,7 @@ export default defineEventHandler(async (event) => {
           // Session & security
           session: {
             id: session?.id || null,
-            lastSignInAt: toISOString(userData.lastSignInAt),
+            lastSignInAt: lastSignInMeta ? toISOString(Number(lastSignInMeta.value)) : null,
             expiresAt: session?.exp || null,
             requires2FA: !!twoFactor,
             type2FA: twoFactor?.type || null,
@@ -89,9 +107,13 @@ export default defineEventHandler(async (event) => {
 
           // Status & metadata
           isActive: Boolean(userData?.isActive),
-          isBanned: Boolean(userData?.isBanned),
-          banReason: userData?.banReason || null,
-          bannedUntil: toISOString(userData.bannedUntil),
+          isBanned: !!userBan,
+          banReason: userBan?.reason || null,
+          bannedUntil: toISOString(userBan?.expiresAt),
+          metadata: metadata.reduce((acc, { key, value }) => {
+            acc[key] = value
+            return acc
+          }, {}),
           createdAt: toISOString(userData.createdAt),
           updatedAt: toISOString(userData.updatedAt),
         },

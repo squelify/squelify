@@ -1,3 +1,4 @@
+import { typeid } from 'typeid-js'
 import { UserSchema } from '~/database/schemas/user'
 
 export interface IUpdateUserResponse {
@@ -7,7 +8,7 @@ export interface IUpdateUserResponse {
     lastName: string | null
     username: string
     avatarUrl: string | null
-    locale: string | null
+    metadata: Record<string, any>
     updatedAt: string
   }
 }
@@ -17,7 +18,6 @@ const UpdateUserSchema = UserSchema.pick({
   lastName: true,
   username: true,
   avatarUrl: true,
-  locale: true,
 }).partial()
 
 export default defineEventHandler(async (event) => {
@@ -30,12 +30,24 @@ export default defineEventHandler(async (event) => {
   try {
     const body = await requireValidatedBody(event, UpdateUserSchema)
 
-    // Get user
-    const user = await db
-      .selectFrom('users')
-      .where('id', '=', userId)
-      .select(['id', 'firstName', 'lastName', 'username', 'avatarUrl', 'locale'])
-      .executeTakeFirst()
+    // Get user and metadata
+    const [user, metadata] = await db.transaction().execute(async (trx) => {
+      const userPromise = trx
+        .selectFrom('users')
+        .where('id', '=', userId)
+        .where('deletedAt', 'is', null)
+        .select(['id', 'firstName', 'lastName', 'username', 'avatarUrl'])
+        .executeTakeFirst()
+
+      const metadataPromise = trx
+        .selectFrom('user_metadata')
+        .where('userId', '=', userId)
+        .where('isPublic', '=', 1)
+        .select(['key', 'value'])
+        .execute()
+
+      return Promise.all([userPromise, metadataPromise])
+    })
 
     if (!user) {
       return createErrorResponse(event, 'User not found', 404)
@@ -65,16 +77,35 @@ export default defineEventHandler(async (event) => {
       Object.entries(body).filter(([_, value]) => value !== null)
     )
 
-    // Update user
-    const updatedUser = await db
-      .updateTable('users')
-      .set({
-        ...updateData,
-        updatedAt: now,
-      })
-      .where('id', '=', userId)
-      .returning(['id', 'firstName', 'lastName', 'username', 'avatarUrl', 'locale', 'updatedAt'])
-      .executeTakeFirst()
+    // Update user and track profile update in metadata
+    const [updatedUser] = await db.transaction().execute(async (trx) => {
+      const userUpdatePromise = trx
+        .updateTable('users')
+        .set({
+          ...updateData,
+          updatedAt: now,
+        })
+        .where('id', '=', userId)
+        .returning(['id', 'firstName', 'lastName', 'username', 'avatarUrl', 'updatedAt'])
+        .executeTakeFirst()
+
+      await trx
+        .insertInto('user_metadata')
+        .values({
+          id: typeid('meta').toString(),
+          userId,
+          key: 'profile_updated_at',
+          value: String(now),
+          isPublic: 1,
+          createdAt: now,
+        })
+        .onConflict((oc) =>
+          oc.columns(['userId', 'key']).doUpdateSet({ value: String(now), updatedAt: now })
+        )
+        .execute()
+
+      return Promise.all([userUpdatePromise])
+    })
 
     // Log update
     await auditLog(event, {
@@ -94,6 +125,10 @@ export default defineEventHandler(async (event) => {
     return createSuccessResponse<IUpdateUserResponse>(event, 'User profile updated successfully', {
       user: {
         ...updatedUser,
+        metadata: metadata.reduce((acc, { key, value }) => {
+          acc[key] = value
+          return acc
+        }, {}),
         updatedAt: toISOString(updatedUser.updatedAt),
       },
     })

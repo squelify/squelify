@@ -3,6 +3,7 @@ import { type Kysely } from 'kysely'
 import { typeid } from 'typeid-js'
 import type { Database } from '~/database/db.schema'
 import type { JWKInsert } from '~/database/schemas/jwk'
+import { TOKEN_DURATION } from '~/utils/jwt'
 
 export default async function seed(db: Kysely<Database>): Promise<void> {
   const now = Math.floor(Date.now() / 1000)
@@ -19,7 +20,7 @@ export default async function seed(db: Kysely<Database>): Promise<void> {
     privateKey: privateKeyString,
     algorithm: 'ES256',
     isActive: 1,
-    expiresAt: now + 30 * 24 * 60 * 60 /* 3o days */,
+    expiresAt: now + TOKEN_DURATION.jwk,
     createdAt: now,
   }
 

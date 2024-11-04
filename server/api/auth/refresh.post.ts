@@ -39,7 +39,6 @@ export default defineEventHandler(async (event) => {
         'sessions.userId',
         'users.firstName',
         'users.lastName',
-        'users.locale',
         'emails.email',
       ])
       .executeTakeFirst()
@@ -59,7 +58,7 @@ export default defineEventHandler(async (event) => {
       iss: appConfig.baseURL,
       sub: session.userId,
       aud: [userAgentHash],
-      exp: now + 900, // 15 minutes
+      exp: now + DURATION.MINUTE * 15,
       nbf: now,
       iat: now,
       jti: typeid('tok').toString(),
@@ -67,7 +66,6 @@ export default defineEventHandler(async (event) => {
       given_name: session.firstName,
       family_name: session.lastName,
       email: session.email,
-      locale: session.locale,
       amr: ['refresh_token'],
     }
 

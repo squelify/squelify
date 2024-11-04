@@ -14,14 +14,10 @@ export const UserSchema = z.object({
     .regex(/^[a-z0-9_]+$/, 'Username hanya boleh mengandung huruf kecil, angka, dan underscore')
     .nullable(),
   avatarUrl: z.string().url('URL avatar tidak valid').nullable(),
-  locale: z.string().default('en'),
   isActive: z.number().min(0).max(1).default(1),
-  isBanned: z.number().min(0).max(1).default(0),
-  banReason: z.string().nullable(),
-  bannedUntil: z.custom<ColumnType<number | null>>().nullable(),
-  lastSignInAt: z.custom<ColumnType<number | null>>().nullable(),
   createdAt: z.custom<ColumnType<number>>().optional(),
   updatedAt: z.custom<ColumnType<number | null>>().nullable(),
+  deletedAt: z.custom<ColumnType<number | null>>().nullable(),
 })
 
 // Table interface for Kysely

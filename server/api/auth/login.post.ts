@@ -12,6 +12,7 @@ export interface ILoginResponse {
     firstName: string | null
     lastName: string | null
     fullName: string
+    metadata: Record<string, any>
   }
   session: {
     id: string
@@ -126,7 +127,7 @@ export default defineEventHandler(async (event) => {
       iss: appConfig.baseURL,
       sub: user.id,
       aud: [userAgentHash],
-      exp: now + 900,
+      exp: now + TOKEN_DURATION.accessToken,
       nbf: now,
       iat: now,
       jti: typeid('tok').toString(),
@@ -135,7 +136,6 @@ export default defineEventHandler(async (event) => {
       family_name: user.lastName,
       name: `${user.firstName} ${user.lastName}`.trim(),
       email: user.email,
-      locale: user.locale,
       amr: ['pwd'],
     }
 
@@ -185,6 +185,7 @@ export default defineEventHandler(async (event) => {
         firstName: user.firstName,
         lastName: user.lastName,
         fullName: `${user.firstName} ${user.lastName}`.trim(),
+        metadata: user.metadata || {},
       },
       session: {
         id: session.id,
@@ -198,7 +199,7 @@ export default defineEventHandler(async (event) => {
       },
       token: {
         accessToken,
-        expiresIn: 900,
+        expiresIn: DURATION.MINUTE * 15,
       },
     })
   } catch (error) {

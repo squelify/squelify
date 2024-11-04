@@ -2,6 +2,14 @@ import * as jose from 'jose'
 import type { JWTHeaderParameters } from 'jose'
 import { env } from 'std-env'
 import type { JWK, JWKVerifyKey } from '~/database/schemas/jwk'
+import { DURATION } from '~/utils/datetime'
+
+export const TOKEN_DURATION = {
+  accessToken: DURATION.MINUTE * 15, // 15 menit
+  refreshToken: DURATION.WEEK, // 7 hari
+  verificationToken: DURATION.DAY, // 24 jam
+  jwk: DURATION.MONTH, // 30 hari
+}
 
 export interface JWTPayload {
   // Standard JWT Claims
@@ -19,7 +27,6 @@ export interface JWTPayload {
   given_name: string // First name
   family_name?: string // Last name
   email: string // Primary email
-  locale: string // User locale preference
 
   // Security Claims
   azp?: string // Authorized party - client ID

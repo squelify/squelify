@@ -1,3 +1,12 @@
+// Duration in seconds
+export const DURATION = {
+  MINUTE: 60,
+  HOUR: 60 * 60,
+  DAY: 24 * 60 * 60,
+  WEEK: 7 * 24 * 60 * 60,
+  MONTH: 30 * 24 * 60 * 60,
+} as const
+
 /**
  * Convert unix timestamp to ISO string date
  */

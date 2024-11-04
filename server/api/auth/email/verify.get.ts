@@ -86,8 +86,8 @@ export default defineEventHandler(async (event) => {
             context: 'email',
             points: 1,
             limit: 3,
-            window: 3600, // 1 hour window
-            expiresAt: now + 3600,
+            window: DURATION.HOUR, // 1 hour window
+            expiresAt: now + DURATION.HOUR,
             createdAt: now,
           })
           .execute()
@@ -105,7 +105,7 @@ export default defineEventHandler(async (event) => {
           token: newToken,
           attempts: 0,
           maxAttempts: 3,
-          expiresAt: now + 24 * 60 * 60,
+          expiresAt: now + DURATION.DAY * 7,
           createdAt: now,
         })
         .execute()

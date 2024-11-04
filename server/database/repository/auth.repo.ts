@@ -1,7 +1,7 @@
 import { type Kysely } from 'kysely'
 import { typeid } from 'typeid-js'
+import type { Database } from '~/database/db.schema'
 import { verifyPassword } from '~/utils/string'
-import type { Database } from '../db.schema'
 
 interface CreateSessionOptions {
   ipAddress: string
@@ -12,10 +12,6 @@ interface CreateSessionOptions {
   keyId: string
 }
 
-/**
- * Find user account by email and verify password
- * Returns user data with verified email if credentials are valid
- */
 export async function verifyUserCredentials(db: Kysely<Database>, email: string, password: string) {
   const user = await db
     .selectFrom('users as u')
@@ -23,19 +19,29 @@ export async function verifyUserCredentials(db: Kysely<Database>, email: string,
       join.onRef('e.userId', '=', 'u.id').on('e.isPrimary', '=', 1)
     )
     .innerJoin('passwords as p', 'p.userId', 'u.id')
+    .leftJoin('user_bans as ub', (join) =>
+      join
+        .onRef('ub.userId', '=', 'u.id')
+        .on((eb) =>
+          eb.or([
+            eb('ub.expiresAt', '>', Math.floor(Date.now() / 1000)),
+            eb('ub.expiresAt', 'is', null),
+          ])
+        )
+    )
     .where('e.email', '=', email)
     .where('e.verifiedAt', 'is not', null)
+    .where('u.isActive', '=', 1)
+    .where('u.deletedAt', 'is', null)
     .select([
       'u.id',
       'u.firstName',
       'u.lastName',
-      'u.locale',
       'u.isActive',
-      'u.isBanned',
-      'u.banReason',
-      'u.bannedUntil',
       'e.email',
       'p.hash',
+      'ub.reason as banReason',
+      'ub.expiresAt as bannedUntil',
     ])
     .executeTakeFirst()
 
@@ -44,23 +50,33 @@ export async function verifyUserCredentials(db: Kysely<Database>, email: string,
   const isValid = await verifyPassword(password, user.hash)
   if (!isValid) return null
 
+  // Get user metadata
+  const metadata = await db
+    .selectFrom('user_metadata')
+    .where('userId', '=', user.id)
+    .where('isPublic', '=', 1)
+    .select(['key', 'value'])
+    .execute()
+
   return {
     id: user.id,
     email: user.email,
     firstName: user.firstName,
     lastName: user.lastName,
-    locale: user.locale,
     isActive: Boolean(user.isActive),
-    isBanned: Boolean(user.isBanned),
+    isBanned: user.banReason !== null,
     bannedUntil: user.bannedUntil,
     banReason: user.banReason,
+    metadata: metadata.reduce(
+      (acc, { key, value }) => {
+        acc[key] = value
+        return acc
+      },
+      {} as Record<string, string>
+    ),
   }
 }
 
-/**
- * Create new session for authenticated user
- * Handles session creation with device tracking and metadata
- */
 export async function createUserSession(
   db: Kysely<Database>,
   userId: string,
@@ -69,8 +85,36 @@ export async function createUserSession(
   const now = Math.floor(Date.now() / 1000)
   const expiresAt = now + 7 * 24 * 60 * 60 // 7 days
 
-  // Update user's last sign in timestamp
-  await db.updateTable('users').set({ lastSignInAt: now }).where('id', '=', userId).execute()
+  // Check if metadata exists first
+  const existingMeta = await db
+    .selectFrom('user_metadata')
+    .where('userId', '=', userId)
+    .where('key', '=', 'last_sign_in_at')
+    .select('id')
+    .executeTakeFirst()
+
+  if (existingMeta) {
+    await db
+      .updateTable('user_metadata')
+      .set({
+        value: String(now),
+        updatedAt: now,
+      })
+      .where('id', '=', existingMeta.id)
+      .execute()
+  } else {
+    await db
+      .insertInto('user_metadata')
+      .values({
+        id: typeid('meta').toString(),
+        userId,
+        key: 'last_sign_in_at',
+        value: String(now),
+        isPublic: 0,
+        createdAt: now,
+      })
+      .execute()
+  }
 
   const session = await db
     .insertInto('sessions')

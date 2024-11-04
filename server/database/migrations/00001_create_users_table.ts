@@ -3,7 +3,6 @@ import { UNIX_TIMESTAMP } from '~/database/db.helper'
 import type { Database } from '~/database/db.schema'
 
 export async function up(db: Kysely<Database>): Promise<void> {
-  // Create users table
   await db.schema
     .createTable('users')
     .addColumn('id', 'text', (col) => col.primaryKey())
@@ -11,18 +10,12 @@ export async function up(db: Kysely<Database>): Promise<void> {
     .addColumn('last_name', 'text')
     .addColumn('username', 'text', (col) => col.unique().check(sql`LENGTH(username) >= 3`))
     .addColumn('avatar_url', 'text')
-    .addColumn('locale', 'text', (col) => col.defaultTo('en'))
     .addColumn('is_active', 'integer', (col) =>
       col.notNull().defaultTo(1).check(sql`is_active IN (0, 1)`)
     )
-    .addColumn('is_banned', 'integer', (col) =>
-      col.notNull().defaultTo(0).check(sql`is_banned IN (0, 1)`)
-    )
-    .addColumn('ban_reason', 'text')
-    .addColumn('banned_until', 'integer')
-    .addColumn('last_sign_in_at', 'integer')
     .addColumn('created_at', 'integer', (col) => col.notNull().defaultTo(UNIX_TIMESTAMP))
     .addColumn('updated_at', 'integer')
+    .addColumn('deleted_at', 'integer')
     .modifyEnd(sql`STRICT`)
     .ifNotExists()
     .execute()
@@ -39,7 +32,6 @@ export async function up(db: Kysely<Database>): Promise<void> {
     END;
   `.execute(db)
 
-  // Create indexes
   await db.schema
     .createIndex('users_username_idx')
     .on('users')
@@ -61,20 +53,35 @@ export async function up(db: Kysely<Database>): Promise<void> {
     .ifNotExists()
     .execute()
 
-  // Index for searching by name
   await db.schema
     .createIndex('users_name_search_idx')
     .on('users')
     .columns(['first_name', 'last_name'])
     .ifNotExists()
     .execute()
+
+  await db.schema
+    .createIndex('users_status_idx')
+    .on('users')
+    .columns(['is_active', 'deleted_at'])
+    .ifNotExists()
+    .execute()
+
+  await db.schema
+    .createIndex('users_auth_idx')
+    .on('users')
+    .columns(['username', 'is_active'])
+    .ifNotExists()
+    .execute()
 }
 
 export async function down(db: Kysely<Database>): Promise<void> {
+  await db.schema.dropIndex('users_auth_idx').ifExists().execute()
+  await db.schema.dropIndex('users_status_idx').ifExists().execute()
+  await db.schema.dropIndex('users_name_search_idx').ifExists().execute()
   await db.schema.dropIndex('users_created_at_idx').ifExists().execute()
   await db.schema.dropIndex('users_is_active_idx').ifExists().execute()
   await db.schema.dropIndex('users_username_idx').ifExists().execute()
-  await db.schema.dropIndex('users_name_search_idx').ifExists().execute()
   await sql`DROP TRIGGER IF EXISTS update_users_timestamp;`.execute(db)
   await db.schema.dropTable('users').ifExists().execute()
 }

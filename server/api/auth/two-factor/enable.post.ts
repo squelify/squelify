@@ -9,6 +9,7 @@ export interface IEnable2FAResponse {
     backupCodes: string[]
     totpUri: string
     qrCodeUrl: string
+    metadata: Record<string, any>
   }
 }
 
@@ -33,6 +34,7 @@ export default defineEventHandler(async (event) => {
       .selectFrom('users')
       .leftJoin('emails', 'emails.userId', 'users.id')
       .where('users.id', '=', payload.sub)
+      .where('users.deletedAt', 'is', null)
       .where('emails.isPrimary', '=', 1)
       .select(['users.id', 'users.username', 'emails.email'])
       .executeTakeFirst()
@@ -65,22 +67,37 @@ export default defineEventHandler(async (event) => {
       .select(['id'])
       .executeTakeFirst()
 
-    // Create TOTP record
     const id = typeid('totp').toString()
-    await db
-      .insertInto('two_factors')
-      .values({
-        id: id,
-        userId: user.id,
-        name: body.name,
-        type: 'totp',
-        secret: secret,
-        backupCodes: JSON.stringify(backupCodes),
-        isVerified: 0,
-        isPrimary: existing2FA ? 0 : 1, // Set as primary if first 2FA
-        createdAt: now,
-      })
-      .execute()
+
+    // Create TOTP record and metadata in transaction
+    await db.transaction().execute(async (trx) => {
+      await trx
+        .insertInto('two_factors')
+        .values({
+          id,
+          userId: user.id,
+          name: body.name,
+          type: 'totp',
+          secret,
+          backupCodes: JSON.stringify(backupCodes),
+          isVerified: 0,
+          isPrimary: existing2FA ? 0 : 1,
+          createdAt: now,
+        })
+        .execute()
+
+      await trx
+        .insertInto('user_metadata')
+        .values({
+          id: typeid('meta').toString(),
+          userId: user.id,
+          key: '2fa_enabled_at',
+          value: String(now),
+          isPublic: 1,
+          createdAt: now,
+        })
+        .execute()
+    })
 
     // Generate TOTP URI for QR code
     const totpUri = generateTOTPUri({
@@ -90,6 +107,14 @@ export default defineEventHandler(async (event) => {
     })
 
     const qrCodeUrl = `${appConfig.baseURL}/api/qrcode?chl=${encodeURIComponent(totpUri)}`
+
+    // Get public metadata
+    const metadata = await db
+      .selectFrom('user_metadata')
+      .where('userId', '=', user.id)
+      .where('isPublic', '=', 1)
+      .select(['key', 'value'])
+      .execute()
 
     await auditLog(event, {
       action: 'enable',
@@ -113,6 +138,10 @@ export default defineEventHandler(async (event) => {
           backupCodes,
           totpUri,
           qrCodeUrl,
+          metadata: metadata.reduce((acc, { key, value }) => {
+            acc[key] = value
+            return acc
+          }, {}),
         },
       }
     )

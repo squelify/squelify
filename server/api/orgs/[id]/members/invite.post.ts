@@ -117,7 +117,7 @@ export default defineEventHandler(async (event) => {
         token: typeid('tok').toString(),
         invitedBy: userId,
         status: 'pending',
-        expiresAt: now + 7 * 24 * 60 * 60, // 7 days
+        expiresAt: now + DURATION.DAY * 7,
         metadata: JSON.stringify({
           title: body.title,
           department: body.department,

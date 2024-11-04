@@ -2,7 +2,6 @@ import { typeid } from 'typeid-js'
 import { z } from 'zod'
 import { UserSchema } from '~/database/schemas/user'
 
-// Response interface
 export interface ICreateUserResponse {
   user: {
     id: string
@@ -11,11 +10,8 @@ export interface ICreateUserResponse {
     username: string
     email: string
     avatarUrl: string | null
-    locale: string | null
     isActive: boolean
-    isBanned: boolean
-    bannedUntil: string | null
-    lastSignInAt: string | null
+    metadata: Record<string, any>
     createdAt: string
     updatedAt: string | null
   }
@@ -26,13 +22,11 @@ export const CreateUserSchema = UserSchema.pick({
   lastName: true,
   username: true,
   avatarUrl: true,
-  locale: true,
 })
   .partial({
     lastName: true,
     username: true,
     avatarUrl: true,
-    locale: true,
   })
   .extend({
     email: z.string().email('Invalid email format'),
@@ -78,13 +72,14 @@ export default defineEventHandler(async (event) => {
         const exists = await db
           .selectFrom('users')
           .where('username', '=', username)
+          .where('deletedAt', 'is', null)
           .select(['id'])
           .executeTakeFirst()
 
         if (!exists) {
           isUnique = true
         } else {
-          username = generateUsername(body.email)
+          username = generateUsername(body.email, generateRandomStr({ size: 4 }))
           attempt++
         }
       }
@@ -96,6 +91,7 @@ export default defineEventHandler(async (event) => {
       const existingUser = await db
         .selectFrom('users')
         .where('username', '=', username)
+        .where('deletedAt', 'is', null)
         .select(['id'])
         .executeTakeFirst()
 
@@ -104,20 +100,19 @@ export default defineEventHandler(async (event) => {
       }
     }
 
-    // Create user and email in transaction
+    // Create user with initial metadata
+    const userId = typeid('user').toString()
     const result = await db.transaction().execute(async (trx) => {
       // Create user
       const user = await trx
         .insertInto('users')
         .values({
-          id: typeid('user').toString(),
+          id: userId,
           firstName: body.firstName,
           lastName: body.lastName || null,
           username,
           avatarUrl: body.avatarUrl || null,
-          locale: body.locale,
           isActive: 1,
-          isBanned: 0,
           createdAt: now,
         })
         .returningAll()
@@ -128,9 +123,22 @@ export default defineEventHandler(async (event) => {
         .insertInto('emails')
         .values({
           id: typeid('eml').toString(),
-          userId: user.id,
+          userId: userId,
           email: body.email,
           isPrimary: 1,
+          createdAt: now,
+        })
+        .execute()
+
+      // Create initial metadata
+      await trx
+        .insertInto('user_metadata')
+        .values({
+          id: typeid('meta').toString(),
+          userId: userId,
+          key: 'registration_date',
+          value: String(now),
+          isPublic: 1,
           createdAt: now,
         })
         .execute()
@@ -141,7 +149,7 @@ export default defineEventHandler(async (event) => {
           .insertInto('passwords')
           .values({
             id: typeid('pwd').toString(),
-            userId: user.id,
+            userId: userId,
             hash: hashedPassword,
             algorithm: 'scrypt',
             createdAt: now,
@@ -149,13 +157,22 @@ export default defineEventHandler(async (event) => {
           .execute()
       }
 
+      // Get public metadata
+      const metadata = await trx
+        .selectFrom('user_metadata')
+        .where('userId', '=', userId)
+        .where('isPublic', '=', 1)
+        .select(['key', 'value'])
+        .execute()
+
       return {
         ...user,
         email: body.email,
         isActive: Boolean(user.isActive),
-        isBanned: Boolean(user.isBanned),
-        bannedUntil: toISOString(user.bannedUntil),
-        lastSignInAt: toISOString(user.lastSignInAt),
+        metadata: metadata.reduce((acc, { key, value }) => {
+          acc[key] = value
+          return acc
+        }, {}),
         createdAt: toISOString(user.createdAt),
         updatedAt: toISOString(user.updatedAt),
       }
@@ -167,11 +184,4 @@ export default defineEventHandler(async (event) => {
   } catch (error) {
     return throwErrorResponse(event, error)
   }
-})
-
-defineRouteMeta({
-  openAPI: {
-    summary: 'Create a user',
-    tags: ['User Management'],
-  },
 })

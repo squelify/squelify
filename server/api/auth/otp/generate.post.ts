@@ -58,7 +58,7 @@ export default defineEventHandler(async (event) => {
         attempts: 0,
         maxAttempts: 3,
         metadata: JSON.stringify(metadata),
-        expiresAt: now + 60 * 5, // 5 minutes
+        expiresAt: now + DURATION.MINUTE * 5,
         createdAt: now,
       })
       .execute()
@@ -73,7 +73,7 @@ export default defineEventHandler(async (event) => {
       data: {
         token: verificationToken,
         identifier: userEmail.email,
-        expiresIn: 300, // 5 minutes in seconds
+        expiresIn: DURATION.MINUTE * 5,
       },
     }
   } catch (error) {

@@ -43,31 +43,3 @@ export async function findUserByEmail(email: string): Promise<Partial<User> | nu
     throw new Error(`Failed to find user with email ${email}`)
   }
 }
-
-/**
- * Updates the username of a user in the database.
- */
-export async function updateUsername(userId: string, newUsername: string): Promise<User> {
-  const now = Math.floor(Date.now() / 1000)
-
-  try {
-    const result = await db
-      .updateTable('users')
-      .set({
-        username: newUsername,
-        updatedAt: now,
-      })
-      .where('id', '=', userId)
-      .returningAll()
-      .executeTakeFirst()
-
-    if (!result) {
-      throw new Error(`User with id ${userId} not found`)
-    }
-
-    return result
-  } catch (error) {
-    logger.error('[app]', `Error updating username for user with id ${userId}:`, error)
-    throw new Error(`Failed to update username for user with id ${userId}`)
-  }
-}
