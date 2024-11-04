@@ -21,8 +21,8 @@ export async function sendJSXEmail<T extends EmailTemplateProps>(
   const config = EMAIL_CONFIG[kind]
   const Template = config.template(data as any)
 
-  const fromName = cleanString(env.SMTP_EMAIL_FROM_NAME)
-  const fromEmail = cleanString(env.SMTP_EMAIL_FROM_EMAIL)
+  const fromName = cleanString(env.SMTP_FROM_NAME)
+  const fromEmail = cleanString(env.SMTP_FROM_EMAIL)
   const from = `${fromName} <${fromEmail}>`
   const subject = config.subject
 
@@ -37,8 +37,8 @@ export async function sendJSXEmail<T extends EmailTemplateProps>(
 export async function sendRawEmail(kind: EmailKind, to: string, content: string): Promise<void> {
   const config = EMAIL_CONFIG[kind]
 
-  const fromName = cleanString(env.SMTP_EMAIL_FROM_NAME)
-  const fromEmail = cleanString(env.SMTP_EMAIL_FROM_EMAIL)
+  const fromName = cleanString(env.SMTP_FROM_NAME)
+  const fromEmail = cleanString(env.SMTP_FROM_EMAIL)
   const from = `${fromName} <${fromEmail}>`
   const subject = config.subject
 
