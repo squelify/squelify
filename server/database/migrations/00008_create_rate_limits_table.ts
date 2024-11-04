@@ -3,6 +3,7 @@ import { UNIX_TIMESTAMP } from '~/database/db.helper'
 import type { Database } from '~/database/db.schema'
 
 export async function up(db: Kysely<Database>): Promise<void> {
+  // Tabel untuk fallback jika Redis tidak tersedia
   await db.schema
     .createTable('rate_limits')
     .addColumn('id', 'text', (col) => col.primaryKey())
@@ -12,7 +13,7 @@ export async function up(db: Kysely<Database>): Promise<void> {
     )
     .addColumn('points', 'integer', (col) => col.notNull().defaultTo(0))
     .addColumn('limit', 'integer', (col) => col.notNull())
-    .addColumn('window', 'integer', (col) => col.notNull()) // in seconds
+    .addColumn('window', 'integer', (col) => col.notNull())
     .addColumn('expires_at', 'integer', (col) => col.notNull())
     .addColumn('blocked_until', 'integer')
     .addColumn('created_at', 'integer', (col) => col.notNull().defaultTo(UNIX_TIMESTAMP))
@@ -21,19 +22,7 @@ export async function up(db: Kysely<Database>): Promise<void> {
     .ifNotExists()
     .execute()
 
-  // Create auto-update trigger
-  await sql`
-    CREATE TRIGGER IF NOT EXISTS update_rate_limits_timestamp
-    AFTER UPDATE ON rate_limits
-    FOR EACH ROW
-    BEGIN
-      UPDATE rate_limits
-      SET updated_at = strftime('%s', 'now')
-      WHERE id = NEW.id;
-    END;
-  `.execute(db)
-
-  // Indexes
+  // Optimized indexes
   await db.schema
     .createIndex('rate_limits_key_context_idx')
     .on('rate_limits')
@@ -43,33 +32,27 @@ export async function up(db: Kysely<Database>): Promise<void> {
     .execute()
 
   await db.schema
-    .createIndex('rate_limits_expires_at_idx')
+    .createIndex('rate_limits_cleanup_idx')
     .on('rate_limits')
-    .column('expires_at')
+    .columns(['expires_at', 'blocked_until'])
     .ifNotExists()
     .execute()
 
-  await db.schema
-    .createIndex('rate_limits_blocked_until_idx')
-    .on('rate_limits')
-    .column('blocked_until')
-    .ifNotExists()
-    .execute()
-
-  // Index for rate limit checks
-  await db.schema
-    .createIndex('rate_limits_check_idx')
-    .on('rate_limits')
-    .columns(['key', 'context', 'expires_at'])
-    .ifNotExists()
-    .execute()
+  // Cleanup trigger untuk expired records
+  await sql`
+    CREATE TRIGGER IF NOT EXISTS cleanup_rate_limits
+    AFTER INSERT ON rate_limits
+    BEGIN
+      DELETE FROM rate_limits
+      WHERE expires_at < strftime('%s', 'now')
+      AND blocked_until IS NULL;
+    END;
+  `.execute(db)
 }
 
 export async function down(db: Kysely<Database>): Promise<void> {
-  await db.schema.dropIndex('rate_limits_blocked_until_idx').ifExists().execute()
-  await db.schema.dropIndex('rate_limits_expires_at_idx').ifExists().execute()
   await db.schema.dropIndex('rate_limits_key_context_idx').ifExists().execute()
-  await db.schema.dropIndex('rate_limits_check_idx').ifExists().execute()
-  await sql`DROP TRIGGER IF EXISTS update_rate_limits_timestamp;`.execute(db)
+  await db.schema.dropIndex('rate_limits_cleanup_idx').ifExists().execute()
+  await sql`DROP TRIGGER IF EXISTS cleanup_rate_limits;`.execute(db)
   await db.schema.dropTable('rate_limits').ifExists().execute()
 }

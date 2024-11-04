@@ -18,6 +18,7 @@ export const SessionSchema = z.object({
   lastActiveAt: z.custom<ColumnType<number | null>>().nullable(),
   createdAt: z.custom<ColumnType<number>>().optional(),
   updatedAt: z.custom<ColumnType<number | null>>().nullable(),
+  archivedAt: z.custom<ColumnType<number | null>>().nullable(),
 })
 
 // Table interface for Kysely

@@ -1,7 +1,11 @@
 import { Kysely, sql } from 'kysely'
 import { typeid } from 'typeid-js'
 import { Database } from '~/database/db.schema'
-import { RateLimitContext, RateLimitInsert } from '~/database/schemas/rate_limit'
+import {
+  RATE_LIMIT_DEFAULTS,
+  RateLimitContext,
+  RateLimitInsert,
+} from '~/database/schemas/rate_limit'
 
 interface RateLimitInfo {
   isLimited: boolean
@@ -14,8 +18,8 @@ export async function createRateLimit(
   db: Kysely<Database>,
   key: string,
   context: RateLimitContext,
-  limit: number,
-  window: number
+  limit: number = RATE_LIMIT_DEFAULTS.POINTS,
+  window: number = RATE_LIMIT_DEFAULTS.WINDOW
 ): Promise<RateLimitInfo> {
   const now = Math.floor(Date.now() / 1000)
   const data: RateLimitInsert = {
@@ -29,14 +33,27 @@ export async function createRateLimit(
     createdAt: now,
   }
 
+  // Cleanup expired records first for better performance
+  await cleanupExpiredRecords(db, now)
+
   try {
     await db
       .insertInto('rate_limits')
       .values(data)
       .onConflict((oc) =>
         oc.columns(['key', 'context']).doUpdateSet({
-          points: sql`points + 1`,
-          expiresAt: now + window,
+          points: sql`CASE
+            WHEN expires_at < ${now} THEN 1
+            ELSE points + 1
+          END`,
+          expiresAt: sql`CASE
+            WHEN expires_at < ${now} THEN ${now + window}
+            ELSE expires_at
+          END`,
+          blockedUntil: sql`CASE
+            WHEN points + 1 >= ${limit * RATE_LIMIT_DEFAULTS.BLOCK_MULTIPLIER} THEN ${now + window * RATE_LIMIT_DEFAULTS.BLOCK_MULTIPLIER}
+            ELSE blocked_until
+          END`,
         })
       )
       .execute()
@@ -51,6 +68,14 @@ export async function createRateLimit(
   }
 }
 
+async function cleanupExpiredRecords(db: Kysely<Database>, now: number): Promise<void> {
+  await db
+    .deleteFrom('rate_limits')
+    .where('expiresAt', '<', now)
+    .where('blockedUntil', 'is', null)
+    .execute()
+}
+
 export async function getRateLimitInfo(
   db: Kysely<Database>,
   key: string,
@@ -63,7 +88,7 @@ export async function getRateLimitInfo(
       .selectFrom('rate_limits')
       .where('key', '=', key)
       .where('context', '=', context)
-      .where('expiresAt', '>', now)
+      .where((eb) => eb.or([eb('expiresAt', '>', now), eb('blockedUntil', '>', now)]))
       .select(['points', 'limit', 'blockedUntil', 'expiresAt'])
       .executeTakeFirst()
 
@@ -76,8 +101,11 @@ export async function getRateLimitInfo(
       }
     }
 
+    const isBlocked = limit.blockedUntil ? limit.blockedUntil > now : false
+    const isLimited = isBlocked || limit.points >= limit.limit
+
     return {
-      isLimited: limit.blockedUntil ? limit.blockedUntil > now : limit.points >= limit.limit,
+      isLimited,
       remainingPoints: Math.max(0, limit.limit - limit.points),
       resetAt: limit.expiresAt,
       blockedUntil: limit.blockedUntil,
@@ -90,21 +118,6 @@ export async function getRateLimitInfo(
     })
   }
 }
-
-export async function checkRateLimit(
-  db: Kysely<Database>,
-  key: string,
-  context: RateLimitContext
-): Promise<boolean> {
-  try {
-    const info = await getRateLimitInfo(db, key, context)
-    return info.isLimited
-  } catch (error) {
-    logger.error('[RateLimit] Failed to check rate limit:', { key, context, error })
-    return false // Fail open to prevent blocking legitimate traffic
-  }
-}
-
 export async function clearRateLimit(
   db: Kysely<Database>,
   key: string,
