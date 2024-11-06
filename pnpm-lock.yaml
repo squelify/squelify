@@ -232,8 +232,8 @@ importers:
         specifier: 1.8.2
         version: 1.8.2
       nitropack:
-        specifier: 2.10.2
-        version: 2.10.2(@libsql/client@0.14.0)(typescript@5.6.3)
+        specifier: 2.10.3
+        version: 2.10.3(@libsql/client@0.14.0)(typescript@5.6.3)
       npm-check-updates:
         specifier: 17.1.10
         version: 17.1.10
@@ -3542,8 +3542,8 @@ packages:
       react: ^16.8 || ^17 || ^18 || ^19 || ^19.0.0-rc
       react-dom: ^16.8 || ^17 || ^18 || ^19 || ^19.0.0-rc
 
-  nitropack@2.10.2:
-    resolution: {integrity: sha512-DxmaAcT33CpeBGU6ppVfT9g1nbjxxkwa4ZEkMwFrbsvTrShAQ7mZf3bTkdAB18iZmthlSovBpY8ecE1FbNvtQw==}
+  nitropack@2.10.3:
+    resolution: {integrity: sha512-7n+ITF7RbCMwZZzyacxJ9eMCnWuE60omGJEyLM5PQRKS4Vu5w6OOCvf4C6E3UC0UryFuUIwGbJ3M+tIP9Az9OQ==}
     engines: {node: ^16.11.0 || >=17.0.0}
     hasBin: true
     peerDependencies:
@@ -7961,7 +7961,7 @@ snapshots:
       react: 18.3.1
       react-dom: 18.3.1(react@18.3.1)
 
-  nitropack@2.10.2(@libsql/client@0.14.0)(typescript@5.6.3):
+  nitropack@2.10.3(@libsql/client@0.14.0)(typescript@5.6.3):
     dependencies:
       '@cloudflare/kv-asset-handler': 0.3.4
       '@netlify/functions': 2.8.2

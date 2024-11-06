@@ -1,6 +1,7 @@
 import 'dotenv/config'
 import consola from 'consola'
 import { makeDirectory } from 'make-dir'
+import { defineNitroConfig } from 'nitropack/config'
 import { resolve } from 'pathe'
 import { isCI, isDevelopment, isProduction, isTest } from 'std-env'
 import { build as buildVite } from 'vite'

@@ -17,16 +17,14 @@ export interface ILoginResponse {
     organizationId: string | null
     isAdmin: boolean
   }
-  mfa: {
-    required: boolean
-    method: string | null
-  }
   credentials: {
     sessionId: string
     accessToken: string
     refreshToken: string
     validUntil: number
     validityPeriod: number
+    mfaRequired: boolean
+    mfaMethod: string | null
   }
 }
 
@@ -181,16 +179,14 @@ export default defineEventHandler(async (event) => {
         organizationId: roles.find((r) => r.type === 'organization')?.organizationId || null,
         isAdmin: roles.some((r) => r.name === 'admin'),
       },
-      mfa: {
-        required: !!twoFactor,
-        method: twoFactor?.type || null,
-      },
       credentials: {
         sessionId: session.id,
         accessToken,
         refreshToken: session.refreshToken,
         validUntil: session.expiresAt,
         validityPeriod: DURATION.MINUTE * 15,
+        mfaRequired: !!twoFactor,
+        mfaMethod: twoFactor?.type || null,
       },
     })
   } catch (error) {

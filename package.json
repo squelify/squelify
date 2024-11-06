@@ -118,7 +118,7 @@
         "dotenv": "16.4.5",
         "git-cliff": "2.6.1",
         "lefthook": "1.8.2",
-        "nitropack": "2.10.2",
+        "nitropack": "2.10.3",
         "npm-check-updates": "17.1.10",
         "postcss": "8.4.47",
         "strip-ansi": "^7.1.0",

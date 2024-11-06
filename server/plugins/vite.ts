@@ -1,5 +1,5 @@
 import { process } from 'std-env'
-import type { ViteDevServer, Logger as ViteLogger } from 'vite'
+import type { ViteDevServer } from 'vite'
 
 export default defineNitroPlugin(async (nitroApp) => {
   if (process.env.NODE_ENV === 'production') {

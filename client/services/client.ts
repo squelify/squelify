@@ -54,6 +54,7 @@ export default class ApiClient {
     this.logLevel = options.logLevel ?? defaultLogLevel
     this.logger = createConsola({
       level: this.logLevel,
+      defaults: { tag: ApiClient.logTag },
     })
 
     // Initialize the storage driver
