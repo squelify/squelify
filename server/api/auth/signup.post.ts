@@ -3,7 +3,8 @@ import { typeid } from 'typeid-js'
 import { z } from 'zod'
 
 export interface ISignupResponse {
-  verificationUrl?: string // Only in development
+  email: string
+  expiresIn: number
 }
 
 export const SignupRequestSchema = z
@@ -36,10 +37,11 @@ export default defineEventHandler(async (event) => {
 
   try {
     const body = await requireValidatedBody(event, SignupRequestSchema)
+    const email = body.email.toLowerCase()
 
     const existingEmail = await db
       .selectFrom('emails')
-      .where('email', '=', body.email)
+      .where('email', '=', email)
       .select('id')
       .executeTakeFirst()
 
@@ -50,7 +52,7 @@ export default defineEventHandler(async (event) => {
         entityId: 'anonymous',
         metadata: {
           success: false,
-          email: body.email,
+          email,
           reason: 'email_exists',
         },
         retention: 'CRITICAL',
@@ -62,7 +64,7 @@ export default defineEventHandler(async (event) => {
     let username = body.username
 
     if (!username) {
-      username = generateUsername(body.email)
+      username = generateUsername(email)
 
       const existingUser = await db
         .selectFrom('users')
@@ -72,7 +74,7 @@ export default defineEventHandler(async (event) => {
         .executeTakeFirst()
 
       if (existingUser) {
-        username = generateUsername(body.email, generateRandomStr({ size: 4 }))
+        username = generateUsername(email, generateRandomStr({ size: 4 }))
       }
     }
 
@@ -90,7 +92,7 @@ export default defineEventHandler(async (event) => {
         entityId: 'anonymous',
         metadata: {
           success: false,
-          email: body.email,
+          email: email,
           reason: 'username_exists',
         },
         retention: 'CRITICAL',
@@ -156,7 +158,7 @@ export default defineEventHandler(async (event) => {
         .values({
           id: typeid('eml').toString(),
           userId,
-          email: body.email,
+          email: email,
           isPrimary: 1,
           createdAt: now,
         })
@@ -168,7 +170,7 @@ export default defineEventHandler(async (event) => {
           id: typeid('ver').toString(),
           userId,
           type: 'email',
-          identifier: body.email,
+          identifier: email,
           token: verificationToken,
           expiresAt: now + DURATION.DAY,
           createdAt: now,
@@ -204,7 +206,7 @@ export default defineEventHandler(async (event) => {
         username,
         firstName: body.firstName,
         lastName: body.lastName,
-        email: body.email,
+        email: email,
       },
       metadata: {
         success: true,
@@ -215,14 +217,12 @@ export default defineEventHandler(async (event) => {
     const verificationUrl = `${appConfig.baseURL}/api/auth/email/verify?token=${verificationToken}`
     logger.debug('[app]', `Verification URL: ${verificationUrl}`)
 
-    const response: ISignupResponse = null
     const message = 'Registration successful, please check your email for verification'
 
-    if (!isProduction) {
-      response.verificationUrl = verificationUrl
-    }
-
-    return createSuccessResponse<ISignupResponse>(event, message, response)
+    return createSuccessResponse<ISignupResponse>(event, message, {
+      email: email,
+      expiresIn: DURATION.DAY,
+    })
   } catch (error) {
     await auditLog(event, {
       action: 'create',

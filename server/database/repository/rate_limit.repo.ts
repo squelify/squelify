@@ -61,10 +61,7 @@ export async function createRateLimit(
     return await getRateLimitInfo(db, key, context)
   } catch (error) {
     logger.error('[RateLimit] Failed to create/update rate limit:', { key, context, error })
-    throw createError({
-      statusCode: 500,
-      message: 'Failed to process rate limit',
-    })
+    throw createError({ statusCode: 500, message: 'Failed to process rate limit' })
   }
 }
 
@@ -112,10 +109,7 @@ export async function getRateLimitInfo(
     }
   } catch (error) {
     logger.error('[RateLimit] Failed to get rate limit info:', { key, context, error })
-    throw createError({
-      statusCode: 500,
-      message: 'Failed to check rate limit',
-    })
+    throw createError({ statusCode: 500, message: 'Failed to check rate limit' })
   }
 }
 export async function clearRateLimit(
@@ -131,9 +125,6 @@ export async function clearRateLimit(
       .execute()
   } catch (error) {
     logger.error('[RateLimit] Failed to clear rate limit:', { key, context, error })
-    throw createError({
-      statusCode: 500,
-      message: 'Failed to clear rate limit',
-    })
+    throw createError({ statusCode: 500, message: 'Failed to clear rate limit' })
   }
 }
