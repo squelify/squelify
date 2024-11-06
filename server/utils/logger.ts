@@ -70,11 +70,11 @@ const LOG_COLORS: Record<Exclude<LogLevel, 'silent'>, (text: string) => string> 
 
 // Constants for log methods with uppercase keys
 const LOG_METHODS: Record<string, (...args: unknown[]) => void> = {
-  DEBUG: console.log,
+  DEBUG: console.debug,
   ERROR: console.error,
   INFO: console.info,
   QUERY: console.log,
-  TRACE: console.debug,
+  TRACE: console.log,
   WARN: console.warn,
 }
 
