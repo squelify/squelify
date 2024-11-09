@@ -27,7 +27,7 @@ beyond writing code. You can read this repository’s [Contributing Guidelines]
 
 ## Maintainer
 
-Currently, [Aris Ripandi](htps://ripandis.com) ([@riipandi](https://twitter.com/riipandi)) is the only maintainer.
+Currently, [Aris Ripandi](htps://ripandis.com) ([@riipandi][riipandi-x]) is the only maintainer.
 
 ## License
 
