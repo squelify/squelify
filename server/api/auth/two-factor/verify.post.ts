@@ -31,7 +31,7 @@ export default defineEventHandler(async (event) => {
       .where('id', '=', body.id)
       .where('userId', '=', payload.sub)
       .where('type', '=', 'totp')
-      .select(['id', 'secret', 'isVerified'])
+      .select(['id', 'secret', 'verifiedAt'])
       .executeTakeFirst()
 
     if (!twoFactor) {
@@ -64,13 +64,12 @@ export default defineEventHandler(async (event) => {
       return createErrorResponse(event, 'Invalid TOTP code', 400)
     }
 
-    if (!twoFactor.isVerified) {
+    if (!twoFactor.verifiedAt) {
       await db
         .updateTable('two_factors')
         .set({
-          isVerified: 1,
           verifiedAt: now,
-          lastUsedAt: now,
+          lastUsedAt: null,
           updatedAt: now,
         })
         .where('id', '=', twoFactor.id)

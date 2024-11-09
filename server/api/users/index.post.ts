@@ -1,5 +1,6 @@
 import { typeid } from 'typeid-js'
 import { z } from 'zod'
+import { DEFAULT_PASSWORD_ALGORITHM } from '~/database/schemas/password'
 import { UserSchema } from '~/database/schemas/user'
 
 export interface ICreateUserResponse {
@@ -144,14 +145,14 @@ export default defineEventHandler(async (event) => {
         .execute()
 
       if (body.password) {
-        const hashedPassword = await hashPassword(body.password)
+        const hashedPassword = await hashPassword(body.password, DEFAULT_PASSWORD_ALGORITHM)
         await trx
           .insertInto('passwords')
           .values({
             id: typeid('pwd').toString(),
             userId: userId,
             hash: hashedPassword,
-            algorithm: 'scrypt',
+            algorithm: DEFAULT_PASSWORD_ALGORITHM,
             createdAt: now,
           })
           .execute()

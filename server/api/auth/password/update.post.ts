@@ -1,5 +1,5 @@
 import { z } from 'zod'
-import { hashPassword, verifyPassword } from '~/utils/string'
+import { hashPassword, verifyPassword } from '~/utils/security'
 
 export interface IUpdatePasswordResponse {
   password: {
@@ -31,7 +31,7 @@ export default defineEventHandler(async (event) => {
     const currentPassword = await db
       .selectFrom('passwords')
       .where('userId', '=', payload.sub)
-      .select(['id', 'hash'])
+      .select(['id', 'hash', 'algorithm'])
       .executeTakeFirst()
 
     if (!currentPassword) {
@@ -48,7 +48,12 @@ export default defineEventHandler(async (event) => {
       return createErrorResponse(event, 'Password not found', 404)
     }
 
-    const isValid = await verifyPassword(body.currentPassword, currentPassword.hash)
+    const isValid = await verifyPassword(
+      body.currentPassword,
+      currentPassword.hash,
+      currentPassword.algorithm
+    )
+
     if (!isValid) {
       await auditLog(event, {
         action: 'update',
@@ -64,7 +69,7 @@ export default defineEventHandler(async (event) => {
       return createErrorResponse(event, 'Invalid current password', 400)
     }
 
-    const hashedPassword = await hashPassword(body.newPassword)
+    const hashedPassword = await hashPassword(body.newPassword, currentPassword.algorithm)
 
     await db
       .updateTable('passwords')

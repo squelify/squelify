@@ -80,7 +80,7 @@ export default defineEventHandler(async (event) => {
     const existing2FA = await db
       .selectFrom('two_factors')
       .where('userId', '=', user.id)
-      .where('isVerified', '=', 1)
+      .where('verifiedAt', '!=', null)
       .select(['id'])
       .executeTakeFirst()
 
@@ -96,7 +96,7 @@ export default defineEventHandler(async (event) => {
           type: 'totp',
           secret,
           backupCodes: JSON.stringify(backupCodes),
-          isVerified: 0,
+          verifiedAt: null,
           isPrimary: existing2FA ? 0 : 1,
           createdAt: now,
         })

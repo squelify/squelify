@@ -43,3 +43,13 @@ export async function findUserByEmail(email: string): Promise<Partial<User> | nu
     throw new Error(`Failed to find user with email ${email}`)
   }
 }
+
+export async function findActiveUser(username: string) {
+  return db
+    .selectFrom('users')
+    .select(['id', 'username', 'firstName', 'lastName', 'isActive'])
+    .where('username', '=', username)
+    .where('isActive', '=', 1)
+    .where('deletedAt', 'is', null)
+    .executeTakeFirst()
+}

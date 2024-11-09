@@ -67,7 +67,7 @@ export default defineEventHandler(async (event) => {
         },
         retention: 'COMPLIANCE',
       })
-      return createErrorResponse(event, 'Invalid email or password', 401)
+      return createErrorResponse(event, 'Invalid credentials', 401)
     }
 
     // Create session first
@@ -106,7 +106,7 @@ export default defineEventHandler(async (event) => {
       db
         .selectFrom('two_factors')
         .where('userId', '=', user.id)
-        .where('isVerified', '=', 1)
+        .where('verifiedAt', '!=', null)
         .select(['type'])
         .executeTakeFirst(),
 

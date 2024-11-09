@@ -1,5 +1,6 @@
 import { z } from 'zod'
-import { hashPassword } from '~/utils/string'
+import { DEFAULT_PASSWORD_ALGORITHM } from '~/database/schemas/password'
+import { hashPassword } from '~/utils/security'
 
 export interface IResetPasswordResponse {
   password: {
@@ -63,7 +64,7 @@ export default defineEventHandler(async (event) => {
       return createErrorResponse(event, 'Maximum reset attempts exceeded', 400)
     }
 
-    const hashedPassword = await hashPassword(body.password)
+    const hashedPassword = await hashPassword(body.password, DEFAULT_PASSWORD_ALGORITHM)
 
     await db.transaction().execute(async (trx) => {
       await trx

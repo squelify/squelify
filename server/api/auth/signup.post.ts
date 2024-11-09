@@ -1,6 +1,6 @@
-import { isProduction } from 'std-env'
 import { typeid } from 'typeid-js'
 import { z } from 'zod'
+import { DEFAULT_PASSWORD_ALGORITHM } from '~/database/schemas/password'
 
 export interface ISignupResponse {
   email: string
@@ -102,7 +102,7 @@ export default defineEventHandler(async (event) => {
     }
 
     const userId = typeid('user').toString()
-    const hashedPassword = await hashPassword(body.password)
+    const hashedPassword = await hashPassword(body.password, DEFAULT_PASSWORD_ALGORITHM)
     const now = Math.floor(Date.now() / 1000)
     const verificationToken = typeid().toString()
 
@@ -137,7 +137,7 @@ export default defineEventHandler(async (event) => {
           id: typeid('pwd').toString(),
           userId,
           hash: hashedPassword,
-          algorithm: 'scrypt',
+          algorithm: DEFAULT_PASSWORD_ALGORITHM,
           createdAt: now,
         })
         .execute()

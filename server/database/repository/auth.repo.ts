@@ -1,7 +1,8 @@
 import { type Kysely } from 'kysely'
 import { typeid } from 'typeid-js'
 import type { Database } from '~/database/db.schema'
-import { verifyPassword } from '~/utils/string'
+import { verifyPassword } from '~/utils/security'
+import { DEFAULT_PASSWORD_ALGORITHM, PASSWORD_POLICIES } from '../schemas/password'
 
 interface CreateSessionOptions {
   ipAddress: string
@@ -39,7 +40,8 @@ export async function verifyUserCredentials(db: Kysely<Database>, email: string,
       'u.lastName',
       'u.isActive',
       'e.email',
-      'p.hash',
+      'p.hash as passwordHash',
+      'p.algorithm as passwordAlgorithm',
       'ub.reason as banReason',
       'ub.expiresAt as bannedUntil',
     ])
@@ -47,7 +49,7 @@ export async function verifyUserCredentials(db: Kysely<Database>, email: string,
 
   if (!user) return null
 
-  const isValid = await verifyPassword(password, user.hash)
+  const isValid = await verifyPassword(password, user.passwordHash, user.passwordAlgorithm)
   if (!isValid) return null
 
   // Get user metadata
@@ -137,4 +139,70 @@ export async function createUserSession(
     .executeTakeFirst()
 
   return session
+}
+
+export async function changePassword(db: Kysely<Database>, userId: string, newPassword: string) {
+  const hash = await hashPassword(newPassword, DEFAULT_PASSWORD_ALGORITHM)
+
+  return db.transaction().execute(async (trx) => {
+    // Get current password
+    const current = await trx
+      .selectFrom('passwords')
+      .where('userId', '=', userId)
+      .select(['hash', 'previousHashes'])
+      .executeTakeFirst()
+
+    // Store password history
+    if (current) {
+      const previousHashes = JSON.parse(JSON.stringify(current.previousHashes) || '[]')
+      previousHashes.push(current.hash)
+
+      // Keep last 5 passwords
+      if (previousHashes.length > 5) previousHashes.shift()
+
+      const now = Math.floor(Date.now() / 1000)
+
+      await trx
+        .updateTable('passwords')
+        .set({
+          hash,
+          algorithm: DEFAULT_PASSWORD_ALGORITHM,
+          previousHashes: JSON.stringify(previousHashes),
+          lastChangedAt: now,
+          updatedAt: now,
+        })
+        .where('userId', '=', userId)
+        .execute()
+    }
+  })
+}
+
+export async function validatePasswordAttempt(db: Kysely<Database>, userId: string) {
+  return db.transaction().execute(async (trx) => {
+    const password = await trx
+      .selectFrom('passwords')
+      .where('userId', '=', userId)
+      .select(['id', 'failedAttempts', 'lockedUntil'])
+      .executeTakeFirst()
+
+    if (!password) return false
+
+    if (password.lockedUntil && password.lockedUntil > Date.now() / 1000) {
+      return false
+    }
+
+    if (password.failedAttempts >= PASSWORD_POLICIES.MAX_ATTEMPTS) {
+      await trx
+        .updateTable('passwords')
+        .set({
+          lockedUntil: PASSWORD_POLICIES.LOCKOUT_DURATION,
+          lastAttemptAt: Math.floor(Date.now() / 1000),
+        })
+        .where('id', '=', password.id)
+        .execute()
+      return false
+    }
+
+    return true
+  })
 }

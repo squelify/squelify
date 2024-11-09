@@ -30,7 +30,7 @@ export default defineEventHandler(async (event) => {
       .selectFrom('two_factors')
       .where('id', '=', body.id)
       .where('userId', '=', payload.sub)
-      .select(['id', 'name', 'type', 'isVerified', 'backupCodes', 'lastUsedAt'])
+      .select(['id', 'name', 'type', 'verifiedAt', 'backupCodes', 'lastUsedAt'])
       .executeTakeFirst()
 
     if (!twoFactor) {
@@ -47,7 +47,7 @@ export default defineEventHandler(async (event) => {
       return createErrorResponse(event, 'Authenticator not found', 404)
     }
 
-    if (!twoFactor.isVerified) {
+    if (!twoFactor.verifiedAt) {
       await auditLog(event, {
         action: 'recovery',
         entity: 'two_factor',

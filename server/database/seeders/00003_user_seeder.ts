@@ -6,11 +6,10 @@ import type { AccountInsert } from '~/database/schemas/account'
 import type { EmailInsert } from '~/database/schemas/email'
 import type { MemberInsert } from '~/database/schemas/member'
 import type { OrganizationInsert } from '~/database/schemas/organization'
-import type { PasswordInsert } from '~/database/schemas/password'
+import { DEFAULT_PASSWORD_ALGORITHM, type PasswordInsert } from '~/database/schemas/password'
 import type { UserInsert } from '~/database/schemas/user'
-import type { UserMetadataInsert } from '~/database/schemas/user_metadata'
 import type { UserRoleInsert } from '~/database/schemas/user_role'
-import { hashPassword } from '~/utils/string'
+import { hashPassword } from '~/utils/security'
 
 export default async function seed(db: Kysely<Database>): Promise<void> {
   await db.transaction().execute(async (trx) => {
@@ -52,12 +51,13 @@ export default async function seed(db: Kysely<Database>): Promise<void> {
 
     // Create admin password
     const passwordId = typeid('pwd').toString()
-    const hashedPassword = await hashPassword('@Passw0rd$123')
+    const hashedPassword = await hashPassword('@Passw0rd$123', DEFAULT_PASSWORD_ALGORITHM)
+
     const newPassword: PasswordInsert = {
       id: passwordId,
       userId: userId,
       hash: hashedPassword,
-      algorithm: 'scrypt',
+      algorithm: DEFAULT_PASSWORD_ALGORITHM,
       createdAt: now,
     }
 

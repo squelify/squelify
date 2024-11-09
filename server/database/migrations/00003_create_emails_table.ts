@@ -51,9 +51,17 @@ export async function up(db: Kysely<Database>): Promise<void> {
     .columns(['user_id', 'is_primary'])
     .ifNotExists()
     .execute()
+
+  await db.schema
+    .createIndex('emails_verified_idx')
+    .on('emails')
+    .columns(['user_id', 'verified_at'])
+    .ifNotExists()
+    .execute()
 }
 
 export async function down(db: Kysely<Database>): Promise<void> {
+  await db.schema.dropIndex('emails_verified_idx').ifExists().execute()
   await db.schema.dropIndex('emails_is_primary_idx').ifExists().execute()
   await db.schema.dropIndex('emails_email_idx').ifExists().execute()
   await db.schema.dropIndex('emails_user_id_idx').ifExists().execute()
