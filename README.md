@@ -14,50 +14,11 @@ Fastrue is a headless authentication server inspired from Netlify GoTrue and Sup
 
 ## 🏁 Quick Start
 
-### Prerequisites
-
-TODO
-
-### Generate Secret Key
-
-Before you continue, you need to create `.env` file (you can duplicate `.env.example`) and
-fill the `application secret key` with some random string. To generate a secret key, use
-the following command:
-
-```sh
-pnpm fastrue make app-key
-```
-
-### Up and Running
-
-1. Install dependencies: `pnpm install`
-2. Prepare environment: `pnpm compose:up`
-3. Run database migration: `pnpm fastrue migrate up`
-4. Start development: `pnpm dev`
-
-Application will run at `http://localhost:3278`
-
-### Reset Database Migration
-
-```sh
-pnpm fastrue migrate reset --migrate --seed
-```
-
-## 🧑🏻‍💻 Development
-
-TODO
-
-### Simple Load Testing
-
-Using [`oha`](https://github.com/hatoo/oha) to perform a simple load testing.
-
-```sh
-oha -z 10s -m GET http://localhost:3278/api/healthz -c 350 -n 10000
-```
+Read [Contributing Guideline](./CONTRIBUTING.md) for detailed documentation.
 
 ## 🚀 Deployment
 
-Please see the [documentation page](https://fastrue.netlify.app/docs/getting-started/introduction/) for more detailed information.
+Read [Deployment Guide](./DEPLOY.md) for detailed documentation.
 
 ## 🧑🏻‍💻 Contributing
 
