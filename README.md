@@ -1,4 +1,4 @@
-# Fastrue Authentication Server
+# Fastrue Auth Server
 
 [![Release](https://img.shields.io/github/v/release/riipandi/fastrue?logo=Docker&color=orange)](https://github.com/riipandi/fastrue/releases)
 [![Languages](https://img.shields.io/github/languages/top/riipandi/fastrue)](https://github.com/riipandi/fastrue)
