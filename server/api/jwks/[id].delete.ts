@@ -78,3 +78,23 @@ export default defineEventHandler(async (event) => {
     return throwErrorResponse(event, error)
   }
 })
+
+defineRouteMeta({
+  openAPI: {
+    summary: 'Delete a JWK',
+    tags: ['Administration'],
+    parameters: [
+      {
+        in: 'header',
+        name: 'Contennt-Type',
+        required: true,
+        example: 'application/json',
+      },
+    ],
+    responses: {
+      200: { $ref: 'resp-ok' },
+      400: { $ref: 'resp-bad-request' },
+      500: { $ref: 'resp-internal-server-error' },
+    },
+  },
+})

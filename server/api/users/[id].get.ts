@@ -94,7 +94,28 @@ export default defineCachedEventHandler(
 
 defineRouteMeta({
   openAPI: {
-    summary: 'Get a user',
+    summary: 'Retrieve user',
     tags: ['User Management'],
+    parameters: [
+      {
+        in: 'header',
+        name: 'Contennt-Type',
+        required: true,
+        example: 'application/json',
+      },
+      {
+        in: 'query',
+        name: 'nocache',
+        required: false,
+        example: true,
+        allowEmptyValue: true,
+        description: 'Disable caching for development purposes',
+      },
+    ],
+    responses: {
+      200: { $ref: 'resp-ok' },
+      400: { $ref: 'resp-bad-request' },
+      500: { $ref: 'resp-internal-server-error' },
+    },
   },
 })

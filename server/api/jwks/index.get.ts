@@ -94,5 +94,18 @@ defineRouteMeta({
   openAPI: {
     summary: 'Get a list of JWKs',
     tags: ['Administration'],
+    parameters: [
+      {
+        in: 'header',
+        name: 'Contennt-Type',
+        required: true,
+        example: 'application/json',
+      },
+    ],
+    responses: {
+      200: { $ref: 'resp-ok' },
+      400: { $ref: 'resp-bad-request' },
+      500: { $ref: 'resp-internal-server-error' },
+    },
   },
 })
