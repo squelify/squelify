@@ -101,7 +101,7 @@ export default defineEventHandler(async (event) => {
 
     logger.debug('[midw]', 'SessionId:', sessionId)
 
-    if (String(env.APP_LOG_LEVEL).toLowerCase() === 'trace') {
+    if (String(env.SQUELIFY_LOG_LEVEL).toLowerCase() === 'trace') {
       logger.debug('[midw]', 'Bearer Token:', bearerToken)
     }
 

@@ -18,7 +18,7 @@ function getNumericLogLevel(level: LogLevelString | undefined): number {
   return LOG_LEVEL_MAP[level] ?? 3
 }
 
-const LOG_LEVEL = getNumericLogLevel(String(env.APP_LOG_LEVEL).toLowerCase() as LogLevelString)
+const LOG_LEVEL = getNumericLogLevel(String(env.SQUELIFY_LOG_LEVEL).toLowerCase() as LogLevelString)
 
 /**
  * Creates a Consola instance for logging.

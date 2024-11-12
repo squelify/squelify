@@ -47,7 +47,7 @@ export const kyselyConfig: KyselyConfig = {
 export default new Kysely<Database>({
   ...kyselyConfig,
   log: (event: QueryLogEvent | ErrorLogEvent): void => {
-    const isTraceMode = String(env.APP_LOG_LEVEL).toLowerCase() === 'trace'
+    const isTraceMode = String(env.SQUELIFY_LOG_LEVEL).toLowerCase() === 'trace'
 
     if (event.level === 'query' && isTraceMode) {
       logger.query('[kysely]', event.query.sql, event.query.parameters)

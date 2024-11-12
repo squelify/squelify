@@ -21,8 +21,8 @@ export default defineConfig({
   clearScreen: true,
   plugins: [react(), tsconfigPaths()],
   appType: 'spa',
-  envPrefix: 'APP_',
-  define: { 'import.meta.env.APP_VERSION': `"${pkg.version}"` },
+  envPrefix: 'SQUELIFY_',
+  define: { 'import.meta.env.SQUELIFY_VERSION': `"${pkg.version}"` },
   publicDir: resolve('public'),
   optimizeDeps: {
     /**

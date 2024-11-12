@@ -45,7 +45,7 @@ export default class ApiClient {
      * The `DEFAULT_OPTIONS` object is merged with the provided `options` object,
      * and the resulting object is used to configure the `ApiClient` instance.
      */
-    const clientInfo = `ApiClient ${import.meta.env.APP_VERSION}`
+    const clientInfo = `ApiClient ${import.meta.env.SQUELIFY_VERSION}`
     const settings = { ...DEFAULT_OPTIONS, ...options, clientInfo }
 
     // By default, in DEV mode we log all requests and responses.

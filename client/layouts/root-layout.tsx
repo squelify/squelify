@@ -14,7 +14,7 @@ interface RootLayoutProps {
 }
 
 // Enable this to show error boundary instead of toast
-const BLOCK_ON_ERROR = env.APP_LOG_LEVEL === 'trace' || false
+const BLOCK_ON_ERROR = env.SQUELIFY_LOG_LEVEL === 'trace' || false
 
 // Health check configuration
 const HEALTH_CHECK_CONFIG = {

@@ -13,8 +13,8 @@ import { ApiClient } from '#/services'
  * @returns The singleton instance of the `ApiClient` class.
  */
 const apiClient = ApiClient.getInstance({
-  baseURL: process.env.APP_BASE_URL
-    ? `${process.env.APP_BASE_URL}/api`
+  baseURL: process.env.SQUELIFY_BASE_URL
+    ? `${process.env.SQUELIFY_BASE_URL}/api`
     : 'http://localhost:3278/api',
 })
 

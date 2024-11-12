@@ -28,7 +28,7 @@ export default defineCommand({
         return
       }
 
-      consola.log(`APP_SECRET_KEY=${secureKey}`)
+      consola.log(`SQUELIFY_SECRET_KEY=${secureKey}`)
     } catch (error) {
       consola.error(error instanceof Error ? error.message : 'Unknown error occurred')
       process.exit(1)

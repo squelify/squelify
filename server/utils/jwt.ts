@@ -130,7 +130,7 @@ export async function verifyAccessToken(
 
     return payload as unknown as JWTPayload
   } catch (error) {
-    if (env.APP_LOG_LEVEL === 'trace') {
+    if (env.SQUELIFY_LOG_LEVEL === 'trace') {
       logger.error('[jwt]', 'Token verification failed:', {
         error,
         token: `${token.substring(0, 10)}...`,

@@ -35,7 +35,7 @@ interface AuditLogFilters {
   entity?: AuditEntity
 }
 
-const isAuditEnabled = env.AUDIT_LOG_ENABLE !== 'false'
+const isAuditEnabled = env.SQUELIFY_AUDIT_LOG_ENABLE !== 'false'
 
 async function executeIfEnabled(fn: () => Promise<void>) {
   if (isAuditEnabled) {

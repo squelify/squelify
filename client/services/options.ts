@@ -7,7 +7,7 @@ import type { ApiClientOptions } from './types'
  * This object contains the base URL for the API and the log level to use.
  * These options can be overridden when creating an API client instance.
  *
- * If the `APP_BASE_URL` environment variable is set, it will be used as the base URL.
+ * If the `SQUELIFY_BASE_URL` environment variable is set, it will be used as the base URL.
  * Otherwise, if the application is running in development mode (`process.env.NODE_ENV === 'development'`),
  * the base URL will be `/api`. If the application is running in production mode,
  * the base URL will be `http://localhost:3278/api`.

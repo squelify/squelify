@@ -1,7 +1,7 @@
 /// <reference types="vite/client" />
 
 interface ImportMetaEnv {
-  readonly APP_VERSION: string
+  readonly SQUELIFY_VERSION: string
 }
 
 export interface ImportMeta {

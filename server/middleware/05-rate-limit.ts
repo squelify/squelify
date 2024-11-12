@@ -48,7 +48,7 @@ const EXCLUDED_PATHS = ['/api/healthz', '/api/settings', '/api/jwks/keys.json']
 
 export default defineEventHandler(async (event) => {
   // Skip rate limiting if disabled globally via environment variable
-  if (env.RATE_LIMIT_ENABLE === 'false' || !env.RATE_LIMIT_ENABLE) {
+  if (env.SQUELIFY_RATE_LIMIT_ENABLE === 'false' || !env.SQUELIFY_RATE_LIMIT_ENABLE) {
     return
   }
 
