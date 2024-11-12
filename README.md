@@ -12,15 +12,15 @@ Squelify is a headless authentication server inspired from Netlify GoTrue and Su
 > **WARNING!** This project still in development.
 > Everything is experimental, breaking changes can happen and the long-term purpose of this project is not yet clear, use at your own risk!
 
-## 🏁 Quick Start
+## Quick Start
 
 Read [Contributing Guideline](./CONTRIBUTING.md) for detailed documentation.
 
-## 🚀 Deployment
+## Deployment
 
 Read [Deployment Guide](./DEPLOY.md) for detailed documentation.
 
-## 🧑🏻‍💻 Contributing
+## Contributing
 
 Welcome, and thank you for your interest in contributing to Squelify! There are many ways in which you can contribute,
 beyond writing code. You can read this repository’s [Contributing Guidelines](./CONTRIBUTING.md) to learn how to contribute.
