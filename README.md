@@ -1,10 +1,34 @@
-# Squelify
+<p align="center">
+  <img src="./public/favicon.svg" width="80" height="80" alt="Squelify logo">
+</p>
 
-[![Release](https://img.shields.io/github/v/release/squelify/squelify?logo=Docker&color=orange)](https://github.com/squelify/squelify/releases)
-[![Languages](https://img.shields.io/github/languages/top/squelify/squelify)](https://github.com/squelify/squelify)
-[![Contribution](https://img.shields.io/badge/Contributions-welcome-gray.svg)][contribution]
+<h3 align="center">Lightweight Headless CMS and Backend Platform without hassle</h3>
 
-<hr/>
+<p align="center">
+  A modern headless CMS and backend-as-a-service platform.
+</p>
+
+<p align="center">
+  <a href="https://squelify.com">Try it Now</a>
+  ·
+  <a href="https://github.com/squelify/squelify/issues">Report Bug</a>
+  ·
+  <a href="https://github.com/squelify/squelify/issues">Suggest Feature</a>
+</p>
+
+<p align="center">
+  <a href="https://github.com/squelify/squelify/releases">
+    <img src="https://img.shields.io/github/v/release/squelify/squelify?logo=Docker&color=orange" alt="Release">
+  </a>
+  <a href="https://github.com/squelify/squelify">
+    <img src="https://img.shields.io/github/languages/top/squelify/squelify" alt="Languages">
+  </a>
+  <a href="https://github.com/squelify/squelify/pulse">
+    <img src="https://img.shields.io/badge/Contributions-welcome-gray.svg" alt="Contribution">
+  </a>
+</p>
+
+## Overview
 
 A modern headless CMS and backend-as-a-service platform powered by Nitro, TypeScript,
 LibSQL, and Kysely. Squelify is a lightweight and developer-friendly headless CMS
