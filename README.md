@@ -11,8 +11,8 @@ LibSQL, and Kysely. Squelify is a lightweight and developer-friendly headless CM
 solution, inspired by amazing projects like Supabase, PocketBase, and Strapi.
 
 > [!WARNING]
-> 🚧 Squelify is under active development - expect bugs and breaking changes.
-> Use in production at your own discretion!
+> 🚧 Heads up! We're actively cooking up new features - expect some bugs and changes along the way.
+> <br/>Use in production at your own discretion!
 
 [Learn more in our documentation.][squelify-docs]
 
