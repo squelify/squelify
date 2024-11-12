@@ -1,50 +1,73 @@
-# Squelify Auth Server
+# Squelify
 
 [![Release](https://img.shields.io/github/v/release/squelify/squelify?logo=Docker&color=orange)](https://github.com/squelify/squelify/releases)
 [![Languages](https://img.shields.io/github/languages/top/squelify/squelify)](https://github.com/squelify/squelify)
 [![Contribution](https://img.shields.io/badge/Contributions-welcome-gray.svg)](https://github.com/squelify/squelify/pulse)
-<!-- [![Test](https://github.com/squelify/squelify/actions/workflows/test.yml/badge.svg)](https://github.com/squelify/squelify/actions/workflows/test.yml) -->
 
 <hr/>
 
-Squelify is a headless authentication server inspired from Netlify GoTrue and Supabase Auth (formerly Supabase GoTrue), built with [Nitro][nitro] and [TypeScript][typescript].
+A modern headless CMS and backend-as-a-service platform powered by Nitro, TypeScript,
+LibSQL, and Kysely. Squelify is a lightweight and developer-friendly headless CMS
+solution, inspired by amazing projects like Supabase, PocketBase, and Strapi.
+Built with developer experience in mind, it offers:
 
-> **WARNING!** This project still in development.
-> Everything is experimental, breaking changes can happen and the long-term purpose of this project is not yet clear, use at your own risk!
+## ✨ Key Features
 
-## Quick Start
+- 🔐 Built-in Authentication System
+  - Email/Password authentication
+  - OAuth providers support
+  - Two-factor authentication (2FA)
+  - Passkey (WebAuthn) support
 
-Read [Contributing Guideline](./CONTRIBUTING.md) for detailed documentation.
+- 📚 Content Management
+  - Dynamic content types
+  - Flexible content modeling
+  - Rich text editor
+  - Media library
 
-## Deployment
+- 🛠 Developer Features
+  - RESTful API
+  - Real-time subscriptions
+  - Role-based access control
+  - Webhooks support
+  - Rate limiting
+  - Audit logs
 
-Read [Deployment Guide](./DEPLOY.md) for detailed documentation.
+- 💪 Technical Stack
+  - [Nitro](https://nitro.unjs.io) - Next Generation Server Toolkit
+  - [TypeScript](https://www.typescriptlang.org) - Type-safe development
+  - [LibSQL](https://turso.tech/libsql) - SQLite for Modern Applications
+  - [Kysely](https://kysely.dev) - Type-safe SQL query builder
 
-## Contributing
+## 🚀 Quick Start
 
-Welcome, and thank you for your interest in contributing to Squelify! There are many ways in which you can contribute,
-beyond writing code. You can read this repository’s [Contributing Guidelines](./CONTRIBUTING.md) to learn how to contribute.
+See our [Contributing Guidelines](./CONTRIBUTING.md) for detailed setup instructions.
 
-## Maintainer
+## 📦 Deployment
 
-Currently, [Aris Ripandi](htps://ripandis.com) ([@riipandi][riipandi-x]) is the only maintainer.
+Follow our [Deployment Guide](./DEPLOY.md) for production deployment instructions.
 
-## License
+## 🤝 Contributing
 
-This project is open-sourced software licensed under the [Apache License 2.0][choosealicense].
+We welcome contributions! Check our [Contributing Guidelines](./CONTRIBUTING.md) to learn how you can help improve Squelify.
 
-Copyrights in this project are retained by their contributors.
+## 👤 Maintainer
 
-See the [license file](./LICENSE) for more information.
+Currently maintained by [Aris Ripandi](https://ripandis.com) ([@riipandi][riipandi-x]).
+
+## 📝 License
+
+Squelify is released under the [Functional Source License][fsl-website] (FSL-1.0-Apache-2.0).
+
+For more information, see the [LICENSE](./LICENSE.md) file.
 
 ---
 
-<sub>🤫 Psst! If you like my work you can support me via [GitHub sponsors](https://github.com/sponsors/riipandi).</sub>
+<sub>🤫 Support this project via [GitHub sponsors](https://github.com/sponsors/riipandi)</sub>
 
 [![Made by](https://badgen.net/badge/icon/Made%20by%20Aris%20Ripandi?icon=bitcoin-lightning&label&color=black&labelColor=black)][riipandi-x]
 
-<!-- link reference definition -->
 [nitro]: https://nitro.unjs.io
 [choosealicense]: https://choosealicense.com/licenses/apache-2.0/
 [riipandi-x]: https://x.com/intent/follow?screen_name=riipandi
-[typescript]: https://www.typescriptlang.org
+[fsl-website]: https://fsl.software/?ref=squelify.com
