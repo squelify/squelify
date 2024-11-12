@@ -66,11 +66,17 @@ We welcome contributions! Check our [Contributing Guidelines](./CONTRIBUTING.md)
 
 Currently maintained by [Aris Ripandi](https://ripandis.com) ([@riipandi][riipandi-x]).
 
-## 📝 License
+## 📜 License
 
-Squelify is released under the [Functional Source License][fsl-website] (FSL-1.0-Apache-2.0).
+Squelify project is released under the [Functional Source License][fsl-website]
+(FSL-1.0-Apache-2.0) unless otherwise specified. Our CLI tools, SDKs, and client
+libraries are licensed under the MIT License to give developers maximum
+flexibility and freedom. Documentation is available under CC-BY-4.0 license.
 
-For more information, see the [LICENSE](./LICENSE.md) file.
+This multi-license approach enables you to freely use, modify and distribute our
+developer tools while ensuring sustainable development of the core platform.
+
+For detailed licensing information, see the [LICENSE](./LICENSE.md) file.
 
 ## 💡 Acknowledgement
 
