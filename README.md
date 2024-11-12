@@ -2,16 +2,23 @@
 
 [![Release](https://img.shields.io/github/v/release/squelify/squelify?logo=Docker&color=orange)](https://github.com/squelify/squelify/releases)
 [![Languages](https://img.shields.io/github/languages/top/squelify/squelify)](https://github.com/squelify/squelify)
-[![Contribution](https://img.shields.io/badge/Contributions-welcome-gray.svg)](https://github.com/squelify/squelify/pulse)
+[![Contribution](https://img.shields.io/badge/Contributions-welcome-gray.svg)][contribution]
 
 <hr/>
 
 A modern headless CMS and backend-as-a-service platform powered by Nitro, TypeScript,
 LibSQL, and Kysely. Squelify is a lightweight and developer-friendly headless CMS
 solution, inspired by amazing projects like Supabase, PocketBase, and Strapi.
-Built with developer experience in mind, it offers:
 
-## ✨ Key Features
+> [!WARNING]
+> 🚧 Squelify is under active development - expect bugs and breaking changes.
+> Use in production at your own discretion!
+
+[Learn more in our documentation.][squelify-docs]
+
+## ✨ Why Squelify?
+
+Built by developers, for developers. Here's what you get:
 
 - 🔐 Built-in Authentication System
   - Email/Password authentication
@@ -39,13 +46,17 @@ Built with developer experience in mind, it offers:
   - [LibSQL](https://turso.tech/libsql) - SQLite for Modern Applications
   - [Kysely](https://kysely.dev) - Type-safe SQL query builder
 
-## 🚀 Quick Start
+## 🏃 Getting Started
 
-See our [Contributing Guidelines](./CONTRIBUTING.md) for detailed setup instructions.
+Check our [Contributing Guidelines](./CONTRIBUTING.md) for setup instructions.
 
 ## 📦 Deployment
 
-Follow our [Deployment Guide](./DEPLOY.md) for production deployment instructions.
+We offer [Squelify docker image][squelify-docker] that enables you to effortlessly
+self-host the platform. You have the flexibility to host Squelify across multiple
+regions on [Fly.io](https://fly.io) or any other cloud providers of your choice.
+
+See [Deployment Guide](./DEPLOY.md) for the deployment steps.
 
 ## 🤝 Contributing
 
@@ -61,13 +72,41 @@ Squelify is released under the [Functional Source License][fsl-website] (FSL-1.0
 
 For more information, see the [LICENSE](./LICENSE.md) file.
 
+## 💡 Acknowledgement
+
+- **Inspiration**: Squelify's design draws inspiration from [Supabase][supabase], [Pocketbase][pocketbase] and [Strapi][strapi].
+- **Licensing Model**: We took inspiration from [Sentry][sentry-licensing] and [GitButler][gitbutler-licensing] licensing model.
+- **The Database**: Our database foundation is powered by:
+    - [LibSQL][libsql], simple and portable database that can be replicated to the edge.
+    - [DuckDB][duckdb], embedded, in-process SQL OLAP database management system.
+- **Logo**: The Squelify logo was created with the help of [Canva][canva].
+
 ---
 
-<sub>🤫 Support this project via [GitHub sponsors](https://github.com/sponsors/riipandi)</sub>
+<sub>💝 Support this project via [GitHub sponsors][github-sponsors] or by subscribing on Polar.</sub>
 
-[![Made by](https://badgen.net/badge/icon/Made%20by%20Aris%20Ripandi?icon=bitcoin-lightning&label&color=black&labelColor=black)][riipandi-x]
+<a href="https://polar.sh/squelify" target="_blank" rel="noopener noreferrer">
+  <picture>
+    <source media="(prefers-color-scheme: dark)"
+      srcset="https://polar.sh/embed/subscribe.svg?org=squelify&label=Subscribe&darkmode"><img
+      alt="Subscribe on Polar" src="https://polar.sh/embed/subscribe.svg?org=squelify&label=Subscribe">
+  </picture>
+</a>
 
-[nitro]: https://nitro.unjs.io
+<!-- link reference definition -->
+[canva]: https://www.canva.com/
 [choosealicense]: https://choosealicense.com/licenses/apache-2.0/
-[riipandi-x]: https://x.com/intent/follow?screen_name=riipandi
+[contribution]: https://github.com/squelify/squelify/pulse
+[duckdb]: https://duckdb.org
 [fsl-website]: https://fsl.software/?ref=squelify.com
+[gitbutler-licensing]: https://blog.gitbutler.com/opening-up-gitbutler/
+[github-sponsors]: https://github.com/sponsors/squelify
+[libsql]: https://turso.tech/libsql
+[nitro]: https://nitro.unjs.io
+[pocketbase]: https://pocketbase.io
+[riipandi-x]: https://x.com/intent/follow?screen_name=riipandi
+[sentry-licensing]: https://blog.sentry.io/introducing-the-functional-source-license-freedom-without-free-riding/
+[squelify-docker]: https://github.com/squelify/squelify/pkgs/container/squelify
+[squelify-docs]: https://squelify.com/docs
+[strapi]: https://strapi.io
+[supabase]: https://supabase.com
