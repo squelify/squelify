@@ -17,11 +17,11 @@ export interface AppConfig {
 export default {
   baseURL: 'http://localhost:3278',
   domain: 'localhost:3278',
-  title: 'Nitro Start',
-  description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit',
+  title: 'Squelify',
+  description: 'Lightweight Headless CMS and Backend Platform without hassle',
   imageUrl: '/images/og-image.png',
   twitterUsername: '@riipandi',
-  authorEmail: 'aris@duck.com',
+  authorEmail: 'hi@squelify.com',
   address: 'The Internet',
   socials: {
     github: 'https://github.com/riipandi',
