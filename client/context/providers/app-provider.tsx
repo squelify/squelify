@@ -174,7 +174,7 @@ export default function AppProvider({ children, debugScreenSize }: AppProviderPr
 
   return (
     <CookiesProvider defaultSetOptions={COOKIE_OPTIONS}>
-      <SEOMetaProvider defaultSuffix="Fastrue" defaultSeparator="|">
+      <SEOMetaProvider defaultSuffix="Squelify" defaultSeparator="|">
         <AuthContext.Provider value={authContextValues}>
           <div className={clx(debugScreenSize && 'debug-breakpoints')}>{children}</div>
         </AuthContext.Provider>

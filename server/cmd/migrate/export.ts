@@ -15,10 +15,10 @@
  * - Wrapped in transaction with PRAGMA foreign_keys handling
  *
  * Usage:
- *   pnpm fastrue migrate export
- *   pnpm fastrue migrate export --output=output.sql
- *   pnpm fastrue migrate export --verbose
- *   pnpm fastrue migrate export --help
+ *   pnpm squelify migrate export
+ *   pnpm squelify migrate export --output=output.sql
+ *   pnpm squelify migrate export --verbose
+ *   pnpm squelify migrate export --help
  */
 
 import { writeFileSync } from 'node:fs'

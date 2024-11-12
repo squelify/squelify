@@ -13,9 +13,9 @@ You will need `Node.js >=20.11.1`, `pnpm >=9.12.0` and `Docker >= 20.10` install
 1. Install the required toolchain & SDK: [Node.js][nodejs], [pnpm][pnpm], and [Docker][docker].
 2. Install required project dependencies: `pnpm install`
 3. Create `.env` file or copy from `.env.example`, then configure required variables.
-4. Generate application secret key: `pnpm --silent fastrue make app-key`
+4. Generate application secret key: `pnpm --silent squelify make app-key`
 5. Start the database server and local SMTP server: `pnpm compose:up`
-6. Run database migration: `pnpm --silent fastrue migrate up`
+6. Run database migration: `pnpm --silent squelify migrate up`
 7. Run project in development mode: `pnpm dev`
 
 > Application will run at <http://localhost:3278>
@@ -53,7 +53,7 @@ Reference: https://www.twilio.com/blog/expose-localhost-to-internet-with-tunnel
 To reset the database and seed the database with the default data, you can run the following command:
 
 ```sh
-pnpm --silent fastrue migrate reset --migrate --seed
+pnpm --silent squelify migrate reset --migrate --seed
 ```
 
 ## Testing
@@ -96,8 +96,8 @@ pnpm docker:images
 
 ```sh
 docker run --network=host --rm -it --env-file .env \
-  -v $(pwd)/_data:/srv/_data --name fastrue \
-  ghcr.io/riipandi/fastrue:latest
+  -v $(pwd)/_data:/srv/_data --name squelify \
+  ghcr.io/squelify/squelify:latest
 ```
 
 ### Push Images
@@ -111,7 +111,7 @@ echo $REGISTRY_TOKEN | docker login ghcr.io --username YOUR_USERNAME --password-
 Push docker image:
 
 ```sh
-docker push ghcr.io/riipandi/fastrue:latest
+docker push ghcr.io/squelify/squelify:latest
 ```
 
 ## 🚀 Deployment

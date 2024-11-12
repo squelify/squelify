@@ -1,18 +1,18 @@
 {
-    "name": "fastrue",
+    "name": "squelify",
     "version": "0.0.0",
     "type": "module",
     "license": "Apache-2.0",
     "repository": {
         "type": "git",
-        "url": "git+https://github.com/riipandi/fastrue.git"
+        "url": "git+https://github.com/squelify/squelify.git"
     },
     "bugs": {
-        "url": "https://github.com/riipandi/fastrue/issues"
+        "url": "https://github.com/squelify/squelify/issues"
     },
-    "homepage": "https://github.com/riipandi/fastrue#readme",
+    "homepage": "https://github.com/squelify/squelify#readme",
     "config": {
-        "image": "ghcr.io/riipandi/fastrue"
+        "image": "ghcr.io/squelify/squelify"
     },
     "scripts": {
         "build": "nitro build",
@@ -42,7 +42,7 @@
         "cleanup:dev": "pnpm dlx rimraf .{output,client,build,data,dist,nitro}",
         "cleanup:deps": "pnpm dlx rimraf pnpm-lock.yaml node_modules tests-results",
         "changelog-full": "git-cliff -o CHANGELOG.md -c .config/cliff-full.toml",
-        "fastrue": "tsx -r dotenv/config server/cmd/index.ts",
+        "squelify": "tsx -r dotenv/config server/cmd/index.ts",
         "typecheck": "tsc -b"
     },
     "dependencies": {

@@ -71,8 +71,8 @@ export default defineNitroConfig({
     production: 'prerender',
     route: '/api-specs.json',
     meta: {
-      title: 'Fastrue API',
-      description: 'Fastrue API documentation',
+      title: 'Squelify API',
+      description: 'Squelify API documentation',
       version: pkg.version,
     },
     ui: {

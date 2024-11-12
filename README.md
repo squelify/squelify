@@ -1,13 +1,13 @@
-# Fastrue Auth Server
+# Squelify Auth Server
 
-[![Release](https://img.shields.io/github/v/release/riipandi/fastrue?logo=Docker&color=orange)](https://github.com/riipandi/fastrue/releases)
-[![Languages](https://img.shields.io/github/languages/top/riipandi/fastrue)](https://github.com/riipandi/fastrue)
-[![Contribution](https://img.shields.io/badge/Contributions-welcome-gray.svg)](https://github.com/riipandi/fastrue/pulse)
-<!-- [![Test](https://github.com/riipandi/fastrue/actions/workflows/test.yml/badge.svg)](https://github.com/riipandi/fastrue/actions/workflows/test.yml) -->
+[![Release](https://img.shields.io/github/v/release/squelify/squelify?logo=Docker&color=orange)](https://github.com/squelify/squelify/releases)
+[![Languages](https://img.shields.io/github/languages/top/squelify/squelify)](https://github.com/squelify/squelify)
+[![Contribution](https://img.shields.io/badge/Contributions-welcome-gray.svg)](https://github.com/squelify/squelify/pulse)
+<!-- [![Test](https://github.com/squelify/squelify/actions/workflows/test.yml/badge.svg)](https://github.com/squelify/squelify/actions/workflows/test.yml) -->
 
 <hr/>
 
-Fastrue is a headless authentication server inspired from Netlify GoTrue and Supabase Auth (formerly Supabase GoTrue), built with [Nitro][nitro] and [TypeScript][typescript].
+Squelify is a headless authentication server inspired from Netlify GoTrue and Supabase Auth (formerly Supabase GoTrue), built with [Nitro][nitro] and [TypeScript][typescript].
 
 > **WARNING!** This project still in development.
 > Everything is experimental, breaking changes can happen and the long-term purpose of this project is not yet clear, use at your own risk!
@@ -22,7 +22,7 @@ Read [Deployment Guide](./DEPLOY.md) for detailed documentation.
 
 ## 🧑🏻‍💻 Contributing
 
-Welcome, and thank you for your interest in contributing to Fastrue! There are many ways in which you can contribute,
+Welcome, and thank you for your interest in contributing to Squelify! There are many ways in which you can contribute,
 beyond writing code. You can read this repository’s [Contributing Guidelines](./CONTRIBUTING.md) to learn how to contribute.
 
 ## Maintainer

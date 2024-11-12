@@ -46,7 +46,7 @@ RUN mkdir -p /srv/_data && chmod 0775 /srv/_data
 # Production image, copy build output files and run the application.
 # -----------------------------------------------------------------------------
 FROM --platform=${PLATFORM} gcr.io/distroless/nodejs20-debian12 AS runner
-LABEL org.opencontainers.image.source="https://github.com/riipandi/fastrue"
+LABEL org.opencontainers.image.source="https://github.com/squelify/squelify"
 
 # ----- Read application environment variables --------------------------------
 

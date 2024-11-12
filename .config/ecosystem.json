@@ -2,7 +2,7 @@
     "$schema": "https://json.schemastore.org/pm2-ecosystem.json",
     "apps": [
         {
-            "name": "fastrue",
+            "name": "squelify",
             "script": "./server/index.mjs",
             "interpreter": "node",
             "interpreter_args": "-r dotenv/config",

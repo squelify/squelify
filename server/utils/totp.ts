@@ -24,7 +24,7 @@ export function generateTOTPUri(options: {
 
 export function verifyTOTP(secret: string, token: string): boolean {
   const totp = new OTPAuth.TOTP({
-    issuer: 'Fastrue',
+    issuer: 'Squelify',
     label: 'auth',
     algorithm: 'SHA1',
     digits: 6,
