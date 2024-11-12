@@ -60,7 +60,14 @@ See [Deployment Guide](./DEPLOY.md) for the deployment steps.
 
 ## 🤝 Contributing
 
-We welcome contributions! Check our [Contributing Guidelines](./CONTRIBUTING.md) to learn how you can help improve Squelify.
+We welcome contributions! Check our [Contributing Guidelines](./CONTRIBUTING.md) to
+learn how you can help improve Squelify.
+
+## ✅ Roadmap
+
+Discover what's new and what's next on our exciting product roadmap! Join our
+[community][squelify-forum] in shaping the future by voting on upcoming features
+and sharing your brilliant ideas.
 
 ## 👤 Maintainer
 
@@ -114,5 +121,6 @@ For detailed licensing information, see the [LICENSE](./LICENSE.md) file.
 [sentry-licensing]: https://blog.sentry.io/introducing-the-functional-source-license-freedom-without-free-riding/
 [squelify-docker]: https://github.com/squelify/squelify/pkgs/container/squelify
 [squelify-docs]: https://squelify.com/docs
+[squelify-forum]: https://github.com/squelify/squelify/discussions
 [strapi]: https://strapi.io
 [supabase]: https://supabase.com
