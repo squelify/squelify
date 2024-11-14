@@ -1,11 +1,11 @@
 import { zodResolver } from '@hookform/resolvers/zod'
+import * as Lucide from 'lucide-react'
 import { type SubmitHandler, useForm } from 'react-hook-form'
 import { useNavigate, useSearchParams } from 'react-router-dom'
 import { toast } from 'sonner'
 import { z } from 'zod'
 import { Button } from '#/components/base-ui/button'
-import { Card, CardHeader, CardTitle } from '#/components/base-ui/card'
-import { CardContent, CardDescription } from '#/components/base-ui/card'
+import { Card, CardContent } from '#/components/base-ui/card'
 import { Checkbox } from '#/components/base-ui/checkbox'
 import { Form, FormControl, FormField, FormItem } from '#/components/base-ui/form'
 import { FormLabel, FormMessage } from '#/components/base-ui/form'
@@ -25,7 +25,6 @@ type FormType = z.infer<typeof FormSchema>
 
 export default function Page() {
   const { pageTitle } = useSEOMeta('Sign In')
-
   const navigate = useNavigate()
   const [searchParams] = useSearchParams()
   const redirectTo = searchParams.get('redirect_to') || '/dashboard'
@@ -53,102 +52,118 @@ export default function Page() {
   }
 
   return (
-    <Card className="mx-auto w-full max-w-sm">
-      <CardHeader>
-        <CardTitle className="text-2xl">{pageTitle}</CardTitle>
-        <CardDescription>Enter your email below to login to your account</CardDescription>
-      </CardHeader>
-      <CardContent className="space-y-4">
-        <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="grid gap-4">
-            <FormField
-              name="identity"
-              control={form.control}
-              render={({ field, formState }) => (
-                <FormItem>
-                  <FormLabel hidden>Email Address</FormLabel>
-                  <FormControl>
-                    <Input
-                      type="text"
-                      placeholder="Email Address"
-                      disabled={formState.isLoading || formState.isSubmitting}
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+    <div className="flex min-h-screen w-full flex-col items-center justify-center">
+      <div className="mx-auto w-full max-w-sm space-y-6">
+        <div className="flex flex-col space-y-2 text-center">
+          <h1 className="font-semibold text-2xl tracking-tight">{pageTitle}</h1>
+          <p className="text-muted-foreground text-sm">
+            Enter your credentials to access your account
+          </p>
+        </div>
 
-            <FormField
-              name="password"
-              control={form.control}
-              render={({ field, formState }) => (
-                <FormItem>
-                  <FormLabel hidden>Password</FormLabel>
-                  <FormControl>
-                    <Input
-                      type="password"
-                      placeholder="*************"
-                      disabled={formState.isLoading || formState.isSubmitting}
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              name="remember"
-              control={form.control}
-              render={({ field, formState }) => (
-                <FormItem>
-                  <div className="flex items-center">
-                    <div className="flex items-start space-x-2 space-y-0">
+        <Card>
+          <CardContent className="pt-6">
+            <Form {...form}>
+              <form onSubmit={form.handleSubmit(onSubmit)} className="grid gap-4">
+                <FormField
+                  name="identity"
+                  control={form.control}
+                  render={({ field, formState }) => (
+                    <FormItem>
+                      <FormLabel>Email Address</FormLabel>
                       <FormControl>
-                        <Checkbox
-                          checked={field.value}
+                        <Input
+                          type="text"
+                          placeholder="name@example.com"
                           disabled={formState.isLoading || formState.isSubmitting}
-                          onCheckedChange={field.onChange}
+                          {...field}
                         />
                       </FormControl>
-                      <div className="leading-none">
-                        <FormLabel>Remember me</FormLabel>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  name="password"
+                  control={form.control}
+                  render={({ field, formState }) => (
+                    <FormItem>
+                      <FormLabel>Password</FormLabel>
+                      <FormControl>
+                        <Input
+                          type="password"
+                          placeholder="Enter your password"
+                          disabled={formState.isLoading || formState.isSubmitting}
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  name="remember"
+                  control={form.control}
+                  render={({ field, formState }) => (
+                    <FormItem>
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center space-x-2">
+                          <FormControl>
+                            <Checkbox
+                              checked={field.value}
+                              disabled={formState.isLoading || formState.isSubmitting}
+                              onCheckedChange={field.onChange}
+                            />
+                          </FormControl>
+                          <FormLabel className="font-medium text-sm leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+                            Remember me
+                          </FormLabel>
+                        </div>
+                        <Link
+                          href="/forgot-password"
+                          className="text-muted-foreground text-sm hover:text-primary"
+                        >
+                          Forgot password?
+                        </Link>
                       </div>
-                    </div>
-                    <Link
-                      href="/forgot-password"
-                      className="ml-auto inline-block text-sm underline"
-                    >
-                      Forgot your password?
-                    </Link>
-                  </div>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+                    </FormItem>
+                  )}
+                />
 
-            <Button
-              type="submit"
-              disabled={form.formState.isLoading || form.formState.isSubmitting}
-            >
-              Login
+                <Button
+                  type="submit"
+                  className="w-full"
+                  disabled={form.formState.isLoading || form.formState.isSubmitting}
+                >
+                  Sign In
+                </Button>
+              </form>
+            </Form>
+
+            <div className="relative my-4">
+              <div className="absolute inset-0 flex items-center">
+                <span className="w-full border-t" />
+              </div>
+              <div className="relative flex justify-center text-xs uppercase">
+                <span className="bg-background px-2 text-muted-foreground">Or continue with</span>
+              </div>
+            </div>
+
+            <Button variant="outline" className="w-full" type="button">
+              <Lucide.Chrome className="mr-2 h-4 w-4" /> Google
             </Button>
-          </form>
-        </Form>
+          </CardContent>
+        </Card>
 
-        <Button variant="outline" className="w-full">
-          Login with Google
-        </Button>
-
-        <div className="text-center text-sm">
-          Don&apos;t have an account?{' '}
-          <Link href="/signup" className="underline">
+        <p className="text-center text-muted-foreground text-sm">
+          Don't have an account?{' '}
+          <Link href="/signup" className="underline underline-offset-4 hover:text-primary">
             Sign up
           </Link>
-        </div>
-      </CardContent>
-    </Card>
+        </p>
+      </div>
+    </div>
   )
 }
