@@ -18,13 +18,12 @@ export type AuthContextType = {
     remember?: boolean
   ) => Promise<ApiResponse<ILoginResponse> | null>
   logout: () => void
-} & Pick<AuthStore, 'user' | 'roles'>
+} & Pick<AuthStore, 'user'>
 
-export type AppContextType = Pick<AuthContextType, 'user' | 'roles' | 'logout'>
+export type AppContextType = Pick<AuthContextType, 'user' | 'logout'>
 
 const defaultAuthContext: AuthContextType = {
   user: defaultAuthStoreValues.user,
-  roles: defaultAuthStoreValues.roles,
   isInitialized: false,
   login: async () => null,
   logout: () => {},
@@ -57,7 +56,6 @@ export default function AppProvider({ children, debugScreenSize }: AppProviderPr
         saveAuthState({
           sessionId: authState.sessionId,
           user: response.data.user,
-          roles: response.data.user.roles,
         })
       }
     } catch {
@@ -90,7 +88,6 @@ export default function AppProvider({ children, debugScreenSize }: AppProviderPr
             updatedAt: Date.now(), // Use current timestamp or fetch from API
             deletedAt: 0, // Assuming not deleted
           },
-          roles: user.roles,
           accessToken: credentials.accessToken,
           refreshToken: credentials.refreshToken,
           sessionId: credentials.sessionId,
@@ -120,12 +117,11 @@ export default function AppProvider({ children, debugScreenSize }: AppProviderPr
   const authContextValues = useMemo(
     () => ({
       user: authState.user,
-      roles: authState.roles,
       isInitialized,
       login,
       logout,
     }),
-    [authState.user, authState.roles, isInitialized, login, logout]
+    [authState.user, isInitialized, login, logout]
   )
 
   if (!isInitialized) {

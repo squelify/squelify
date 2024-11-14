@@ -25,55 +25,71 @@ export default defineEventHandler(async (event) => {
   const { db } = event.context
 
   try {
-    const [userData, userBan, metadata, roles, permissions] = await Promise.all([
-      db
-        .selectFrom('users')
-        .where('id', '=', payload.sub)
-        .where('deletedAt', 'is', null)
-        .selectAll()
-        .executeTakeFirst(),
+    // Execute all queries in a transaction for better consistency and performance
+    const result = await db.transaction().execute(async (trx) => {
+      const [userData, userBan, metadata, roles, permissions] = await Promise.all([
+        trx
+          .selectFrom('users')
+          .where('id', '=', payload.sub)
+          .where('deletedAt', 'is', null)
+          .selectAll()
+          .executeTakeFirst(),
 
-      db
-        .selectFrom('user_bans')
-        .where('userId', '=', payload.sub)
-        .where((eb) =>
-          eb.or([eb('expiresAt', '>', Math.floor(Date.now() / 1000)), eb('expiresAt', 'is', null)])
-        )
-        .selectAll()
-        .executeTakeFirst(),
+        trx
+          .selectFrom('user_bans')
+          .where('userId', '=', payload.sub)
+          .where((eb) =>
+            eb.or([
+              eb('expiresAt', '>', Math.floor(Date.now() / 1000)),
+              eb('expiresAt', 'is', null),
+            ])
+          )
+          .selectAll()
+          .executeTakeFirst(),
 
-      db
-        .selectFrom('user_metadata')
-        .where('userId', '=', payload.sub)
-        .where('isPublic', '=', 1)
-        .select(['key', 'value'])
-        .execute(),
+        trx
+          .selectFrom('user_metadata')
+          .where('userId', '=', payload.sub)
+          .where('isPublic', '=', 1)
+          .select(['key', 'value'])
+          .execute(),
 
-      db
-        .selectFrom('roles')
-        .innerJoin('user_roles', 'roles.id', 'user_roles.roleId')
-        .where('user_roles.userId', '=', payload.sub)
-        .select(['roles.id', 'roles.name', 'roles.type', 'roles.organizationId'])
-        .execute(),
+        trx
+          .selectFrom('roles')
+          .innerJoin('user_roles', 'roles.id', 'user_roles.roleId')
+          .where('user_roles.userId', '=', payload.sub)
+          .select(['roles.id', 'roles.name', 'roles.type', 'roles.organizationId'])
+          .execute(),
 
-      db
-        .selectFrom('permissions')
-        .innerJoin('role_permissions', 'permissions.id', 'role_permissions.permissionId')
-        .innerJoin('user_roles', 'role_permissions.roleId', 'user_roles.roleId')
-        .where('user_roles.userId', '=', payload.sub)
-        .select([
-          'permissions.id',
-          'permissions.name',
-          'permissions.category',
-          'permissions.action',
-          'permissions.resource',
-        ])
-        .execute(),
-    ])
+        trx
+          .selectFrom('permissions')
+          .innerJoin('role_permissions', 'permissions.id', 'role_permissions.permissionId')
+          .innerJoin('user_roles', 'role_permissions.roleId', 'user_roles.roleId')
+          .where('user_roles.userId', '=', payload.sub)
+          .select([
+            'permissions.id',
+            'permissions.name',
+            'permissions.category',
+            'permissions.action',
+            'permissions.resource',
+          ])
+          .execute(),
+      ])
 
-    if (!userData) {
-      return createErrorResponse(event, 'User not found', 404)
-    }
+      if (!userData) {
+        throw new Error('User not found')
+      }
+
+      return {
+        userData,
+        userBan,
+        metadata,
+        roles,
+        permissions,
+      }
+    })
+
+    const { userData, userBan, metadata, roles, permissions } = result
 
     return createSuccessResponse<IUserInfoResponse>(
       event,
