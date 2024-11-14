@@ -1,5 +1,4 @@
 import { persistentMap } from '@nanostores/persistent'
-import { RoleType } from '~/database/schemas/role'
 import { User } from '~/database/schemas/user'
 
 type AuthStore = {

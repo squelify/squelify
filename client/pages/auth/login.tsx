@@ -29,7 +29,6 @@ export default function Page() {
   const navigate = useNavigate()
   const [searchParams] = useSearchParams()
   const redirectTo = searchParams.get('redirect_to') || '/dashboard'
-
   const auth = useAuth()
 
   const form = useForm<FormType>({
@@ -38,17 +37,10 @@ export default function Page() {
   })
 
   const onSubmit: SubmitHandler<FormType> = async ({ identity, password, remember }) => {
-    toast.promise(auth.login(identity, password), {
+    toast.promise(auth.login(identity, password, remember), {
       loading: 'Signing in..',
-      success: (ctx) => {
-        logger.info('[LOGIN]', remember, ctx)
-        // if (ctx.error) {
-        //   throw ctx.error // Trigger the error handler
-        // }
-        // if (ctx.data?.user && !ctx.data.user.emailVerified) {
-        //   toast.warning('Your email not verified, check your inbox!')
-        //   return
-        // }
+      success: (response) => {
+        if (!response?.data) throw new Error('Invalid response')
         setTimeout(() => navigate(redirectTo), 500)
         return `Sign in successful!`
       },
@@ -56,9 +48,6 @@ export default function Page() {
         logger.error('[LOGIN]', err)
         form.setFocus('identity')
         return `Failed to sign in: ${err.message}`
-      },
-      finally: () => {
-        form.reset()
       },
     })
   }

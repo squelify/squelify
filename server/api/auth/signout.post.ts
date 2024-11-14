@@ -3,6 +3,7 @@ import { z } from 'zod'
 export const SignoutRequestSchema = z.object({
   sessionId: z.string({ required_error: 'Session ID is required' }),
   deviceId: z.string().optional().nullable(),
+  allDevices: z.boolean().optional().default(false),
 })
 
 export default defineEventHandler(async (event) => {
@@ -14,10 +15,11 @@ export default defineEventHandler(async (event) => {
   try {
     const body = await requireValidatedBody(event, SignoutRequestSchema)
 
+    // Validate current session
     const session = await db
       .selectFrom('sessions')
       .where('id', '=', body.sessionId)
-      .select(['isActive', 'expiresAt'])
+      .select(['isActive', 'expiresAt', 'deviceId'])
       .executeTakeFirst()
 
     if (!session) {
@@ -32,7 +34,6 @@ export default defineEventHandler(async (event) => {
         },
         retention: 'COMPLIANCE',
       })
-
       return createErrorResponse(event, 'Session not found', 400)
     }
 
@@ -48,7 +49,6 @@ export default defineEventHandler(async (event) => {
         },
         retention: 'COMPLIANCE',
       })
-
       return createErrorResponse(event, 'Session has expired', 400)
     }
 
@@ -64,10 +64,10 @@ export default defineEventHandler(async (event) => {
         },
         retention: 'COMPLIANCE',
       })
-
       return createErrorResponse(event, 'Session is already inactive', 400)
     }
 
+    // Deactivate current session
     await db
       .updateTable('sessions')
       .set({
@@ -77,17 +77,20 @@ export default defineEventHandler(async (event) => {
       .where('id', '=', body.sessionId)
       .execute()
 
-    if (body.deviceId) {
-      await db
-        .updateTable('sessions')
-        .set({
-          isActive: 0,
-          updatedAt: now,
-        })
-        .where('deviceId', '=', body.deviceId)
-        .where('expiresAt', '>', now)
-        .where('isActive', '=', 1)
-        .execute()
+    // Handle device-specific or all devices logout
+    const logoutQuery = db
+      .updateTable('sessions')
+      .set({
+        isActive: 0,
+        updatedAt: now,
+      })
+      .where('expiresAt', '>', now)
+      .where('isActive', '=', 1)
+
+    if (body.allDevices) {
+      await logoutQuery.where('userId', '=', userId).execute()
+    } else if (body.deviceId || session.deviceId) {
+      await logoutQuery.where('deviceId', '=', body.deviceId || session.deviceId).execute()
     }
 
     await auditLog(event, {
@@ -97,6 +100,7 @@ export default defineEventHandler(async (event) => {
       metadata: {
         success: true,
         deviceId: body.deviceId,
+        allDevices: body.allDevices,
         signedOutBy: {
           id: userId,
           email: userEmail,
@@ -105,7 +109,12 @@ export default defineEventHandler(async (event) => {
       retention: 'COMPLIANCE',
     })
 
-    deleteCookie(event, 'auth_session')
+    deleteCookie(event, 'auth_session', {
+      path: '/',
+      sameSite: 'lax',
+      secure: process.env.NODE_ENV === 'production',
+      httpOnly: true,
+    })
 
     return createSuccessResponse(event, 'Signed out successfully')
   } catch (error) {

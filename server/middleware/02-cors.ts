@@ -59,7 +59,7 @@ export default defineEventHandler((event) => {
 
       return isAllowed
     },
-    credentials: true, // Support untuk credentials (cookies, auth headers)
+    credentials: true, // Allow support for credentials (cookies, auth headers)
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
     allowHeaders: ['Content-Type', 'Authorization', 'X-Client-Info'],
     exposeHeaders: ['Content-Length', 'Content-Type'],

@@ -1,23 +1,17 @@
-export interface IWhoAmIResponse {
-  user: {
-    id: string
+import type { User } from '~/database/schemas/user'
+
+export interface IUserInfoResponse {
+  user: User & {
     email: string | null
-    username: string | null
-    firstName: string | null
-    lastName: string | null
     displayName: string
-    avatarUrl: string | null
     roles: string[]
     permissions: string[]
     organizationId: string | null
     isAdmin: boolean
-    isActive: boolean
     isBanned: boolean
     banReason: string | null
     bannedUntil: string | null
     metadata: Record<string, any>
-    createdAt: string
-    updatedAt: string | null
   }
   credentials: {
     sessionId: string | null
@@ -81,23 +75,18 @@ export default defineEventHandler(async (event) => {
       return createErrorResponse(event, 'User not found', 404)
     }
 
-    return createSuccessResponse<IWhoAmIResponse>(
+    return createSuccessResponse<IUserInfoResponse>(
       event,
       'User information retrieved successfully',
       {
         user: {
-          id: userData.id,
+          ...userData,
           email: payload?.email,
-          username: userData?.username,
-          firstName: userData?.firstName,
-          lastName: userData?.lastName,
           displayName: `${userData?.firstName || ''} ${userData?.lastName || ''}`.trim(),
-          avatarUrl: userData?.avatarUrl,
           roles: roles.map((r) => r.name),
           permissions: permissions.map((p) => `${p.action}:${p.resource}`),
           organizationId: roles.find((r) => r.type === 'organization')?.organizationId || null,
           isAdmin: roles.some((r) => r.name === 'admin'),
-          isActive: Boolean(userData?.isActive),
           isBanned: !!userBan,
           banReason: userBan?.reason || null,
           bannedUntil: toISOString(userBan?.expiresAt),
@@ -105,8 +94,6 @@ export default defineEventHandler(async (event) => {
             acc[key] = value
             return acc
           }, {}),
-          createdAt: toISOString(userData.createdAt),
-          updatedAt: toISOString(userData.updatedAt),
         },
         credentials: {
           sessionId: session?.id || null,
