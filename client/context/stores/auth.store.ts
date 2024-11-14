@@ -2,6 +2,7 @@ import { persistentMap } from '@nanostores/persistent'
 import { User } from '~/database/schemas/user'
 
 type AuthStore = {
+  sessionId: string | null
   accessToken: string | null
   refreshToken: string | null
   user: User | null
@@ -10,6 +11,7 @@ type AuthStore = {
 
 // Default values for the AuthStore
 const defaultAuthStoreValues: AuthStore = {
+  sessionId: null,
   accessToken: null,
   refreshToken: null,
   user: null,

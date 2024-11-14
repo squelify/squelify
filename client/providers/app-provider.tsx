@@ -43,7 +43,7 @@ export default function AppProvider({ children, debugScreenSize }: AppProviderPr
   const [isInitialized, setIsInitialized] = useState(false)
 
   const initializeAuth = useCallback(async () => {
-    const hasStoredAuth = !!authState.accessToken
+    const hasStoredAuth = !!authState.sessionId
 
     if (!hasStoredAuth) {
       resetAuthState()
@@ -55,6 +55,7 @@ export default function AppProvider({ children, debugScreenSize }: AppProviderPr
       const response = await apiClient.auth.getCurrentUser()
       if (response?.data?.user) {
         saveAuthState({
+          sessionId: authState.sessionId,
           user: response.data.user,
           roles: response.data.user.roles,
         })
@@ -64,7 +65,7 @@ export default function AppProvider({ children, debugScreenSize }: AppProviderPr
     }
 
     setIsInitialized(true)
-  }, [authState.accessToken])
+  }, [authState.sessionId])
 
   useEffect(() => {
     initializeAuth()
@@ -92,6 +93,7 @@ export default function AppProvider({ children, debugScreenSize }: AppProviderPr
           roles: user.roles,
           accessToken: credentials.accessToken,
           refreshToken: credentials.refreshToken,
+          sessionId: credentials.sessionId,
         })
 
         return result
@@ -105,15 +107,15 @@ export default function AppProvider({ children, debugScreenSize }: AppProviderPr
 
   const logout = useCallback(async () => {
     try {
-      if (authState.accessToken) {
+      if (authState.sessionId) {
         await apiClient.auth.signout({
-          sessionId: authState.accessToken,
+          sessionId: authState.sessionId,
         })
       }
     } finally {
       resetAuthState()
     }
-  }, [authState.accessToken])
+  }, [authState.sessionId])
 
   const authContextValues = useMemo(
     () => ({
