@@ -16,8 +16,8 @@ import { useSEOMeta } from '#/context/hooks/use-seo-meta'
 import logger from '#/utils/logger'
 
 const FormSchema = z.object({
-  identity: z.string().min(1, { message: 'Email address or username is required' }),
-  password: z.string().min(1, { message: 'Password is required' }),
+  identity: z.string({ message: 'Email address required' }).min(1),
+  password: z.string({ message: 'Password required' }).min(1),
   remember: z.boolean().optional().default(false),
 })
 
@@ -53,7 +53,7 @@ export default function Page() {
 
   return (
     <div className="flex min-h-screen w-full flex-col items-center justify-center">
-      <div className="mx-auto w-full max-w-sm space-y-6">
+      <div className="mx-auto w-full max-w-md space-y-6">
         <div className="flex flex-col space-y-2 text-center">
           <h1 className="font-semibold text-2xl tracking-tight">{pageTitle}</h1>
           <p className="text-muted-foreground text-sm">
@@ -62,7 +62,7 @@ export default function Page() {
         </div>
 
         <Card>
-          <CardContent className="pt-6">
+          <CardContent className="p-8">
             <Form {...form}>
               <form onSubmit={form.handleSubmit(onSubmit)} className="grid gap-4">
                 <FormField
@@ -123,7 +123,7 @@ export default function Page() {
                         </div>
                         <Link
                           href="/forgot-password"
-                          className="text-muted-foreground text-sm hover:text-primary"
+                          className="font-medium text-muted-foreground text-sm hover:text-primary"
                         >
                           Forgot password?
                         </Link>
@@ -142,7 +142,7 @@ export default function Page() {
               </form>
             </Form>
 
-            <div className="relative my-4">
+            <div className="relative my-6">
               <div className="absolute inset-0 flex items-center">
                 <span className="w-full border-t" />
               </div>
@@ -151,9 +151,12 @@ export default function Page() {
               </div>
             </div>
 
-            <Button variant="outline" className="w-full" type="button">
-              <Lucide.Chrome className="mr-2 h-4 w-4" /> Google
-            </Button>
+            <div className="grid grid-cols-1 gap-2">
+              <Button variant="outline" className="w-full" type="button">
+                <Lucide.Chrome className="mr-2 size-4" />
+                <span>Google</span>
+              </Button>
+            </div>
           </CardContent>
         </Card>
 

@@ -10,7 +10,7 @@ export default function Component() {
   const [count, setCount] = useState(0)
 
   return (
-    <div className="size-full p-4 md:p-8">
+    <div className="size-full">
       <div className="w-full max-w-sm rounded-lg bg-white p-8 shadow">
         <h1 className="mb-6 text-center font-bold text-3xl text-gray-800">
           Hello {ctx.user?.firstName}!

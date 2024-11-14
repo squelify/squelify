@@ -49,9 +49,9 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
             )}
           >
             {showPassword ? (
-              <Lucide.EyeOff className="h-4 w-4" strokeWidth={2} />
+              <Lucide.EyeOff className="size-4" strokeWidth={2} />
             ) : (
-              <Lucide.Eye className="h-4 w-4" strokeWidth={2} />
+              <Lucide.Eye className="size-4" strokeWidth={2} />
             )}
           </button>
         )}

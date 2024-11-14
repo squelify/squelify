@@ -1,6 +1,6 @@
 import { ErrorBoundary } from 'react-error-boundary'
 import { Navigate, Outlet, useLocation } from 'react-router-dom'
-import { SidebarProvider } from '#/components/base-ui/sidebar'
+import { SidebarInset, SidebarProvider } from '#/components/base-ui/sidebar'
 import PageLoader from '#/components/loader'
 import { useAuth } from '#/context/hooks/use-auth'
 import ErrorBoundaryFallback from '#/pages/error/boundary-fallback'
@@ -26,9 +26,26 @@ export default function AppLayout() {
       <RootLayout className="size-full min-h-screen">
         <SidebarProvider>
           <AppSidebar logout={logout} />
-          <main className="flex flex-1 flex-col bg-gray-50">
-            <Outlet context={{ user, logout } satisfies AppContextType} />
-          </main>
+          <SidebarInset>
+            {/* <header className="flex h-16 shrink-0 items-center gap-2 border-b px-4">
+              <SidebarTrigger className="-ml-1" />
+              <Separator orientation="vertical" className="mr-2 h-4" />
+              <Breadcrumb>
+                <BreadcrumbList>
+                  <BreadcrumbItem className="hidden md:block">
+                    <BreadcrumbLink href="#">Building Your Application</BreadcrumbLink>
+                  </BreadcrumbItem>
+                  <BreadcrumbSeparator className="hidden md:block" />
+                  <BreadcrumbItem>
+                    <BreadcrumbPage>Data Fetching</BreadcrumbPage>
+                  </BreadcrumbItem>
+                </BreadcrumbList>
+              </Breadcrumb>
+            </header> */}
+            <main className="flex flex-1 flex-col bg-gray-100/80 p-5">
+              <Outlet context={{ user, logout } satisfies AppContextType} />
+            </main>
+          </SidebarInset>
         </SidebarProvider>
       </RootLayout>
     </ErrorBoundary>

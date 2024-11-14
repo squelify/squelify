@@ -12,10 +12,11 @@ import { TooltipProvider, TooltipTrigger } from '#/components/base-ui/tooltip'
 import { Tooltip, TooltipContent } from '#/components/base-ui/tooltip'
 import { useIsMobile } from '#/context/hooks/use-mobile'
 import { clx } from '#/utils/helper'
+import { ScrollArea } from './scroll-area'
 
 const SIDEBAR_COOKIE_NAME = 'sidebar:state'
 const SIDEBAR_COOKIE_MAX_AGE = 60 * 60 * 24 * 7
-const SIDEBAR_WIDTH = '14rem'
+const SIDEBAR_WIDTH = '16rem'
 const SIDEBAR_WIDTH_MOBILE = '18rem'
 const SIDEBAR_WIDTH_ICON = '3rem'
 const SIDEBAR_KEYBOARD_SHORTCUT = 'b'
@@ -383,15 +384,14 @@ SidebarSeparator.displayName = 'SidebarSeparator'
 const SidebarContent = React.forwardRef<HTMLDivElement, React.ComponentProps<'div'>>(
   ({ className, ...props }, ref) => {
     return (
-      <div
-        ref={ref}
-        data-sidebar="content"
+      <ScrollArea
         className={clx(
           'flex min-h-0 flex-1 flex-col gap-2 overflow-auto group-data-[collapsible=icon]:overflow-hidden',
           className
         )}
-        {...props}
-      />
+      >
+        <div ref={ref} data-sidebar="content" {...props} />
+      </ScrollArea>
     )
   }
 )

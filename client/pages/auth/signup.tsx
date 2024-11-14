@@ -68,14 +68,14 @@ export default function Page() {
 
   return (
     <div className="flex min-h-screen w-full flex-col items-center justify-center">
-      <div className="mx-auto w-full max-w-sm space-y-6">
+      <div className="mx-auto w-full max-w-md space-y-6">
         <div className="flex flex-col space-y-2 text-center">
           <h1 className="font-semibold text-2xl tracking-tight">{pageTitle}</h1>
           <p className="text-muted-foreground text-sm">Create a new account to get started</p>
         </div>
 
         <Card>
-          <CardContent className="pt-6">
+          <CardContent className="p-8">
             <Form {...form}>
               <form onSubmit={form.handleSubmit(onSubmit)} className="grid gap-4">
                 <div className="grid grid-cols-2 gap-4">
@@ -163,7 +163,7 @@ export default function Page() {
               </form>
             </Form>
 
-            <div className="relative my-4">
+            <div className="relative my-6">
               <div className="absolute inset-0 flex items-center">
                 <span className="w-full border-t" />
               </div>
@@ -172,9 +172,12 @@ export default function Page() {
               </div>
             </div>
 
-            <Button variant="outline" className="w-full" type="button">
-              <Lucide.Chrome className="mr-2 h-4 w-4" /> Google
-            </Button>
+            <div className="grid grid-cols-1 gap-2">
+              <Button variant="outline" className="w-full" type="button">
+                <Lucide.Chrome className="mr-2 size-4" />
+                <span>Google</span>
+              </Button>
+            </div>
           </CardContent>
         </Card>
 
