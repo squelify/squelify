@@ -42,7 +42,7 @@ export default function AppLayout() {
                 </BreadcrumbList>
               </Breadcrumb>
             </header> */}
-            <main className="flex flex-1 flex-col bg-gray-100/80 p-5">
+            <main className="flex flex-1 bg-gray-100/80">
               <Outlet context={{ user, logout } satisfies AppContextType} />
             </main>
           </SidebarInset>

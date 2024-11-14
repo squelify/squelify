@@ -11,6 +11,7 @@ import SignUpPage from '#/pages/auth/signup'
 import DashboardPage from '#/pages/dashboard'
 import InternalError from '#/pages/error/internal-error'
 import NotFound from '#/pages/error/not-found'
+import WorkInProgress from '#/pages/work-in-progress'
 
 /**
  * Utility function to create a route object with the provided path and other properties.
@@ -39,6 +40,36 @@ const Routes: RouteObject[] = [
         element: <DashboardPage />,
         // lazy: () => import('#/pages/dashboard'),
       },
+
+      // User Management
+      route('/users', {
+        children: [
+          { index: true, element: <Navigate to="/users/list" replace /> },
+          { path: '/users/list', element: <WorkInProgress /> },
+          { path: '/users/roles', element: <WorkInProgress /> },
+          { path: '/users/permissions', element: <WorkInProgress /> },
+        ],
+      }),
+
+      // Content
+      route('/content', {
+        children: [
+          { index: true, element: <Navigate to="/content/collections" replace /> },
+          { path: '/content/collections', element: <WorkInProgress /> },
+          { path: '/content/media', element: <WorkInProgress /> },
+        ],
+      }),
+
+      // System
+      route('/system', {
+        children: [
+          { index: true, element: <Navigate to="/system/settings" replace /> },
+          { path: '/system/audit-logs', element: <WorkInProgress /> },
+          { path: '/system/webhooks', element: <WorkInProgress /> },
+          { path: '/system/api-keys', element: <WorkInProgress /> },
+          { path: '/system/settings', element: <WorkInProgress /> },
+        ],
+      }),
     ],
     errorElement: <InternalError />,
   }),

@@ -1,17 +1,19 @@
 import * as Lucide from 'lucide-react'
+import { useLocation } from 'react-router-dom'
 import { DropdownMenuContent, DropdownMenuItem } from '#/components/base-ui/dropdown-menu'
 import { DropdownMenu, DropdownMenuTrigger } from '#/components/base-ui/dropdown-menu'
-import { Label } from '#/components/base-ui/label'
-import { SidebarInput, SidebarTrigger } from '#/components/base-ui/sidebar'
-import { SidebarFooter, SidebarHeader } from '#/components/base-ui/sidebar'
+import { SidebarFooter, SidebarHeader, SidebarTrigger } from '#/components/base-ui/sidebar'
 import { SidebarGroup, SidebarGroupContent, SidebarGroupLabel } from '#/components/base-ui/sidebar'
 import { SidebarMenu, SidebarMenuButton, SidebarMenuItem } from '#/components/base-ui/sidebar'
 import { Sidebar, SidebarContent, useSidebar } from '#/components/base-ui/sidebar'
+import { TooltipContent, TooltipProvider } from '#/components/base-ui/tooltip'
+import { Tooltip, TooltipTrigger } from '#/components/base-ui/tooltip'
 import { Link } from '#/components/link'
 import { clx } from '#/utils/helper'
 import AppCommand from './app-command'
 
 export default function AppSidebar({ logout }: { logout: () => void }) {
+  const { pathname } = useLocation()
   const { state: sidebarState } = useSidebar()
 
   const menuGroups = [
@@ -58,17 +60,17 @@ export default function AppSidebar({ logout }: { logout: () => void }) {
               <div
                 className={clx(
                   sidebarState === 'expanded' ? 'flex' : 'hidden',
-                  'flex-col gap-0.5 leading-none'
+                  'ml-0.5 flex-col gap-0.5 leading-none'
                 )}
               >
                 <span className="font-semibold">Squelify</span>
-                <span className="">v1.0.0</span>
+                <span className="text-xs">v{import.meta.env.SQUELIFY_VERSION}</span>
               </div>
             </SidebarMenuButton>
           </SidebarMenuItem>
         </SidebarMenu>
 
-        <SidebarGroup>
+        <SidebarGroup className={clx(sidebarState === 'expanded' ? 'flex' : 'hidden')}>
           <SidebarGroupContent className="-mx-0.5">
             <AppCommand logout={logout} />
           </SidebarGroupContent>
@@ -77,32 +79,60 @@ export default function AppSidebar({ logout }: { logout: () => void }) {
 
       {/* Sidebar Content */}
       <SidebarContent>
-        {menuGroups.map((group) => (
-          <SidebarGroup key={group.label}>
-            <SidebarGroupLabel className={group.label === 'Main' ? 'hidden' : 'flex'}>
-              {group.label}
-            </SidebarGroupLabel>
-            <SidebarGroupContent>
-              <SidebarMenu>
-                {group.items.map((item) => (
-                  <SidebarMenuItem key={item.title}>
-                    <SidebarMenuButton asChild>
-                      <Link href={item.url}>
-                        <item.icon />
-                        <span>{item.title}</span>
-                      </Link>
-                    </SidebarMenuButton>
-                  </SidebarMenuItem>
-                ))}
-              </SidebarMenu>
-            </SidebarGroupContent>
-          </SidebarGroup>
-        ))}
+        <TooltipProvider>
+          {menuGroups.map((group) => (
+            <SidebarGroup key={group.label}>
+              <SidebarGroupLabel className={group.label === 'Main' ? 'hidden' : 'flex'}>
+                {group.label}
+              </SidebarGroupLabel>
+              <SidebarGroupContent>
+                <SidebarMenu>
+                  {group.items.map((item) => (
+                    <SidebarMenuItem key={item.title}>
+                      {sidebarState === 'collapsed' ? (
+                        <Tooltip delayDuration={100}>
+                          <TooltipTrigger asChild>
+                            <SidebarMenuButton
+                              className={clx(
+                                pathname === item.url && 'bg-accent text-accent-foreground'
+                              )}
+                              asChild
+                            >
+                              <Link href={item.url}>
+                                <item.icon />
+                                <span>{item.title}</span>
+                              </Link>
+                            </SidebarMenuButton>
+                          </TooltipTrigger>
+                          <TooltipContent side="right" className="rounded-lg bg-black">
+                            <p>{item.title}</p>
+                          </TooltipContent>
+                        </Tooltip>
+                      ) : (
+                        <SidebarMenuButton
+                          className={clx(
+                            pathname === item.url && 'bg-accent text-accent-foreground'
+                          )}
+                          asChild
+                        >
+                          <Link href={item.url}>
+                            <item.icon />
+                            <span>{item.title}</span>
+                          </Link>
+                        </SidebarMenuButton>
+                      )}
+                    </SidebarMenuItem>
+                  ))}
+                </SidebarMenu>
+              </SidebarGroupContent>
+            </SidebarGroup>
+          ))}
+        </TooltipProvider>
       </SidebarContent>
 
       {/* Sidebar Footer */}
       <SidebarFooter>
-        <SidebarMenu className="flex flex-col gap-2 transition-all duration-200 ease-linear group-data-[state=expanded]:flex-row group-data-[state=expanded]:items-center">
+        <SidebarMenu className="flex flex-col gap-2 group-data-[state=expanded]:flex-row group-data-[state=expanded]:items-center">
           <SidebarMenuItem className="flex-1">
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
@@ -111,7 +141,10 @@ export default function AppSidebar({ logout }: { logout: () => void }) {
                   <Lucide.ChevronUp className="ml-auto" />
                 </SidebarMenuButton>
               </DropdownMenuTrigger>
-              <DropdownMenuContent side="top" className="w-[--radix-popper-anchor-width]">
+              <DropdownMenuContent
+                side={sidebarState === 'expanded' ? 'top' : 'right'}
+                className="w-[--radix-popper-anchor-width]"
+              >
                 <DropdownMenuItem>
                   <span>Account</span>
                 </DropdownMenuItem>

@@ -4,7 +4,7 @@ import { fontFamily } from 'tailwindcss/defaultTheme'
 
 export default {
   content: ['./client/**/*!(*.stories|*.spec|*.test).{ts,tsx}'],
-  darkMode: ['class', 'class'],
+  darkMode: 'class',
   theme: {
     extend: {
       fontFamily: {
