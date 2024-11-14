@@ -73,6 +73,7 @@
         "@radix-ui/react-tooltip": "^1.1.4",
         "@simplewebauthn/browser": "^11.0.0",
         "@simplewebauthn/server": "^11.0.0",
+        "@tanstack/react-table": "^8.20.5",
         "class-variance-authority": "^0.7.0",
         "cli-table3": "^0.6.5",
         "cmdk": "^1.0.4",

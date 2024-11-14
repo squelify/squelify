@@ -1,5 +1,5 @@
 import type { Insertable, Selectable, Updateable } from 'kysely'
-import type { ColumnType, Generated } from 'kysely'
+import type { ColumnType } from 'kysely'
 import { z } from 'zod'
 
 // Audit log retention in seconds

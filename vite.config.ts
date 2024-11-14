@@ -33,7 +33,10 @@ export default defineConfig({
     exclude: ['react/jsx-runtime'],
   },
   resolve: {
-    alias: [{ find: '#', replacement: resolve('client') }],
+    alias: [
+      { find: '#', replacement: resolve('client') },
+      { find: '~', replacement: resolve('server') },
+    ],
   },
   build: {
     manifest: true,

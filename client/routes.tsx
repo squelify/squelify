@@ -4,6 +4,7 @@ import { Navigate, useRoutes } from 'react-router-dom'
 import AppLayout from '#/layouts/app-layout'
 import AuthLayout from '#/layouts/auth-layout'
 
+import AuditLogsPage from '#/pages/audit-logs/page'
 import SignInPage from '#/pages/auth/login'
 import ForgotPasswordPage from '#/pages/auth/password/forgot'
 import ResetPasswordPage from '#/pages/auth/password/reset'
@@ -60,7 +61,7 @@ const Routes: RouteObject[] = [
       route('/system', {
         children: [
           { index: true, element: <Navigate to="/system/settings" replace /> },
-          { path: '/system/audit-logs', element: <WorkInProgress /> },
+          { path: '/system/audit-logs', element: <AuditLogsPage /> },
           { path: '/system/webhooks', element: <WorkInProgress /> },
           { path: '/system/api-keys', element: <WorkInProgress /> },
           { path: '/system/settings', element: <WorkInProgress /> },

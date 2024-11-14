@@ -24,7 +24,7 @@ export default function AppCommand({ logout }: { logout: () => void }) {
     <>
       <Button
         onClick={() => setOpen(!open)}
-        className="flex w-full select-none justify-between rounded-lg border border-input bg-background py-1.5 pr-2 pl-2.5 text-muted-foreground text-xs shadow-none transition-colors"
+        className="flex w-full select-none justify-between rounded-lg border border-input bg-background/10 py-1.5 pr-2 pl-2.5 text-muted-foreground text-xs shadow-none transition-colors hover:bg-secondary/60"
         variant="secondary"
       >
         <span>Open command</span>

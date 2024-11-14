@@ -53,9 +53,10 @@ export default function AppSidebar({ logout }: { logout: () => void }) {
       <SidebarHeader>
         <SidebarMenu>
           <SidebarMenuItem>
-            <SidebarMenuButton size="lg">
-              <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-sidebar-primary text-sidebar-primary-foreground">
-                <Lucide.GalleryVerticalEnd className="size-4" />
+            <SidebarMenuButton size="lg" className="pointer-events-none select-none">
+              <div className="flex aspect-square size-8 items-center justify-center bg-transparent p-0.5">
+                <img src="/favicon.svg" className="size-8" alt="logo" />
+                {/* <Lucide.GalleryVerticalEnd className="size-4" /> */}
               </div>
               <div
                 className={clx(
@@ -70,8 +71,10 @@ export default function AppSidebar({ logout }: { logout: () => void }) {
           </SidebarMenuItem>
         </SidebarMenu>
 
-        <SidebarGroup className={clx(sidebarState === 'expanded' ? 'flex' : 'hidden')}>
-          <SidebarGroupContent className="-mx-0.5">
+        <SidebarGroup
+          className={clx(sidebarState === 'expanded' ? 'flex' : 'hidden', 'w-full p-0')}
+        >
+          <SidebarGroupContent>
             <AppCommand logout={logout} />
           </SidebarGroupContent>
         </SidebarGroup>
