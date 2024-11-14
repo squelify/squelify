@@ -24,7 +24,7 @@ export default class AuthService {
   }
 
   signout(opts: z.infer<typeof SignoutRequestSchema>) {
-    return this.apiClient._request<ApiResponse<any>>('/auth/signout', {
+    return this.apiClient._request<ApiResponse>('/auth/signout', {
       method: 'POST',
       body: JSON.stringify(opts),
     })

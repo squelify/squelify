@@ -17,7 +17,7 @@ export default defineNitroConfig({
   serveStatic: 'node',
   minify: isProduction,
   sourceMap: isDevelopment,
-  compatibilityDate: '2024-11-02',
+  compatibilityDate: '2024-11-08',
   appConfigFiles: ['~/app.config'],
 
   handlers: [

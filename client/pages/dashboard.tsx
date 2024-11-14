@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { useOutletContext } from 'react-router-dom'
 import { useSEOMeta } from '#/context/hooks/use-seo-meta'
-import type { AppContextType } from '#/context/providers/app-provider'
+import type { AppContextType } from '#/providers/app-provider'
 
 export default function Component() {
   useSEOMeta('Dashboard')

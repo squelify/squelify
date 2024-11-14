@@ -9,80 +9,80 @@ importers:
   .:
     dependencies:
       '@hookform/resolvers':
-        specifier: 3.9.1
+        specifier: ^3.9.1
         version: 3.9.1(react-hook-form@7.53.2(react@18.3.1))
       '@libsql/kysely-libsql':
-        specifier: 0.4.1
+        specifier: ^0.4.1
         version: 0.4.1(kysely@0.27.4)
       '@nanostores/persistent':
-        specifier: 0.10.2
+        specifier: ^0.10.2
         version: 0.10.2(nanostores@0.11.3)
       '@nanostores/react':
-        specifier: 0.8.0
+        specifier: ^0.8.0
         version: 0.8.0(nanostores@0.11.3)(react@18.3.1)
       '@noble/hashes':
         specifier: ^1.5.0
         version: 1.5.0
       '@radix-ui/react-accordion':
-        specifier: 1.2.1
+        specifier: ^1.2.1
         version: 1.2.1(@types/react-dom@18.3.1)(@types/react@18.3.12)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@radix-ui/react-alert-dialog':
-        specifier: 1.1.2
+        specifier: ^1.1.2
         version: 1.1.2(@types/react-dom@18.3.1)(@types/react@18.3.12)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@radix-ui/react-aspect-ratio':
-        specifier: 1.1.0
+        specifier: ^1.1.0
         version: 1.1.0(@types/react-dom@18.3.1)(@types/react@18.3.12)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@radix-ui/react-avatar':
-        specifier: 1.1.1
+        specifier: ^1.1.1
         version: 1.1.1(@types/react-dom@18.3.1)(@types/react@18.3.12)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@radix-ui/react-checkbox':
-        specifier: 1.1.2
+        specifier: ^1.1.2
         version: 1.1.2(@types/react-dom@18.3.1)(@types/react@18.3.12)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@radix-ui/react-collapsible':
-        specifier: 1.1.1
+        specifier: ^1.1.1
         version: 1.1.1(@types/react-dom@18.3.1)(@types/react@18.3.12)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@radix-ui/react-dialog':
-        specifier: 1.1.2
+        specifier: ^1.1.2
         version: 1.1.2(@types/react-dom@18.3.1)(@types/react@18.3.12)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@radix-ui/react-dropdown-menu':
-        specifier: 2.1.2
+        specifier: ^2.1.2
         version: 2.1.2(@types/react-dom@18.3.1)(@types/react@18.3.12)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@radix-ui/react-icons':
-        specifier: 1.3.1
+        specifier: ^1.3.1
         version: 1.3.1(react@18.3.1)
       '@radix-ui/react-label':
-        specifier: 2.1.0
+        specifier: ^2.1.0
         version: 2.1.0(@types/react-dom@18.3.1)(@types/react@18.3.12)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@radix-ui/react-popover':
-        specifier: 1.1.2
+        specifier: ^1.1.2
         version: 1.1.2(@types/react-dom@18.3.1)(@types/react@18.3.12)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@radix-ui/react-progress':
-        specifier: 1.1.0
+        specifier: ^1.1.0
         version: 1.1.0(@types/react-dom@18.3.1)(@types/react@18.3.12)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@radix-ui/react-radio-group':
-        specifier: 1.2.1
+        specifier: ^1.2.1
         version: 1.2.1(@types/react-dom@18.3.1)(@types/react@18.3.12)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@radix-ui/react-scroll-area':
-        specifier: 1.2.0
-        version: 1.2.0(@types/react-dom@18.3.1)(@types/react@18.3.12)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+        specifier: ^1.2.1
+        version: 1.2.1(@types/react-dom@18.3.1)(@types/react@18.3.12)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@radix-ui/react-select':
-        specifier: 2.1.2
+        specifier: ^2.1.2
         version: 2.1.2(@types/react-dom@18.3.1)(@types/react@18.3.12)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@radix-ui/react-separator':
-        specifier: 1.1.0
+        specifier: ^1.1.0
         version: 1.1.0(@types/react-dom@18.3.1)(@types/react@18.3.12)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@radix-ui/react-slot':
-        specifier: 1.1.0
+        specifier: ^1.1.0
         version: 1.1.0(@types/react@18.3.12)(react@18.3.1)
       '@radix-ui/react-switch':
-        specifier: 1.1.1
+        specifier: ^1.1.1
         version: 1.1.1(@types/react-dom@18.3.1)(@types/react@18.3.12)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@radix-ui/react-tabs':
-        specifier: 1.1.1
+        specifier: ^1.1.1
         version: 1.1.1(@types/react-dom@18.3.1)(@types/react@18.3.12)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@radix-ui/react-tooltip':
-        specifier: 1.1.3
-        version: 1.1.3(@types/react-dom@18.3.1)(@types/react@18.3.12)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+        specifier: ^1.1.4
+        version: 1.1.4(@types/react-dom@18.3.1)(@types/react@18.3.12)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@simplewebauthn/browser':
         specifier: ^11.0.0
         version: 11.0.0
@@ -90,43 +90,46 @@ importers:
         specifier: ^11.0.0
         version: 11.0.0
       class-variance-authority:
-        specifier: 0.7.0
+        specifier: ^0.7.0
         version: 0.7.0
       cli-table3:
         specifier: ^0.6.5
         version: 0.6.5
       consola:
-        specifier: 3.2.3
+        specifier: ^3.2.3
         version: 3.2.3
       input-otp:
-        specifier: 1.4.1
+        specifier: ^1.4.1
         version: 1.4.1(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       jose:
-        specifier: 5.9.6
+        specifier: ^5.9.6
         version: 5.9.6
       jsx-email:
-        specifier: 2.1.4
+        specifier: ^2.1.4
         version: 2.1.4(@jsx-email/app-preview@2.0.2(@types/node@22.8.6)(@types/react-dom@18.3.1)(@types/react@18.3.12)(react@18.3.1)(terser@5.36.0))(@jsx-email/plugin-inline@1.0.1)(@jsx-email/plugin-minify@1.0.1)(@jsx-email/plugin-pretty@1.0.0)(@types/node@22.8.6)(@types/react@18.3.12)(react@18.3.1)(terser@5.36.0)
       kysely:
-        specifier: 0.27.4
+        specifier: ^0.27.4
         version: 0.27.4
       lucide-react:
-        specifier: 0.456.0
+        specifier: ^0.456.0
         version: 0.456.0(react@18.3.1)
       make-dir:
         specifier: ^5.0.0
         version: 5.0.0
       nanostores:
-        specifier: 0.11.3
+        specifier: ^0.11.3
         version: 0.11.3
       next-themes:
-        specifier: 0.4.3
+        specifier: ^0.4.3
         version: 0.4.3(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       nodemailer:
-        specifier: 6.9.16
+        specifier: ^6.9.16
         version: 6.9.16
+      nuqs:
+        specifier: ^2.1.2
+        version: 2.1.2(react-router-dom@6.28.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react@18.3.1)
       ofetch:
-        specifier: 1.4.1
+        specifier: ^1.4.1
         version: 1.4.1
       otpauth:
         specifier: ^9.3.4
@@ -135,49 +138,49 @@ importers:
         specifier: 18.3.1
         version: 18.3.1
       react-cookie:
-        specifier: 7.2.2
+        specifier: ^7.2.2
         version: 7.2.2(react@18.3.1)
       react-dom:
         specifier: 18.3.1
         version: 18.3.1(react@18.3.1)
       react-error-boundary:
-        specifier: 4.1.2
+        specifier: ^4.1.2
         version: 4.1.2(react@18.3.1)
       react-hook-form:
-        specifier: 7.53.2
+        specifier: ^7.53.2
         version: 7.53.2(react@18.3.1)
       react-router-dom:
-        specifier: 6.28.0
+        specifier: ^6.28.0
         version: 6.28.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       redactyl.js:
-        specifier: 1.6.0
+        specifier: ^1.6.0
         version: 1.6.0
       sonner:
-        specifier: 1.7.0
+        specifier: ^1.7.0
         version: 1.7.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       std-env:
-        specifier: 3.8.0
+        specifier: ^3.8.0
         version: 3.8.0
       typeid-js:
-        specifier: 1.1.0
+        specifier: ^1.1.0
         version: 1.1.0
       ua-parser-js:
-        specifier: 1.0.39
+        specifier: ^1.0.39
         version: 1.0.39
       universal-cookie:
-        specifier: 7.2.2
+        specifier: ^7.2.2
         version: 7.2.2
       unstorage:
-        specifier: 1.13.1
+        specifier: ^1.13.1
         version: 1.13.1(ioredis@5.4.1)
       uqr:
         specifier: ^0.1.2
         version: 0.1.2
       vaul:
-        specifier: 1.1.1
+        specifier: ^1.1.1
         version: 1.1.1(@types/react-dom@18.3.1)(@types/react@18.3.12)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       zod:
-        specifier: 3.23.8
+        specifier: ^3.23.8
         version: 3.23.8
     devDependencies:
       '@biomejs/biome':
@@ -187,31 +190,31 @@ importers:
         specifier: ^8.3.4
         version: 8.3.4
       '@tailwindcss/aspect-ratio':
-        specifier: 0.4.2
+        specifier: ^0.4.2
         version: 0.4.2(tailwindcss@3.4.14)
       '@tailwindcss/forms':
-        specifier: 0.5.9
+        specifier: ^0.5.9
         version: 0.5.9(tailwindcss@3.4.14)
       '@tailwindcss/typography':
-        specifier: 0.5.15
+        specifier: ^0.5.15
         version: 0.5.15(tailwindcss@3.4.14)
       '@types/nodemailer':
-        specifier: 6.4.16
+        specifier: ^6.4.16
         version: 6.4.16
       '@types/react':
-        specifier: ^18.3.12
+        specifier: 18.3.12
         version: 18.3.12
       '@types/react-dom':
         specifier: 18.3.1
         version: 18.3.1
       '@types/ua-parser-js':
-        specifier: 0.7.39
+        specifier: ^0.7.39
         version: 0.7.39
       '@vitejs/plugin-react':
-        specifier: 4.3.3
+        specifier: ^4.3.3
         version: 4.3.3(vite@5.4.11(@types/node@22.8.6)(terser@5.36.0))
       autoprefixer:
-        specifier: 10.4.20
+        specifier: ^10.4.20
         version: 10.4.20(postcss@8.4.49)
       chalk:
         specifier: ^5.3.0
@@ -220,55 +223,55 @@ importers:
         specifier: ^0.1.6
         version: 0.1.6
       clsx:
-        specifier: 2.1.1
+        specifier: ^2.1.1
         version: 2.1.1
       dotenv:
-        specifier: 16.4.5
+        specifier: ^16.4.5
         version: 16.4.5
       git-cliff:
-        specifier: 2.6.1
+        specifier: ^2.6.1
         version: 2.6.1
       lefthook:
-        specifier: 1.8.2
+        specifier: ^1.8.2
         version: 1.8.2
       nitropack:
-        specifier: 2.10.4
+        specifier: ^2.10.4
         version: 2.10.4(@libsql/client@0.14.0)(typescript@5.6.3)
       npm-check-updates:
-        specifier: 17.1.10
-        version: 17.1.10
+        specifier: ^17.1.11
+        version: 17.1.11
       postcss:
-        specifier: 8.4.49
+        specifier: ^8.4.49
         version: 8.4.49
       strip-ansi:
         specifier: ^7.1.0
         version: 7.1.0
       tailwind-debug-breakpoints:
-        specifier: 1.0.3
+        specifier: ^1.0.3
         version: 1.0.3(tailwindcss@3.4.14)
       tailwind-merge:
-        specifier: 2.5.4
+        specifier: ^2.5.4
         version: 2.5.4
       tailwindcss:
-        specifier: 3.4.14
+        specifier: ^3.4.14
         version: 3.4.14
       tailwindcss-animate:
-        specifier: 1.0.7
+        specifier: ^1.0.7
         version: 1.0.7(tailwindcss@3.4.14)
       tailwindcss-motion:
-        specifier: 0.2.7
+        specifier: ^0.2.7
         version: 0.2.7(tailwindcss@3.4.14)
       tsx:
-        specifier: 4.19.2
+        specifier: ^4.19.2
         version: 4.19.2
       typescript:
-        specifier: 5.6.3
+        specifier: ^5.6.3
         version: 5.6.3
       vite:
-        specifier: 5.4.11
+        specifier: ^5.4.11
         version: 5.4.11(@types/node@22.8.6)(terser@5.36.0)
       vite-tsconfig-paths:
-        specifier: 5.1.2
+        specifier: ^5.1.2
         version: 5.1.2(typescript@5.6.3)(vite@5.4.11(@types/node@22.8.6)(terser@5.36.0))
 
 packages:
@@ -1628,8 +1631,8 @@ packages:
       '@types/react-dom':
         optional: true
 
-  '@radix-ui/react-scroll-area@1.2.0':
-    resolution: {integrity: sha512-q2jMBdsJ9zB7QG6ngQNzNwlvxLQqONyL58QbEGwuyRZZb/ARQwk3uQVbCF7GvQVOtV6EU/pDxAw3zRzJZI3rpQ==}
+  '@radix-ui/react-scroll-area@1.2.1':
+    resolution: {integrity: sha512-FnM1fHfCtEZ1JkyfH/1oMiTcFBQvHKl4vD9WnpwkLgtF+UmnXMCad6ECPTaAjcDjam+ndOEJWgHyKDGNteWSHw==}
     peerDependencies:
       '@types/react': '*'
       '@types/react-dom': '*'
@@ -1728,8 +1731,8 @@ packages:
       '@types/react-dom':
         optional: true
 
-  '@radix-ui/react-tooltip@1.1.3':
-    resolution: {integrity: sha512-Z4w1FIS0BqVFI2c1jZvb/uDVJijJjJ2ZMuPV81oVgTZ7g3BZxobplnMVvXtFWgtozdvYJ+MFWtwkM5S2HnAong==}
+  '@radix-ui/react-tooltip@1.1.4':
+    resolution: {integrity: sha512-QpObUH/ZlpaO4YgHSaYzrLO2VuO+ZBFFgGzjMUPwtiYnAzzNNDPJeEGRrT7qNOrWm/Jr08M1vlp+vTHtnSQ0Uw==}
     peerDependencies:
       '@types/react': '*'
       '@types/react-dom': '*'
@@ -3502,6 +3505,9 @@ packages:
     resolution: {integrity: sha512-bAxsR8BVfj60DWXHE3u30oHzfl4G7khkSuPW+qvpd7jFRHm7dLxOjUk1EHACJ/hxLY8phGJ0YhYHZo7jil7Qdg==}
     engines: {node: '>= 8'}
 
+  mitt@3.0.1:
+    resolution: {integrity: sha512-vKivATfr97l2/QBCYAkXYDbrIWPM2IIKEl7YPhjCvKlG3kE2gm+uBo6nEXK3M5/Ffh/FLpKExzOQ3JJoJGFKBw==}
+
   mkdirp@1.0.4:
     resolution: {integrity: sha512-vVqVZQyf3WLx2Shd0qJ9xuvqgAyKPLAiqITEtqW0oIUjzo3PePDd6fW9iFz30ef7Ysp/oiWqbhszeGWW2T6Gzw==}
     engines: {node: '>=10'}
@@ -3608,8 +3614,8 @@ packages:
     resolution: {integrity: sha512-bdok/XvKII3nUpklnV6P2hxtMNrCboOjAcyBuQnWEhO665FwrSNRxU+AqpsyvO6LgGYPspN+lu5CLtw4jPRKNA==}
     engines: {node: '>=0.10.0'}
 
-  npm-check-updates@17.1.10:
-    resolution: {integrity: sha512-GnN6KbUzC8BpwsRYJntuumgCiagZ0+xxorvUJM9m06d7AlyK9lm3iFsAsnXF3VAZZzpD5QjZvWBwNze61Vywkw==}
+  npm-check-updates@17.1.11:
+    resolution: {integrity: sha512-TR2RuGIH7P3Qrb0jfdC/nT7JWqXPKjDlxuNQt3kx4oNVf1Pn5SBRB7KLypgYZhruivJthgTtfkkyK4mz342VjA==}
     engines: {node: ^18.18.0 || >=20.0.0, npm: '>=8.12.1'}
     hasBin: true
 
@@ -3623,6 +3629,21 @@ packages:
 
   nth-check@2.1.1:
     resolution: {integrity: sha512-lqjrjmaOoAnWfMmBPL+XNnynZh2+swxiX3WUE0s4yEHI6m+AwrK2UZOimIRl3X/4QctVqS8AiZjFqyOGrMXb/w==}
+
+  nuqs@2.1.2:
+    resolution: {integrity: sha512-WL9Qb6Pn8JPLCTE04l0CaRjeVrEdybEuLuc7IMS/H6HJnxjO2f63i1sd6HkU3ntEY6rc05M1PL8/ZRvdBC7pgw==}
+    peerDependencies:
+      '@remix-run/react': '>= 2'
+      next: '>= 14.2.0'
+      react: '>= 18.2.0'
+      react-router-dom: '>= 6'
+    peerDependenciesMeta:
+      '@remix-run/react':
+        optional: true
+      next:
+        optional: true
+      react-router-dom:
+        optional: true
 
   nypm@0.3.12:
     resolution: {integrity: sha512-D3pzNDWIvgA+7IORhD/IuWzEk4uXv6GsgOxiid4UU3h9oq5IqV1KtPDi63n4sZJ/xcWlr88c0QM2RgN5VbOhFA==}
@@ -5930,7 +5951,7 @@ snapshots:
       '@types/react': 18.3.12
       '@types/react-dom': 18.3.1
 
-  '@radix-ui/react-scroll-area@1.2.0(@types/react-dom@18.3.1)(@types/react@18.3.12)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)':
+  '@radix-ui/react-scroll-area@1.2.1(@types/react-dom@18.3.1)(@types/react@18.3.12)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)':
     dependencies:
       '@radix-ui/number': 1.1.0
       '@radix-ui/primitive': 1.1.0
@@ -6049,7 +6070,7 @@ snapshots:
       '@types/react': 18.3.12
       '@types/react-dom': 18.3.1
 
-  '@radix-ui/react-tooltip@1.1.3(@types/react-dom@18.3.1)(@types/react@18.3.12)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)':
+  '@radix-ui/react-tooltip@1.1.4(@types/react-dom@18.3.1)(@types/react@18.3.12)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)':
     dependencies:
       '@radix-ui/primitive': 1.1.0
       '@radix-ui/react-compose-refs': 1.1.0(@types/react@18.3.12)(react@18.3.1)
@@ -7929,6 +7950,8 @@ snapshots:
       minipass: 3.3.6
       yallist: 4.0.0
 
+  mitt@3.0.1: {}
+
   mkdirp@1.0.4: {}
 
   mlly@1.7.2:
@@ -8090,7 +8113,7 @@ snapshots:
 
   normalize-range@0.1.2: {}
 
-  npm-check-updates@17.1.10: {}
+  npm-check-updates@17.1.11: {}
 
   npm-run-path@5.3.0:
     dependencies:
@@ -8106,6 +8129,13 @@ snapshots:
   nth-check@2.1.1:
     dependencies:
       boolbase: 1.0.0
+
+  nuqs@2.1.2(react-router-dom@6.28.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react@18.3.1):
+    dependencies:
+      mitt: 3.0.1
+      react: 18.3.1
+    optionalDependencies:
+      react-router-dom: 6.28.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
 
   nypm@0.3.12:
     dependencies:

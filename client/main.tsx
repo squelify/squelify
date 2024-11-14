@@ -5,7 +5,7 @@ import * as React from 'react'
 import ReactDOM from 'react-dom/client'
 import { BrowserRouter } from 'react-router-dom'
 import { isDevelopment } from 'std-env'
-import AppProvider from '#/context/providers/app-provider'
+import AppProvider from '#/providers/app-provider'
 import AppRoutes from '#/routes'
 
 const rootElement = document.getElementById('root')

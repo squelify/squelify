@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useState } from 'react'
-import { useSEOMetaContext } from '#/context/providers/seo-provider'
+import { useSEOMetaContext } from '#/providers/seo-provider'
 
 interface SEOMetaOptions {
   separator?: string | null

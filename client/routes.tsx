@@ -1,19 +1,16 @@
 import type { RouteObject } from 'react-router-dom'
 import { Navigate, useRoutes } from 'react-router-dom'
 
-// Application layouts
 import AppLayout from '#/layouts/app-layout'
 import AuthLayout from '#/layouts/auth-layout'
 
-// Authentication pages
 import SignInPage from '#/pages/auth/login'
 import ForgotPasswordPage from '#/pages/auth/password/forgot'
 import ResetPasswordPage from '#/pages/auth/password/reset'
 import SignUpPage from '#/pages/auth/signup'
+import DashboardPage from '#/pages/dashboard'
 import InternalError from '#/pages/error/internal-error'
 import NotFound from '#/pages/error/not-found'
-
-import DashboardPage from '#/pages/dashboard'
 
 /**
  * Utility function to create a route object with the provided path and other properties.
@@ -22,7 +19,7 @@ import DashboardPage from '#/pages/dashboard'
  * @param props - Additional properties for the route object.
  * @returns A new route object with the provided path and properties.
  */
-const Route = (path: string, { ...props }: RouteObject) => ({ path, ...props })
+const route = (path: string, { ...props }: RouteObject) => ({ path, ...props })
 
 /**
  * Using dynamic import for the pages to reduce the bundle size.
@@ -33,7 +30,7 @@ const Route = (path: string, { ...props }: RouteObject) => ({ path, ...props })
  * @see https://reactrouter.com/en/route/lazy#statically-defined-properties
  */
 const Routes: RouteObject[] = [
-  Route('/', {
+  route('/', {
     element: <AppLayout />,
     children: [
       { index: true, element: <Navigate to="/dashboard" replace /> },
@@ -45,7 +42,7 @@ const Routes: RouteObject[] = [
     ],
     errorElement: <InternalError />,
   }),
-  Route('/', {
+  route('/', {
     element: <AuthLayout />,
     children: [
       { path: 'login', element: <SignInPage /> },
@@ -54,7 +51,7 @@ const Routes: RouteObject[] = [
       { path: 'reset-password', element: <ResetPasswordPage /> },
     ],
   }),
-  Route('*', { element: <NotFound />, errorElement: <InternalError /> }),
+  route('*', { element: <NotFound />, errorElement: <InternalError /> }),
 ]
 
 /**
