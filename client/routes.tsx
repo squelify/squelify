@@ -35,11 +35,7 @@ const Routes: RouteObject[] = [
     element: <AppLayout />,
     children: [
       { index: true, element: <Navigate to="/dashboard" replace /> },
-      {
-        path: 'dashboard',
-        element: <DashboardPage />,
-        // lazy: () => import('#/pages/dashboard'),
-      },
+      { path: '/dashboard', element: <DashboardPage /> },
 
       // User Management
       route('/users', {
@@ -76,10 +72,10 @@ const Routes: RouteObject[] = [
   route('/', {
     element: <AuthLayout />,
     children: [
-      { path: 'login', element: <SignInPage /> },
-      { path: 'signup', element: <SignUpPage /> },
-      { path: 'forgot-password', element: <ForgotPasswordPage /> },
-      { path: 'reset-password', element: <ResetPasswordPage /> },
+      { path: '/login', element: <SignInPage /> },
+      { path: '/signup', element: <SignUpPage /> },
+      { path: '/forgot-password', element: <ForgotPasswordPage /> },
+      { path: '/reset-password', element: <ResetPasswordPage /> },
     ],
   }),
   route('*', { element: <NotFound />, errorElement: <InternalError /> }),

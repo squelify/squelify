@@ -1,11 +1,13 @@
-// Alternatively you can use https://uiball.com/ldrs/
+/* Alternatively you can use https://uiball.com/ldrs */
+
 const SVGLoader = () => (
   <svg
     width={40}
     height={30}
     viewBox="0 0 120 30"
     xmlns="http://www.w3.org/2000/svg"
-    fill="#ffffff"
+    className="text-primary"
+    fill="currentColor"
   >
     <circle cx={15} cy={15} r={15}>
       <animate
@@ -78,10 +80,10 @@ const SVGLoader = () => (
 
 export default function PageLoader() {
   return (
-    <div className="flex size-full min-h-screen flex-col items-center justify-center bg-brand-900 p-4 py-12 sm:px-6 lg:px-8 dark:bg-gray-900">
+    <div className="flex size-full min-h-screen flex-col items-center justify-center bg-background p-4 py-12 sm:px-6 lg:px-8">
       <div className="flex flex-col items-center justify-center space-y-4 sm:mx-auto sm:w-full sm:max-w-lg">
-        <h1 className="mt-3 text-center font-medium text-white">Loading...</h1>
-        <p className="text-center text-brand-50 text-sm leading-6 tracking-tight">
+        <h1 className="mt-3 text-center font-medium text-foreground">Loading...</h1>
+        <p className="text-center text-muted-foreground text-sm leading-6 tracking-tight">
           Does this take longer than expected? <br />
           Try clearing your browser's cache or check if you have an ad blocker enabled!
         </p>
