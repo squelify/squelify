@@ -1,18 +1,15 @@
 import * as Lucide from 'lucide-react'
 import { DropdownMenuContent, DropdownMenuItem } from '#/components/base-ui/dropdown-menu'
 import { DropdownMenu, DropdownMenuTrigger } from '#/components/base-ui/dropdown-menu'
-import {
-  SidebarFooter,
-  SidebarHeader,
-  SidebarInput,
-  SidebarTrigger,
-} from '#/components/base-ui/sidebar'
+import { Label } from '#/components/base-ui/label'
+import { SidebarInput, SidebarTrigger } from '#/components/base-ui/sidebar'
+import { SidebarFooter, SidebarHeader } from '#/components/base-ui/sidebar'
 import { SidebarGroup, SidebarGroupContent, SidebarGroupLabel } from '#/components/base-ui/sidebar'
 import { SidebarMenu, SidebarMenuButton, SidebarMenuItem } from '#/components/base-ui/sidebar'
 import { Sidebar, SidebarContent, useSidebar } from '#/components/base-ui/sidebar'
 import { Link } from '#/components/link'
 import { clx } from '#/utils/helper'
-import { Label } from '../components/base-ui/label'
+import AppCommand from './app-command'
 
 export default function AppSidebar({ logout }: { logout: () => void }) {
   const { state: sidebarState } = useSidebar()
@@ -71,18 +68,11 @@ export default function AppSidebar({ logout }: { logout: () => void }) {
           </SidebarMenuItem>
         </SidebarMenu>
 
-        {/* Search Form */}
-        <form className="mt-2 mb-1">
-          <SidebarGroup className="py-0">
-            <SidebarGroupContent className="relative">
-              <Label htmlFor="search" className="sr-only">
-                Search
-              </Label>
-              <SidebarInput id="search" placeholder="Search the docs..." className="pl-8" />
-              <Lucide.Search className="-translate-y-1/2 pointer-events-none absolute top-1/2 left-2 size-4 select-none opacity-50" />
-            </SidebarGroupContent>
-          </SidebarGroup>
-        </form>
+        <SidebarGroup>
+          <SidebarGroupContent className="-mx-0.5">
+            <AppCommand logout={logout} />
+          </SidebarGroupContent>
+        </SidebarGroup>
       </SidebarHeader>
 
       {/* Sidebar Content */}

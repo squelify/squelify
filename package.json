@@ -75,6 +75,7 @@
         "@simplewebauthn/server": "^11.0.0",
         "class-variance-authority": "^0.7.0",
         "cli-table3": "^0.6.5",
+        "cmdk": "^1.0.4",
         "consola": "^3.2.3",
         "input-otp": "^1.4.1",
         "jose": "^5.9.6",
