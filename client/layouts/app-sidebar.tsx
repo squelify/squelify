@@ -14,7 +14,7 @@ import AppCommand from './app-command'
 
 export default function AppSidebar({ logout }: { logout: () => void }) {
   const { pathname } = useLocation()
-  const { state: sidebarState } = useSidebar()
+  const { state: sidebarState, setOpen, isMobile } = useSidebar()
 
   const menuGroups = [
     {
@@ -85,7 +85,9 @@ export default function AppSidebar({ logout }: { logout: () => void }) {
         <TooltipProvider>
           {menuGroups.map((group) => (
             <SidebarGroup key={group.label}>
-              <SidebarGroupLabel className={group.label === 'Main' ? 'hidden' : 'flex'}>
+              <SidebarGroupLabel
+                className={clx(group.label === 'Main' ? 'hidden' : 'flex', 'pointer-events-none')}
+              >
                 {group.label}
               </SidebarGroupLabel>
               <SidebarGroupContent>
@@ -101,13 +103,23 @@ export default function AppSidebar({ logout }: { logout: () => void }) {
                               )}
                               asChild
                             >
-                              <Link href={item.url}>
+                              <Link
+                                href={item.url}
+                                onClick={() => {
+                                  if (item.url.startsWith('/content/collections')) {
+                                    setOpen(false)
+                                  } else if (!isMobile) {
+                                    // desktop breakpoint
+                                    setOpen(true)
+                                  }
+                                }}
+                              >
                                 <item.icon />
                                 <span>{item.title}</span>
                               </Link>
                             </SidebarMenuButton>
                           </TooltipTrigger>
-                          <TooltipContent side="right" className="rounded-lg bg-black">
+                          <TooltipContent side="right">
                             <p>{item.title}</p>
                           </TooltipContent>
                         </Tooltip>
@@ -118,7 +130,17 @@ export default function AppSidebar({ logout }: { logout: () => void }) {
                           )}
                           asChild
                         >
-                          <Link href={item.url}>
+                          <Link
+                            href={item.url}
+                            onClick={() => {
+                              if (item.url.startsWith('/content/collections')) {
+                                setOpen(false)
+                              } else if (!isMobile) {
+                                // desktop breakpoint
+                                setOpen(true)
+                              }
+                            }}
+                          >
                             <item.icon />
                             <span>{item.title}</span>
                           </Link>
