@@ -48,8 +48,8 @@ importers:
         specifier: ^2.1.2
         version: 2.1.2(@types/react-dom@18.3.1)(@types/react@18.3.12)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@radix-ui/react-icons':
-        specifier: ^1.3.1
-        version: 1.3.1(react@18.3.1)
+        specifier: ^1.3.2
+        version: 1.3.2(react@18.3.1)
       '@radix-ui/react-label':
         specifier: ^2.1.0
         version: 2.1.0(@types/react-dom@18.3.1)(@types/react@18.3.12)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
@@ -92,9 +92,6 @@ importers:
       '@tanstack/react-table':
         specifier: ^8.20.5
         version: 8.20.5(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
-      '@tanstack/react-virtual':
-        specifier: ^3.10.9
-        version: 3.10.9(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       class-variance-authority:
         specifier: ^0.7.0
         version: 0.7.0
@@ -114,14 +111,14 @@ importers:
         specifier: ^5.9.6
         version: 5.9.6
       jsx-email:
-        specifier: ^2.1.4
-        version: 2.1.4(@jsx-email/app-preview@2.0.2(@types/node@22.8.6)(@types/react-dom@18.3.1)(@types/react@18.3.12)(react@18.3.1)(terser@5.36.0))(@jsx-email/plugin-inline@1.0.1)(@jsx-email/plugin-minify@1.0.1)(@jsx-email/plugin-pretty@1.0.0)(@types/node@22.8.6)(@types/react@18.3.12)(react@18.3.1)(terser@5.36.0)
+        specifier: ^2.1.5
+        version: 2.1.5(@jsx-email/app-preview@2.0.2(@types/node@22.8.6)(@types/react-dom@18.3.1)(@types/react@18.3.12)(react@18.3.1)(terser@5.36.0))(@jsx-email/plugin-inline@1.0.1)(@jsx-email/plugin-minify@1.0.1)(@jsx-email/plugin-pretty@1.0.0)(@types/node@22.8.6)(@types/react@18.3.12)(react@18.3.1)(terser@5.36.0)
       kysely:
         specifier: ^0.27.4
         version: 0.27.4
       lucide-react:
-        specifier: ^0.456.0
-        version: 0.456.0(react@18.3.1)
+        specifier: ^0.460.0
+        version: 0.460.0(react@18.3.1)
       make-dir:
         specifier: ^5.0.0
         version: 5.0.0
@@ -135,14 +132,14 @@ importers:
         specifier: ^6.9.16
         version: 6.9.16
       nuqs:
-        specifier: ^2.1.2
-        version: 2.1.2(react-router-dom@6.28.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react@18.3.1)
+        specifier: ^2.2.1
+        version: 2.2.1(react-router-dom@6.28.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react@18.3.1)
       ofetch:
         specifier: ^1.4.1
         version: 1.4.1
       otpauth:
-        specifier: ^9.3.4
-        version: 9.3.4
+        specifier: ^9.3.5
+        version: 9.3.5
       react:
         specifier: 18.3.1
         version: 18.3.1
@@ -171,8 +168,8 @@ importers:
         specifier: ^1.1.0
         version: 1.1.0
       ua-parser-js:
-        specifier: ^1.0.39
-        version: 1.0.39
+        specifier: ^2.0.0
+        version: 2.0.0
       unstorage:
         specifier: ^1.13.1
         version: 1.13.1(ioredis@5.4.1)
@@ -194,13 +191,13 @@ importers:
         version: 8.3.4
       '@tailwindcss/aspect-ratio':
         specifier: ^0.4.2
-        version: 0.4.2(tailwindcss@3.4.14)
+        version: 0.4.2(tailwindcss@3.4.15)
       '@tailwindcss/forms':
         specifier: ^0.5.9
-        version: 0.5.9(tailwindcss@3.4.14)
+        version: 0.5.9(tailwindcss@3.4.15)
       '@tailwindcss/typography':
         specifier: ^0.5.15
-        version: 0.5.15(tailwindcss@3.4.14)
+        version: 0.5.15(tailwindcss@3.4.15)
       '@types/nodemailer':
         specifier: ^6.4.16
         version: 6.4.16
@@ -235,8 +232,8 @@ importers:
         specifier: ^2.6.1
         version: 2.6.1
       lefthook:
-        specifier: ^1.8.2
-        version: 1.8.2
+        specifier: ^1.8.4
+        version: 1.8.4
       nitropack:
         specifier: ^2.10.4
         version: 2.10.4(@libsql/client@0.14.0)(typescript@5.6.3)
@@ -251,19 +248,19 @@ importers:
         version: 7.1.0
       tailwind-debug-breakpoints:
         specifier: ^1.0.3
-        version: 1.0.3(tailwindcss@3.4.14)
+        version: 1.0.3(tailwindcss@3.4.15)
       tailwind-merge:
         specifier: ^2.5.4
         version: 2.5.4
       tailwindcss:
-        specifier: ^3.4.14
-        version: 3.4.14
+        specifier: ^3.4.15
+        version: 3.4.15
       tailwindcss-animate:
         specifier: ^1.0.7
-        version: 1.0.7(tailwindcss@3.4.14)
+        version: 1.0.7(tailwindcss@3.4.15)
       tailwindcss-motion:
         specifier: ^0.2.7
-        version: 0.2.7(tailwindcss@3.4.14)
+        version: 0.2.7(tailwindcss@3.4.15)
       tsx:
         specifier: ^4.19.2
         version: 4.19.2
@@ -1451,10 +1448,10 @@ packages:
       '@types/react-dom':
         optional: true
 
-  '@radix-ui/react-icons@1.3.1':
-    resolution: {integrity: sha512-QvYompk0X+8Yjlo/Fv4McrzxohDdM5GgLHyQcPpcsPvlOSXCGFjdbuyGL5dzRbg0GpknAjQJJZzdiRK7iWVuFQ==}
+  '@radix-ui/react-icons@1.3.2':
+    resolution: {integrity: sha512-fyQIhGDhzfc9pK2kH6Pl9c4BDJGfMkPqkyIgYDthyNYoNg3wVhoJMMh19WS4Up/1KMPFVpNsT2q3WmXn2N1m6g==}
     peerDependencies:
-      react: ^16.x || ^17.x || ^18.x || ^19.x
+      react: ^16.x || ^17.x || ^18.x || ^19.0.0 || ^19.0.0-rc
 
   '@radix-ui/react-id@1.1.0':
     resolution: {integrity: sha512-EJUrI8yYh7WOjNOqpoJaf1jlFIH2LvtgAl+YcFqNCa+4hj64ZXmPkAKOFs/ukjz3byN6bdb/AVUqHkI8/uWWMA==}
@@ -2068,18 +2065,9 @@ packages:
       react: '>=16.8'
       react-dom: '>=16.8'
 
-  '@tanstack/react-virtual@3.10.9':
-    resolution: {integrity: sha512-OXO2uBjFqA4Ibr2O3y0YMnkrRWGVNqcvHQXmGvMu6IK8chZl3PrDxFXdGZ2iZkSrKh3/qUYoFqYe+Rx23RoU0g==}
-    peerDependencies:
-      react: ^16.8.0 || ^17.0.0 || ^18.0.0
-      react-dom: ^16.8.0 || ^17.0.0 || ^18.0.0
-
   '@tanstack/table-core@8.20.5':
     resolution: {integrity: sha512-P9dF7XbibHph2PFRz8gfBKEXEY/HJPOhym8CHmjF8y3q5mWpKx9xtZapXQUWCgkqvsK0R46Azuz+VaxD4Xl+Tg==}
     engines: {node: '>=12'}
-
-  '@tanstack/virtual-core@3.10.9':
-    resolution: {integrity: sha512-kBknKOKzmeR7lN+vSadaKWXaLS0SZZG+oqpQ/k80Q6g9REn6zRHS/ZYdrIzHnpHgy/eWs00SujveUN/GJT2qTw==}
 
   '@types/babel__core@7.20.5':
     resolution: {integrity: sha512-qoQprZvz5wQFJwMDqeseRXWv3rqMvhgpbXFfVyWhbx9X47POIA6i/+dXefEmZKoAgOaTdaIgNSMqMIU61yRyzA==}
@@ -2607,6 +2595,9 @@ packages:
   destroy@1.2.0:
     resolution: {integrity: sha512-2sJGJTaXIIaR1w4iJSNoN0hnMY7Gpc/n8D4qSCJw8QqFWXf7cuAgnEHxBpweaVcPevC2l3KpjYCx3NypQQgaJg==}
     engines: {node: '>= 0.8', npm: 1.2.8000 || >= 1.4.16}
+
+  detect-europe-js@0.1.2:
+    resolution: {integrity: sha512-lgdERlL3u0aUdHocoouzT10d9I89VVhk0qNRmll7mXdGfJT1/wqZ2ZLA4oJAjeACPY5fT1wsbq2AT+GkuInsow==}
 
   detect-libc@1.0.3:
     resolution: {integrity: sha512-pGjwhsmsp4kL2RTz08wcOlGN83otlqHeD/Z5T8GXZB+/YcpQ/dgo+lbU8ZsGxV0HIvqqxo9l7mqYwyYMD9bKDg==}
@@ -3161,6 +3152,9 @@ packages:
   is-reference@1.2.1:
     resolution: {integrity: sha512-U82MsXXiFIrjCK4otLT+o2NA2Cd2g5MLoOVXUZjIOhLurrRxpEXzI8O0KZHr3IjLvlAH1kTPYSuqer5T9ZVBKQ==}
 
+  is-standalone-pwa@0.1.1:
+    resolution: {integrity: sha512-9Cbovsa52vNQCjdXOzeQq5CnCbAcRk05aU62K20WO372NrTv0NxibLFCK6lQ4/iZEFdEA3p3t2VNOn8AJ53F5g==}
+
   is-stream@2.0.1:
     resolution: {integrity: sha512-hFoiJiTl63nn+kstHGBtewWSKnQLpyb155KHheA1l39uvtO9nWIop1p3udqPcUd/xbF1VLMO4n7OI6p7RbngDg==}
     engines: {node: '>=8'}
@@ -3247,8 +3241,8 @@ packages:
   jsonfile@6.1.0:
     resolution: {integrity: sha512-5dgndWOriYSm5cnYaJNhalLNDKOqFwyDB/rr1E9ZsGciGvKPs8R2xYGCacuf3z6K1YKDz182fd+fY3cn3pMqXQ==}
 
-  jsx-email@2.1.4:
-    resolution: {integrity: sha512-th5o7TjAjl2fWXtFIZHhB1wSM+voGS6NprdHMzYFQQdBfl+l1on9rPC/psRYaWT4at0SLAlHeEKT1hECkguGww==}
+  jsx-email@2.1.5:
+    resolution: {integrity: sha512-O9jfI9DuSpGt3klbqvQo3Gb70KRg2Irf6CUZZEPQPogYSufDb4YVcn1gG3saR/ei5rLuoJdE8JCRc0t1kqi29Q==}
     engines: {node: '>=18.0.0'}
     hasBin: true
     peerDependencies:
@@ -3280,58 +3274,58 @@ packages:
   leac@0.6.0:
     resolution: {integrity: sha512-y+SqErxb8h7nE/fiEX07jsbuhrpO9lL8eca7/Y1nuWV2moNlXhyd59iDGcRf6moVyDMbmTNzL40SUyrFU/yDpg==}
 
-  lefthook-darwin-arm64@1.8.2:
-    resolution: {integrity: sha512-g41SoFUv8SzHpG1NOPkHUEPhC1tJM5FF3Vo+HESmLmL9cDfd7JncHFPy59rVnC9Q8nOS0rvoik5HTq+3/wcfww==}
+  lefthook-darwin-arm64@1.8.4:
+    resolution: {integrity: sha512-OS5MsU0gvd8LYSpuQCHtmDUqwNrJ/LjCO0LGC1wNepY4OkuVl9DfX+rQ506CVUQYZiGVcwy2/qPOOBjNzA5+wQ==}
     cpu: [arm64]
     os: [darwin]
 
-  lefthook-darwin-x64@1.8.2:
-    resolution: {integrity: sha512-IlCm4PrA/aAZ1MChiExYTbladC87GaxmYHOMHCeChLecqn+lypAuiYLgf7w5r2s3MjH5rbXImfU925NRKi6RXQ==}
+  lefthook-darwin-x64@1.8.4:
+    resolution: {integrity: sha512-QLRsqK9aTMRcVW8qz4pzI2OWnGCEcaEPJlIiFjwstYsS+wfkooxOS0UkfVMjy+QoGgEcki+cxF/FoY7lE7DDtw==}
     cpu: [x64]
     os: [darwin]
 
-  lefthook-freebsd-arm64@1.8.2:
-    resolution: {integrity: sha512-f7AIvuIEXUUR1ZutIFxjYKFDAVUBrdsLm+cbwOCjdfpJh7j2Fjg6nKXbDcglPXlX9Ix+nw9pHbJE2DAgzkI1Vw==}
+  lefthook-freebsd-arm64@1.8.4:
+    resolution: {integrity: sha512-chnQ1m/Cmn9c0sLdk5HL2SToE5LBJv5uQMdH1IGRRcw+nEqWqrMnDXvM75caiJAyjmUGvPH3czKTJDzTFV1E+A==}
     cpu: [arm64]
     os: [freebsd]
 
-  lefthook-freebsd-x64@1.8.2:
-    resolution: {integrity: sha512-DSDL64fRLSNSWOa1y2bGXwXPiwU1fbAXpj63j6jeQ0jkgu6k+3XL/PBXKh80cI6MvCKz/KQKCtIencXZZ2Ua4Q==}
+  lefthook-freebsd-x64@1.8.4:
+    resolution: {integrity: sha512-KQi+WBUdnGLnK0rHOR58kbMH5TDVN1ZjZLu66Pv9FCG7Y7shR1qtaTXu+wmxdRhMvaLeQIXRsUEPjNRC66yMmA==}
     cpu: [x64]
     os: [freebsd]
 
-  lefthook-linux-arm64@1.8.2:
-    resolution: {integrity: sha512-sJ95X+ZH8ayIE7ApiGEq5ZF9KGA+eKiocJU+536bLbAIHw5WjGmv2x3llFqUxH/zAmLe3k542oZ4d84wEO0EGQ==}
+  lefthook-linux-arm64@1.8.4:
+    resolution: {integrity: sha512-CXNcqIskLwTwQARidGdFqmNxpvOU3jsWPK4KA7pq2+QmlWJ64w98ebMvNBoUmRUCXqzmUm7Udf/jpfz2fobewQ==}
     cpu: [arm64]
     os: [linux]
 
-  lefthook-linux-x64@1.8.2:
-    resolution: {integrity: sha512-2eirc61M0WjlbSHamAgGf9iWsQTYz4IT6PAPm66vUaeG34+5D66xFicIV6pK2niRGUOPtNs8Kt4lboKtW+ba5g==}
+  lefthook-linux-x64@1.8.4:
+    resolution: {integrity: sha512-pVNITkFBxUCEtamWSM/res2Gd48+m9YKbNyIBndAuZVC5pKV5aGKZy2DNq6PWUPYiUDPx+7hoAtCJg/tlAiqhw==}
     cpu: [x64]
     os: [linux]
 
-  lefthook-openbsd-arm64@1.8.2:
-    resolution: {integrity: sha512-ZMop7htaSwP3MiL06WHUV36EX05N33o0WzNzC8NO5KEubn8Z74vbXcaq6qYezmgi+erkG6dtTnlbcZy5PFvFIA==}
+  lefthook-openbsd-arm64@1.8.4:
+    resolution: {integrity: sha512-l+i/Dg5X36kYzhpMGSPE3rMbWy1KSytbLB9lY1PmxYb6LRH6iQTYIoxvLabVUwSBPSq8HtIFa50+bvC5+scfVA==}
     cpu: [arm64]
     os: [openbsd]
 
-  lefthook-openbsd-x64@1.8.2:
-    resolution: {integrity: sha512-jXFoxmpYXO6ZafgQJVvk3MYlRgOBJD3n7H8A1Bj1E2yrLzOhKevUKlTNwZTxQdxlnvoo33yD6SjVSujZavEGpw==}
+  lefthook-openbsd-x64@1.8.4:
+    resolution: {integrity: sha512-CqhDDPPX8oHzMLgNi/Reba823DRzj+eMNWQ8axvSiIG+zmG1w20xZH5QSs/mD3tjrND90yfDd90mWMt181qPyA==}
     cpu: [x64]
     os: [openbsd]
 
-  lefthook-windows-arm64@1.8.2:
-    resolution: {integrity: sha512-hsQUSk6kmB8E0UMD3Mk6ROoa7qv6XmigfPsn9tFjmbZ2aO+kpBfWitZ5v+gcjNp44yaECs3YTMIfv3QFwXlRCw==}
+  lefthook-windows-arm64@1.8.4:
+    resolution: {integrity: sha512-dvpvorICmVjmw29Aiczg7DcaSzkd86bEBomiGq4UsAEk3+7ExLrlWJDLFsI6xLjMKmTxy+F7eXb2uDtuFC1N4g==}
     cpu: [arm64]
     os: [win32]
 
-  lefthook-windows-x64@1.8.2:
-    resolution: {integrity: sha512-YypbMhvgAtkL7y+O3OlF81vwua7X4jloBz5hO3fILAuzaGAiPE1VbeuqRweV8VuKK4L/ZVVKqmpesygBUNDp9w==}
+  lefthook-windows-x64@1.8.4:
+    resolution: {integrity: sha512-e+y8Jt4/7PnoplhOuK48twjGVJEsU4T3J5kxD4mWfl6Cbit0YSn4bme9nW41eqCqTUqOm+ky29XlfnPHFX5ZNA==}
     cpu: [x64]
     os: [win32]
 
-  lefthook@1.8.2:
-    resolution: {integrity: sha512-lMXbcFHNDr+gzy/7ghuJDVB/Yyycj+ZL/7pN3Gm/s5Xqrc9+5sj3IrDAPylcEJ1cKCbUnXbwESrhhqpcYv4d4g==}
+  lefthook@1.8.4:
+    resolution: {integrity: sha512-XNyMaTWNRuADOaocYiHidgNkNDz8SCekpdNJ7lqceFcBT2zjumnb28/o7IMaNROpLBZdQkLkJXSeaQWGqn3kog==}
     hasBin: true
 
   libsql@0.3.19:
@@ -3401,8 +3395,8 @@ packages:
   lru-cache@5.1.1:
     resolution: {integrity: sha512-KpNARQA3Iwv+jTA0utUVVbrh+Jlrr1Fv0e56GGzAFOXN7dk/FviaDW8LHmK52DlcH4WP2n6gI8vN1aesBFgo9w==}
 
-  lucide-react@0.456.0:
-    resolution: {integrity: sha512-DIIGJqTT5X05sbAsQ+OhA8OtJYyD4NsEMCA/HQW/Y6ToPQ7gwbtujIoeAaup4HpHzV35SQOarKAWH8LYglB6eA==}
+  lucide-react@0.460.0:
+    resolution: {integrity: sha512-BVtq/DykVeIvRTJvRAgCsOwaGL8Un3Bxh8MbDxMhEWlZay3T4IpEKDEpwt5KZ0KJMHzgm6jrltxlT5eXOWXDHg==}
     peerDependencies:
       react: ^16.5.1 || ^17.0.0 || ^18.0.0 || ^19.0.0-rc
 
@@ -3646,13 +3640,13 @@ packages:
   nth-check@2.1.1:
     resolution: {integrity: sha512-lqjrjmaOoAnWfMmBPL+XNnynZh2+swxiX3WUE0s4yEHI6m+AwrK2UZOimIRl3X/4QctVqS8AiZjFqyOGrMXb/w==}
 
-  nuqs@2.1.2:
-    resolution: {integrity: sha512-WL9Qb6Pn8JPLCTE04l0CaRjeVrEdybEuLuc7IMS/H6HJnxjO2f63i1sd6HkU3ntEY6rc05M1PL8/ZRvdBC7pgw==}
+  nuqs@2.2.1:
+    resolution: {integrity: sha512-P0swZtg6k9LRXzlT9gQAFtQg25Edan2Evt5vwyGvh00Z+rHH19gb2ZajU/E/SfhwE858aM/jb+wJziWbbwSlcg==}
     peerDependencies:
-      '@remix-run/react': '>= 2'
-      next: '>= 14.2.0'
-      react: '>= 18.2.0'
-      react-router-dom: '>= 6'
+      '@remix-run/react': '>=2'
+      next: '>=14.2.0'
+      react: '>=18.2.0 || ^19.0.0-0'
+      react-router-dom: '>=6'
     peerDependenciesMeta:
       '@remix-run/react':
         optional: true
@@ -3704,8 +3698,8 @@ packages:
     peerDependencies:
       typescript: ^5.x
 
-  otpauth@9.3.4:
-    resolution: {integrity: sha512-qXv+lpsCUO9ewitLYfeDKbLYt7UUCivnU/fwGK2OqhgrCBsRkTUNKWsgKAhkXG3aistOY+jEeuL90JEBu6W3mQ==}
+  otpauth@9.3.5:
+    resolution: {integrity: sha512-jQyqOuQExeIl4YIiOUz4TdEcamgAgPX6UYeeS9Iit4lkvs7bwHb0JNDqchGRccbRfvWHV6oRwH36tOsVmc+7hQ==}
 
   p-defer@3.0.0:
     resolution: {integrity: sha512-ugZxsxmtTln604yeYd29EGrNhazN2lywetzpKhfmQjW/VJmhpDmWbiX+h0zL8V91R0UXkhb3KtPmyq9PZw3aYw==}
@@ -4338,8 +4332,8 @@ packages:
     engines: {node: '>=14.0.0'}
     hasBin: true
 
-  tailwindcss@3.4.14:
-    resolution: {integrity: sha512-IcSvOcTRcUtQQ7ILQL5quRDg7Xs93PdJEk1ZLbhhvJc7uj/OAhYOnruEiwnGgBvUtaUAJ8/mhSw1o8L2jCiENA==}
+  tailwindcss@3.4.15:
+    resolution: {integrity: sha512-r4MeXnfBmSOuKUWmXe6h2CcyfzJCEk4F0pptO5jlnYSIViUkVmsawj80N5h2lO3gwcmSb4n3PuN+e+GC1Guylw==}
     engines: {node: '>=14.0.0'}
     hasBin: true
 
@@ -4423,8 +4417,11 @@ packages:
     engines: {node: '>=14.17'}
     hasBin: true
 
-  ua-parser-js@1.0.39:
-    resolution: {integrity: sha512-k24RCVWlEcjkdOxYmVJgeD/0a1TiSpqLg+ZalVGV9lsnr4yqu0w7tX/x2xX6G4zpkgQnRf89lxuZ1wsbjXM8lw==}
+  ua-is-frozen@0.1.2:
+    resolution: {integrity: sha512-RwKDW2p3iyWn4UbaxpP2+VxwqXh0jpvdxsYpZ5j/MLLiQOfbsV5shpgQiw93+KMYQPcteeMQ289MaAFzs3G9pw==}
+
+  ua-parser-js@2.0.0:
+    resolution: {integrity: sha512-SASgD4RlB7+SCMmlVNqrhPw0f/2pGawWBzJ2+LwGTD0GgNnrKGzPJDiraGHJDwW9Zm5DH2lTmUpqDpbZjJY4+Q==}
     hasBin: true
 
   ufo@1.5.4:
@@ -5177,7 +5174,7 @@ snapshots:
     dependencies:
       '@radix-ui/colors': 3.0.0
       '@radix-ui/react-collapsible': 1.1.0(@types/react-dom@18.3.1)(@types/react@18.3.12)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
-      '@radix-ui/react-icons': 1.3.1(react@18.3.1)
+      '@radix-ui/react-icons': 1.3.2(react@18.3.1)
       '@radix-ui/react-popover': 1.1.1(@types/react-dom@18.3.1)(@types/react@18.3.12)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@radix-ui/react-select': 2.1.2(@types/react-dom@18.3.1)(@types/react@18.3.12)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@radix-ui/react-slot': 1.1.0(@types/react@18.3.12)(react@18.3.1)
@@ -5215,18 +5212,18 @@ snapshots:
       micromatch: 4.0.8
       style-to-object: 1.0.8
 
-  '@jsx-email/plugin-inline@1.0.1(jsx-email@2.1.4)':
+  '@jsx-email/plugin-inline@1.0.1(jsx-email@2.1.5)':
     dependencies:
       '@adobe/css-tools': 4.4.0
       hast-util-select: 6.0.3
       hast-util-to-string: 3.0.1
-      jsx-email: 2.1.4(@jsx-email/app-preview@2.0.2(@types/node@22.8.6)(@types/react-dom@18.3.1)(@types/react@18.3.12)(react@18.3.1)(terser@5.36.0))(@jsx-email/plugin-inline@1.0.1)(@jsx-email/plugin-minify@1.0.1)(@jsx-email/plugin-pretty@1.0.0)(@types/node@22.8.6)(@types/react@18.3.12)(react@18.3.1)(terser@5.36.0)
+      jsx-email: 2.1.5(@jsx-email/app-preview@2.0.2(@types/node@22.8.6)(@types/react-dom@18.3.1)(@types/react@18.3.12)(react@18.3.1)(terser@5.36.0))(@jsx-email/plugin-inline@1.0.1)(@jsx-email/plugin-minify@1.0.1)(@jsx-email/plugin-pretty@1.0.0)(@types/node@22.8.6)(@types/react@18.3.12)(react@18.3.1)(terser@5.36.0)
       unist-util-remove: 4.0.0
       unist-util-visit: 5.0.0
 
-  '@jsx-email/plugin-minify@1.0.1(jsx-email@2.1.4)':
+  '@jsx-email/plugin-minify@1.0.1(jsx-email@2.1.5)':
     dependencies:
-      jsx-email: 2.1.4(@jsx-email/app-preview@2.0.2(@types/node@22.8.6)(@types/react-dom@18.3.1)(@types/react@18.3.12)(react@18.3.1)(terser@5.36.0))(@jsx-email/plugin-inline@1.0.1)(@jsx-email/plugin-minify@1.0.1)(@jsx-email/plugin-pretty@1.0.0)(@types/node@22.8.6)(@types/react@18.3.12)(react@18.3.1)(terser@5.36.0)
+      jsx-email: 2.1.5(@jsx-email/app-preview@2.0.2(@types/node@22.8.6)(@types/react-dom@18.3.1)(@types/react@18.3.12)(react@18.3.1)(terser@5.36.0))(@jsx-email/plugin-inline@1.0.1)(@jsx-email/plugin-minify@1.0.1)(@jsx-email/plugin-pretty@1.0.0)(@types/node@22.8.6)(@types/react@18.3.12)(react@18.3.1)(terser@5.36.0)
       rehype-minify-attribute-whitespace: 4.0.1
       rehype-minify-css-style: 4.0.1
       rehype-minify-enumerated-attribute: 5.0.1
@@ -5246,9 +5243,9 @@ snapshots:
       rehype-sort-attributes: 5.0.1
       unified: 11.0.5
 
-  '@jsx-email/plugin-pretty@1.0.0(jsx-email@2.1.4)':
+  '@jsx-email/plugin-pretty@1.0.0(jsx-email@2.1.5)':
     dependencies:
-      jsx-email: 2.1.4(@jsx-email/app-preview@2.0.2(@types/node@22.8.6)(@types/react-dom@18.3.1)(@types/react@18.3.12)(react@18.3.1)(terser@5.36.0))(@jsx-email/plugin-inline@1.0.1)(@jsx-email/plugin-minify@1.0.1)(@jsx-email/plugin-pretty@1.0.0)(@types/node@22.8.6)(@types/react@18.3.12)(react@18.3.1)(terser@5.36.0)
+      jsx-email: 2.1.5(@jsx-email/app-preview@2.0.2(@types/node@22.8.6)(@types/react-dom@18.3.1)(@types/react@18.3.12)(react@18.3.1)(terser@5.36.0))(@jsx-email/plugin-inline@1.0.1)(@jsx-email/plugin-minify@1.0.1)(@jsx-email/plugin-pretty@1.0.0)(@types/node@22.8.6)(@types/react@18.3.12)(react@18.3.1)(terser@5.36.0)
       pretty: 2.0.0
 
   '@levischuck/tiny-cbor@0.2.2': {}
@@ -5757,7 +5754,7 @@ snapshots:
       '@types/react': 18.3.12
       '@types/react-dom': 18.3.1
 
-  '@radix-ui/react-icons@1.3.1(react@18.3.1)':
+  '@radix-ui/react-icons@1.3.2(react@18.3.1)':
     dependencies:
       react: 18.3.1
 
@@ -6365,22 +6362,22 @@ snapshots:
 
   '@sindresorhus/merge-streams@2.3.0': {}
 
-  '@tailwindcss/aspect-ratio@0.4.2(tailwindcss@3.4.14)':
+  '@tailwindcss/aspect-ratio@0.4.2(tailwindcss@3.4.15)':
     dependencies:
-      tailwindcss: 3.4.14
+      tailwindcss: 3.4.15
 
-  '@tailwindcss/forms@0.5.9(tailwindcss@3.4.14)':
+  '@tailwindcss/forms@0.5.9(tailwindcss@3.4.15)':
     dependencies:
       mini-svg-data-uri: 1.4.4
-      tailwindcss: 3.4.14
+      tailwindcss: 3.4.15
 
-  '@tailwindcss/typography@0.5.15(tailwindcss@3.4.14)':
+  '@tailwindcss/typography@0.5.15(tailwindcss@3.4.15)':
     dependencies:
       lodash.castarray: 4.4.0
       lodash.isplainobject: 4.0.6
       lodash.merge: 4.6.2
       postcss-selector-parser: 6.0.10
-      tailwindcss: 3.4.14
+      tailwindcss: 3.4.15
 
   '@tanstack/react-table@8.20.5(react-dom@18.3.1(react@18.3.1))(react@18.3.1)':
     dependencies:
@@ -6388,15 +6385,7 @@ snapshots:
       react: 18.3.1
       react-dom: 18.3.1(react@18.3.1)
 
-  '@tanstack/react-virtual@3.10.9(react-dom@18.3.1(react@18.3.1))(react@18.3.1)':
-    dependencies:
-      '@tanstack/virtual-core': 3.10.9
-      react: 18.3.1
-      react-dom: 18.3.1(react@18.3.1)
-
   '@tanstack/table-core@8.20.5': {}
-
-  '@tanstack/virtual-core@3.10.9': {}
 
   '@types/babel__core@7.20.5':
     dependencies:
@@ -6921,6 +6910,8 @@ snapshots:
   destr@2.0.3: {}
 
   destroy@1.2.0: {}
+
+  detect-europe-js@0.1.2: {}
 
   detect-libc@1.0.3: {}
 
@@ -7588,6 +7579,8 @@ snapshots:
     dependencies:
       '@types/estree': 1.0.6
 
+  is-standalone-pwa@0.1.1: {}
+
   is-stream@2.0.1: {}
 
   is-stream@3.0.0: {}
@@ -7656,14 +7649,14 @@ snapshots:
     optionalDependencies:
       graceful-fs: 4.2.11
 
-  jsx-email@2.1.4(@jsx-email/app-preview@2.0.2(@types/node@22.8.6)(@types/react-dom@18.3.1)(@types/react@18.3.12)(react@18.3.1)(terser@5.36.0))(@jsx-email/plugin-inline@1.0.1)(@jsx-email/plugin-minify@1.0.1)(@jsx-email/plugin-pretty@1.0.0)(@types/node@22.8.6)(@types/react@18.3.12)(react@18.3.1)(terser@5.36.0):
+  jsx-email@2.1.5(@jsx-email/app-preview@2.0.2(@types/node@22.8.6)(@types/react-dom@18.3.1)(@types/react@18.3.12)(react@18.3.1)(terser@5.36.0))(@jsx-email/plugin-inline@1.0.1)(@jsx-email/plugin-minify@1.0.1)(@jsx-email/plugin-pretty@1.0.0)(@types/node@22.8.6)(@types/react@18.3.12)(react@18.3.1)(terser@5.36.0):
     dependencies:
       '@dot/log': 0.1.5
       '@jsx-email/app-preview': 2.0.2(@types/node@22.8.6)(@types/react-dom@18.3.1)(@types/react@18.3.12)(react@18.3.1)(terser@5.36.0)
       '@jsx-email/doiuse-email': 1.0.4
-      '@jsx-email/plugin-inline': 1.0.1(jsx-email@2.1.4)
-      '@jsx-email/plugin-minify': 1.0.1(jsx-email@2.1.4)
-      '@jsx-email/plugin-pretty': 1.0.0(jsx-email@2.1.4)
+      '@jsx-email/plugin-inline': 1.0.1(jsx-email@2.1.5)
+      '@jsx-email/plugin-minify': 1.0.1(jsx-email@2.1.5)
+      '@jsx-email/plugin-pretty': 1.0.0(jsx-email@2.1.5)
       '@parcel/watcher': 2.4.1
       '@radix-ui/react-slot': 1.1.0(@types/react@18.3.12)(react@18.3.1)
       '@unocss/core': 0.63.6
@@ -7733,48 +7726,48 @@ snapshots:
 
   leac@0.6.0: {}
 
-  lefthook-darwin-arm64@1.8.2:
+  lefthook-darwin-arm64@1.8.4:
     optional: true
 
-  lefthook-darwin-x64@1.8.2:
+  lefthook-darwin-x64@1.8.4:
     optional: true
 
-  lefthook-freebsd-arm64@1.8.2:
+  lefthook-freebsd-arm64@1.8.4:
     optional: true
 
-  lefthook-freebsd-x64@1.8.2:
+  lefthook-freebsd-x64@1.8.4:
     optional: true
 
-  lefthook-linux-arm64@1.8.2:
+  lefthook-linux-arm64@1.8.4:
     optional: true
 
-  lefthook-linux-x64@1.8.2:
+  lefthook-linux-x64@1.8.4:
     optional: true
 
-  lefthook-openbsd-arm64@1.8.2:
+  lefthook-openbsd-arm64@1.8.4:
     optional: true
 
-  lefthook-openbsd-x64@1.8.2:
+  lefthook-openbsd-x64@1.8.4:
     optional: true
 
-  lefthook-windows-arm64@1.8.2:
+  lefthook-windows-arm64@1.8.4:
     optional: true
 
-  lefthook-windows-x64@1.8.2:
+  lefthook-windows-x64@1.8.4:
     optional: true
 
-  lefthook@1.8.2:
+  lefthook@1.8.4:
     optionalDependencies:
-      lefthook-darwin-arm64: 1.8.2
-      lefthook-darwin-x64: 1.8.2
-      lefthook-freebsd-arm64: 1.8.2
-      lefthook-freebsd-x64: 1.8.2
-      lefthook-linux-arm64: 1.8.2
-      lefthook-linux-x64: 1.8.2
-      lefthook-openbsd-arm64: 1.8.2
-      lefthook-openbsd-x64: 1.8.2
-      lefthook-windows-arm64: 1.8.2
-      lefthook-windows-x64: 1.8.2
+      lefthook-darwin-arm64: 1.8.4
+      lefthook-darwin-x64: 1.8.4
+      lefthook-freebsd-arm64: 1.8.4
+      lefthook-freebsd-x64: 1.8.4
+      lefthook-linux-arm64: 1.8.4
+      lefthook-linux-x64: 1.8.4
+      lefthook-openbsd-arm64: 1.8.4
+      lefthook-openbsd-x64: 1.8.4
+      lefthook-windows-arm64: 1.8.4
+      lefthook-windows-x64: 1.8.4
 
   libsql@0.3.19:
     dependencies:
@@ -7865,7 +7858,7 @@ snapshots:
     dependencies:
       yallist: 3.1.1
 
-  lucide-react@0.456.0(react@18.3.1):
+  lucide-react@0.460.0(react@18.3.1):
     dependencies:
       react: 18.3.1
 
@@ -8155,7 +8148,7 @@ snapshots:
     dependencies:
       boolbase: 1.0.0
 
-  nuqs@2.1.2(react-router-dom@6.28.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react@18.3.1):
+  nuqs@2.2.1(react-router-dom@6.28.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react@18.3.1):
     dependencies:
       mitt: 3.0.1
       react: 18.3.1
@@ -8217,7 +8210,7 @@ snapshots:
     transitivePeerDependencies:
       - encoding
 
-  otpauth@9.3.4:
+  otpauth@9.3.5:
     dependencies:
       '@noble/hashes': 1.5.0
 
@@ -8883,19 +8876,19 @@ snapshots:
 
   system-architecture@0.1.0: {}
 
-  tailwind-debug-breakpoints@1.0.3(tailwindcss@3.4.14):
+  tailwind-debug-breakpoints@1.0.3(tailwindcss@3.4.15):
     dependencies:
-      tailwindcss: 3.4.14
+      tailwindcss: 3.4.15
 
   tailwind-merge@2.5.4: {}
 
-  tailwindcss-animate@1.0.7(tailwindcss@3.4.14):
+  tailwindcss-animate@1.0.7(tailwindcss@3.4.15):
     dependencies:
-      tailwindcss: 3.4.14
+      tailwindcss: 3.4.15
 
-  tailwindcss-motion@0.2.7(tailwindcss@3.4.14):
+  tailwindcss-motion@0.2.7(tailwindcss@3.4.15):
     dependencies:
-      tailwindcss: 3.4.14
+      tailwindcss: 3.4.15
 
   tailwindcss@3.4.0:
     dependencies:
@@ -8924,7 +8917,7 @@ snapshots:
     transitivePeerDependencies:
       - ts-node
 
-  tailwindcss@3.4.14:
+  tailwindcss@3.4.15:
     dependencies:
       '@alloc/quick-lru': 5.2.0
       arg: 5.0.2
@@ -9022,7 +9015,13 @@ snapshots:
 
   typescript@5.6.3: {}
 
-  ua-parser-js@1.0.39: {}
+  ua-is-frozen@0.1.2: {}
+
+  ua-parser-js@2.0.0:
+    dependencies:
+      detect-europe-js: 0.1.2
+      is-standalone-pwa: 0.1.1
+      ua-is-frozen: 0.1.2
 
   ufo@1.5.4: {}
 
