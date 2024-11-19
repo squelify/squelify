@@ -10,15 +10,17 @@ import AppSidebar from './app-sidebar'
 import RootLayout from './root-layout'
 
 export default function AppLayout() {
-  const { pathname } = useLocation()
   const { user, logout, isInitialized } = useAuth()
+
+  const { pathname } = useLocation()
+  const redirectTo = encodeURIComponent(pathname)
 
   if (!isInitialized) {
     return <PageLoader />
   }
 
   if (!user) {
-    return <Navigate to={`/login?redirect_to=${encodeURIComponent(pathname)}`} replace />
+    return <Navigate to={`/login?redirect_to=${redirectTo}`} replace />
   }
 
   return (
