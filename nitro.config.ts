@@ -29,6 +29,14 @@ export default defineNitroConfig({
   routeRules: {
     '/': { redirect: '/ui/**' },
     '/ui/**': { static: true, prerender: false },
+    '/ui/docs': {
+      redirect: 'https://squelify.com/docs?utm_source=squelify&utm_medium=profile',
+      prerender: false,
+    },
+    '/ui/github': {
+      redirect: 'https://github.com/squelify/squelify',
+      prerender: false,
+    },
   },
 
   errorHandler: '~/error.handler',

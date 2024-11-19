@@ -13,11 +13,11 @@ import DashboardPage from '#/pages/dashboard'
 import InternalError from '#/pages/error/internal-error'
 import NotFound from '#/pages/error/not-found'
 
+import AccountPage from '#/pages/account/page'
 import APIKeysPage from '#/pages/api-keys/page'
 import CollectionsPage from '#/pages/collections/page'
 import MediaLibraryPage from '#/pages/media-library/page'
 import PermissionsPage from '#/pages/permissions/page'
-import ProfilePage from '#/pages/profile/page'
 import RolesPage from '#/pages/roles/page'
 import SettingsPage from '#/pages/settings/page'
 import UsersPage from '#/pages/users/page'
@@ -64,6 +64,11 @@ const Routes: RouteObject[] = [
           { path: '/content/collections', element: <CollectionsPage /> },
           { path: '/content/media', element: <MediaLibraryPage /> },
         ],
+      }),
+
+      // Content
+      route('/account', {
+        children: [{ index: true, element: <AccountPage /> }],
       }),
 
       // System

@@ -3,6 +3,7 @@ import { useLocation } from 'react-router-dom'
 import { User } from '~/database/schemas/user'
 import { Avatar, AvatarFallback, AvatarImage } from '#/components/base-ui/avatar'
 import { DropdownMenuContent, DropdownMenuItem } from '#/components/base-ui/dropdown-menu'
+import { DropdownMenuSeparator, DropdownMenuShortcut } from '#/components/base-ui/dropdown-menu'
 import { DropdownMenu, DropdownMenuTrigger } from '#/components/base-ui/dropdown-menu'
 import { SidebarFooter, SidebarHeader, SidebarTrigger } from '#/components/base-ui/sidebar'
 import { SidebarGroup, SidebarGroupContent, SidebarGroupLabel } from '#/components/base-ui/sidebar'
@@ -184,16 +185,39 @@ export default function AppSidebar({ user, logout }: AppSideBarProps) {
               </DropdownMenuTrigger>
               <DropdownMenuContent
                 side={sidebarState === 'expanded' ? 'top' : 'right'}
-                className="w-[--radix-popper-anchor-width]"
+                className={clx(sidebarState === 'expanded' ? 'mb-2 ml-4' : 'mb-10', 'w-56')}
               >
-                <DropdownMenuItem>
-                  <span>Account</span>
+                <DropdownMenuItem asChild>
+                  <Link href="/account">
+                    <span>Account Settings</span>
+                    <DropdownMenuShortcut>
+                      <Lucide.UserRoundCog className="size-3" strokeWidth={1.8} />
+                    </DropdownMenuShortcut>
+                  </Link>
                 </DropdownMenuItem>
-                <DropdownMenuItem>
-                  <span>Billing</span>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem asChild>
+                  <Link href="/docs" newTab>
+                    <span>Documentation</span>
+                    <DropdownMenuShortcut>
+                      <Lucide.ExternalLink className="size-3" strokeWidth={1.8} />
+                    </DropdownMenuShortcut>
+                  </Link>
                 </DropdownMenuItem>
+                <DropdownMenuItem asChild>
+                  <Link href="/github" newTab>
+                    <span>Source Code</span>
+                    <DropdownMenuShortcut>
+                      <Lucide.ExternalLink className="size-3" strokeWidth={1.8} />
+                    </DropdownMenuShortcut>
+                  </Link>
+                </DropdownMenuItem>
+                <DropdownMenuSeparator />
                 <DropdownMenuItem onClick={logout}>
-                  <span>Sign out</span>
+                  <span>Sign Out</span>
+                  <DropdownMenuShortcut>
+                    <Lucide.LogOut className="size-3" strokeWidth={1.8} />
+                  </DropdownMenuShortcut>
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
