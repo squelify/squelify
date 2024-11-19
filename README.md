@@ -40,7 +40,7 @@ solution, inspired by amazing projects like Supabase, PocketBase, and Strapi.
 
 [Learn more in our documentation.][squelify-docs]
 
-## ✨ Why Squelify?
+## ✨ Key Features
 
 Built by developers, for developers. Here's what you get:
 
@@ -113,9 +113,7 @@ For detailed licensing information, see the [LICENSE](./LICENSE.md) file.
 
 - **Inspiration**: Squelify's design draws inspiration from [Supabase][supabase], [Pocketbase][pocketbase] and [Strapi][strapi].
 - **Licensing Model**: We took inspiration from [Sentry][sentry-licensing] and [GitButler][gitbutler-licensing] licensing model.
-- **The Database**: Our database foundation is powered by:
-    - [LibSQL][libsql], simple and portable database that can be replicated to the edge.
-    - [DuckDB][duckdb], embedded, in-process SQL OLAP database management system.
+- **The Database**: Our database foundation is powered by [LibSQL][libsql].
 - **Logo**: The Squelify logo was created with the help of [Canva][canva].
 
 ---
