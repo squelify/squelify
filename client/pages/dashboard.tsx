@@ -6,6 +6,7 @@ import { HealthCheckResponse } from '~/api/healthz.get'
 import { Button } from '#/components/base-ui/button'
 import { Card, CardHeader, CardTitle } from '#/components/base-ui/card'
 import { CardContent, CardDescription } from '#/components/base-ui/card'
+import { Link } from '#/components/link'
 import { useApiClient } from '#/context/hooks/use-api-client'
 import { useSEOMeta } from '#/context/hooks/use-seo-meta'
 import type { AppContextType } from '#/providers/app-provider'
@@ -207,9 +208,11 @@ export default function Component() {
                   <li>Passkey (WebAuthn)</li>
                 </ul>
               </div>
-              <Button variant="outline" className="w-full">
-                <Lucide.ArrowRight className="mr-2 size-4" />
-                Configure Auth
+              <Button variant="outline" className="w-full" asChild>
+                <Link href="/settings/auth">
+                  <Lucide.ArrowRight className="mr-2 size-4" />
+                  <span>Configure Auth</span>
+                </Link>
               </Button>
             </CardContent>
           </Card>
@@ -231,9 +234,11 @@ export default function Component() {
                   <li>Media library</li>
                 </ul>
               </div>
-              <Button variant="outline" className="w-full">
-                <Lucide.ArrowRight className="mr-2 size-4" />
-                Create Content
+              <Button variant="outline" className="w-full" asChild>
+                <Link href="/content">
+                  <Lucide.ArrowRight className="mr-2 size-4" />
+                  <span>Create Content</span>
+                </Link>
               </Button>
             </CardContent>
           </Card>
@@ -255,9 +260,11 @@ export default function Component() {
                   <li>Webhooks</li>
                 </ul>
               </div>
-              <Button variant="outline" className="w-full">
-                <Lucide.ArrowRight className="mr-2 size-4" />
-                View API Docs
+              <Button variant="outline" className="w-full" asChild>
+                <Link href="/docs" newTab>
+                  <Lucide.ArrowRight className="mr-2 size-4" />
+                  <span>View API Docs</span>
+                </Link>
               </Button>
             </CardContent>
           </Card>
@@ -273,13 +280,17 @@ export default function Component() {
           <CardDescription>Quick access to help and documentation</CardDescription>
         </CardHeader>
         <CardContent className="grid grid-cols-1 gap-4 md:grid-cols-3">
-          <Button variant="outline" className="flex-1">
-            <Lucide.BookOpen className="mr-2 size-4" />
-            Documentation
+          <Button variant="outline" className="flex-1" asChild>
+            <Link href="/docs" newTab>
+              <Lucide.BookOpen className="mr-2 size-4" />
+              <span>Documentation</span>
+            </Link>
           </Button>
-          <Button variant="outline" className="flex-1">
-            <Lucide.LifeBuoy className="mr-2 size-4" />
-            Support
+          <Button variant="outline" className="flex-1" asChild>
+            <Link href="/github" newTab>
+              <Lucide.LifeBuoy className="mr-2 size-4" />
+              <span>Support</span>
+            </Link>
           </Button>
           <Button variant="secondary" className="flex-1" onClick={() => ctx.logout()}>
             <Lucide.LogOut className="mr-2 size-4" />
