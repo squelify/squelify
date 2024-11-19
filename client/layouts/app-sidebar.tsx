@@ -176,14 +176,14 @@ export default function AppSidebar({ user, logout }: AppSideBarProps) {
                     <Avatar className="size-5">
                       <AvatarImage src={user.avatarUrl} alt={user.username} />
                       <AvatarFallback>
-                        <Lucide.User2 />
+                        <Lucide.CircleUser strokeWidth={1.8} />
                       </AvatarFallback>
                     </Avatar>
                   ) : (
-                    <Lucide.User2 className="size-5" />
+                    <Lucide.CircleUser className="size-5" strokeWidth={1.8} />
                   )}
                   <span>{`${user.firstName} ${user.lastName}`}</span>
-                  <Lucide.ChevronUp className="ml-auto" />
+                  <Lucide.ChevronUp className="ml-auto" strokeWidth={1.8} />
                 </SidebarMenuButton>
               </DropdownMenuTrigger>
               <DropdownMenuContent
