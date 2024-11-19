@@ -9,8 +9,10 @@ export async function isTableExists(db: Kysely<any>, tableName: string): Promise
     .selectFrom('sqlite_master')
     .select(['name'])
     .where('type', '=', 'table')
-    .where('name', 'not like', 'sqlite_%')
-    .where('name', 'not like', 'sq_%')
+    .where('name', 'not like', 'sqlite_%') // exclude system tables
+    .where('name', 'not like', '_migration') // exclude internal migration table
+    .where('name', 'not like', '_migration_lock') // exclude internal migration lock table
+    .where('name', 'not like', 'sq_%') // exclude internal tables with `sq_` prefix
     .where('name', '=', tableName)
     .limit(1)
     .execute()

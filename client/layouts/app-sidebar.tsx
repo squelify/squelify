@@ -20,8 +20,8 @@ interface AppSideBarProps {
 }
 
 export default function AppSidebar({ user, logout }: AppSideBarProps) {
-  const { pathname } = useLocation()
   const { state: sidebarState, setOpen, isMobile } = useSidebar()
+  const { pathname } = useLocation()
 
   const menuGroups = [
     {
@@ -115,8 +115,7 @@ export default function AppSidebar({ user, logout }: AppSideBarProps) {
                                 onClick={() => {
                                   if (item.url.startsWith('/content/collections')) {
                                     setOpen(false)
-                                  } else if (!isMobile) {
-                                    // desktop breakpoint
+                                  } else if (!isMobile && sidebarState !== 'collapsed') {
                                     setOpen(true)
                                   }
                                 }}
