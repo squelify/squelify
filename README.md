@@ -2,7 +2,7 @@
   <img src="./public/favicon.svg" width="80" height="80" alt="Squelify logo">
 </p>
 
-<h3 align="center">Lightweight Headless CMS and Backend Platform without hassle</h3>
+<h3 align="center">Headless CMS and Backend Platform without hassle</h3>
 
 <p align="center">
   A modern headless CMS and backend-as-a-service platform.
