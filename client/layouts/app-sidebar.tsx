@@ -29,18 +29,18 @@ export default function AppSidebar({ user, logout }: AppSideBarProps) {
       items: [{ title: 'Dashboard', url: '/dashboard', icon: Lucide.Home }],
     },
     {
+      label: 'Content',
+      items: [
+        { title: 'Collections', url: '/content/collections', icon: Lucide.Database },
+        { title: 'Media Library', url: '/content/media', icon: Lucide.Image },
+      ],
+    },
+    {
       label: 'User Management',
       items: [
         { title: 'Users', url: '/users/list', icon: Lucide.Users },
         { title: 'Roles', url: '/users/roles', icon: Lucide.Shield },
         { title: 'Permissions', url: '/users/permissions', icon: Lucide.Lock },
-      ],
-    },
-    {
-      label: 'Content',
-      items: [
-        { title: 'Collections', url: '/content/collections', icon: Lucide.Database },
-        { title: 'Media Library', url: '/content/media', icon: Lucide.Image },
       ],
     },
     {
