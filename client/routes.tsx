@@ -12,7 +12,16 @@ import SignUpPage from '#/pages/auth/signup'
 import DashboardPage from '#/pages/dashboard'
 import InternalError from '#/pages/error/internal-error'
 import NotFound from '#/pages/error/not-found'
-import WorkInProgress from '#/pages/work-in-progress'
+
+import APIKeysPage from '#/pages/api-keys/page'
+import CollectionsPage from '#/pages/collections/page'
+import MediaLibraryPage from '#/pages/media-library/page'
+import PermissionsPage from '#/pages/permissions/page'
+import ProfilePage from '#/pages/profile/page'
+import RolesPage from '#/pages/roles/page'
+import SettingsPage from '#/pages/settings/page'
+import UsersPage from '#/pages/users/page'
+import WebhooksPage from '#/pages/webhooks/page'
 
 /**
  * Utility function to create a route object with the provided path and other properties.
@@ -42,9 +51,9 @@ const Routes: RouteObject[] = [
       route('/users', {
         children: [
           { index: true, element: <Navigate to="/users/list" replace /> },
-          { path: '/users/list', element: <WorkInProgress /> },
-          { path: '/users/roles', element: <WorkInProgress /> },
-          { path: '/users/permissions', element: <WorkInProgress /> },
+          { path: '/users/list', element: <UsersPage /> },
+          { path: '/users/roles', element: <RolesPage /> },
+          { path: '/users/permissions', element: <PermissionsPage /> },
         ],
       }),
 
@@ -52,8 +61,8 @@ const Routes: RouteObject[] = [
       route('/content', {
         children: [
           { index: true, element: <Navigate to="/content/collections" replace /> },
-          { path: '/content/collections', element: <WorkInProgress /> },
-          { path: '/content/media', element: <WorkInProgress /> },
+          { path: '/content/collections', element: <CollectionsPage /> },
+          { path: '/content/media', element: <MediaLibraryPage /> },
         ],
       }),
 
@@ -62,9 +71,9 @@ const Routes: RouteObject[] = [
         children: [
           { index: true, element: <Navigate to="/system/settings" replace /> },
           { path: '/system/audit-logs', element: <AuditLogsPage /> },
-          { path: '/system/webhooks', element: <WorkInProgress /> },
-          { path: '/system/api-keys', element: <WorkInProgress /> },
-          { path: '/system/settings', element: <WorkInProgress /> },
+          { path: '/system/webhooks', element: <WebhooksPage /> },
+          { path: '/system/api-keys', element: <APIKeysPage /> },
+          { path: '/system/settings', element: <SettingsPage /> },
         ],
       }),
     ],

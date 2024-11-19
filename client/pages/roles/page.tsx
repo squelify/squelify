@@ -2,7 +2,7 @@ import * as Lucide from 'lucide-react'
 import { useSEOMeta } from '#/context/hooks/use-seo-meta'
 
 export default function Component() {
-  useSEOMeta('Work in Progress')
+  const { pageTitle } = useSEOMeta('Roles')
 
   return (
     <div className="mx-auto flex size-full items-center justify-center">
@@ -10,7 +10,7 @@ export default function Component() {
         <div className="mb-8">
           <Lucide.Construction className="size-24 text-muted-foreground hover:text-primary" />
         </div>
-        <h1 className="mb-4 font-bold text-xl">Feature Coming Soon!</h1>
+        <h1 className="mb-4 font-bold text-xl">{pageTitle} Coming Soon!</h1>
         <div className="space-y-4 text-muted-foreground">
           <p className="leading-7">
             This feature is part of our upcoming release.
@@ -23,4 +23,4 @@ export default function Component() {
   )
 }
 
-Component.displayName = 'WorkInProgressPage'
+Component.displayName = 'RolesPage'
