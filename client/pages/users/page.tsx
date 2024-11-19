@@ -1,8 +1,18 @@
 import * as Lucide from 'lucide-react'
+import { useEffect, useRef } from 'react'
+import { useApiClient } from '#/context/hooks/use-api-client'
 import { useSEOMeta } from '#/context/hooks/use-seo-meta'
 
 export default function Component() {
   const { pageTitle } = useSEOMeta('Users')
+
+  const apiClient = useRef(useApiClient()).current
+
+  useEffect(() => {
+    apiClient.user.getAll().then((res) => {
+      console.info('DEBUG', res.data.users)
+    })
+  }, [apiClient])
 
   return (
     <div className="mx-auto flex size-full items-center justify-center">

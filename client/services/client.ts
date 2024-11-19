@@ -5,7 +5,20 @@ import { createStorage } from 'unstorage'
 import localstorageDriver from 'unstorage/drivers/localstorage'
 import { HealthCheckResponse } from '~/api/healthz.get'
 import { LOG_LEVEL } from '#/utils/logger'
+
+import AccountService from './modules/account.service'
+import AuditLogService from './modules/auditlog.service'
 import AuthService from './modules/auth.service'
+import CollectionService from './modules/collection.service'
+import JWKService from './modules/jwk.service'
+import MediaLibraryService from './modules/media.service'
+import OrganizationService from './modules/organization.service'
+import PermissionService from './modules/permission.service'
+import RoleService from './modules/role.service'
+import SettingsService from './modules/settings.service'
+import UserService from './modules/user.service'
+import WebhooksService from './modules/webhooks.service'
+
 import { DEFAULT_OPTIONS } from './options'
 import type { ApiClientOptions } from './types'
 
@@ -33,7 +46,18 @@ export default class ApiClient {
     [key: string]: string
   }
 
+  account: AccountService
+  auditlog: AuditLogService
   auth: AuthService
+  collection: CollectionService
+  jwk: JWKService
+  media: MediaLibraryService
+  organization: OrganizationService
+  permission: PermissionService
+  role: RoleService
+  settings: SettingsService
+  user: UserService
+  webhooks: WebhooksService
 
   constructor(options: ApiClientOptions) {
     this.instanceID = ApiClient.nextInstanceID
@@ -74,7 +98,20 @@ export default class ApiClient {
     this.headers = settings.headers || {}
     this.clientInfo = settings.clientInfo
     this.fetcher = this._createFetcher()
+
+    // Initialize the services
+    this.account = new AccountService(this)
+    this.auditlog = new AuditLogService(this)
     this.auth = new AuthService(this)
+    this.collection = new CollectionService(this)
+    this.jwk = new JWKService(this)
+    this.media = new MediaLibraryService(this)
+    this.organization = new OrganizationService(this)
+    this.permission = new PermissionService(this)
+    this.role = new RoleService(this)
+    this.settings = new SettingsService(this)
+    this.user = new UserService(this)
+    this.webhooks = new WebhooksService(this)
 
     if (isProduction && HTTPRegexp.test(this.baseURL)) {
       this.logger.warn(

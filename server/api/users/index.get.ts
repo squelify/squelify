@@ -26,7 +26,7 @@ export interface IListUsersResponse {
   }
 }
 
-const QueryParamSchema = z.object({
+export const QueryParamSchema = z.object({
   page: z.coerce.number().min(1, 'Page must be greater than 0').default(1),
   limit: z.coerce
     .number()
