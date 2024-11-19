@@ -53,7 +53,7 @@ export default function Page() {
 
   return (
     <div className="flex min-h-screen w-full flex-col items-center justify-center">
-      <div className="mx-auto w-full max-w-md space-y-6">
+      <div className="mx-auto w-full max-w-sm space-y-6">
         <div className="flex flex-col space-y-2 text-center">
           <h1 className="font-semibold text-2xl tracking-tight">{pageTitle}</h1>
           <p className="text-muted-foreground text-sm">

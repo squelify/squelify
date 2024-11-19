@@ -1,5 +1,7 @@
 import * as Lucide from 'lucide-react'
 import { useLocation } from 'react-router-dom'
+import { User } from '~/database/schemas/user'
+import { Avatar, AvatarFallback, AvatarImage } from '#/components/base-ui/avatar'
 import { DropdownMenuContent, DropdownMenuItem } from '#/components/base-ui/dropdown-menu'
 import { DropdownMenu, DropdownMenuTrigger } from '#/components/base-ui/dropdown-menu'
 import { SidebarFooter, SidebarHeader, SidebarTrigger } from '#/components/base-ui/sidebar'
@@ -12,7 +14,12 @@ import { Link } from '#/components/link'
 import { clx } from '#/utils/helper'
 import AppCommand from './app-command'
 
-export default function AppSidebar({ logout }: { logout: () => void }) {
+interface AppSideBarProps {
+  user: User
+  logout: () => void
+}
+
+export default function AppSidebar({ user, logout }: AppSideBarProps) {
   const { pathname } = useLocation()
   const { state: sidebarState, setOpen, isMobile } = useSidebar()
 
@@ -162,7 +169,17 @@ export default function AppSidebar({ logout }: { logout: () => void }) {
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <SidebarMenuButton>
-                  <Lucide.User2 /> Username
+                  {user.avatarUrl ? (
+                    <Avatar className="size-5">
+                      <AvatarImage src={user.avatarUrl} alt={user.username} />
+                      <AvatarFallback>
+                        <Lucide.User2 />
+                      </AvatarFallback>
+                    </Avatar>
+                  ) : (
+                    <Lucide.User2 className="size-5" />
+                  )}
+                  <span>{`${user.firstName} ${user.lastName}`}</span>
                   <Lucide.ChevronUp className="ml-auto" />
                 </SidebarMenuButton>
               </DropdownMenuTrigger>

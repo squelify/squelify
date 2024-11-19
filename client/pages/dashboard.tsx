@@ -19,7 +19,8 @@ const HEALTH_CHECK_CONFIG = {
 } as const
 
 export default function Component() {
-  useSEOMeta('Squelify Dashboard')
+  useSEOMeta('Dashboard')
+
   const ctx = useOutletContext<AppContextType>()
   const apiClient = useRef(useApiClient()).current
 
@@ -105,7 +106,7 @@ export default function Component() {
             <Lucide.Activity className="size-5" />
             System Overview
           </CardTitle>
-          <CardDescription>Welcome back, {ctx.user?.firstName}!</CardDescription>
+          <CardDescription>Welcome back, {ctx.user?.username}!</CardDescription>
         </CardHeader>
       </Card>
 
