@@ -27,7 +27,10 @@ export default function AppSidebar({ user, logout }: AppSideBarProps) {
   const menuGroups = [
     {
       label: 'Main',
-      items: [{ title: 'Dashboard', url: '/dashboard', icon: Lucide.Home }],
+      items: [
+        { title: 'Dashboard', url: '/dashboard', icon: Lucide.LayoutDashboard },
+        { title: 'Query Editor', url: '/query-editor', icon: Lucide.SquareChartGantt },
+      ],
     },
     {
       label: 'Content',
@@ -37,7 +40,7 @@ export default function AppSidebar({ user, logout }: AppSideBarProps) {
       ],
     },
     {
-      label: 'User Management',
+      label: 'Authentication',
       items: [
         { title: 'Users', url: '/users/list', icon: Lucide.Users },
         { title: 'Roles', url: '/users/roles', icon: Lucide.Shield },
@@ -121,7 +124,7 @@ export default function AppSidebar({ user, logout }: AppSideBarProps) {
                                   }
                                 }}
                               >
-                                <item.icon />
+                                <item.icon strokeWidth={1.8} />
                                 <span>{item.title}</span>
                               </Link>
                             </SidebarMenuButton>
@@ -148,7 +151,7 @@ export default function AppSidebar({ user, logout }: AppSideBarProps) {
                               }
                             }}
                           >
-                            <item.icon />
+                            <item.icon strokeWidth={1.8} />
                             <span>{item.title}</span>
                           </Link>
                         </SidebarMenuButton>
