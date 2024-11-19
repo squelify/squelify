@@ -24,5 +24,5 @@ export default async function seed(db: Kysely<Database>): Promise<void> {
     createdAt: now,
   }
 
-  await db.insertInto('jwks').values(jwk).execute()
+  await db.insertInto('sq_jwks').values(jwk).execute()
 }

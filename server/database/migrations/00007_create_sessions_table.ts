@@ -3,12 +3,13 @@ import { UNIX_TIMESTAMP } from '~/database/db.helper'
 import type { Database } from '~/database/db.schema'
 
 export async function up(db: Kysely<Database>): Promise<void> {
-  // Create sessions table
   await db.schema
-    .createTable('sessions')
+    .createTable('sq_sessions')
     .addColumn('id', 'text', (col) => col.primaryKey())
-    .addColumn('user_id', 'text', (col) => col.notNull().references('users.id').onDelete('cascade'))
-    .addColumn('key_id', 'text', (col) => col.references('jwks.id').onDelete('restrict'))
+    .addColumn('user_id', 'text', (col) =>
+      col.notNull().references('sq_users.id').onDelete('cascade')
+    )
+    .addColumn('key_id', 'text', (col) => col.references('sq_jwks.id').onDelete('restrict'))
     .addColumn('refresh_token', 'text', (col) => col.notNull())
     .addColumn('ip_address', 'text')
     .addColumn('user_agent', 'text')
@@ -27,29 +28,39 @@ export async function up(db: Kysely<Database>): Promise<void> {
     .ifNotExists()
     .execute()
 
-  // Create indexes
+  /**
+   * Index for session cleanup operations
+   * Optimizes queries that handle session expiration and cleanup
+   */
   await db.schema
-    .createIndex('sessions_cleanup_idx')
-    .on('sessions')
+    .createIndex('sq_idx_sessions_cleanup')
+    .on('sq_sessions')
     .columns(['is_active', 'expires_at'])
     .ifNotExists()
     .execute()
 
+  /**
+   * Index for session archival operations
+   * Enhances queries that manage archived sessions
+   */
   await db.schema
-    .createIndex('sessions_archive_idx')
-    .on('sessions')
+    .createIndex('sq_idx_sessions_archive')
+    .on('sq_sessions')
     .columns(['archived_at', 'created_at'])
     .ifNotExists()
     .execute()
 
-  // Create cleanup trigger
+  /**
+   * Trigger to automatically cleanup expired sessions
+   * Maintains session hygiene by marking expired sessions as inactive
+   */
   await sql`
-    CREATE TRIGGER IF NOT EXISTS cleanup_expired_sessions
-    AFTER UPDATE ON sessions
+    CREATE TRIGGER IF NOT EXISTS sq_trg_sessions_cleanup
+    AFTER UPDATE ON sq_sessions
     FOR EACH ROW
     WHEN NEW.expires_at < strftime('%s', 'now')
     BEGIN
-      UPDATE sessions
+      UPDATE sq_sessions
       SET
         is_active = 0,
         archived_at = strftime('%s', 'now')
@@ -59,8 +70,8 @@ export async function up(db: Kysely<Database>): Promise<void> {
 }
 
 export async function down(db: Kysely<Database>): Promise<void> {
-  await db.schema.dropIndex('sessions_cleanup_idx').ifExists().execute()
-  await db.schema.dropIndex('sessions_archive_idx').ifExists().execute()
-  await sql`DROP TRIGGER IF EXISTS cleanup_expired_sessions;`.execute(db)
-  await db.schema.dropTable('sessions').ifExists().execute()
+  await db.schema.dropIndex('sq_idx_sessions_cleanup').ifExists().execute()
+  await db.schema.dropIndex('sq_idx_sessions_archive').ifExists().execute()
+  await sql`DROP TRIGGER IF EXISTS sq_trg_sessions_cleanup;`.execute(db)
+  await db.schema.dropTable('sq_sessions').ifExists().execute()
 }

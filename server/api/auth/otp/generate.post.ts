@@ -24,7 +24,7 @@ export default defineEventHandler(async (event) => {
     const now = Math.floor(Date.now() / 1000)
 
     const userEmail = await db
-      .selectFrom('emails')
+      .selectFrom('sq_emails')
       .where('userId', '=', payload.sub)
       .where('isPrimary', '=', 1)
       .where('verifiedAt', 'is not', null)
@@ -57,7 +57,7 @@ export default defineEventHandler(async (event) => {
     }
 
     await db
-      .insertInto('verifications')
+      .insertInto('sq_verifications')
       .values({
         id: typeid('ver').toString(),
         userId: payload.sub,

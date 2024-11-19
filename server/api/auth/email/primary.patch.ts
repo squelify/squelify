@@ -23,7 +23,7 @@ export default defineEventHandler(async (event) => {
     const now = Math.floor(Date.now() / 1000)
 
     const email = await db
-      .selectFrom('emails')
+      .selectFrom('sq_emails')
       .where('id', '=', body.emailId)
       .where('userId', '=', payload.sub)
       .where('verifiedAt', 'is not', null)
@@ -47,7 +47,7 @@ export default defineEventHandler(async (event) => {
 
     await db.transaction().execute(async (trx) => {
       await trx
-        .updateTable('emails')
+        .updateTable('sq_emails')
         .set({
           isPrimary: 0,
           updatedAt: now,
@@ -56,7 +56,7 @@ export default defineEventHandler(async (event) => {
         .execute()
 
       await trx
-        .updateTable('emails')
+        .updateTable('sq_emails')
         .set({
           isPrimary: 1,
           updatedAt: now,

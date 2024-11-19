@@ -34,7 +34,7 @@ export default defineEventHandler(async (event) => {
     const body = await requireValidatedBody(event, UpdateJWKSchema)
 
     const jwk = await db
-      .selectFrom('jwks')
+      .selectFrom('sq_jwks')
       .where('id', '=', jwkId)
       .select(['id', 'keyId', 'isActive', 'expiresAt'])
       .executeTakeFirst()
@@ -55,7 +55,7 @@ export default defineEventHandler(async (event) => {
 
     if (body.keyId && body.keyId !== jwk.keyId) {
       const existingKey = await db
-        .selectFrom('jwks')
+        .selectFrom('sq_jwks')
         .where('keyId', '=', body.keyId as string)
         .select(['id'])
         .executeTakeFirst()
@@ -104,7 +104,7 @@ export default defineEventHandler(async (event) => {
     }
 
     const updatedJwk = await db
-      .updateTable('jwks')
+      .updateTable('sq_jwks')
       .set(updateData)
       .where('id', '=', jwkId)
       .returning(['id', 'keyId', 'publicKey', 'algorithm', 'isActive', 'expiresAt', 'updatedAt'])

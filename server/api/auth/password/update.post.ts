@@ -29,7 +29,7 @@ export default defineEventHandler(async (event) => {
     const now = Math.floor(Date.now() / 1000)
 
     const currentPassword = await db
-      .selectFrom('passwords')
+      .selectFrom('sq_passwords')
       .where('userId', '=', payload.sub)
       .select(['id', 'hash', 'algorithm'])
       .executeTakeFirst()
@@ -72,7 +72,7 @@ export default defineEventHandler(async (event) => {
     const hashedPassword = await hashPassword(body.newPassword, currentPassword.algorithm)
 
     await db
-      .updateTable('passwords')
+      .updateTable('sq_passwords')
       .set({
         hash: hashedPassword,
         updatedAt: now,

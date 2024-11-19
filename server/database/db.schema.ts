@@ -29,26 +29,26 @@ import type { IVerification } from './schemas/verification'
  * @see: https://www.kysely.dev/docs/recipes/schemas
  */
 export interface Database {
-  accounts: IAccount
-  audit_logs: IAuditLog
-  emails: IEmail
-  invitations: IInvitation
-  jwks: IJWK
-  members: IMember
-  organizations: IOrganization
-  passkeys: IPasskey
-  passwords: IPassword
-  permissions: IPermission
-  rate_limits: IRateLimit
-  role_permissions: IRolePermission
-  roles: IRole
-  sessions: ISession
-  two_factors: ITwoFactor
-  user_roles: IUserRole
-  user_bans: IUserBan
-  user_metadata: IUserMetadata
-  users: IUser
-  verifications: IVerification
+  sq_accounts: IAccount
+  sq_audit_logs: IAuditLog
+  sq_emails: IEmail
+  sq_invitations: IInvitation
+  sq_jwks: IJWK
+  sq_members: IMember
+  sq_organizations: IOrganization
+  sq_passkeys: IPasskey
+  sq_passwords: IPassword
+  sq_permissions: IPermission
+  sq_rate_limits: IRateLimit
+  sq_role_permissions: IRolePermission
+  sq_roles: IRole
+  sq_sessions: ISession
+  sq_two_factors: ITwoFactor
+  sq_user_roles: IUserRole
+  sq_user_bans: IUserBan
+  sq_user_metadata: IUserMetadata
+  sq_users: IUser
+  sq_verifications: IVerification
 }
 
 /**

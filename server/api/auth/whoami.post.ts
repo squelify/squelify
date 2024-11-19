@@ -29,14 +29,14 @@ export default defineEventHandler(async (event) => {
     const result = await db.transaction().execute(async (trx) => {
       const [userData, userBan, metadata, roles, permissions] = await Promise.all([
         trx
-          .selectFrom('users')
+          .selectFrom('sq_users')
           .where('id', '=', payload.sub)
           .where('deletedAt', 'is', null)
           .selectAll()
           .executeTakeFirst(),
 
         trx
-          .selectFrom('user_bans')
+          .selectFrom('sq_user_bans')
           .where('userId', '=', payload.sub)
           .where((eb) =>
             eb.or([
@@ -48,31 +48,25 @@ export default defineEventHandler(async (event) => {
           .executeTakeFirst(),
 
         trx
-          .selectFrom('user_metadata')
+          .selectFrom('sq_user_metadata')
           .where('userId', '=', payload.sub)
           .where('isPublic', '=', 1)
           .select(['key', 'value'])
           .execute(),
 
         trx
-          .selectFrom('roles')
-          .innerJoin('user_roles', 'roles.id', 'user_roles.roleId')
-          .where('user_roles.userId', '=', payload.sub)
+          .selectFrom('sq_roles as roles')
+          .innerJoin('sq_user_roles as urole', 'roles.id', 'urole.roleId')
+          .where('urole.userId', '=', payload.sub)
           .select(['roles.id', 'roles.name', 'roles.type', 'roles.organizationId'])
           .execute(),
 
         trx
-          .selectFrom('permissions')
-          .innerJoin('role_permissions', 'permissions.id', 'role_permissions.permissionId')
-          .innerJoin('user_roles', 'role_permissions.roleId', 'user_roles.roleId')
-          .where('user_roles.userId', '=', payload.sub)
-          .select([
-            'permissions.id',
-            'permissions.name',
-            'permissions.category',
-            'permissions.action',
-            'permissions.resource',
-          ])
+          .selectFrom('sq_permissions as perms')
+          .innerJoin('sq_role_permissions as rp', 'perms.id', 'rp.permissionId')
+          .innerJoin('sq_user_roles as urole', 'rp.roleId', 'urole.roleId')
+          .where('urole.userId', '=', payload.sub)
+          .select(['perms.id', 'perms.name', 'perms.category', 'perms.action', 'perms.resource'])
           .execute(),
       ])
 

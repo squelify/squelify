@@ -43,7 +43,7 @@ export default defineEventHandler(async (event) => {
     const body = await requireValidatedBody(event, AuthenticatePasskeySchema)
 
     const passkey = await db
-      .selectFrom('passkeys')
+      .selectFrom('sq_passkeys')
       .where('credentialId', '=', body.response.id)
       .select(['id', 'userId', 'credentialPublicKey', 'counter', 'rpId', 'origin'])
       .executeTakeFirst()
@@ -63,7 +63,7 @@ export default defineEventHandler(async (event) => {
     }
 
     const user = await db
-      .selectFrom('users')
+      .selectFrom('sq_users')
       .where('id', '=', passkey.userId)
       .select(['id', 'username'])
       .executeTakeFirst()
@@ -110,7 +110,7 @@ export default defineEventHandler(async (event) => {
     }
 
     await db
-      .updateTable('passkeys')
+      .updateTable('sq_passkeys')
       .set({
         counter: verification.authenticationInfo.newCounter,
         updatedAt: now,

@@ -141,7 +141,7 @@ export default defineEventHandler(async (event) => {
 
     // Check if session is still valid
     const session = await db
-      .selectFrom('sessions')
+      .selectFrom('sq_sessions')
       .where('id', '=', payload.sid)
       .where('userId', '=', payload.sub)
       .where('isActive', '=', 1)

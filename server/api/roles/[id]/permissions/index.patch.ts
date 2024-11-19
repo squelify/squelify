@@ -32,7 +32,7 @@ export default defineEventHandler(async (event) => {
 
     // Get role
     const role = await db
-      .selectFrom('roles')
+      .selectFrom('sq_roles')
       .where('id', '=', roleId)
       .select(['id', 'name', 'type', 'organizationId'])
       .executeTakeFirst()
@@ -43,7 +43,7 @@ export default defineEventHandler(async (event) => {
 
     // Verify permissions exist
     const permissions = await db
-      .selectFrom('permissions')
+      .selectFrom('sq_permissions')
       .where('id', 'in', body.permissions)
       .select(['id', 'name', 'category', 'action', 'resource'])
       .execute()
@@ -55,11 +55,11 @@ export default defineEventHandler(async (event) => {
     // Update role permissions in transaction
     await db.transaction().execute(async (trx) => {
       // Remove existing permissions
-      await trx.deleteFrom('role_permissions').where('roleId', '=', roleId).execute()
+      await trx.deleteFrom('sq_role_permissions').where('roleId', '=', roleId).execute()
 
       // Add new permissions
       await trx
-        .insertInto('role_permissions')
+        .insertInto('sq_role_permissions')
         .values(
           body.permissions.map((permissionId) => ({
             id: typeid('rpr').toString(),

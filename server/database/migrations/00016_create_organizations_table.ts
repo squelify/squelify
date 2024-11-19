@@ -4,7 +4,7 @@ import type { Database } from '~/database/db.schema'
 
 export async function up(db: Kysely<Database>): Promise<void> {
   await db.schema
-    .createTable('organizations')
+    .createTable('sq_organizations')
     .addColumn('id', 'text', (col) => col.primaryKey())
     .addColumn('name', 'text', (col) => col.notNull())
     .addColumn('slug', 'text', (col) => col.notNull().unique().check(sql`LENGTH(slug) >= 3`))
@@ -23,7 +23,7 @@ export async function up(db: Kysely<Database>): Promise<void> {
       col.notNull().defaultTo(0).check(sql`is_verified IN (0, 1)`)
     )
     .addColumn('created_by', 'text', (col) =>
-      col.notNull().references('users.id').onDelete('restrict')
+      col.notNull().references('sq_users.id').onDelete('restrict')
     )
     .addColumn('created_at', 'integer', (col) => col.notNull().defaultTo(UNIX_TIMESTAMP))
     .addColumn('updated_at', 'integer')
@@ -31,45 +31,59 @@ export async function up(db: Kysely<Database>): Promise<void> {
     .ifNotExists()
     .execute()
 
-  // Create auto-update trigger
+  /**
+   * Trigger to automatically update timestamp when organization record changes
+   * Ensures accurate tracking of organization modifications
+   */
   await sql`
-    CREATE TRIGGER IF NOT EXISTS update_organizations_timestamp
-    AFTER UPDATE ON organizations
+    CREATE TRIGGER IF NOT EXISTS sq_trg_organizations_timestamp
+    AFTER UPDATE ON sq_organizations
     FOR EACH ROW
     BEGIN
-      UPDATE organizations
+      UPDATE sq_organizations
       SET updated_at = strftime('%s', 'now')
       WHERE id = NEW.id;
     END;
   `.execute(db)
 
-  // Indexes
+  /**
+   * Index for slug-based organization lookups
+   * Optimizes queries that find organizations by slug
+   */
   await db.schema
-    .createIndex('organizations_slug_idx')
-    .on('organizations')
+    .createIndex('sq_idx_organizations_slug')
+    .on('sq_organizations')
     .column('slug')
     .ifNotExists()
     .execute()
 
+  /**
+   * Index for email-based organization lookups
+   * Enhances queries that search organizations by email
+   */
   await db.schema
-    .createIndex('organizations_email_idx')
-    .on('organizations')
+    .createIndex('sq_idx_organizations_email')
+    .on('sq_organizations')
     .column('email')
     .ifNotExists()
     .execute()
 
+  /**
+   * Index for verification status filtering
+   * Improves performance when filtering verified organizations
+   */
   await db.schema
-    .createIndex('organizations_is_verified_idx')
-    .on('organizations')
+    .createIndex('sq_idx_organizations_verified')
+    .on('sq_organizations')
     .column('is_verified')
     .ifNotExists()
     .execute()
 }
 
 export async function down(db: Kysely<Database>): Promise<void> {
-  await db.schema.dropIndex('organizations_is_verified_idx').ifExists().execute()
-  await db.schema.dropIndex('organizations_email_idx').ifExists().execute()
-  await db.schema.dropIndex('organizations_slug_idx').ifExists().execute()
-  await sql`DROP TRIGGER IF EXISTS update_organizations_timestamp;`.execute(db)
-  await db.schema.dropTable('organizations').ifExists().execute()
+  await db.schema.dropIndex('sq_idx_organizations_verified').ifExists().execute()
+  await db.schema.dropIndex('sq_idx_organizations_email').ifExists().execute()
+  await db.schema.dropIndex('sq_idx_organizations_slug').ifExists().execute()
+  await sql`DROP TRIGGER IF EXISTS sq_trg_organizations_timestamp;`.execute(db)
+  await db.schema.dropTable('sq_organizations').ifExists().execute()
 }

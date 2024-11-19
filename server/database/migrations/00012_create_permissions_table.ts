@@ -4,7 +4,7 @@ import type { Database } from '~/database/db.schema'
 
 export async function up(db: Kysely<Database>): Promise<void> {
   await db.schema
-    .createTable('permissions')
+    .createTable('sq_permissions')
     .addColumn('id', 'text', (col) => col.primaryKey())
     .addColumn('name', 'text', (col) => col.notNull().unique().check(sql`LENGTH(name) >= 3`))
     .addColumn('description', 'text')
@@ -22,45 +22,59 @@ export async function up(db: Kysely<Database>): Promise<void> {
     .ifNotExists()
     .execute()
 
-  // Create auto-update trigger
+  /**
+   * Trigger to automatically update timestamp when permission record changes
+   * Ensures accurate tracking of permission modifications
+   */
   await sql`
-    CREATE TRIGGER IF NOT EXISTS update_permissions_timestamp
-    AFTER UPDATE ON permissions
+    CREATE TRIGGER IF NOT EXISTS sq_trg_permissions_timestamp
+    AFTER UPDATE ON sq_permissions
     FOR EACH ROW
     BEGIN
-      UPDATE permissions
+      UPDATE sq_permissions
       SET updated_at = strftime('%s', 'now')
       WHERE id = NEW.id;
     END;
   `.execute(db)
 
-  // Indexes
+  /**
+   * Index for permission name lookups
+   * Optimizes permission validation queries
+   */
   await db.schema
-    .createIndex('permissions_name_idx')
-    .on('permissions')
+    .createIndex('sq_idx_permissions_name')
+    .on('sq_permissions')
     .column('name')
     .ifNotExists()
     .execute()
 
+  /**
+   * Index for category-based filtering
+   * Enhances queries that filter permissions by category
+   */
   await db.schema
-    .createIndex('permissions_category_idx')
-    .on('permissions')
+    .createIndex('sq_idx_permissions_category')
+    .on('sq_permissions')
     .column('category')
     .ifNotExists()
     .execute()
 
+  /**
+   * Compound index for resource-action lookups
+   * Improves performance of permission checking queries
+   */
   await db.schema
-    .createIndex('permissions_resource_action_idx')
-    .on('permissions')
+    .createIndex('sq_idx_permissions_resource_action')
+    .on('sq_permissions')
     .columns(['resource', 'action'])
     .ifNotExists()
     .execute()
 }
 
 export async function down(db: Kysely<Database>): Promise<void> {
-  await db.schema.dropIndex('permissions_resource_action_idx').ifExists().execute()
-  await db.schema.dropIndex('permissions_category_idx').ifExists().execute()
-  await db.schema.dropIndex('permissions_name_idx').ifExists().execute()
-  await sql`DROP TRIGGER IF EXISTS update_permissions_timestamp;`.execute(db)
-  await db.schema.dropTable('permissions').ifExists().execute()
+  await db.schema.dropIndex('sq_idx_permissions_resource_action').ifExists().execute()
+  await db.schema.dropIndex('sq_idx_permissions_category').ifExists().execute()
+  await db.schema.dropIndex('sq_idx_permissions_name').ifExists().execute()
+  await sql`DROP TRIGGER IF EXISTS sq_trg_permissions_timestamp;`.execute(db)
+  await db.schema.dropTable('sq_permissions').ifExists().execute()
 }

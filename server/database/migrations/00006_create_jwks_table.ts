@@ -4,7 +4,7 @@ import type { Database } from '~/database/db.schema'
 
 export async function up(db: Kysely<Database>): Promise<void> {
   await db.schema
-    .createTable('jwks')
+    .createTable('sq_jwks')
     .addColumn('id', 'text', (col) => col.primaryKey())
     .addColumn('key_id', 'text', (col) => col.notNull().unique())
     .addColumn('public_key', 'text', (col) => col.notNull())
@@ -15,10 +15,8 @@ export async function up(db: Kysely<Database>): Promise<void> {
         .defaultTo('ES256')
         .check(
           sql`algorithm IN (
-          'RS256', 'RS384', 'RS512',
-          'PS256', 'PS384', 'PS512',
-          'ES256', 'ES384', 'ES512',
-          'EdDSA'
+          'RS256', 'RS384', 'RS512', 'PS256', 'PS384',
+          'PS512', 'ES256', 'ES384', 'ES512', 'EdDSA'
         )`
         )
     )
@@ -32,40 +30,59 @@ export async function up(db: Kysely<Database>): Promise<void> {
     .ifNotExists()
     .execute()
 
-  // Create auto-update trigger
+  /**
+   * Trigger to automatically update timestamp when JWK is modified
+   * Ensures accurate tracking of key changes for security audit
+   */
   await sql`
-    CREATE TRIGGER IF NOT EXISTS update_jwks_timestamp
-    AFTER UPDATE ON jwks
+    CREATE TRIGGER IF NOT EXISTS sq_trg_jwks_timestamp
+    AFTER UPDATE ON sq_jwks
     FOR EACH ROW
     BEGIN
-      UPDATE jwks
+      UPDATE sq_jwks
       SET updated_at = strftime('%s', 'now')
       WHERE id = NEW.id;
     END;
   `.execute(db)
 
-  // Indexes
-  await db.schema.createIndex('jwks_key_id_idx').on('jwks').column('key_id').ifNotExists().execute()
-
+  /**
+   * Index for key_id lookups
+   * Optimizes JWK retrieval during token verification
+   */
   await db.schema
-    .createIndex('jwks_is_active_idx')
-    .on('jwks')
+    .createIndex('sq_idx_jwks_key')
+    .on('sq_jwks')
+    .column('key_id')
+    .ifNotExists()
+    .execute()
+
+  /**
+   * Index for active key filtering
+   * Improves queries that filter active signing keys
+   */
+  await db.schema
+    .createIndex('sq_idx_jwks_active')
+    .on('sq_jwks')
     .column('is_active')
     .ifNotExists()
     .execute()
 
+  /**
+   * Index for key expiration checks
+   * Enhances queries that validate key validity
+   */
   await db.schema
-    .createIndex('jwks_expires_at_idx')
-    .on('jwks')
+    .createIndex('sq_idx_jwks_expires')
+    .on('sq_jwks')
     .column('expires_at')
     .ifNotExists()
     .execute()
 }
 
 export async function down(db: Kysely<Database>): Promise<void> {
-  await db.schema.dropIndex('jwks_expires_at_idx').ifExists().execute()
-  await db.schema.dropIndex('jwks_is_active_idx').ifExists().execute()
-  await db.schema.dropIndex('jwks_key_id_idx').ifExists().execute()
-  await sql`DROP TRIGGER IF EXISTS update_jwks_timestamp;`.execute(db)
-  await db.schema.dropTable('jwks').ifExists().execute()
+  await db.schema.dropIndex('sq_idx_jwks_expires').ifExists().execute()
+  await db.schema.dropIndex('sq_idx_jwks_active').ifExists().execute()
+  await db.schema.dropIndex('sq_idx_jwks_key').ifExists().execute()
+  await sql`DROP TRIGGER IF EXISTS sq_trg_jwks_timestamp;`.execute(db)
+  await db.schema.dropTable('sq_jwks').ifExists().execute()
 }

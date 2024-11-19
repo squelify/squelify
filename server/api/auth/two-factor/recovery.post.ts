@@ -27,7 +27,7 @@ export default defineEventHandler(async (event) => {
     const now = Math.floor(Date.now() / 1000)
 
     const twoFactor = await db
-      .selectFrom('two_factors')
+      .selectFrom('sq_two_factors')
       .where('id', '=', body.id)
       .where('userId', '=', payload.sub)
       .select(['id', 'name', 'type', 'verifiedAt', 'backupCodes', 'lastUsedAt'])
@@ -114,7 +114,7 @@ export default defineEventHandler(async (event) => {
     backupCodes.splice(codeIndex, 1)
 
     await db
-      .updateTable('two_factors')
+      .updateTable('sq_two_factors')
       .set({
         backupCodes: JSON.stringify(backupCodes),
         lastUsedAt: now,

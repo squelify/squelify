@@ -25,7 +25,7 @@ export default defineEventHandler(async (event) => {
     const now = Math.floor(Date.now() / 1000)
 
     const existingEmail = await db
-      .selectFrom('emails')
+      .selectFrom('sq_emails')
       .where('email', '=', body.email)
       .select(['id'])
       .executeTakeFirst()
@@ -49,7 +49,7 @@ export default defineEventHandler(async (event) => {
     const verificationToken = typeid().toString()
     await db.transaction().execute(async (trx) => {
       await trx
-        .insertInto('emails')
+        .insertInto('sq_emails')
         .values({
           id: typeid('eml').toString(),
           userId: payload.sub,
@@ -60,7 +60,7 @@ export default defineEventHandler(async (event) => {
         .execute()
 
       await trx
-        .insertInto('verifications')
+        .insertInto('sq_verifications')
         .values({
           id: typeid('ver').toString(),
           userId: payload.sub,

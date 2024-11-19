@@ -18,9 +18,9 @@ export default defineEventHandler(async (event) => {
     const now = Math.floor(Date.now() / 1000)
 
     const sessionQuery = db
-      .selectFrom('sessions')
-      .innerJoin('users', 'users.id', 'sessions.userId')
-      .innerJoin('emails', 'emails.userId', 'users.id')
+      .selectFrom('sq_sessions as sessions')
+      .innerJoin('sq_users as users', 'users.id', 'sessions.userId')
+      .innerJoin('sq_emails as emails', 'emails.userId', 'users.id')
       .where('sessions.refreshToken', '=', refreshToken)
       .where('sessions.isActive', '=', 1)
       .where('sessions.expiresAt', '>', now)
@@ -54,18 +54,18 @@ export default defineEventHandler(async (event) => {
 
     const [roles, permissions] = await Promise.all([
       db
-        .selectFrom('roles')
-        .innerJoin('user_roles', 'roles.id', 'user_roles.roleId')
-        .where('user_roles.userId', '=', session.userId)
-        .select(['roles.name', 'roles.type', 'roles.organizationId'])
+        .selectFrom('sq_roles as r')
+        .innerJoin('sq_user_roles as urole', 'r.id', 'urole.roleId')
+        .where('urole.userId', '=', session.userId)
+        .select(['r.name', 'r.type', 'r.organizationId'])
         .execute(),
 
       db
-        .selectFrom('permissions')
-        .innerJoin('role_permissions', 'permissions.id', 'role_permissions.permissionId')
-        .innerJoin('user_roles', 'role_permissions.roleId', 'user_roles.roleId')
-        .where('user_roles.userId', '=', session.userId)
-        .select(['permissions.action', 'permissions.resource'])
+        .selectFrom('sq_permissions as perms')
+        .innerJoin('sq_role_permissions as rp', 'perms.id', 'rp.permissionId')
+        .innerJoin('sq_user_roles as urole', 'rp.roleId', 'urole.roleId')
+        .where('urole.userId', '=', session.userId)
+        .select(['perms.action', 'perms.resource'])
         .execute(),
     ])
 
@@ -98,7 +98,7 @@ export default defineEventHandler(async (event) => {
     })
 
     await db
-      .updateTable('sessions')
+      .updateTable('sq_sessions')
       .set({ lastActiveAt: now })
       .where('id', '=', session.sessionId)
       .execute()

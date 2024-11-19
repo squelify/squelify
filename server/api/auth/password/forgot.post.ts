@@ -43,7 +43,7 @@ export default defineEventHandler(async (event) => {
     }
 
     const existingVerification = await db
-      .selectFrom('verifications')
+      .selectFrom('sq_verifications')
       .where('userId', '=', user.id)
       .where('type', '=', 'password_reset')
       .where('identifier', '=', body.email)
@@ -78,7 +78,7 @@ export default defineEventHandler(async (event) => {
     const expiresIn = DURATION.MINUTE * 30
 
     await db
-      .insertInto('verifications')
+      .insertInto('sq_verifications')
       .values({
         id: typeid('ver').toString(),
         userId: user.id,

@@ -39,7 +39,7 @@ export default defineEventHandler(async (event) => {
 
     // Get role
     const role = await db
-      .selectFrom('roles')
+      .selectFrom('sq_roles')
       .where('id', '=', roleId)
       .select(['id', 'name', 'type', 'organizationId'])
       .executeTakeFirst()
@@ -50,7 +50,7 @@ export default defineEventHandler(async (event) => {
 
     // Check existing permission
     const existingPermission = await db
-      .selectFrom('permissions')
+      .selectFrom('sq_permissions')
       .where('name', '=', body.name)
       .where('category', '=', body.category)
       .where('action', '=', body.action)
@@ -65,7 +65,7 @@ export default defineEventHandler(async (event) => {
       permissionId = existingPermission.id
     } else {
       const newPermission = await db
-        .insertInto('permissions')
+        .insertInto('sq_permissions')
         .values({
           id: typeid('prm').toString(),
           name: body.name,
@@ -84,7 +84,7 @@ export default defineEventHandler(async (event) => {
 
     // Assign permission to role
     await db
-      .insertInto('role_permissions')
+      .insertInto('sq_role_permissions')
       .values({
         id: typeid('rpr').toString(),
         roleId: role.id,
@@ -95,7 +95,7 @@ export default defineEventHandler(async (event) => {
 
     // Get complete permission data
     const permission = await db
-      .selectFrom('permissions')
+      .selectFrom('sq_permissions')
       .where('id', '=', permissionId)
       .selectAll()
       .executeTakeFirst()

@@ -13,7 +13,7 @@ export default defineEventHandler(async (event) => {
 
   try {
     const jwk = await db
-      .selectFrom('jwks')
+      .selectFrom('sq_jwks')
       .where('id', '=', jwkId)
       .select(['id', 'keyId', 'isActive'])
       .executeTakeFirst()
@@ -51,7 +51,7 @@ export default defineEventHandler(async (event) => {
       return createErrorResponse(event, 'Cannot delete active JWK', 400)
     }
 
-    await db.deleteFrom('jwks').where('id', '=', jwkId).execute()
+    await db.deleteFrom('sq_jwks').where('id', '=', jwkId).execute()
 
     await auditLog(event, {
       action: 'delete',

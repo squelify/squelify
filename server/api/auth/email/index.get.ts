@@ -17,7 +17,7 @@ export default defineEventHandler(async (event) => {
   try {
     // Get user's emails
     const rawEmails = await db
-      .selectFrom('emails')
+      .selectFrom('sq_emails')
       .where('userId', '=', payload.sub)
       .select(['id', 'email', 'isPrimary', 'verifiedAt', 'createdAt', 'updatedAt'])
       .orderBy('isPrimary', 'desc')

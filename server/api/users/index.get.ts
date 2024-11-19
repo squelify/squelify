@@ -46,7 +46,7 @@ export default defineCachedEventHandler(
 
       // Get total count for pagination
       const totalCount = await db
-        .selectFrom('users')
+        .selectFrom('sq_users')
         .where('deletedAt', 'is', null)
         .select((eb) => eb.fn.countAll().as('count'))
         .executeTakeFirst()
@@ -54,7 +54,7 @@ export default defineCachedEventHandler(
       // Get paginated users with metadata and bans
       const [users, metadata, bans] = await db.transaction().execute(async (trx) => {
         const users = await trx
-          .selectFrom('users')
+          .selectFrom('sq_users')
           .where('deletedAt', 'is', null)
           .selectAll()
           .limit(limit)
@@ -64,14 +64,14 @@ export default defineCachedEventHandler(
         const userIds = users.map((u) => u.id)
 
         const metadataPromise = trx
-          .selectFrom('user_metadata')
+          .selectFrom('sq_user_metadata')
           .where('userId', 'in', userIds)
           .where('isPublic', '=', 1)
           .select(['userId', 'key', 'value'])
           .execute()
 
         const bansPromise = trx
-          .selectFrom('user_bans')
+          .selectFrom('sq_user_bans')
           .where('userId', 'in', userIds)
           .where((eb) =>
             eb.or([

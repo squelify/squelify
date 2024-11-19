@@ -6,12 +6,12 @@ import type { User } from '~/database/schemas/user'
 /**
  * Finds a user by their unique identifier.
  */
-export async function findUserById<SE extends SelectExpression<Database, 'users'>>(
+export async function findUserById<SE extends SelectExpression<Database, 'sq_users'>>(
   id: string,
   cols?: readonly SE[]
 ): Promise<Partial<User> | null> {
   try {
-    const query = db.selectFrom('users').where('id', '=', id)
+    const query = db.selectFrom('sq_users').where('id', '=', id)
     const result = cols
       ? await query.select(cols).executeTakeFirst()
       : await query.selectAll().executeTakeFirst()
@@ -29,8 +29,8 @@ export async function findUserById<SE extends SelectExpression<Database, 'users'
 export async function findUserByEmail(email: string): Promise<Partial<User> | null> {
   try {
     const result = await db
-      .selectFrom('users')
-      .innerJoin('emails', 'emails.userId', 'users.id')
+      .selectFrom('sq_users as users')
+      .innerJoin('sq_emails as emails', 'emails.userId', 'users.id')
       .where('emails.email', '=', email)
       .where('emails.isPrimary', '=', 1)
       .where('users.isActive', '=', 1)
@@ -46,7 +46,7 @@ export async function findUserByEmail(email: string): Promise<Partial<User> | nu
 
 export async function findActiveUser(username: string) {
   return db
-    .selectFrom('users')
+    .selectFrom('sq_users')
     .select(['id', 'username', 'firstName', 'lastName', 'isActive'])
     .where('username', '=', username)
     .where('isActive', '=', 1)

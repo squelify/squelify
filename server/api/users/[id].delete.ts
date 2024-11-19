@@ -17,8 +17,8 @@ export default defineEventHandler(async (event) => {
   try {
     // Get user with primary email
     const user = await db
-      .selectFrom('users as u')
-      .leftJoin('emails as e', (join) =>
+      .selectFrom('sq_users as u')
+      .leftJoin('sq_emails as e', (join) =>
         join.onRef('e.userId', '=', 'u.id').on('e.isPrimary', '=', 1)
       )
       .where('u.id', '=', userId)
@@ -49,11 +49,11 @@ export default defineEventHandler(async (event) => {
 
     if (hardDelete) {
       // Hard delete - remove all records
-      await db.deleteFrom('users').where('id', '=', userId).execute()
+      await db.deleteFrom('sq_users').where('id', '=', userId).execute()
     } else {
       // Soft delete - update deletedAt timestamp
       await db
-        .updateTable('users')
+        .updateTable('sq_users')
         .set({ deletedAt: now, updatedAt: now })
         .where('id', '=', userId)
         .execute()

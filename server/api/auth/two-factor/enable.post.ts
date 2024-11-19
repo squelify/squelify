@@ -30,12 +30,12 @@ export default defineEventHandler(async (event) => {
     const now = Math.floor(Date.now() / 1000)
 
     const user = await db
-      .selectFrom('users')
-      .leftJoin('emails', 'emails.userId', 'users.id')
-      .where('users.id', '=', payload.sub)
-      .where('users.deletedAt', 'is', null)
-      .where('emails.isPrimary', '=', 1)
-      .select(['users.id', 'users.username', 'emails.email'])
+      .selectFrom('sq_users as u')
+      .leftJoin('sq_emails as e', 'e.userId', 'u.id')
+      .where('u.id', '=', payload.sub)
+      .where('u.deletedAt', 'is', null)
+      .where('e.isPrimary', '=', 1)
+      .select(['u.id', 'u.username', 'e.email'])
       .executeTakeFirst()
 
     if (!user) {
@@ -53,7 +53,7 @@ export default defineEventHandler(async (event) => {
     }
 
     const existingAuth = await db
-      .selectFrom('two_factors')
+      .selectFrom('sq_two_factors')
       .where('userId', '=', user.id)
       .where('name', '=', body.name)
       .select(['id'])
@@ -78,7 +78,7 @@ export default defineEventHandler(async (event) => {
     const backupCodes = Array.from({ length: 10 }, () => generateRandomStr({ size: 8 }))
 
     const existing2FA = await db
-      .selectFrom('two_factors')
+      .selectFrom('sq_two_factors')
       .where('userId', '=', user.id)
       .where('verifiedAt', '!=', null)
       .select(['id'])
@@ -88,7 +88,7 @@ export default defineEventHandler(async (event) => {
 
     await db.transaction().execute(async (trx) => {
       await trx
-        .insertInto('two_factors')
+        .insertInto('sq_two_factors')
         .values({
           id,
           userId: user.id,
@@ -103,7 +103,7 @@ export default defineEventHandler(async (event) => {
         .execute()
 
       await trx
-        .insertInto('user_metadata')
+        .insertInto('sq_user_metadata')
         .values({
           id: typeid('meta').toString(),
           userId: user.id,
@@ -124,7 +124,7 @@ export default defineEventHandler(async (event) => {
     const qrCodeUrl = `${appConfig.baseURL}/api/qrcode?chl=${encodeURIComponent(totpUri)}`
 
     const metadata = await db
-      .selectFrom('user_metadata')
+      .selectFrom('sq_user_metadata')
       .where('userId', '=', user.id)
       .where('isPublic', '=', 1)
       .select(['key', 'value'])

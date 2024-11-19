@@ -21,7 +21,7 @@ export default defineCachedEventHandler(
 
     try {
       const keys = await db
-        .selectFrom('jwks')
+        .selectFrom('sq_jwks')
         .where('isActive', '=', 1)
         .where('expiresAt', '>', Math.floor(Date.now() / 1000))
         .select(['keyId', 'publicKey', 'algorithm'])

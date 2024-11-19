@@ -25,7 +25,7 @@ export default defineEventHandler(async (event) => {
     const body = await requireValidatedBody(event, RemovePasskeySchema)
 
     const passkey = await db
-      .selectFrom('passkeys')
+      .selectFrom('sq_passkeys')
       .where('credentialId', '=', body.credentialId)
       .where('userId', '=', userId)
       .select(['id', 'name', 'credentialId'])
@@ -47,7 +47,7 @@ export default defineEventHandler(async (event) => {
     }
 
     const passkeyCount = await db
-      .selectFrom('passkeys')
+      .selectFrom('sq_passkeys')
       .where('userId', '=', userId)
       .select((eb) => eb.fn.count('id').as('count'))
       .executeTakeFirst()
@@ -68,7 +68,7 @@ export default defineEventHandler(async (event) => {
       return createErrorResponse(event, 'Cannot remove last passkey', 400)
     }
 
-    await db.deleteFrom('passkeys').where('id', '=', passkey.id).execute()
+    await db.deleteFrom('sq_passkeys').where('id', '=', passkey.id).execute()
 
     await auditLog(event, {
       action: 'delete',

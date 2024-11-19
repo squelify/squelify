@@ -15,7 +15,7 @@ export async function cleanupSessions(db: Kysely<Database>): Promise<void> {
   const now = Math.floor(Date.now() / 1000)
 
   await db
-    .deleteFrom('sessions')
+    .deleteFrom('sq_sessions')
     .where((eb) =>
       eb.or([
         eb('expiresAt', '<', now),
@@ -42,7 +42,7 @@ export async function cleanupRateLimits(db: Kysely<Database>): Promise<void> {
   const now = Math.floor(Date.now() / 1000)
 
   await db
-    .deleteFrom('rate_limits')
+    .deleteFrom('sq_rate_limits')
     .where((eb) =>
       eb.or([
         eb.and([eb('expiresAt', '<', now), eb('blockedUntil', 'is', null)]),
@@ -60,7 +60,7 @@ export async function cleanupAuditLogs(db: Kysely<Database>): Promise<void> {
 
   while (true) {
     const deleted = await db
-      .deleteFrom('audit_logs')
+      .deleteFrom('sq_audit_logs')
       .where((eb) => eb.val(sql`created_at + retention`), '<', now)
       .execute()
 

@@ -19,8 +19,8 @@ export default defineEventHandler(async (event) => {
 
   try {
     const role = await db
-      .selectFrom('roles as r')
-      .leftJoin('role_permissions as rp', 'rp.roleId', 'r.id')
+      .selectFrom('sq_roles as r')
+      .leftJoin('sq_role_permissions as rp', 'rp.roleId', 'r.id')
       .where('r.id', '=', roleId)
       .select([
         'r.id',

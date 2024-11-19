@@ -23,7 +23,7 @@ export default defineEventHandler(async (event) => {
     const now = Math.floor(Date.now() / 1000)
 
     const verification = await db
-      .selectFrom('verifications')
+      .selectFrom('sq_verifications')
       .where('token', '=', body.token)
       .where('type', '=', 'otp')
       .where('userId', '=', payload.sub)
@@ -93,7 +93,7 @@ export default defineEventHandler(async (event) => {
 
     if (metadata.code !== body.code) {
       await db
-        .updateTable('verifications')
+        .updateTable('sq_verifications')
         .set({
           attempts: verification.attempts + 1,
           updatedAt: now,
@@ -123,7 +123,7 @@ export default defineEventHandler(async (event) => {
     }
 
     await db
-      .updateTable('verifications')
+      .updateTable('sq_verifications')
       .set({
         verifiedAt: now,
         updatedAt: now,

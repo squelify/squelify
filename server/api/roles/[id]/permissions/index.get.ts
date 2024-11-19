@@ -25,7 +25,7 @@ export default defineEventHandler(async (event) => {
   try {
     // Get role with its permissions
     const role = await db
-      .selectFrom('roles')
+      .selectFrom('sq_roles')
       .where('id', '=', roleId)
       .select(['id', 'name', 'type', 'organizationId'])
       .executeTakeFirst()
@@ -35,8 +35,8 @@ export default defineEventHandler(async (event) => {
     }
 
     const permissions = await db
-      .selectFrom('permissions as p')
-      .innerJoin('role_permissions as rp', 'rp.permissionId', 'p.id')
+      .selectFrom('sq_permissions as p')
+      .innerJoin('sq_role_permissions as rp', 'rp.permissionId', 'p.id')
       .where('rp.roleId', '=', roleId)
       .select([
         'p.id',

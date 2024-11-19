@@ -24,10 +24,10 @@ export default async function seed(db: Kysely<Database>): Promise<void> {
     },
   ]
 
-  await db.insertInto('roles').values(roles).execute()
+  await db.insertInto('sq_roles').values(roles).execute()
 
   // Assign permissions to roles
-  const permissions = await db.selectFrom('permissions').select(['id']).execute()
+  const permissions = await db.selectFrom('sq_permissions').select(['id']).execute()
 
   const rolePermissions: RolePermissionInsert[] = permissions.map((permission) => ({
     id: typeid('rper').toString(),
@@ -37,5 +37,5 @@ export default async function seed(db: Kysely<Database>): Promise<void> {
     createdAt: now,
   }))
 
-  await db.insertInto('role_permissions').values(rolePermissions).execute()
+  await db.insertInto('sq_role_permissions').values(rolePermissions).execute()
 }

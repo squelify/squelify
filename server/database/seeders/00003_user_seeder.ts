@@ -17,7 +17,7 @@ export default async function seed(db: Kysely<Database>): Promise<void> {
 
     // Check for existing admin user
     const existingUser = await trx
-      .selectFrom('emails')
+      .selectFrom('sq_emails')
       .where('email', '=', 'admin@example.com')
       .select('userId')
       .executeTakeFirst()
@@ -98,7 +98,7 @@ export default async function seed(db: Kysely<Database>): Promise<void> {
 
     // Get admin role
     const adminRole = await trx
-      .selectFrom('roles')
+      .selectFrom('sq_roles')
       .where('name', '=', 'admin')
       .select('id')
       .executeTakeFirst()
@@ -117,13 +117,13 @@ export default async function seed(db: Kysely<Database>): Promise<void> {
     }
 
     // Execute all inserts
-    await trx.insertInto('users').values(newUser).execute()
-    await trx.insertInto('emails').values(newEmail).execute()
-    await trx.insertInto('passwords').values(newPassword).execute()
-    await trx.insertInto('organizations').values(newOrg).execute()
-    await trx.insertInto('members').values(newMember).execute()
-    await trx.insertInto('accounts').values(newAccount).execute()
-    await trx.insertInto('user_roles').values(newUserRole).execute()
+    await trx.insertInto('sq_users').values(newUser).execute()
+    await trx.insertInto('sq_emails').values(newEmail).execute()
+    await trx.insertInto('sq_passwords').values(newPassword).execute()
+    await trx.insertInto('sq_organizations').values(newOrg).execute()
+    await trx.insertInto('sq_members').values(newMember).execute()
+    await trx.insertInto('sq_accounts').values(newAccount).execute()
+    await trx.insertInto('sq_user_roles').values(newUserRole).execute()
 
     consola.log('🍀 Admin user and organization created successfully')
   })

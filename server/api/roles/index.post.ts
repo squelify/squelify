@@ -44,13 +44,13 @@ export default defineEventHandler(async (event) => {
     if (body.type === 'organization' && body.organizationId) {
       const [org, member] = await Promise.all([
         db
-          .selectFrom('organizations')
+          .selectFrom('sq_organizations')
           .where('id', '=', body.organizationId)
           .select(['id', 'name', 'status'])
           .executeTakeFirst(),
 
         db
-          .selectFrom('members')
+          .selectFrom('sq_members')
           .where('organizationId', '=', body.organizationId)
           .where('userId', '=', userId)
           .where('role', '=', 'org:owner')
@@ -88,7 +88,7 @@ export default defineEventHandler(async (event) => {
 
     // Check for duplicate role name in same scope
     const existingRole = await db
-      .selectFrom('roles')
+      .selectFrom('sq_roles')
       .where('name', '=', body.name)
       .where((eb) => {
         if (body.type === 'organization' && body.organizationId) {
@@ -105,7 +105,7 @@ export default defineEventHandler(async (event) => {
 
     // Create role
     const role = await db
-      .insertInto('roles')
+      .insertInto('sq_roles')
       .values({
         id: typeid('rol').toString(),
         name: body.name,

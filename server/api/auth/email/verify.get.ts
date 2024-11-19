@@ -34,7 +34,7 @@ export default defineEventHandler(async (event) => {
     }
 
     const verification = await db
-      .selectFrom('verifications')
+      .selectFrom('sq_verifications')
       .where('token', '=', token)
       .where('type', '=', 'email')
       .select(['id', 'userId', 'identifier', 'attempts', 'maxAttempts', 'verifiedAt', 'expiresAt'])
@@ -71,7 +71,7 @@ export default defineEventHandler(async (event) => {
     }
 
     const rateLimit = await db
-      .selectFrom('rate_limits')
+      .selectFrom('sq_rate_limits')
       .where('key', '=', verification.identifier)
       .where('context', '=', 'email')
       .where('expiresAt', '>', now)
@@ -93,7 +93,7 @@ export default defineEventHandler(async (event) => {
         const blocked = newPoints >= 3
 
         await db
-          .updateTable('rate_limits')
+          .updateTable('sq_rate_limits')
           .set({
             points: newPoints,
             blockedUntil: blocked ? now + 30 * 60 : null,
@@ -108,7 +108,7 @@ export default defineEventHandler(async (event) => {
         }
       } else {
         await db
-          .insertInto('rate_limits')
+          .insertInto('sq_rate_limits')
           .values({
             id: typeid('rlim').toString(),
             key: verification.identifier,
@@ -124,7 +124,7 @@ export default defineEventHandler(async (event) => {
 
       const newToken = typeid().toString()
       await db
-        .insertInto('verifications')
+        .insertInto('sq_verifications')
         .values({
           id: typeid('ver').toString(),
           userId: verification.userId,
@@ -164,7 +164,7 @@ export default defineEventHandler(async (event) => {
 
     await db.transaction().execute(async (trx) => {
       await trx
-        .updateTable('verifications')
+        .updateTable('sq_verifications')
         .set({
           verifiedAt: now,
           attempts: verification.attempts + 1,
@@ -174,7 +174,7 @@ export default defineEventHandler(async (event) => {
         .execute()
 
       await trx
-        .updateTable('emails')
+        .updateTable('sq_emails')
         .set({
           verifiedAt: now,
           updatedAt: now,

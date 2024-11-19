@@ -34,7 +34,7 @@ export default defineEventHandler(async (event) => {
     const body = await requireValidatedBody(event, InviteMemberSchema)
 
     const org = await db
-      .selectFrom('organizations')
+      .selectFrom('sq_organizations')
       .where('id', '=', orgId)
       .select(['id', 'name', 'status'])
       .executeTakeFirst()
@@ -55,7 +55,7 @@ export default defineEventHandler(async (event) => {
     }
 
     const requester = await db
-      .selectFrom('members')
+      .selectFrom('sq_members')
       .where('organizationId', '=', orgId)
       .where('userId', '=', userId)
       .where('role', 'in', ['org:owner', 'org:admin'])
@@ -101,7 +101,7 @@ export default defineEventHandler(async (event) => {
     }
 
     const existingInvite = await db
-      .selectFrom('invitations')
+      .selectFrom('sq_invitations')
       .where('organizationId', '=', orgId)
       .where('email', '=', body.email)
       .where('status', '=', 'pending')
@@ -125,7 +125,7 @@ export default defineEventHandler(async (event) => {
 
     const inviteId = typeid('inv').toString()
     const invitation = await db
-      .insertInto('invitations')
+      .insertInto('sq_invitations')
       .values({
         id: inviteId,
         organizationId: orgId,

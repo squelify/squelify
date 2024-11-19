@@ -1,7 +1,3 @@
-import { type Kysely, sql } from 'kysely'
-import { UNIX_TIMESTAMP } from '~/database/db.helper'
-import type { Database } from '~/database/db.schema'
-
 /**
  * User Bans Table
  *
@@ -12,12 +8,19 @@ import type { Database } from '~/database/db.schema'
  * - Appeal status
  * - Historical ban data
  */
+
+import { type Kysely, sql } from 'kysely'
+import { UNIX_TIMESTAMP } from '~/database/db.helper'
+import type { Database } from '~/database/db.schema'
+
 export async function up(db: Kysely<Database>): Promise<void> {
   await db.schema
-    .createTable('user_bans')
+    .createTable('sq_user_bans')
     .addColumn('id', 'text', (col) => col.primaryKey())
-    .addColumn('user_id', 'text', (col) => col.notNull().references('users.id').onDelete('cascade'))
-    .addColumn('banned_by', 'text', (col) => col.references('users.id').onDelete('set null'))
+    .addColumn('user_id', 'text', (col) =>
+      col.notNull().references('sq_users.id').onDelete('cascade')
+    )
+    .addColumn('banned_by', 'text', (col) => col.references('sq_users.id').onDelete('set null'))
     .addColumn('reason', 'text', (col) => col.notNull())
     .addColumn('details', 'text', (col) => col.notNull().defaultTo('{}'))
     .addColumn('expires_at', 'integer')
@@ -26,7 +29,7 @@ export async function up(db: Kysely<Database>): Promise<void> {
     )
     .addColumn('appeal_reason', 'text')
     .addColumn('appeal_reviewed_by', 'text', (col) =>
-      col.references('users.id').onDelete('set null')
+      col.references('sq_users.id').onDelete('set null')
     )
     .addColumn('appeal_reviewed_at', 'integer')
     .addColumn('created_at', 'integer', (col) => col.notNull().defaultTo(UNIX_TIMESTAMP))
@@ -35,37 +38,47 @@ export async function up(db: Kysely<Database>): Promise<void> {
     .ifNotExists()
     .execute()
 
-  // Indexes
-  await db.schema
-    .createIndex('user_bans_user_id_idx')
-    .on('user_bans')
-    .column('user_id')
-    .ifNotExists()
-    .execute()
-
-  await db.schema
-    .createIndex('user_bans_expires_idx')
-    .on('user_bans')
-    .columns(['user_id', 'expires_at'])
-    .ifNotExists()
-    .execute()
-
-  // Create auto-update trigger
+  /**
+   * Trigger to automatically update timestamp when ban record changes
+   * Ensures accurate tracking of ban modifications and appeals
+   */
   await sql`
-    CREATE TRIGGER IF NOT EXISTS update_user_bans_timestamp
-    AFTER UPDATE ON user_bans
+    CREATE TRIGGER IF NOT EXISTS sq_trg_user_bans_timestamp
+    AFTER UPDATE ON sq_user_bans
     FOR EACH ROW
     BEGIN
-      UPDATE user_bans
+      UPDATE sq_user_bans
       SET updated_at = strftime('%s', 'now')
       WHERE id = NEW.id;
     END;
   `.execute(db)
+
+  /**
+   * Index for user-based ban lookups
+   * Optimizes queries that check user ban status
+   */
+  await db.schema
+    .createIndex('sq_idx_user_bans_user')
+    .on('sq_user_bans')
+    .column('user_id')
+    .ifNotExists()
+    .execute()
+
+  /**
+   * Compound index for expiration checks
+   * Enhances queries that manage ban durations
+   */
+  await db.schema
+    .createIndex('sq_idx_user_bans_expires')
+    .on('sq_user_bans')
+    .columns(['user_id', 'expires_at'])
+    .ifNotExists()
+    .execute()
 }
 
 export async function down(db: Kysely<Database>): Promise<void> {
-  await db.schema.dropIndex('user_bans_user_id_idx').ifExists().execute()
-  await db.schema.dropIndex('user_bans_expires_idx').ifExists().execute()
-  await sql`DROP TRIGGER IF EXISTS update_user_bans_timestamp;`.execute(db)
-  await db.schema.dropTable('user_bans').ifExists().execute()
+  await db.schema.dropIndex('sq_idx_user_bans_user').ifExists().execute()
+  await db.schema.dropIndex('sq_idx_user_bans_expires').ifExists().execute()
+  await sql`DROP TRIGGER IF EXISTS sq_trg_user_bans_timestamp;`.execute(db)
+  await db.schema.dropTable('sq_user_bans').ifExists().execute()
 }

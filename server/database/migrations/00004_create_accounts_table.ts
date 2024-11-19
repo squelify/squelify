@@ -4,9 +4,11 @@ import type { Database } from '~/database/db.schema'
 
 export async function up(db: Kysely<Database>): Promise<void> {
   await db.schema
-    .createTable('accounts')
+    .createTable('sq_accounts')
     .addColumn('id', 'text', (col) => col.primaryKey())
-    .addColumn('user_id', 'text', (col) => col.notNull().references('users.id').onDelete('cascade'))
+    .addColumn('user_id', 'text', (col) =>
+      col.notNull().references('sq_users.id').onDelete('cascade')
+    )
     .addColumn('provider', 'text')
     .addColumn('provider_account_id', 'text', (col) => col.notNull())
     .addColumn('provider_refresh_token', 'text')
@@ -21,46 +23,60 @@ export async function up(db: Kysely<Database>): Promise<void> {
     .ifNotExists()
     .execute()
 
-  // Create auto-update trigger
+  /**
+   * Trigger to automatically update timestamp when OAuth account is modified
+   * Ensures accurate tracking of account changes and token updates
+   */
   await sql`
-    CREATE TRIGGER IF NOT EXISTS update_accounts_timestamp
-    AFTER UPDATE ON accounts
+    CREATE TRIGGER IF NOT EXISTS sq_trg_accounts_timestamp
+    AFTER UPDATE ON sq_accounts
     FOR EACH ROW
     BEGIN
-      UPDATE accounts
+      UPDATE sq_accounts
       SET updated_at = strftime('%s', 'now')
       WHERE id = NEW.id;
     END;
   `.execute(db)
 
-  // Indexes
+  /**
+   * Primary lookup index for user's OAuth accounts
+   * Optimizes queries filtering by user_id
+   */
   await db.schema
-    .createIndex('accounts_user_id_idx')
-    .on('accounts')
+    .createIndex('sq_idx_accounts_user')
+    .on('sq_accounts')
     .column('user_id')
     .ifNotExists()
     .execute()
 
+  /**
+   * Unique compound index for provider account lookups
+   * Ensures unique provider accounts and improves authentication queries
+   */
   await db.schema
-    .createIndex('accounts_provider_account_id_idx')
-    .on('accounts')
+    .createIndex('sq_idx_accounts_provider_lookup')
+    .on('sq_accounts')
     .columns(['provider', 'provider_account_id'])
     .unique()
     .ifNotExists()
     .execute()
 
+  /**
+   * Index for provider-based filtering
+   * Enhances queries that filter accounts by OAuth provider
+   */
   await db.schema
-    .createIndex('accounts_provider_idx')
-    .on('accounts')
+    .createIndex('sq_idx_accounts_provider')
+    .on('sq_accounts')
     .column('provider')
     .ifNotExists()
     .execute()
 }
 
 export async function down(db: Kysely<Database>): Promise<void> {
-  await db.schema.dropIndex('accounts_provider_idx').ifExists().execute()
-  await db.schema.dropIndex('accounts_provider_account_id_idx').ifExists().execute()
-  await db.schema.dropIndex('accounts_user_id_idx').ifExists().execute()
-  await sql`DROP TRIGGER IF EXISTS update_accounts_timestamp;`.execute(db)
-  await db.schema.dropTable('accounts').ifExists().execute()
+  await db.schema.dropIndex('sq_idx_accounts_provider').ifExists().execute()
+  await db.schema.dropIndex('sq_idx_accounts_provider_lookup').ifExists().execute()
+  await db.schema.dropIndex('sq_idx_accounts_user').ifExists().execute()
+  await sql`DROP TRIGGER IF EXISTS sq_trg_accounts_timestamp;`.execute(db)
+  await db.schema.dropTable('sq_accounts').ifExists().execute()
 }

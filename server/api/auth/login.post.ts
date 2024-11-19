@@ -82,36 +82,36 @@ export default defineEventHandler(async (event) => {
     // Query user data in parallel
     const [roles, permissions, twoFactor] = await Promise.all([
       db
-        .selectFrom('roles')
-        .innerJoin('user_roles', 'roles.id', 'user_roles.roleId')
-        .where('user_roles.userId', '=', user.id)
-        .select(['roles.id', 'roles.name', 'roles.type', 'roles.organizationId'])
+        .selectFrom('sq_roles as r')
+        .innerJoin('sq_user_roles as urole', 'r.id', 'urole.roleId')
+        .where('urole.userId', '=', user.id)
+        .select(['r.id', 'r.name', 'r.type', 'r.organizationId'])
         .execute(),
 
       db
-        .selectFrom('permissions')
-        .innerJoin('role_permissions', 'permissions.id', 'role_permissions.permissionId')
-        .innerJoin('user_roles', 'role_permissions.roleId', 'user_roles.roleId')
-        .where('user_roles.userId', '=', user.id)
+        .selectFrom('sq_permissions as perms')
+        .innerJoin('sq_role_permissions as rp', 'perms.id', 'rp.permissionId')
+        .innerJoin('sq_user_roles as urole', 'rp.roleId', 'urole.roleId')
+        .where('urole.userId', '=', user.id)
         .select([
-          'permissions.id',
-          'permissions.name',
-          'permissions.category',
-          'permissions.action',
-          'permissions.resource',
-          'permissions.conditions',
+          'perms.id',
+          'perms.name',
+          'perms.category',
+          'perms.action',
+          'perms.resource',
+          'perms.conditions',
         ])
         .execute(),
 
       db
-        .selectFrom('two_factors')
+        .selectFrom('sq_two_factors')
         .where('userId', '=', user.id)
         .where('verifiedAt', '!=', null)
         .select(['type'])
         .executeTakeFirst(),
 
       db
-        .selectFrom('user_metadata')
+        .selectFrom('sq_user_metadata')
         .where('userId', '=', user.id)
         .where('isPublic', '=', 1)
         .select(['key', 'value'])

@@ -42,14 +42,14 @@ export default defineCachedEventHandler(
 
       // Get total count for pagination
       const totalCount = await db
-        .selectFrom('roles')
+        .selectFrom('sq_roles')
         .select((eb) => eb.fn.countAll().as('count'))
         .executeTakeFirst()
 
       // Get paginated roles with permissions count
       const roles = await db
-        .selectFrom('roles as r')
-        .leftJoin('role_permissions as rp', 'rp.roleId', 'r.id')
+        .selectFrom('sq_roles as r')
+        .leftJoin('sq_role_permissions as rp', 'rp.roleId', 'r.id')
         .select([
           'r.id',
           'r.name',

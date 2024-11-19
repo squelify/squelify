@@ -3,8 +3,9 @@ import { UNIX_TIMESTAMP } from '~/database/db.helper'
 import type { Database } from '~/database/db.schema'
 
 export async function up(db: Kysely<Database>): Promise<void> {
+  // Create users table with strict mode enabled
   await db.schema
-    .createTable('users')
+    .createTable('sq_users')
     .addColumn('id', 'text', (col) => col.primaryKey())
     .addColumn('first_name', 'text', (col) => col.notNull())
     .addColumn('last_name', 'text')
@@ -20,68 +21,87 @@ export async function up(db: Kysely<Database>): Promise<void> {
     .ifNotExists()
     .execute()
 
-  // Create auto-update trigger
+  /**
+   * Trigger to automatically update timestamp when record is modified
+   * This ensures data consistency and audit trail
+   */
   await sql`
-    CREATE TRIGGER IF NOT EXISTS update_users_timestamp
-    AFTER UPDATE ON users
+    CREATE TRIGGER IF NOT EXISTS sq_trg_users_timestamp
+    AFTER UPDATE ON sq_users
     FOR EACH ROW
     BEGIN
-      UPDATE users
+      UPDATE sq_users
       SET updated_at = strftime('%s', 'now')
       WHERE id = NEW.id;
     END;
   `.execute(db)
 
+  /**
+   * Single column indexes for frequent lookup operations
+   * Improves query performance for common search patterns
+   */
   await db.schema
-    .createIndex('users_username_idx')
-    .on('users')
+    .createIndex('sq_idx_users_username')
+    .on('sq_users')
     .column('username')
     .ifNotExists()
     .execute()
 
   await db.schema
-    .createIndex('users_is_active_idx')
-    .on('users')
+    .createIndex('sq_idx_users_is_active')
+    .on('sq_users')
     .column('is_active')
     .ifNotExists()
     .execute()
 
   await db.schema
-    .createIndex('users_created_at_idx')
-    .on('users')
+    .createIndex('sq_idx_users_created_at')
+    .on('sq_users')
     .column('created_at')
     .ifNotExists()
     .execute()
 
+  /**
+   * Compound index for name-based searches
+   * Optimizes queries that filter or sort by full name
+   */
   await db.schema
-    .createIndex('users_name_search_idx')
-    .on('users')
+    .createIndex('sq_idx_users_name_search')
+    .on('sq_users')
     .columns(['first_name', 'last_name'])
     .ifNotExists()
     .execute()
 
+  /**
+   * Status index for filtering active and soft-deleted records
+   * Improves performance for status-based queries
+   */
   await db.schema
-    .createIndex('users_status_idx')
-    .on('users')
+    .createIndex('sq_idx_users_status')
+    .on('sq_users')
     .columns(['is_active', 'deleted_at'])
     .ifNotExists()
     .execute()
 
+  /**
+   * Authentication index for login and session validation
+   * Speeds up user authentication lookups
+   */
   await db.schema
-    .createIndex('users_auth_idx')
-    .on('users')
+    .createIndex('sq_idx_users_auth')
+    .on('sq_users')
     .columns(['username', 'is_active'])
     .ifNotExists()
     .execute()
 }
 
 export async function down(db: Kysely<Database>): Promise<void> {
-  await db.schema.dropIndex('users_auth_idx').ifExists().execute()
-  await db.schema.dropIndex('users_status_idx').ifExists().execute()
-  await db.schema.dropIndex('users_name_search_idx').ifExists().execute()
-  await db.schema.dropIndex('users_created_at_idx').ifExists().execute()
-  await db.schema.dropIndex('users_is_active_idx').ifExists().execute()
-  await db.schema.dropIndex('users_username_idx').ifExists().execute()
-  await sql`DROP TRIGGER IF EXISTS update_users_timestamp;`.execute(db)
-  await db.schema.dropTable('users').ifExists().execute()
+  await db.schema.dropIndex('sq_idx_users_auth').ifExists().execute()
+  await db.schema.dropIndex('sq_idx_users_status').ifExists().execute()
+  await db.schema.dropIndex('sq_idx_users_name_search').ifExists().execute()
+  await db.schema.dropIndex('sq_idx_users_created_at').ifExists().execute()
+  await db.schema.dropIndex('sq_idx_users_is_active').ifExists().execute()
+  await db.schema.dropIndex('sq_idx_users_username').ifExists().execute()
+  await sql`DROP TRIGGER IF EXISTS sq_trg_users_timestamp;`.execute(db)
+  await db.schema.dropTable('sq_users').ifExists().execute()
 }

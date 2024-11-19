@@ -1,7 +1,3 @@
-import { type Kysely, sql } from 'kysely'
-import { UNIX_TIMESTAMP } from '~/database/db.helper'
-import type { Database } from '~/database/db.schema'
-
 /**
  * User Metadata Table
  *
@@ -41,11 +37,17 @@ import type { Database } from '~/database/db.schema'
  *   - locations: [{ip, country, city}]
  */
 
+import { type Kysely, sql } from 'kysely'
+import { UNIX_TIMESTAMP } from '~/database/db.helper'
+import type { Database } from '~/database/db.schema'
+
 export async function up(db: Kysely<Database>): Promise<void> {
   await db.schema
-    .createTable('user_metadata')
+    .createTable('sq_user_metadata')
     .addColumn('id', 'text', (col) => col.primaryKey())
-    .addColumn('user_id', 'text', (col) => col.notNull().references('users.id').onDelete('cascade'))
+    .addColumn('user_id', 'text', (col) =>
+      col.notNull().references('sq_users.id').onDelete('cascade')
+    )
     .addColumn('key', 'text', (col) => col.notNull())
     .addColumn('value', 'text', (col) => col.notNull())
     .addColumn('is_public', 'integer', (col) =>
@@ -57,45 +59,59 @@ export async function up(db: Kysely<Database>): Promise<void> {
     .ifNotExists()
     .execute()
 
-  // Create auto-update trigger
+  /**
+   * Trigger to automatically update timestamp when metadata is modified
+   * Ensures accurate tracking of metadata changes
+   */
   await sql`
-    CREATE TRIGGER IF NOT EXISTS update_user_metadata_timestamp
-    AFTER UPDATE ON user_metadata
+    CREATE TRIGGER IF NOT EXISTS sq_trg_user_metadata_timestamp
+    AFTER UPDATE ON sq_user_metadata
     FOR EACH ROW
     BEGIN
-      UPDATE user_metadata
+      UPDATE sq_user_metadata
       SET updated_at = strftime('%s', 'now')
       WHERE id = NEW.id;
     END;
   `.execute(db)
 
-  // Indexes
+  /**
+   * Primary lookup index for user metadata
+   * Optimizes queries filtering by user_id
+   */
   await db.schema
-    .createIndex('user_metadata_user_id_idx')
-    .on('user_metadata')
+    .createIndex('sq_idx_user_metadata_user')
+    .on('sq_user_metadata')
     .column('user_id')
     .ifNotExists()
     .execute()
 
+  /**
+   * Compound index for key-based lookups
+   * Improves performance when querying specific metadata keys for a user
+   */
   await db.schema
-    .createIndex('user_metadata_lookup_idx')
-    .on('user_metadata')
+    .createIndex('sq_idx_user_metadata_lookup')
+    .on('sq_user_metadata')
     .columns(['user_id', 'key'])
     .ifNotExists()
     .execute()
 
+  /**
+   * Index for public metadata filtering
+   * Enhances queries that filter public/private metadata
+   */
   await db.schema
-    .createIndex('user_metadata_public_idx')
-    .on('user_metadata')
+    .createIndex('sq_idx_user_metadata_public')
+    .on('sq_user_metadata')
     .columns(['user_id', 'is_public'])
     .ifNotExists()
     .execute()
 }
 
 export async function down(db: Kysely<Database>): Promise<void> {
-  await db.schema.dropIndex('user_metadata_public_idx').ifExists().execute()
-  await db.schema.dropIndex('user_metadata_lookup_idx').ifExists().execute()
-  await db.schema.dropIndex('user_metadata_user_id_idx').ifExists().execute()
-  await sql`DROP TRIGGER IF EXISTS update_user_metadata_timestamp;`.execute(db)
-  await db.schema.dropTable('user_metadata').ifExists().execute()
+  await db.schema.dropIndex('sq_idx_user_metadata_public').ifExists().execute()
+  await db.schema.dropIndex('sq_idx_user_metadata_lookup').ifExists().execute()
+  await db.schema.dropIndex('sq_idx_user_metadata_user').ifExists().execute()
+  await sql`DROP TRIGGER IF EXISTS sq_trg_user_metadata_timestamp;`.execute(db)
+  await db.schema.dropTable('sq_user_metadata').ifExists().execute()
 }

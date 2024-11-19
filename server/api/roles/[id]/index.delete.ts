@@ -16,7 +16,7 @@ export default defineEventHandler(async (event) => {
   try {
     // Get role details
     const role = await db
-      .selectFrom('roles')
+      .selectFrom('sq_roles')
       .where('id', '=', roleId)
       .select(['id', 'name', 'type', 'organizationId', 'isDefault'])
       .executeTakeFirst()
@@ -47,7 +47,7 @@ export default defineEventHandler(async (event) => {
     // Verify delete permissions
     if (role.type === 'organization') {
       const member = await db
-        .selectFrom('members')
+        .selectFrom('sq_members')
         .where('organizationId', '=', role.organizationId)
         .where('userId', '=', userId)
         .where('role', '=', 'org:owner')
@@ -74,7 +74,7 @@ export default defineEventHandler(async (event) => {
     }
 
     // Delete role - cascading will handle role_permissions
-    await db.deleteFrom('roles').where('id', '=', roleId).execute()
+    await db.deleteFrom('sq_roles').where('id', '=', roleId).execute()
 
     // Log successful deletion
     await auditLog(event, {

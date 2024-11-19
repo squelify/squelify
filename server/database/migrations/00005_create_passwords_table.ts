@@ -5,9 +5,11 @@ import { DEFAULT_PASSWORD_ALGORITHM } from '~/database/schemas/password'
 
 export async function up(db: Kysely<Database>): Promise<void> {
   await db.schema
-    .createTable('passwords')
+    .createTable('sq_passwords')
     .addColumn('id', 'text', (col) => col.primaryKey())
-    .addColumn('user_id', 'text', (col) => col.notNull().references('users.id').onDelete('cascade'))
+    .addColumn('user_id', 'text', (col) =>
+      col.notNull().references('sq_users.id').onDelete('cascade')
+    )
     .addColumn('hash', 'text', (col) => col.notNull())
     .addColumn('algorithm', 'text', (col) =>
       col
@@ -30,80 +32,104 @@ export async function up(db: Kysely<Database>): Promise<void> {
     .ifNotExists()
     .execute()
 
-  // Auto-update trigger
+  /**
+   * Trigger to automatically update timestamp when password record changes
+   * Ensures accurate tracking of password modifications
+   */
   await sql`
-    CREATE TRIGGER IF NOT EXISTS update_passwords_timestamp
-    AFTER UPDATE ON passwords
+    CREATE TRIGGER IF NOT EXISTS sq_trg_passwords_timestamp
+    AFTER UPDATE ON sq_passwords
     FOR EACH ROW
     BEGIN
-      UPDATE passwords
+      UPDATE sq_passwords
       SET updated_at = strftime('%s', 'now')
       WHERE id = NEW.id;
     END;
   `.execute(db)
 
-  // Auto-update last_changed_at trigger
+  /**
+   * Trigger to update last_changed_at when password hash changes
+   * Tracks password change history for security purposes
+   */
   await sql`
-    CREATE TRIGGER IF NOT EXISTS update_passwords_last_changed
-    AFTER UPDATE ON passwords
+    CREATE TRIGGER IF NOT EXISTS sq_trg_passwords_last_changed
+    AFTER UPDATE ON sq_passwords
     WHEN NEW.hash != OLD.hash
     BEGIN
-      UPDATE passwords
+      UPDATE sq_passwords
       SET last_changed_at = strftime('%s', 'now')
       WHERE id = NEW.id;
     END;
   `.execute(db)
 
-  // Reset failed attempts on successful password change
+  /**
+   * Trigger to reset failed attempts on successful password change
+   * Implements security policy for password attempts tracking
+   */
   await sql`
-    CREATE TRIGGER IF NOT EXISTS reset_password_attempts
-    AFTER UPDATE ON passwords
+    CREATE TRIGGER IF NOT EXISTS sq_trg_passwords_reset_attempts
+    AFTER UPDATE ON sq_passwords
     WHEN NEW.hash != OLD.hash
     BEGIN
-      UPDATE passwords
+      UPDATE sq_passwords
       SET failed_attempts = 0,
           locked_until = NULL
       WHERE id = NEW.id;
     END;
   `.execute(db)
 
-  // Indexes
+  /**
+   * Primary lookup index for user passwords
+   * Optimizes authentication queries
+   */
   await db.schema
-    .createIndex('passwords_user_id_idx')
-    .on('passwords')
+    .createIndex('sq_idx_passwords_user')
+    .on('sq_passwords')
     .column('user_id')
     .ifNotExists()
     .execute()
 
+  /**
+   * Index for password reset requirements
+   * Enhances queries that check for required password resets
+   */
   await db.schema
-    .createIndex('passwords_reset_required_idx')
-    .on('passwords')
+    .createIndex('sq_idx_passwords_reset')
+    .on('sq_passwords')
     .columns(['user_id', 'reset_required'])
     .ifNotExists()
     .execute()
 
+  /**
+   * Index for account lockout status
+   * Improves performance of login attempt checks
+   */
   await db.schema
-    .createIndex('passwords_locked_idx')
-    .on('passwords')
+    .createIndex('sq_idx_passwords_locked')
+    .on('sq_passwords')
     .columns(['user_id', 'locked_until'])
     .ifNotExists()
     .execute()
 
+  /**
+   * Index for password expiration checks
+   * Optimizes queries that validate password age
+   */
   await db.schema
-    .createIndex('passwords_expires_idx')
-    .on('passwords')
+    .createIndex('sq_idx_passwords_expires')
+    .on('sq_passwords')
     .columns(['user_id', 'expires_at'])
     .ifNotExists()
     .execute()
 }
 
 export async function down(db: Kysely<Database>): Promise<void> {
-  await db.schema.dropIndex('passwords_expires_idx').ifExists().execute()
-  await db.schema.dropIndex('passwords_locked_idx').ifExists().execute()
-  await db.schema.dropIndex('passwords_reset_required_idx').ifExists().execute()
-  await db.schema.dropIndex('passwords_user_id_idx').ifExists().execute()
-  await sql`DROP TRIGGER IF EXISTS reset_password_attempts;`.execute(db)
-  await sql`DROP TRIGGER IF EXISTS update_passwords_last_changed;`.execute(db)
-  await sql`DROP TRIGGER IF EXISTS update_passwords_timestamp;`.execute(db)
-  await db.schema.dropTable('passwords').ifExists().execute()
+  await db.schema.dropIndex('sq_idx_passwords_expires').ifExists().execute()
+  await db.schema.dropIndex('sq_idx_passwords_locked').ifExists().execute()
+  await db.schema.dropIndex('sq_idx_passwords_reset').ifExists().execute()
+  await db.schema.dropIndex('sq_idx_passwords_user').ifExists().execute()
+  await sql`DROP TRIGGER IF EXISTS sq_trg_passwords_reset_attempts;`.execute(db)
+  await sql`DROP TRIGGER IF EXISTS sq_trg_passwords_last_changed;`.execute(db)
+  await sql`DROP TRIGGER IF EXISTS sq_trg_passwords_timestamp;`.execute(db)
+  await db.schema.dropTable('sq_passwords').ifExists().execute()
 }

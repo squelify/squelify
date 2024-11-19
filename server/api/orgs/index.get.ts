@@ -45,13 +45,13 @@ export default defineCachedEventHandler(
 
       // Get total count for pagination
       const totalCount = await event.context.db
-        .selectFrom('organizations')
+        .selectFrom('sq_organizations')
         .select((eb) => eb.fn.countAll().as('count'))
         .executeTakeFirst()
 
       // Get paginated organizations
       const organizations = await event.context.db
-        .selectFrom('organizations')
+        .selectFrom('sq_organizations')
         .selectAll()
         .limit(limit)
         .offset(offset)

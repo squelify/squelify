@@ -25,7 +25,7 @@ export default defineEventHandler(async (event) => {
     const now = Math.floor(Date.now() / 1000)
 
     const twoFactor = await db
-      .selectFrom('two_factors')
+      .selectFrom('sq_two_factors')
       .where('id', '=', body.id)
       .where('userId', '=', payload.sub)
       .where('type', '=', 'totp')
@@ -78,7 +78,7 @@ export default defineEventHandler(async (event) => {
 
     if (twoFactor.isPrimary) {
       const otherVerified2FA = await db
-        .selectFrom('two_factors')
+        .selectFrom('sq_two_factors')
         .where('userId', '=', payload.sub)
         .where('id', '!=', twoFactor.id)
         .where('verifiedAt', '=', now)
@@ -104,7 +104,7 @@ export default defineEventHandler(async (event) => {
       }
 
       await db
-        .updateTable('two_factors')
+        .updateTable('sq_two_factors')
         .set({
           isPrimary: 1,
           updatedAt: now,
@@ -113,7 +113,7 @@ export default defineEventHandler(async (event) => {
         .execute()
     }
 
-    await db.deleteFrom('two_factors').where('id', '=', twoFactor.id).execute()
+    await db.deleteFrom('sq_two_factors').where('id', '=', twoFactor.id).execute()
 
     await auditLog(event, {
       action: 'disable',

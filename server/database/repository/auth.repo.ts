@@ -1,8 +1,8 @@
 import { type Kysely } from 'kysely'
 import { typeid } from 'typeid-js'
 import type { Database } from '~/database/db.schema'
+import { DEFAULT_PASSWORD_ALGORITHM, PASSWORD_POLICIES } from '~/database/schemas/password'
 import { verifyPassword } from '~/utils/security'
-import { DEFAULT_PASSWORD_ALGORITHM, PASSWORD_POLICIES } from '../schemas/password'
 
 interface CreateSessionOptions {
   ipAddress: string
@@ -15,12 +15,12 @@ interface CreateSessionOptions {
 
 export async function verifyUserCredentials(db: Kysely<Database>, email: string, password: string) {
   const user = await db
-    .selectFrom('users as u')
-    .innerJoin('emails as e', (join) =>
+    .selectFrom('sq_users as u')
+    .innerJoin('sq_emails as e', (join) =>
       join.onRef('e.userId', '=', 'u.id').on('e.isPrimary', '=', 1)
     )
-    .innerJoin('passwords as p', 'p.userId', 'u.id')
-    .leftJoin('user_bans as ub', (join) =>
+    .innerJoin('sq_passwords as p', 'p.userId', 'u.id')
+    .leftJoin('sq_user_bans as ub', (join) =>
       join
         .onRef('ub.userId', '=', 'u.id')
         .on((eb) =>
@@ -54,7 +54,7 @@ export async function verifyUserCredentials(db: Kysely<Database>, email: string,
 
   // Get user metadata
   const metadata = await db
-    .selectFrom('user_metadata')
+    .selectFrom('sq_user_metadata')
     .where('userId', '=', user.id)
     .where('isPublic', '=', 1)
     .select(['key', 'value'])
@@ -89,7 +89,7 @@ export async function createUserSession(
 
   // Check if metadata exists first
   const existingMeta = await db
-    .selectFrom('user_metadata')
+    .selectFrom('sq_user_metadata')
     .where('userId', '=', userId)
     .where('key', '=', 'last_sign_in_at')
     .select('id')
@@ -97,7 +97,7 @@ export async function createUserSession(
 
   if (existingMeta) {
     await db
-      .updateTable('user_metadata')
+      .updateTable('sq_user_metadata')
       .set({
         value: String(now),
         updatedAt: now,
@@ -106,7 +106,7 @@ export async function createUserSession(
       .execute()
   } else {
     await db
-      .insertInto('user_metadata')
+      .insertInto('sq_user_metadata')
       .values({
         id: typeid('meta').toString(),
         userId,
@@ -119,7 +119,7 @@ export async function createUserSession(
   }
 
   const session = await db
-    .insertInto('sessions')
+    .insertInto('sq_sessions')
     .values({
       id: typeid('sess').toString(),
       userId,
@@ -147,7 +147,7 @@ export async function changePassword(db: Kysely<Database>, userId: string, newPa
   return db.transaction().execute(async (trx) => {
     // Get current password
     const current = await trx
-      .selectFrom('passwords')
+      .selectFrom('sq_passwords')
       .where('userId', '=', userId)
       .select(['hash', 'previousHashes'])
       .executeTakeFirst()
@@ -163,7 +163,7 @@ export async function changePassword(db: Kysely<Database>, userId: string, newPa
       const now = Math.floor(Date.now() / 1000)
 
       await trx
-        .updateTable('passwords')
+        .updateTable('sq_passwords')
         .set({
           hash,
           algorithm: DEFAULT_PASSWORD_ALGORITHM,
@@ -180,7 +180,7 @@ export async function changePassword(db: Kysely<Database>, userId: string, newPa
 export async function validatePasswordAttempt(db: Kysely<Database>, userId: string) {
   return db.transaction().execute(async (trx) => {
     const password = await trx
-      .selectFrom('passwords')
+      .selectFrom('sq_passwords')
       .where('userId', '=', userId)
       .select(['id', 'failedAttempts', 'lockedUntil'])
       .executeTakeFirst()
@@ -193,7 +193,7 @@ export async function validatePasswordAttempt(db: Kysely<Database>, userId: stri
 
     if (password.failedAttempts >= PASSWORD_POLICIES.MAX_ATTEMPTS) {
       await trx
-        .updateTable('passwords')
+        .updateTable('sq_passwords')
         .set({
           lockedUntil: PASSWORD_POLICIES.LOCKOUT_DURATION,
           lastAttemptAt: Math.floor(Date.now() / 1000),
