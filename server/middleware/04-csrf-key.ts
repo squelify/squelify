@@ -41,17 +41,12 @@ export default defineEventHandler(async (event) => {
     const clientInfo = getHeader(event, 'X-Client-Info')
     const isOfficialApp = clientInfo?.startsWith('ApiClient')
 
-    const debugMsg = { pathname, apiKey, clientInfo, isOfficialApp }
-    logger.debug('[midw]', 'CSRF/API protection', debugMsg)
-
     if (matchRoute(apiPath, UNPROTECTED_ROUTES)) return
 
     if (isOfficialApp) {
       // Browser-based official app - validate CSRF token
       const csrfToken = getCookie(event, 'csrf_token')
       const headerToken = getHeader(event, 'X-CSRF-Token')
-
-      logger.debug('[midw]', 'CSRF/API protection', { csrfToken, headerToken })
 
       if (!headerToken) {
         return createErrorResponse(event, 'Missing CSRF token', 403)

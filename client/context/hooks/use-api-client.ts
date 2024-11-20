@@ -1,6 +1,6 @@
 import { useMemo } from 'react'
 import { useLoaderData as useLoaderDataOriginal } from 'react-router-dom'
-import { process } from 'std-env'
+import { env } from 'std-env'
 import { ApiClient } from '#/services'
 
 /**
@@ -13,9 +13,7 @@ import { ApiClient } from '#/services'
  * @returns The singleton instance of the `ApiClient` class.
  */
 const apiClient = ApiClient.getInstance({
-  baseURL: process.env.SQUELIFY_BASE_URL
-    ? `${process.env.SQUELIFY_BASE_URL}/api`
-    : 'http://localhost:3278/api',
+  baseURL: env.SQUELIFY_BASE_URL ? `${env.SQUELIFY_BASE_URL}/api` : 'http://localhost:3278/api',
 })
 
 /**

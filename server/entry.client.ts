@@ -18,7 +18,7 @@ export default defineCachedEventHandler(
       maxAge: DURATION.MINUTE * 30,
     })
 
-    if (process.env.NODE_ENV === 'development') {
+    if (process.dev) {
       const [serverAddress] = event.context.vite.resolvedUrls.local
 
       return /* html */ `<!DOCTYPE html>
@@ -32,8 +32,6 @@ export default defineCachedEventHandler(
   <body>
     <div id="root"></div>
     <script type="module">
-      import RefreshRuntime from '${serverAddress}@react-refresh'
-      RefreshRuntime.injectIntoGlobalHook(window)
       window.$RefreshReg$ = () => {}
       window.$RefreshSig$ = () => (type) => type
       window.__vite_plugin_react_preamble_installed__ = true

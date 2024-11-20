@@ -2,7 +2,7 @@ import { process } from 'std-env'
 import type { ViteDevServer } from 'vite'
 
 export default defineNitroPlugin(async (nitroApp) => {
-  if (process.env.NODE_ENV === 'production') {
+  if (!process.dev) {
     return
   }
 

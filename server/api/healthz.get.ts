@@ -1,6 +1,6 @@
 import os from 'node:os'
 import { sql } from 'kysely'
-import { env, process } from 'std-env'
+import { env, nodeENV, process } from 'std-env'
 import pkg from '~~/package.json' assert { type: 'json' }
 
 export interface HealthCheckResponse {
@@ -115,7 +115,7 @@ export default defineEventHandler(async (event): Promise<HealthCheckResponse> =>
   return {
     status: dbStatus === 'up' ? 'healthy' : 'unhealthy',
     appVersion: pkg.version,
-    environment: process.env.NODE_ENV,
+    environment: nodeENV,
     timestamp: new Date().toISOString(),
     serviceId: isHostedOnFly ? serviceId : host,
     uptime: formatUptime(process.uptime()),

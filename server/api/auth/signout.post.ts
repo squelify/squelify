@@ -1,3 +1,4 @@
+import { isProduction } from 'std-env'
 import { z } from 'zod'
 
 export const SignoutRequestSchema = z.object({
@@ -112,7 +113,7 @@ export default defineEventHandler(async (event) => {
     deleteCookie(event, 'auth_session', {
       path: '/',
       sameSite: 'lax',
-      secure: process.env.NODE_ENV === 'production',
+      secure: isProduction,
       httpOnly: true,
     })
 

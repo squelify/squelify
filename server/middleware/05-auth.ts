@@ -2,7 +2,6 @@ import { LibsqlError } from '@libsql/client'
 import type { H3Event } from 'h3'
 import * as jose from 'jose'
 import { JWTClaimValidationFailed, JWTExpired, JWTInvalid } from 'jose/errors'
-import { env } from 'std-env'
 import { ZodError, z } from 'zod'
 import { getJWKByKeyId } from '~/database/repository/jwk.repo'
 import type { JWTPayload } from '~/utils/jwt'
@@ -101,21 +100,21 @@ export default defineEventHandler(async (event) => {
     const sessionId = getCookie(event, 'auth_session')
     const bearerToken = getRequestHeader(event, 'Authorization')?.replace('Bearer ', '')
 
-    logger.debug('[midw]', 'SessionId:', sessionId)
-
-    if (String(env.SQUELIFY_LOG_LEVEL).toLowerCase() === 'trace') {
-      logger.debug('[midw]', 'Bearer Token:', bearerToken)
-    }
-
     if (!bearerToken) {
-      return createErrorResponse(event, 'Unauthorized', 401)
+      return createErrorResponse(event, 'Bearer token is required', 401)
     }
 
     // Extract key ID from token header
-    const decoded = jose.decodeProtectedHeader(bearerToken)
+    let decoded: jose.ProtectedHeaderParameters
+
+    try {
+      decoded = jose.decodeProtectedHeader(bearerToken)
+    } catch (_err) {
+      return createErrorResponse(event, 'Malformed authorization token', 400)
+    }
 
     if (!decoded.kid) {
-      return createErrorResponse(event, 'Invalid token format', 401)
+      return createErrorResponse(event, 'Missing key identifier in token', 401)
     }
 
     const now = Math.floor(Date.now() / 1000)
@@ -123,7 +122,7 @@ export default defineEventHandler(async (event) => {
     // Get JWK used for signing
     const jwk = await getJWKByKeyId(db, decoded.kid)
     if (!jwk) {
-      return createErrorResponse(event, 'Invalid token signature', 401)
+      return createErrorResponse(event, 'Token signing key not found', 401)
     }
 
     // Get client user agent from header

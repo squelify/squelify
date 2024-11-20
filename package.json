@@ -17,7 +17,7 @@
     "scripts": {
         "build": "nitro build",
         "prepare": "nitro prepare",
-        "dev": "nitro dev --port 3278",
+        "dev": "NODE_ENV=development nitro dev --port 3278",
         "start": "PORT=3278 node --env-file .env .output/server/index.mjs",
         "docker:build": "docker build -f Dockerfile . -t $npm_package_config_image:latest -t $npm_package_config_image:$npm_package_version",
         "docker:push": "docker push $npm_package_config_image:latest && docker push $npm_package_config_image:$npm_package_version",
