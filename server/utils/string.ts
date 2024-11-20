@@ -8,6 +8,7 @@ import { DURATION } from '~/utils/datetime'
 interface RandomStringOptions {
   size?: number
   pattern?: string
+  prefix?: string
   digitsOnly?: boolean
   includeLower?: boolean
   includeUpper?: boolean
@@ -35,7 +36,8 @@ export function generateRandomStr(config: RandomStringOptions = {}): string {
   for (let i = 0; i < size; i++) {
     result += allowedChars[bytes[i] % allowedChars.length]
   }
-  return result
+
+  return config.prefix ? `${config.prefix}${result}` : result
 }
 
 export function generateUsername(email: string, suffix?: string): string {

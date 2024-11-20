@@ -20,6 +20,7 @@ export default async function seed(db: Kysely<Database>): Promise<void> {
         name: 'System Integration Key',
         expiresAt: null,
         isActive: true,
+        kind: 'pk',
       })
 
       // Create temporary API key for testing (90 days)
@@ -28,6 +29,7 @@ export default async function seed(db: Kysely<Database>): Promise<void> {
         name: 'Development Testing Key',
         expiresAt: now + DURATION.DAY * 90,
         isActive: true,
+        kind: 'pk',
       })
     }
   })

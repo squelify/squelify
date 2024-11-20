@@ -9,15 +9,19 @@ interface CreateApiKeyOptions {
   userId: string
   expiresAt?: number | null
   isActive?: boolean
+  kind?: 'pk' | 'sk'
 }
 
 export async function createApiKey(db: Kysely<Database>, options: CreateApiKeyOptions) {
-  const { name, userId, expiresAt = null, isActive = true } = options
+  const { name, userId, expiresAt = null, isActive = true, kind = 'pk' } = options
 
-  const id = typeid('api').toString()
-  const key = generateRandomStr({ size: 32 })
-  const hash = await hashToken(key)
+  // Generate secure random token with prefix.
+  // This token is used to authenticate API requests.
+  const key = generateRandomStr({ size: 32, prefix: `${kind}_` })
+
+  const id = typeid('key').toString()
   const createdAt = Math.floor(Date.now() / 1000)
+  const hash = await hashToken(key)
 
   const apiKey = await db
     .insertInto('sq_api_keys')
