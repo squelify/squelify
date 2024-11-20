@@ -1,6 +1,7 @@
 import type { ColumnType } from 'kysely'
 
 import type { IAccount } from './schemas/account'
+import type { IApiKey } from './schemas/api_key'
 import type { IAuditLog } from './schemas/audit_log'
 import type { IEmail } from './schemas/email'
 import type { IInvitation } from './schemas/invitation'
@@ -30,6 +31,7 @@ import type { IVerification } from './schemas/verification'
  */
 export interface Database {
   sq_accounts: IAccount
+  sq_api_keys: IApiKey
   sq_audit_logs: IAuditLog
   sq_emails: IEmail
   sq_invitations: IInvitation
@@ -44,9 +46,9 @@ export interface Database {
   sq_roles: IRole
   sq_sessions: ISession
   sq_two_factors: ITwoFactor
-  sq_user_roles: IUserRole
   sq_user_bans: IUserBan
   sq_user_metadata: IUserMetadata
+  sq_user_roles: IUserRole
   sq_users: IUser
   sq_verifications: IVerification
 }
@@ -61,7 +63,6 @@ export interface Database {
  * Here we define a column `updated_at` that is selected as a `Date`, can
  * optionally be provided as a `string` in inserts and can never be updated.
  */
-
 export interface WithTimeStampSchema {
   createdAt: ColumnType<Date, string | undefined, never>
   updatedAt: ColumnType<Date, string | undefined, never>

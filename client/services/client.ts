@@ -137,7 +137,17 @@ export default class ApiClient {
     return ofetch.create({
       baseURL: this.baseURL,
       async onRequest(ctx) {
-        // Do something before request is sent.
+        // Add CSRF token for mutating requests
+        if (['POST', 'PUT', 'PATCH', 'DELETE'].includes(ctx.options.method?.toUpperCase() || '')) {
+          const csrfToken = document
+            .querySelector('meta[name="csrf-token"]')
+            ?.getAttribute('content')
+
+          if (!ctx.options.headers.get('X-CSRF-Token') && csrfToken) {
+            ctx.options.headers.set('X-CSRF-Token', csrfToken)
+          }
+        }
+
         logger.debug('onRequest', ctx.request)
       },
       async onResponse(ctx) {
@@ -169,6 +179,7 @@ export default class ApiClient {
     headers.append('Accept', 'application/json')
     headers.append('Content-Type', 'application/json')
 
+    // Add client info header
     if (options?.clientInfo && !headers.has('X-Client-Info')) {
       headers.append('X-Client-Info', options.clientInfo)
     } else {
@@ -183,10 +194,8 @@ export default class ApiClient {
     try {
       return await this.fetcher<T>(path, { ...options, headers })
     } catch (error) {
-      if (error instanceof FetchError && error.data) {
-        if (error.data.error) {
-          error.message = error.data.error.message
-        }
+      if (error instanceof FetchError) {
+        throw new Error(error.data.message)
       }
       throw error
     }

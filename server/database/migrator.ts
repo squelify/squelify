@@ -39,6 +39,7 @@ export async function runSeeds(): Promise<void> {
       { name: 'roles', seeder: await import('./seeders/00002_roles_seeder') },
       { name: 'users', seeder: await import('./seeders/00003_user_seeder') },
       { name: 'jwks', seeder: await import('./seeders/00004_jwk_seeder') },
+      { name: 'api_keys', seeder: await import('./seeders/00005_api_key_seeder') },
     ]
 
     if (seeders.length > 0) {

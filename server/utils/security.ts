@@ -162,3 +162,27 @@ async function verifyArgon2id(password: string, hashedPassword: string): Promise
   const newHash = argon2id(encodedPassword, salt, params)
   return timingSafeEqual(bytesToHex(newHash), hashHex)
 }
+
+/**
+ * Hashes API token using Argon2id for secure storage
+ */
+export async function hashToken(token: string): Promise<string> {
+  const encodedToken = textEncoder.encode(token)
+  const salt = randomBytes(16)
+  const params = ARGON2_PARAMS.FAST
+
+  const hash = argon2id(encodedToken, salt, params)
+  return bytesToHex(hash)
+}
+
+/**
+ * Verifies API token against stored hash
+ */
+export async function verifyToken(token: string, hash: string): Promise<boolean> {
+  const encodedToken = textEncoder.encode(token)
+  const params = ARGON2_PARAMS.FAST
+  const salt = hexToBytes(hash.slice(0, 32))
+
+  const newHash = argon2id(encodedToken, salt, params)
+  return timingSafeEqual(bytesToHex(newHash), hash)
+}

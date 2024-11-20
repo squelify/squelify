@@ -109,13 +109,6 @@ export default defineEventHandler(async (event) => {
         .where('verifiedAt', '!=', null)
         .select(['type'])
         .executeTakeFirst(),
-
-      db
-        .selectFrom('sq_user_metadata')
-        .where('userId', '=', user.id)
-        .where('isPublic', '=', 1)
-        .select(['key', 'value'])
-        .execute(),
     ])
 
     const now = Math.floor(Date.now() / 1000)

@@ -1,4 +1,5 @@
 import { randomBytes } from '@noble/hashes/utils'
+import { DURATION } from '~/utils/datetime'
 
 /**
  * Generates a cryptographically secure random key with specified length
@@ -62,4 +63,48 @@ export function cleanString(str: string): string {
     .replace(/[\r\n\t]/g, '') // Removes newlines and tabs
     .replace(/ {2,}/g, ' ') // Replace multiple spaces with a single space
     .replace(/['""`<>]/g, '') // Remove quotes and < > characters
+}
+
+const CSRF_TOKEN_LENGTH = 40
+
+/**
+ * Generate CSRF token with timestamp
+ * Returns token in format: {random_string}.{expiry_timestamp}
+ */
+export function generateCSRFToken(): string {
+  const CSRF_EXPIRY = DURATION.MINUTE * 30
+  const token = generateRandomStr({ size: CSRF_TOKEN_LENGTH })
+  const timestamp = Math.floor(Date.now() / 1000) + CSRF_EXPIRY
+  return `${token}.${timestamp}`
+}
+
+/**
+ * Validates CSRF token format and expiry
+ * Returns true if token is valid and not expired
+ */
+export function validateCSRFToken(token: string): boolean {
+  if (!token || !token.includes('.')) return false
+
+  const [value, expiry] = token.split('.')
+  const expiryTime = Number(expiry)
+  const now = Math.floor(Date.now() / 1000)
+
+  if (!value || value.length !== CSRF_TOKEN_LENGTH) return false
+  if (Number.isNaN(expiryTime)) return false
+
+  return expiryTime > now
+}
+
+/**
+ * Compares provided token with stored token
+ * Returns true if tokens match exactly
+ */
+export function compareCSRFTokens(providedToken: string, storedToken: string): boolean {
+  if (!providedToken || !storedToken) return false
+
+  // Get token value without timestamp
+  const [providedValue] = providedToken.split('.')
+  const [storedValue] = storedToken.split('.')
+
+  return providedValue === storedValue
 }

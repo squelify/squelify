@@ -1,9 +1,22 @@
 import { isProduction, process } from 'std-env'
+import { generateCSRFToken } from '~/utils/string'
 import { useStorage } from '#imports'
 
 export default defineCachedEventHandler(
   async (event) => {
     const appConfig = event.context.appConfig
+
+    // Generate CSRF token with expiry
+    const csrfToken = generateCSRFToken()
+
+    // Set CSRF cookie with secure flags
+    setCookie(event, 'csrf_token', csrfToken, {
+      httpOnly: true,
+      secure: isProduction,
+      sameSite: 'strict',
+      path: '/',
+      maxAge: DURATION.MINUTE * 30,
+    })
 
     if (process.env.NODE_ENV === 'development') {
       const [serverAddress] = event.context.vite.resolvedUrls.local
@@ -13,22 +26,22 @@ export default defineCachedEventHandler(
   <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="csrf-token" content="${csrfToken}">
     <title>${appConfig.title}</title>
   </head>
   <body>
     <div id="root"></div>
     <script type="module">
       import RefreshRuntime from '${serverAddress}@react-refresh'
-      RefreshRuntime.injectIntoGlobalHook( window )
-      window.$RefreshReg$ = () => { }
-      window.$RefreshSig$ = () => ( type ) => type
+      RefreshRuntime.injectIntoGlobalHook(window)
+      window.$RefreshReg$ = () => {}
+      window.$RefreshSig$ = () => (type) => type
       window.__vite_plugin_react_preamble_installed__ = true
     </script>
     <script type="module" src="${serverAddress}@vite/client"></script>
     <script type="module" src="${serverAddress}client/main.tsx"></script>
   </body>
-</html>
-`
+</html>`
     }
 
     type Manifest = Record<string, { css: string[]; file: string; isEntry: boolean }>
@@ -37,13 +50,13 @@ export default defineCachedEventHandler(
 
     if (!manifest) {
       setResponseStatus(event, 500)
-      return `Missing manifest`
+      return 'Missing manifest'
     }
 
     const entryChunk = Object.values(manifest).find((entry) => entry.isEntry)
     if (!entryChunk) {
       setResponseStatus(event, 500)
-      return `Missing manifest entry`
+      return 'Missing manifest entry'
     }
 
     const cssLinks = entryChunk.css
@@ -56,6 +69,7 @@ export default defineCachedEventHandler(
   <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="csrf-token" content="${csrfToken}">
     <title>${appConfig.title}</title>
     ${cssLinks}
   </head>
@@ -63,12 +77,10 @@ export default defineCachedEventHandler(
     <div id="root"></div>
     ${scriptLinks}
   </body>
-</html>
-`
+</html>`
   },
   {
-    /* cache for 1 hour in production */
     maxAge: isProduction ? 60 * 60 : 0,
-    swr: true /* Stale while revalidate */,
+    swr: true,
   }
 )
