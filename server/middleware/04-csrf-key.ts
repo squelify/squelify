@@ -48,7 +48,7 @@ export default defineEventHandler(async (event) => {
       const csrfToken = getCookie(event, 'csrf_token')
       const headerToken = getHeader(event, 'X-CSRF-Token')
 
-      logger.debug('[midw]', 'CSRF validation', JSON.stringify({ csrfToken, headerToken }))
+      logger.debug('[csrf]', JSON.stringify({ csrfToken, headerToken }))
 
       if (!headerToken) {
         return createErrorResponse(event, 'Missing CSRF token', 403)
@@ -64,6 +64,9 @@ export default defineEventHandler(async (event) => {
     } else {
       // External API integration using API key
       const isValidKey = await validateApiKey(db, apiKey)
+
+      logger.debug('[csrf]', JSON.stringify({ apiKey, isValidKey }))
+
       if (!apiKey || !isValidKey) {
         await auditLog(event, {
           action: 'login',
