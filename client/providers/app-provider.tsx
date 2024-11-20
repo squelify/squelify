@@ -42,9 +42,10 @@ export default function AppProvider({ children, debugScreenSize }: AppProviderPr
   const [isInitialized, setIsInitialized] = useState(false)
 
   const initializeAuth = useCallback(async () => {
-    const hasStoredAuth = !!authState.sessionId
+    // Only fetch user data if we have valid session
+    const hasValidSession = authState.sessionId && authState.accessToken
 
-    if (!hasStoredAuth) {
+    if (!hasValidSession) {
       resetAuthState()
       setIsInitialized(true)
       return
@@ -63,7 +64,7 @@ export default function AppProvider({ children, debugScreenSize }: AppProviderPr
     }
 
     setIsInitialized(true)
-  }, [authState.sessionId])
+  }, [authState.sessionId, authState.accessToken])
 
   useEffect(() => {
     initializeAuth()
@@ -78,16 +79,7 @@ export default function AppProvider({ children, debugScreenSize }: AppProviderPr
         const { user, credentials } = result.data
 
         saveAuthState({
-          user: {
-            ...user,
-            // TODO: sync with API response
-            username: user.email, // Assuming email can be used as username
-            avatarUrl: '', // Provide a default value or fetch from API if available
-            isActive: 1, // Assuming the user is active by default
-            createdAt: Date.now(), // Use current timestamp or fetch from API
-            updatedAt: Date.now(), // Use current timestamp or fetch from API
-            deletedAt: 0, // Assuming not deleted
-          },
+          user, // User data from login response
           accessToken: credentials.accessToken,
           refreshToken: credentials.refreshToken,
           sessionId: credentials.sessionId,

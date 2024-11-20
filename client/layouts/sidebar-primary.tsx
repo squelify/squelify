@@ -1,6 +1,6 @@
 import * as Lucide from 'lucide-react'
 import { useLocation } from 'react-router-dom'
-import { User } from '~/database/schemas/user'
+import { ILoginResponse } from '~/api/auth/login.post'
 import { SidebarFooter, SidebarHeader } from '#/components/base-ui/sidebar'
 import { SidebarGroup, SidebarGroupContent, SidebarGroupLabel } from '#/components/base-ui/sidebar'
 import { SidebarMenu, SidebarMenuButton, SidebarMenuItem } from '#/components/base-ui/sidebar'
@@ -14,7 +14,7 @@ import AppCommand from './app-command'
 import UserMenu from './user-menu'
 
 interface PrimarySidebarProps {
-  user: User
+  user: ILoginResponse['user']
   logout: () => void
 }
 

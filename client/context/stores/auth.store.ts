@@ -1,11 +1,11 @@
 import { persistentMap } from '@nanostores/persistent'
-import { User } from '~/database/schemas/user'
+import { ILoginResponse } from '~/api/auth/login.post'
 
 type AuthStore = {
   sessionId: string | null
   accessToken: string | null
   refreshToken: string | null
-  user: User | null
+  user: ILoginResponse['user'] | null
 }
 
 // Default values for the AuthStore

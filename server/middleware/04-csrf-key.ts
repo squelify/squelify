@@ -48,6 +48,8 @@ export default defineEventHandler(async (event) => {
       const csrfToken = getCookie(event, 'csrf_token')
       const headerToken = getHeader(event, 'X-CSRF-Token')
 
+      logger.debug('[midw]', 'CSRF validation', JSON.stringify({ csrfToken, headerToken }))
+
       if (!headerToken) {
         return createErrorResponse(event, 'Missing CSRF token', 403)
       }

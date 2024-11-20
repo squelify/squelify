@@ -6,17 +6,22 @@ export default defineCachedEventHandler(
   async (event) => {
     const appConfig = event.context.appConfig
 
-    // Generate CSRF token with expiry
-    const csrfToken = generateCSRFToken()
+    // Check existing CSRF token
+    let csrfToken = getCookie(event, 'csrf_token')
 
-    // Set CSRF cookie with secure flags
-    setCookie(event, 'csrf_token', csrfToken, {
-      httpOnly: true,
-      secure: isProduction,
-      sameSite: 'strict',
-      path: '/',
-      maxAge: DURATION.MINUTE * 30,
-    })
+    // Generate new token if not exists or expired
+    if (!csrfToken || !validateCSRFToken(csrfToken)) {
+      csrfToken = generateCSRFToken()
+
+      // Set CSRF cookie with secure flags
+      setCookie(event, 'csrf_token', csrfToken, {
+        httpOnly: true,
+        secure: isProduction,
+        sameSite: 'strict',
+        path: '/',
+        maxAge: DURATION.MINUTE * 30,
+      })
+    }
 
     if (process.dev) {
       const [serverAddress] = event.context.vite.resolvedUrls.local

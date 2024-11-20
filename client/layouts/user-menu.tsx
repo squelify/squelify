@@ -1,5 +1,5 @@
 import * as Lucide from 'lucide-react'
-import { User } from '~/database/schemas/user'
+import { ILoginResponse } from '~/api/auth/login.post'
 import { Avatar, AvatarFallback, AvatarImage } from '#/components/base-ui/avatar'
 import { DropdownMenuContent, DropdownMenuItem } from '#/components/base-ui/dropdown-menu'
 import { DropdownMenuSeparator, DropdownMenuShortcut } from '#/components/base-ui/dropdown-menu'
@@ -9,7 +9,7 @@ import { Link } from '#/components/link'
 import { clx } from '#/utils/helper'
 
 interface UserMenuProps {
-  user: User
+  user: ILoginResponse['user']
   sidebarState: 'expanded' | 'collapsed'
   logout: () => void
 }
@@ -29,7 +29,7 @@ export default function UserMenu({ user, sidebarState, logout }: UserMenuProps) 
           ) : (
             <Lucide.CircleUser className="size-5" strokeWidth={1.8} />
           )}
-          <span>{`${user.firstName} ${user.lastName}`}</span>
+          <span>{user.displayName}</span>
           <Lucide.ChevronUp className="ml-auto" strokeWidth={1.8} />
         </SidebarMenuButton>
       </DropdownMenuTrigger>

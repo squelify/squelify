@@ -12,6 +12,8 @@ export interface ILoginResponse {
     firstName: string | null
     lastName: string | null
     displayName: string
+    username: string
+    avatarUrl: string | null
     roles: string[]
     permissions: string[]
     organizationId: string | null
@@ -167,6 +169,8 @@ export default defineEventHandler(async (event) => {
         firstName: user.firstName,
         lastName: user.lastName,
         displayName: `${user.firstName} ${user.lastName}`.trim(),
+        username: user.username,
+        avatarUrl: user.avatarUrl,
         roles: roles.map((r) => r.name),
         permissions: permissions.map((p) => `${p.action}:${p.resource}`),
         organizationId: roles.find((r) => r.type === 'organization')?.organizationId || null,
