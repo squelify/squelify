@@ -1,5 +1,3 @@
-import * as React from 'react'
-
 interface AppLogoProps {
   className?: string
   width?: number

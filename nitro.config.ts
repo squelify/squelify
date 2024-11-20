@@ -25,6 +25,7 @@ export default defineNitroConfig({
     { route: '/ui', handler: '~/entry.client', lazy: true },
     { route: '/ui/**', handler: '~/entry.client', lazy: true },
   ],
+  errorHandler: '~/error.handler',
 
   routeRules: {
     '/': { redirect: '/ui/**' },
@@ -39,8 +40,8 @@ export default defineNitroConfig({
     },
   },
 
-  errorHandler: '~/error.handler',
   publicAssets: [{ dir: resolve('public') }],
+  compressPublicAssets: { gzip: isProduction, brotli: isProduction },
 
   serverAssets: [
     // Frontend application assets
@@ -93,16 +94,14 @@ export default defineNitroConfig({
     },
   },
 
+  esbuild: {
+    options: {
+      jsx: 'automatic',
+    },
+  },
+
   // TODO: modify rollupConfig to use React frontend
-  // esbuild: {
-  //   options: {
-  //     jsx: 'preserve',
-  //   },
-  // },
-  // rollupConfig: {
-  //   input: ['./client/main.tsx'],
-  //   plugins: [],
-  // },
+  // This is a temporary workaround, with a better solution coming in the future!
   typescript: {
     tsConfig: {
       compilerOptions: {

@@ -1,6 +1,8 @@
 import { typeid } from 'typeid-js'
 import { z } from 'zod'
 import { DEFAULT_PASSWORD_ALGORITHM } from '~/database/schemas/password'
+import { VerifyEmailProps } from '~/mailer/templates/verify-email'
+import { sendJSXEmail } from '~/utils/notify'
 
 export interface ISignupResponse {
   email: string
@@ -215,9 +217,14 @@ export default defineEventHandler(async (event) => {
     })
 
     const verificationUrl = `${appConfig.baseURL}/api/auth/email/verify?token=${verificationToken}`
-    logger.debug('[app]', `Verification URL: ${verificationUrl}`)
-
     const message = 'Registration successful, please check your email for verification'
+
+    // Send verification email
+    await sendJSXEmail<VerifyEmailProps>('verify-email', email, {
+      email,
+      token: verificationToken,
+      url: verificationUrl,
+    })
 
     return createSuccessResponse<ISignupResponse>(event, message, {
       email: email,
