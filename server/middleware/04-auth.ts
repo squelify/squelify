@@ -1,7 +1,9 @@
+import { LibsqlError } from '@libsql/client'
 import type { H3Event } from 'h3'
 import * as jose from 'jose'
+import { JWTClaimValidationFailed, JWTExpired, JWTInvalid } from 'jose/errors'
 import { env } from 'std-env'
-import { z } from 'zod'
+import { ZodError, z } from 'zod'
 import { getJWKByKeyId } from '~/database/repository/jwk.repo'
 import type { JWTPayload } from '~/utils/jwt'
 
@@ -106,16 +108,14 @@ export default defineEventHandler(async (event) => {
     }
 
     if (!bearerToken) {
-      setResponseStatus(event, 401)
-      throw createError({ statusCode: 401, message: 'Unauthorized' })
+      return createErrorResponse(event, 'Unauthorized', 401)
     }
 
     // Extract key ID from token header
     const decoded = jose.decodeProtectedHeader(bearerToken)
 
     if (!decoded.kid) {
-      setResponseStatus(event, 401)
-      throw createError({ statusCode: 401, message: 'Invalid token format' })
+      return createErrorResponse(event, 'Invalid token format', 401)
     }
 
     const now = Math.floor(Date.now() / 1000)
@@ -123,8 +123,7 @@ export default defineEventHandler(async (event) => {
     // Get JWK used for signing
     const jwk = await getJWKByKeyId(db, decoded.kid)
     if (!jwk) {
-      setResponseStatus(event, 401)
-      throw createError({ statusCode: 401, message: 'Invalid token signature' })
+      return createErrorResponse(event, 'Invalid token signature', 401)
     }
 
     // Get client user agent from header
@@ -150,8 +149,7 @@ export default defineEventHandler(async (event) => {
       .executeTakeFirst()
 
     if (!session) {
-      setResponseStatus(event, 401)
-      throw createError({ statusCode: 401, message: 'Session tidak valid atau telah berakhir' })
+      return createErrorResponse(event, 'Session is invalid or has expired', 401)
     }
 
     event.context.auth = {
@@ -164,6 +162,24 @@ export default defineEventHandler(async (event) => {
       },
     }
   } catch (error) {
+    if (error instanceof JWTClaimValidationFailed) {
+      return createErrorResponse(event, 'Your session has invalid permissions or claims', 403)
+    }
+    if (error instanceof JWTVerificationError) {
+      return createErrorResponse(event, 'Your session token is invalid', 401)
+    }
+    if (error instanceof JWTExpired) {
+      return createErrorResponse(event, 'Your session has expired, please sign in again', 401)
+    }
+    if (error instanceof JWTInvalid) {
+      return createErrorResponse(event, 'Your session token format is invalid', 400)
+    }
+    if (error instanceof ZodError) {
+      return createErrorResponse(event, 'Required headers are missing or invalid', 400)
+    }
+    if (error instanceof LibsqlError) {
+      return createErrorResponse(event, 'Authentication service is temporarily unavailable', 503)
+    }
     return throwErrorResponse(event, error)
   }
 })
