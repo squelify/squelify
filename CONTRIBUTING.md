@@ -50,6 +50,25 @@ Reference: https://www.twilio.com/blog/expose-localhost-to-internet-with-tunnel
 
 ## 🔰 Database Migration
 
+The migration generator creates new migration files with standardized naming format:
+`YYYYMMXXX_NAME.ts` where:
+
+- `YYYYMM`: Year and month (e.g. 202412)
+- `XXX`: Sequential number within the month (e.g. 001)
+- `NAME`: Migration name using snake_case
+
+```bash
+pnpm squelify make migration <name>
+```
+
+### Example Usage
+
+```sh
+pnpm squelify make migration create_users_table
+```
+
+### Reset Migrations
+
 To reset the database and seed the database with the default data, you can run the following command:
 
 ```sh

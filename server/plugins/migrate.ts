@@ -17,7 +17,10 @@ export default defineNitroPlugin(async (_nitroApp) => {
   // Run migrations by default unless explicitly disabled
   const shouldAutoMigrate = env.DATABASE_AUTO_MIGRATE !== 'false'
 
-  if (!shouldAutoMigrate) return
+  if (!shouldAutoMigrate) {
+    logger.info('[app]', 'Skipped automatic database migration')
+    return
+  }
 
   try {
     logger.info('[app]', 'Running database migrations...')

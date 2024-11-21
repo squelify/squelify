@@ -1,21 +1,73 @@
+/**
+ * Migration File Generator
+ *
+ * Generates database migration files with standardized naming format:
+ * YYYYMMXXX_NAME.ts where:
+ * - YYYYMM: Year and month (e.g. 202412)
+ * - XXX: Sequential number within month (e.g. 001)
+ * - NAME: Migration name in snake_case
+ *
+ * Naming Convention:
+ * - create_* : Create new table
+ * - alter_* : Modify table structure
+ * - add_* : Add column or constraint
+ * - drop_* : Drop table or column
+ * - update_* : Update existing data
+ * - index_* : Create database index
+ *
+ * Usage:
+ * ```
+ * pnpm run make:migration create_users_table
+ * // Generates: 202412001_create_users_table.ts
+ * ```
+ *
+ * @module server/cmd/make/migration
+ */
+
 import { mkdir, readdir, writeFile } from 'node:fs/promises'
 import { defineCommand, showUsage } from 'citty'
 import consola from 'consola'
 import { join } from 'pathe'
 import { MIGRATION_FOLDER } from '~/database/migrator'
 
+/**
+ * Checks if migration name is unique in migrations folder
+ * @param name Migration name to check
+ * @returns True if name is unique, false otherwise
+ */
 async function isMigrationNameUnique(name: string): Promise<boolean> {
   const files = await readdir(MIGRATION_FOLDER)
-  return !files.some((file) => file.split('_').slice(1).join('_') === `${name}.ts`)
+  return !files.some((file) => {
+    const parts = file.split('_')
+    const migrationName = parts[1]
+    return migrationName === `${name}.ts`
+  })
 }
 
-async function getNextMigrationNumber(): Promise<number> {
+/**
+ * Generates next migration number in YYYYMMXXX format
+ * - YYYYMM: Current year and month
+ * - XXX: Sequential number, resets each month
+ * @returns Migration number string (e.g. 202412001)
+ */
+async function getNextMigrationNumber(): Promise<string> {
   const files = await readdir(MIGRATION_FOLDER)
-  const numbers = files
-    .map((file) => Number.parseInt(file.split('_')[0] ?? '', 10))
+  const currentDate = new Date()
+  const yearMonth = `${currentDate.getFullYear()}${String(currentDate.getMonth() + 1).padStart(2, '0')}`
+
+  // Filter files for current year and month
+  const currentMonthFiles = files.filter((file) => file.startsWith(yearMonth))
+
+  // Extract sequence numbers for current month
+  const numbers = currentMonthFiles
+    .map((file) => {
+      const seqNum = file.substring(6, 9) // Extract XXX part
+      return Number.parseInt(seqNum, 10)
+    })
     .filter((num) => !Number.isNaN(num))
 
-  return Math.max(0, ...numbers) + 1
+  const nextNumber = (Math.max(0, ...numbers) + 1).toString().padStart(3, '0')
+  return `${yearMonth}${nextNumber}`
 }
 
 export default defineCommand({
@@ -74,7 +126,7 @@ export async function up(db: Kysely<Database>): Promise<void> {
 
   // Create auto-update trigger
   await sql\`
-    CREATE TRIGGER IF NOT EXISTS update_TABLE_NAME_timestamp
+    CREATE TRIGGER IF NOT EXISTS trg_TABLE_NAME_timestamp
     AFTER UPDATE ON TABLE_NAME
     FOR EACH ROW
     BEGIN
@@ -86,7 +138,7 @@ export async function up(db: Kysely<Database>): Promise<void> {
 
   // Create indexes
   await db.schema
-    .createIndex('TABLE_NAME_created_at_idx')
+    .createIndex('idx_TABLE_NAME_created_at')
     .on('TABLE_NAME')
     .column('created_at')
     .ifNotExists()
@@ -96,8 +148,8 @@ export async function up(db: Kysely<Database>): Promise<void> {
 // down migration code goes here...
 // note: down migrations are optional. you can safely delete this function.
 export async function down(db: Kysely<Database>): Promise<void> {
-  await db.schema.dropIndex('TABLE_NAME_created_at_idx').ifExists().execute()
-  await sql\`DROP TRIGGER IF EXISTS update_TABLE_NAME_timestamp;\`.execute(db)
+  await db.schema.dropIndex('idx_TABLE_NAME_created_at').ifExists().execute()
+  await sql\`DROP TRIGGER IF EXISTS trg_TABLE_NAME_timestamp;\`.execute(db)
   await db.schema.dropTable('TABLE_NAME').ifExists().execute()
 }`
 
@@ -107,9 +159,8 @@ export async function down(db: Kysely<Database>): Promise<void> {
         return
       }
 
-      const nextNumber = await getNextMigrationNumber()
-      const paddedNumber = nextNumber.toString().padStart(5, '0')
-      const fileName = `${paddedNumber}_${migrationName}.ts`
+      const prefix = await getNextMigrationNumber()
+      const fileName = `${prefix}_${migrationName}.ts`
       const migrationPath = join(MIGRATION_FOLDER, fileName)
 
       await writeFile(migrationPath, template.trim(), { encoding: 'utf-8' })
