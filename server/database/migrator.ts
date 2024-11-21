@@ -78,9 +78,6 @@ const migrationActions: Record<MigrationAction, () => Promise<void>> = {
           }
         }
       }
-      if (isRunningFromCLI()) {
-        console.debug('')
-      }
     }
 
     if (error) {
@@ -101,9 +98,6 @@ const migrationActions: Record<MigrationAction, () => Promise<void>> = {
           console.error(`🔥 Failed to execute migration "${it.migrationName}"`)
         }
       }
-      if (isRunningFromCLI()) {
-        console.debug('')
-      }
     }
 
     if (error) {
@@ -118,9 +112,6 @@ const migrationActions: Record<MigrationAction, () => Promise<void>> = {
       .migrateTo(NO_MIGRATIONS)
       .then(async () => {
         console.info('🍀 Database has been reset')
-        if (isRunningFromCLI()) {
-          console.debug('')
-        }
 
         // If has parameter --migrate then run the migration.
         if (process.argv.includes('--migrate')) {
