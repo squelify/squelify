@@ -1,5 +1,5 @@
 import { env } from 'std-env'
-import { runMigration } from '~/database/migrator'
+import { migrateDBClient, runMigration } from '~/database/migrator'
 
 /**
  * Automatically runs database migrations on application startup.

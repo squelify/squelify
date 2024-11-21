@@ -8,6 +8,11 @@ import logger from '~/utils/logger'
 import type { Database } from './db.schema'
 import { MIGRATION_FOLDER } from './migrator'
 
+interface DatabaseMigration {
+  readonly name: string
+  readonly migration: Migration
+}
+
 export default class SquelifyMigrator implements MigrationProvider {
   private readonly storage: Awaited<ReturnType<typeof createStorage>>
   private readonly resolvedPath: string
@@ -46,100 +51,112 @@ export default class SquelifyMigrator implements MigrationProvider {
     }
 
     // Automatic Migration mode
-    const files = await fs.readdir(MIGRATION_FOLDER)
-    const fileExt = process.dev ? '.ts' : '.js'
+    const importedMigrations: DatabaseMigration[] = [
+      {
+        name: '202303001_create_users_table',
+        migration: await import('./migrations/202303001_create_users_table'),
+      },
+      {
+        name: '202303002_create_user_metadata_table',
+        migration: await import('./migrations/202303002_create_user_metadata_table'),
+      },
+      {
+        name: '202303003_create_emails_table',
+        migration: await import('./migrations/202303003_create_emails_table'),
+      },
+      {
+        name: '202303004_create_accounts_table',
+        migration: await import('./migrations/202303004_create_accounts_table'),
+      },
+      {
+        name: '202303005_create_passwords_table',
+        migration: await import('./migrations/202303005_create_passwords_table'),
+      },
+      {
+        name: '202303006_create_jwks_table',
+        migration: await import('./migrations/202303006_create_jwks_table'),
+      },
+      {
+        name: '202303007_create_sessions_table',
+        migration: await import('./migrations/202303007_create_sessions_table'),
+      },
+      {
+        name: '202303008_create_rate_limits_table',
+        migration: await import('./migrations/202303008_create_rate_limits_table'),
+      },
+      {
+        name: '202303009_create_verifications_table',
+        migration: await import('./migrations/202303009_create_verifications_table'),
+      },
+      {
+        name: '202303010_create_two_factors_table',
+        migration: await import('./migrations/202303010_create_two_factors_table'),
+      },
+      {
+        name: '202303011_create_passkeys_table',
+        migration: await import('./migrations/202303011_create_passkeys_table'),
+      },
+      {
+        name: '202303012_create_permissions_table',
+        migration: await import('./migrations/202303012_create_permissions_table'),
+      },
+      {
+        name: '202303013_create_roles_table',
+        migration: await import('./migrations/202303013_create_roles_table'),
+      },
+      {
+        name: '202303014_create_role_permissions_table',
+        migration: await import('./migrations/202303014_create_role_permissions_table'),
+      },
+      {
+        name: '202303015_create_user_roles_table',
+        migration: await import('./migrations/202303015_create_user_roles_table'),
+      },
+      {
+        name: '202303016_create_organizations_table',
+        migration: await import('./migrations/202303016_create_organizations_table'),
+      },
+      {
+        name: '202303017_create_members_table',
+        migration: await import('./migrations/202303017_create_members_table'),
+      },
+      {
+        name: '202303018_create_invitations_table',
+        migration: await import('./migrations/202303018_create_invitations_table'),
+      },
+      {
+        name: '202303019_create_audit_logs_table',
+        migration: await import('./migrations/202303019_create_audit_logs_table'),
+      },
+      {
+        name: '202303020_create_user_bans_table',
+        migration: await import('./migrations/202303020_create_user_bans_table'),
+      },
+      {
+        name: '202303021_create_api_keys_table',
+        migration: await import('./migrations/202303021_create_api_keys_table'),
+      },
+    ]
 
-    const migrationFiles = files
-      .filter((file) => file.endsWith(fileExt))
-      .sort((a, b) => a.localeCompare(b))
+    // const storage = useStorage('assets:migrations')
+    // const storageKeys = await storage.getKeys()
+    // const migrationItems = storageKeys.map((key) => key.replace('.ts', ''))
 
-    const migrationEntries = await Promise.all(
-      migrationFiles.map(async (fileName) => {
-        try {
-          const migrationKey = fileName.replace(fileExt, '')
-          const importPath = join(MIGRATION_FOLDER, fileName).replace(/\\/g, '/')
+    // const importedMigrations: DatabaseMigration[] = await Promise.all(
+    //   migrationItems.map(async (key) => {
+    //     const importedMigration = await import(`../database/migrations/${key}`)
+    //     return { name: key, migration: importedMigration.default }
+    //   })
+    // )
 
-          if (process.dev) {
-            const content = await this.storage.getItem<{
-              up: (db: Kysely<Database>) => Promise<void>
-              down: (db: Kysely<Database>) => Promise<void>
-            }>(fileName)
-
-            // Debug log untuk melihat struktur content
-            logger.debug('[migration]', `Content for ${fileName}:`, content)
-
-            // Cek apakah content adalah string yang perlu di-parse
-            if (typeof content === 'string') {
-              try {
-                const parsedContent = JSON.parse(content)
-                return [
-                  migrationKey,
-                  {
-                    up: parsedContent.up,
-                    down:
-                      parsedContent.down ||
-                      (async () => {
-                        logger.warn('[migration]', `No down migration for: ${fileName}`)
-                      }),
-                  },
-                ] as const
-              } catch (error) {
-                logger.error('[migration]', `Failed to parse migration content: ${fileName}`, error)
-                return null
-              }
-            }
-
-            // Fallback ke penanganan original
-            if (!content?.up) {
-              logger.warn('[migration]', `Invalid migration content: ${fileName}`)
-              return null
-            }
-
-            return [
-              migrationKey,
-              {
-                up: content.up,
-                down:
-                  content.down ||
-                  (async () => {
-                    logger.warn('[migration]', `No down migration for: ${fileName}`)
-                  }),
-              },
-            ] as const
-          }
-
-          const migration = require(importPath)
-          const migrationModule = migration.default || migration
-
-          if (!migrationModule?.up || typeof migrationModule.up !== 'function') {
-            logger.warn('[migration]', `Invalid migration module structure: ${fileName}`)
-            return null
-          }
-
-          return [
-            migrationKey,
-            {
-              up: migrationModule.up,
-              down:
-                migrationModule.down ||
-                (async () => {
-                  logger.warn('[migration]', `No down migration for: ${fileName}`)
-                }),
-            },
-          ] as const
-        } catch (error) {
-          logger.error('[migration]', `Error loading migration ${fileName}:`, error)
-          return null
-        }
-      })
+    const migrationItems = Object.fromEntries(
+      await Promise.all(
+        importedMigrations.map(async ({ name, migration }) => {
+          return [name, migration] as const
+        })
+      )
     )
 
-    const validEntries = migrationEntries.filter(
-      (entry): entry is Exclude<typeof entry, null> => entry !== null
-    )
-
-    logger.info('[migration]', `Loaded ${validEntries.length} valid migrations`)
-
-    return Object.fromEntries(validEntries)
+    return migrationItems
   }
 }

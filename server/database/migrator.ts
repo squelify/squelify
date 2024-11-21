@@ -10,7 +10,7 @@ export const SEEDER_FOLDER = join(process.cwd(), 'server/database/seeders')
 
 type MigrationAction = 'migrate' | 'rollback' | 'reset'
 
-const migrateDBClient = new Kysely<Database>({
+export const migrateDBClient = new Kysely<Database>({
   ...kyselyConfig,
   log: env.SQUELIFY_LOG_LEVEL === 'trace' ? ['error', 'query'] : ['error'],
 })
