@@ -11,6 +11,8 @@ export const TOKEN_DURATION = {
   jwk: DURATION.MONTH, // 30 hari
 }
 
+// JWT Payload follows the JWT standard
+// @ref: https://www.iana.org/assignments/jwt/jwt.xhtml
 export interface JWTPayload {
   // Standard JWT Claims
   iss: string // Issuer: auth service identifier
@@ -21,7 +23,6 @@ export interface JWTPayload {
   iat: number // Issued at timestamp
   jti: string // JWT ID: unique token identifier
   sid: string // Session ID from sessions table
-
   // OpenID Connect Claims
   name?: string // Full formatted name
   given_name: string // First name

@@ -2,6 +2,7 @@ import { type Kysely } from 'kysely'
 import { typeid } from 'typeid-js'
 import type { Database } from '~/database/db.schema'
 import { DEFAULT_PASSWORD_ALGORITHM, PASSWORD_POLICIES } from '~/database/schemas/password'
+import { DURATION } from '~/utils/datetime'
 import { verifyPassword } from '~/utils/security'
 
 interface CreateSessionOptions {
@@ -89,7 +90,7 @@ export async function createUserSession(
   options: CreateSessionOptions
 ) {
   const now = Math.floor(Date.now() / 1000)
-  const expiresAt = now + 7 * 24 * 60 * 60 // 7 days
+  const expiresAt = now + DURATION.DAY * 7
 
   // Check if metadata exists first
   const existingMeta = await db

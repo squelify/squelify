@@ -3,6 +3,7 @@ import type ApiClient from '../client'
 import type { ApiResponse } from '../types'
 
 import { ILoginResponse, LoginRequestSchema } from '~/api/auth/login.post'
+import { IRefreshTokenResponse } from '~/api/auth/refresh.post'
 import { SignoutRequestSchema } from '~/api/auth/signout.post'
 import { SignupRequestSchema } from '~/api/auth/signup.post'
 import { IUserInfoResponse } from '~/api/auth/whoami.post'
@@ -73,7 +74,7 @@ export default class AuthService {
    * Refresh access token using refresh token
    */
   refreshToken(refreshToken: string) {
-    return this.apiClient._request<ApiResponse>('/auth/refresh', {
+    return this.apiClient._request<ApiResponse<IRefreshTokenResponse>>('/auth/refresh', {
       method: 'POST',
       body: JSON.stringify({ refreshToken }),
     })

@@ -15,8 +15,7 @@ export interface IUserInfoResponse {
   }
   credentials: {
     sessionId: string | null
-    validUntil: string | null
-    validityPeriod: number
+    sessionExpiry: string | null
   }
 }
 
@@ -108,8 +107,7 @@ export default defineCachedEventHandler(
           },
           credentials: {
             sessionId: session?.id || null,
-            validUntil: session?.exp || null,
-            validityPeriod: DURATION.MINUTE * 15,
+            sessionExpiry: session?.exp || null,
           },
         }
       )

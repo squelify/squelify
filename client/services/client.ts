@@ -1,9 +1,8 @@
-import consola, { type ConsolaInstance, type LogLevel, createConsola } from 'consola'
+import { type ConsolaInstance, type LogLevel, createConsola } from 'consola'
 import { type $Fetch, FetchError, ofetch } from 'ofetch'
 import { hasWindow, isProduction } from 'std-env'
-import { createStorage } from 'unstorage'
-import localstorageDriver from 'unstorage/drivers/localstorage'
 import { HealthCheckResponse } from '~/api/healthz.get'
+import { authStore } from '#/context/stores/auth.store'
 import { LOG_LEVEL } from '#/utils/logger'
 
 import AccountService from './modules/account.service'
@@ -40,7 +39,6 @@ export default class ApiClient {
   protected baseURL: string
   protected logLevel: LogLevel
   protected logger: ConsolaInstance
-  protected storage: ReturnType<typeof createStorage>
 
   protected headers: {
     [key: string]: string
@@ -79,11 +77,6 @@ export default class ApiClient {
     this.logger = createConsola({
       level: this.logLevel,
       defaults: { tag: ApiClient.logTag },
-    })
-
-    // Initialize the storage driver
-    this.storage = createStorage({
-      driver: localstorageDriver({}),
     })
 
     if (this.instanceID > 0 && hasWindow) {
@@ -131,12 +124,11 @@ export default class ApiClient {
   private _createFetcher(): $Fetch {
     const logger = this.logger
 
-    // FIXME - the baseURL is not being set correctly.
-    consola.debug('DEBUG:_createFetcher', this.baseURL)
-
     return ofetch.create({
       baseURL: this.baseURL,
       async onRequest(ctx) {
+        const authState = authStore.get()
+
         // Add CSRF token for mutating requests
         if (['POST', 'PUT', 'PATCH', 'DELETE'].includes(ctx.options.method?.toUpperCase() || '')) {
           const csrfToken = document
@@ -146,6 +138,11 @@ export default class ApiClient {
           if (!ctx.options.headers.get('X-CSRF-Token') && csrfToken) {
             ctx.options.headers.set('X-CSRF-Token', csrfToken)
           }
+        }
+
+        // Check if the access token is available in the storage
+        if (authState.accessToken && !ctx.options.headers.has('Authorization')) {
+          ctx.options.headers.set('Authorization', `Bearer ${authState.accessToken}`)
         }
 
         logger.debug('onRequest', ctx.request)
@@ -184,11 +181,6 @@ export default class ApiClient {
       headers.append('X-Client-Info', options.clientInfo)
     } else {
       headers.append('X-Client-Info', this.clientInfo)
-    }
-
-    if (this.storage.hasItem('auth:accessToken')) {
-      const accessToken = await this.storage.getItem('auth:accessToken')
-      headers.append('Authorization', `Bearer ${accessToken}`)
     }
 
     try {

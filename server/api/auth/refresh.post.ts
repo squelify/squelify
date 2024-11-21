@@ -3,10 +3,10 @@ import { getActiveJWK } from '~/database/repository/jwk.repo'
 import { type JWTPayload, generateAccessToken } from '~/utils/jwt'
 
 export interface IRefreshTokenResponse {
-  sessionId: string
   accessToken: string
-  validUntil: number
-  validityPeriod: number
+  sessionId: string
+  sessionExpiry: number
+  tokenExpiry: number
 }
 
 export default defineEventHandler(async (event) => {
@@ -74,11 +74,12 @@ export default defineEventHandler(async (event) => {
       return createErrorResponse(event, 'No active signing key available', 500)
     }
 
+    const tokenExpiry = now + TOKEN_DURATION.accessToken
     const payload: JWTPayload = {
       iss: appConfig.baseURL,
       sub: session.userId,
       aud: [userAgentHash],
-      exp: now + TOKEN_DURATION.accessToken,
+      exp: tokenExpiry,
       nbf: now,
       iat: now,
       jti: typeid('tok').toString(),
@@ -116,10 +117,10 @@ export default defineEventHandler(async (event) => {
     })
 
     return createSuccessResponse<IRefreshTokenResponse>(event, 'Token refreshed successfully', {
-      sessionId: session.sessionId,
       accessToken,
-      validUntil: session.expiresAt,
-      validityPeriod: DURATION.MINUTE * 15,
+      sessionId: session.sessionId,
+      sessionExpiry: session.expiresAt,
+      tokenExpiry: tokenExpiry,
     })
   } catch (error) {
     return throwErrorResponse(event, error)

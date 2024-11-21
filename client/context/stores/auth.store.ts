@@ -1,27 +1,25 @@
 import { persistentMap } from '@nanostores/persistent'
-import { ILoginResponse } from '~/api/auth/login.post'
+import type { UserInfo } from '#/services/types'
 
 type AuthStore = {
-  sessionId: string | null
   accessToken: string | null
   refreshToken: string | null
-  user: ILoginResponse['user'] | null
+  accessTokenExpiry: number | null
+  refreshTokenExpiry: number | null
+  user: UserInfo | null
 }
 
 // Default values for the AuthStore
 const defaultAuthStoreValues: AuthStore = {
-  sessionId: null,
   accessToken: null,
   refreshToken: null,
+  accessTokenExpiry: null,
+  refreshTokenExpiry: null,
   user: null,
 }
 
 /**
- * Configures a persistent key-value map store for the application's UI state.
- * The store is persisted to the browser's localStorage, using the 'auth:' prefix
- * for the keys. The store values are encoded and decoded using JSON.stringify
- * and JSON.parse, respectively.
- *
+ * A persistent map store for the Auth state, with the default values for the sidebar state.
  * Using key-value map store. It will keep each key in separated localStorage key.
  * You can switch localStorage to any other storage for all used stores.
  * @ref: https://github.com/nanostores/persistent#persistent-engines

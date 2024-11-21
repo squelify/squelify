@@ -35,8 +35,8 @@ export default function Page() {
     defaultValues: { remember: false },
   })
 
-  const onSubmit: SubmitHandler<FormType> = async ({ identity, password, remember }) => {
-    toast.promise(auth.login(identity, password, remember), {
+  const onSubmit: SubmitHandler<FormType> = async ({ identity, password }) => {
+    toast.promise(auth.login(identity, password), {
       loading: 'Signing in..',
       success: (response) => {
         if (!response?.data) throw new Error('Invalid response')

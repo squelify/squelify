@@ -3,7 +3,7 @@ import { createContext, useContext } from 'react'
 
 interface SEOMetaContextType {
   defaultSuffix: string
-  defaultSeparator: string
+  defaultSeparator?: string
 }
 
 /**
@@ -23,7 +23,7 @@ const SEOMetaContext = createContext<SEOMetaContextType | undefined>(undefined)
  */
 export const SEOMetaProvider: React.FC<SEOMetaContextType & { children: React.ReactNode }> = ({
   defaultSuffix,
-  defaultSeparator,
+  defaultSeparator = '-',
   children,
 }) => {
   return (

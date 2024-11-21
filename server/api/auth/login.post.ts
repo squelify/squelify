@@ -6,28 +6,16 @@ import { getActiveJWK } from '~/database/repository/jwk.repo'
 import { JWTPayload } from '~/utils/jwt'
 
 export interface ILoginResponse {
-  user: {
-    id: string
-    email: string
-    firstName: string | null
-    lastName: string | null
-    displayName: string
-    username: string
-    avatarUrl: string | null
-    roles: string[]
-    permissions: string[]
-    organizationId: string | null
-    isAdmin: boolean
-  }
-  credentials: {
-    sessionId: string
-    accessToken: string
-    refreshToken: string
-    validUntil: number
-    validityPeriod: number
-    mfaRequired: boolean
-    mfaMethod: string | null
-  }
+  accessToken: string
+  refreshToken: string
+  sessionId: string
+  displayName: string
+  sessionExpiry: number
+  tokenExpiry: number
+  mfaRequired: boolean
+  mfaMethod: string | null
+  isAdmin: boolean
+  roles: string[]
 }
 
 export const LoginRequestSchema = z.object({
@@ -114,11 +102,12 @@ export default defineEventHandler(async (event) => {
     ])
 
     const now = Math.floor(Date.now() / 1000)
+    const tokenExpiry = now + TOKEN_DURATION.accessToken
     const payload: JWTPayload = {
       iss: appConfig.baseURL,
       sub: user.id,
       aud: [userAgentHash],
-      exp: now + TOKEN_DURATION.accessToken,
+      exp: tokenExpiry,
       nbf: now,
       iat: now,
       jti: typeid('tok').toString(),
@@ -163,28 +152,16 @@ export default defineEventHandler(async (event) => {
     })
 
     return createSuccessResponse<ILoginResponse>(event, 'Authentication successful', {
-      user: {
-        id: user.id,
-        email: user.email,
-        firstName: user.firstName,
-        lastName: user.lastName,
-        displayName: `${user.firstName} ${user.lastName}`.trim(),
-        username: user.username,
-        avatarUrl: user.avatarUrl,
-        roles: roles.map((r) => r.name),
-        permissions: permissions.map((p) => `${p.action}:${p.resource}`),
-        organizationId: roles.find((r) => r.type === 'organization')?.organizationId || null,
-        isAdmin: roles.some((r) => r.name === 'admin'),
-      },
-      credentials: {
-        sessionId: session.id,
-        accessToken,
-        refreshToken: session.refreshToken,
-        validUntil: session.expiresAt,
-        validityPeriod: DURATION.MINUTE * 15,
-        mfaRequired: !!twoFactor,
-        mfaMethod: twoFactor?.type || null,
-      },
+      accessToken,
+      refreshToken: session.refreshToken,
+      sessionId: session.id,
+      displayName: `${user.firstName} ${user.lastName}`.trim(),
+      sessionExpiry: session.expiresAt,
+      tokenExpiry: tokenExpiry,
+      mfaRequired: !!twoFactor,
+      mfaMethod: twoFactor?.type || null,
+      isAdmin: roles.some((r) => r.name === 'admin'),
+      roles: roles.map((r) => r.name),
     })
   } catch (error) {
     if (error instanceof JWTGenerationError) {

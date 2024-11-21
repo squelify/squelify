@@ -6,7 +6,6 @@ import { BreadcrumbSeparator } from '#/components/base-ui/breadcrumb'
 import { Separator } from '#/components/base-ui/separator'
 import { SidebarInset, SidebarProvider, SidebarTrigger } from '#/components/base-ui/sidebar'
 import { Link } from '#/components/link'
-import PageLoader from '#/components/loader'
 import { useAuth } from '#/context/hooks/use-auth'
 import ErrorBoundaryFallback from '#/pages/error/boundary-fallback'
 import type { AppContextType } from '#/providers/app-provider'
@@ -16,14 +15,10 @@ import PrimarySidebar from './sidebar-primary'
 import SecondarySidebar from './sidebar-secondary'
 
 export default function AppLayout() {
-  const { user, logout, isInitialized } = useAuth()
+  const { user, logout } = useAuth()
 
   const { pathname } = useLocation()
   const redirectTo = encodeURIComponent(pathname)
-
-  if (!isInitialized) {
-    return <PageLoader />
-  }
 
   if (!user) {
     return <Navigate to={`/login?redirect_to=${redirectTo}`} replace />

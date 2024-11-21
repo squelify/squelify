@@ -1,15 +1,15 @@
 import * as Lucide from 'lucide-react'
-import { ILoginResponse } from '~/api/auth/login.post'
 import { Avatar, AvatarFallback, AvatarImage } from '#/components/base-ui/avatar'
 import { DropdownMenuContent, DropdownMenuItem } from '#/components/base-ui/dropdown-menu'
 import { DropdownMenuSeparator, DropdownMenuShortcut } from '#/components/base-ui/dropdown-menu'
 import { DropdownMenu, DropdownMenuTrigger } from '#/components/base-ui/dropdown-menu'
 import { SidebarMenuButton } from '#/components/base-ui/sidebar'
 import { Link } from '#/components/link'
+import type { UserInfo } from '#/services/types'
 import { clx } from '#/utils/helper'
 
 interface UserMenuProps {
-  user: ILoginResponse['user']
+  user: UserInfo
   sidebarState: 'expanded' | 'collapsed'
   logout: () => void
 }

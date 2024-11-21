@@ -1,7 +1,8 @@
 import { useStore } from '@nanostores/react'
-import { createContext, useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { createContext, useCallback, useEffect, useMemo, useRef } from 'react'
+import { CookiesProvider, useCookies } from 'react-cookie'
+import type { CookieSetOptions } from 'universal-cookie'
 import { ILoginResponse } from '~/api/auth/login.post'
-import PageLoader from '#/components/loader'
 import { useApiClient } from '#/context/hooks/use-api-client'
 import { authStore, resetAuthState, saveAuthState } from '#/context/stores/auth.store'
 import { defaultAuthStoreValues } from '#/context/stores/auth.store'
@@ -10,13 +11,17 @@ import { SEOMetaProvider } from '#/providers/seo-provider'
 import type { ApiResponse } from '#/services/types'
 import { clx } from '#/utils/helper'
 
+const COOKIE_NAME = 'auth_session'
+const COOKIE_LIFETIME = 60 * 60 * 24 * 7 /* 7 days */
+const COOKIE_OPTIONS: Omit<CookieSetOptions, 'maxAge'> = {
+  path: '/',
+  sameSite: 'lax',
+  secure: window.location.protocol === 'https:',
+  domain: window.location.hostname,
+}
+
 export type AuthContextType = {
-  isInitialized: boolean
-  login: (
-    identity: string,
-    password: string,
-    remember?: boolean
-  ) => Promise<ApiResponse<ILoginResponse> | null>
+  login: (identity: string, password: string) => Promise<ApiResponse<ILoginResponse> | null>
   logout: () => void
 } & Pick<AuthStore, 'user'>
 
@@ -24,7 +29,6 @@ export type AppContextType = Pick<AuthContextType, 'user' | 'logout'>
 
 const defaultAuthContext: AuthContextType = {
   user: defaultAuthStoreValues.user,
-  isInitialized: false,
   login: async () => null,
   logout: () => {},
 }
@@ -38,93 +42,152 @@ interface AppProviderProps {
 
 export default function AppProvider({ children, debugScreenSize }: AppProviderProps) {
   const { current: apiClient } = useRef(useApiClient())
+  const [cookies, setCookie, removeCookie] = useCookies([COOKIE_NAME])
   const authState = useStore(authStore)
-  const [isInitialized, setIsInitialized] = useState(false)
 
-  const initializeAuth = useCallback(async () => {
-    // Only fetch user data if we have valid session
-    const hasValidSession = authState.sessionId && authState.accessToken
+  // Prevent concurrent login calls
+  const loginLockRef = useRef(false)
 
-    if (!hasValidSession) {
+  const checkAuthState = useCallback(async () => {
+    const sessionId = cookies[COOKIE_NAME]
+
+    console.debug('Current auth state:', {
+      sessionId,
+      accessToken: authState.accessToken,
+      tokenExpiry: authState.accessTokenExpiry,
+    })
+
+    // If there is no session but there is still a valid token, try refreshing
+    if (!sessionId && authState.refreshToken) {
+      try {
+        const refreshResult = await apiClient.auth.refreshToken(authState.refreshToken)
+
+        if (refreshResult?.data) {
+          setCookie(COOKIE_NAME, refreshResult.data.sessionId, {
+            maxAge: COOKIE_LIFETIME,
+            ...COOKIE_OPTIONS,
+          })
+          return
+        }
+      } catch {
+        // Jika refresh gagal, reset state
+        resetAuthState()
+        return
+      }
+    }
+
+    const now = Math.floor(Date.now() / 1000)
+    const hasValidToken =
+      authState.accessToken && authState.accessTokenExpiry && authState.accessTokenExpiry > now
+
+    if (!hasValidToken) {
       resetAuthState()
-      setIsInitialized(true)
+      removeCookie(COOKIE_NAME)
       return
     }
 
-    try {
-      const response = await apiClient.auth.getCurrentUser()
-      if (response?.data?.user) {
-        saveAuthState({
-          sessionId: authState.sessionId,
-          user: response.data.user,
-        })
-      }
-    } catch {
-      resetAuthState()
-    }
-
-    setIsInitialized(true)
-  }, [authState.sessionId, authState.accessToken])
+    // Sisanya sama seperti sebelumnya
+  }, [authState, cookies, setCookie, removeCookie])
 
   useEffect(() => {
-    initializeAuth()
-  }, [initializeAuth])
+    let isMounted = true
+
+    const runCheckAuthState = async () => {
+      if (!isMounted) return
+      await checkAuthState()
+    }
+
+    // Cek pertama kali
+    runCheckAuthState()
+
+    // Cek setiap 5 menit
+    const interval = setInterval(runCheckAuthState, 5 * 60 * 1000)
+
+    return () => {
+      isMounted = false
+      clearInterval(interval)
+    }
+  }, [checkAuthState])
 
   const login = useCallback(
-    async (identity: string, password: string): Promise<ApiResponse<ILoginResponse> | null> => {
+    async (identity: string, password: string) => {
+      if (loginLockRef.current) {
+        throw new Error('Login already in progress')
+      }
+
+      loginLockRef.current = true
+
       try {
-        const result = await apiClient.auth.login({ identity, password })
-        if (!result?.data?.user) throw new Error('Invalid response data')
+        const loginResult = await apiClient.auth.login({ identity, password })
+        if (!loginResult?.data?.accessToken) {
+          throw new Error('Invalid response data')
+        }
 
-        const { user, credentials } = result.data
+        const authData = loginResult.data
 
-        saveAuthState({
-          user, // User data from login response
-          accessToken: credentials.accessToken,
-          refreshToken: credentials.refreshToken,
-          sessionId: credentials.sessionId,
+        // Set cookie sebelum update state
+        setCookie(COOKIE_NAME, authData.sessionId, {
+          maxAge: COOKIE_LIFETIME,
+          ...COOKIE_OPTIONS,
         })
 
-        return result
+        const initialAuthState: AuthStore = {
+          accessToken: authData.accessToken,
+          refreshToken: authData.refreshToken,
+          accessTokenExpiry: authData.tokenExpiry,
+          refreshTokenExpiry: authData.sessionExpiry,
+          user: null,
+        }
+
+        saveAuthState(initialAuthState)
+
+        // Fetch user data
+        const userResult = await apiClient.auth.getCurrentUser()
+        if (userResult?.data?.user) {
+          saveAuthState({ ...initialAuthState, user: userResult.data.user })
+        }
+
+        return loginResult
       } catch (error) {
         resetAuthState()
+        removeCookie(COOKIE_NAME)
         throw error
+      } finally {
+        loginLockRef.current = false
       }
     },
-    []
+    [setCookie, removeCookie]
   )
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies: prevent re-render
   const logout = useCallback(async () => {
     try {
-      if (authState.sessionId) {
-        await apiClient.auth.signout({
-          sessionId: authState.sessionId,
-        })
+      const sessionId = cookies.auth_session
+      if (sessionId) {
+        await apiClient.auth.signout({ sessionId })
       }
     } finally {
       resetAuthState()
+      removeCookie(COOKIE_NAME)
     }
-  }, [authState.sessionId])
+  }, [apiClient])
 
   const authContextValues = useMemo(
     () => ({
       user: authState.user,
-      isInitialized,
       login,
       logout,
     }),
-    [authState.user, isInitialized, login, logout]
+    [authState.user, login, logout]
   )
 
-  if (!isInitialized) {
-    return <PageLoader />
-  }
-
   return (
-    <SEOMetaProvider defaultSuffix="Squelify" defaultSeparator="|">
-      <AuthContext.Provider value={authContextValues}>
-        <div className={clx(debugScreenSize && 'debug-breakpoints')}>{children}</div>
-      </AuthContext.Provider>
-    </SEOMetaProvider>
+    <CookiesProvider defaultSetOptions={COOKIE_OPTIONS}>
+      <SEOMetaProvider defaultSuffix="Squelify">
+        <AuthContext.Provider value={authContextValues}>
+          <div className={clx(debugScreenSize && 'debug-breakpoints')}>{children}</div>
+        </AuthContext.Provider>
+      </SEOMetaProvider>
+    </CookiesProvider>
   )
 }

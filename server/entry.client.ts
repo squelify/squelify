@@ -1,4 +1,4 @@
-import { isProduction, process } from 'std-env'
+import { process } from 'std-env'
 import { generateCSRFToken } from '~/utils/string'
 import { useStorage } from '#imports'
 
@@ -14,10 +14,10 @@ export default defineEventHandler(async (event) => {
 
     // Set CSRF cookie with secure flags
     setCookie(event, 'csrf_token', csrfToken, {
-      httpOnly: true,
-      secure: isProduction,
-      sameSite: 'strict',
       path: '/',
+      httpOnly: true,
+      sameSite: 'strict',
+      secure: event.headers.get('x-forwarded-proto') === 'https',
       maxAge: DURATION.MINUTE * 30,
     })
   }

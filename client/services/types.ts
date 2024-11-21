@@ -1,4 +1,5 @@
 import type { LogLevel } from 'consola'
+import { IUserInfoResponse } from '~/api/auth/whoami.post'
 
 export interface ApiClientOptions {
   /** Base URL for API requests */
@@ -19,3 +20,5 @@ export interface ApiResponse<T = unknown> {
     stack?: string
   }
 }
+
+export type UserInfo = IUserInfoResponse['user']

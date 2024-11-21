@@ -1,6 +1,5 @@
 import * as Lucide from 'lucide-react'
 import { useLocation } from 'react-router-dom'
-import { ILoginResponse } from '~/api/auth/login.post'
 import { SidebarFooter, SidebarHeader } from '#/components/base-ui/sidebar'
 import { SidebarGroup, SidebarGroupContent, SidebarGroupLabel } from '#/components/base-ui/sidebar'
 import { SidebarMenu, SidebarMenuButton, SidebarMenuItem } from '#/components/base-ui/sidebar'
@@ -9,12 +8,13 @@ import { TooltipContent, TooltipProvider } from '#/components/base-ui/tooltip'
 import { Tooltip, TooltipTrigger } from '#/components/base-ui/tooltip'
 import { Link } from '#/components/link'
 import ThemeSwitcher from '#/components/theme-switcher'
+import type { UserInfo } from '#/services/types'
 import { clx } from '#/utils/helper'
 import AppCommand from './app-command'
 import UserMenu from './user-menu'
 
 interface PrimarySidebarProps {
-  user: ILoginResponse['user']
+  user: UserInfo
   logout: () => void
 }
 
