@@ -124,7 +124,5 @@ export default async function seed(db: Kysely<Database>): Promise<void> {
     await trx.insertInto('sq_members').values(newMember).execute()
     await trx.insertInto('sq_accounts').values(newAccount).execute()
     await trx.insertInto('sq_user_roles').values(newUserRole).execute()
-
-    consola.log('🍀 Admin user and organization created successfully')
   })
 }
