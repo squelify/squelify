@@ -30,5 +30,9 @@ export default async function seed(db: Kysely<Database>): Promise<void> {
     },
   ]
 
-  await db.insertInto('sq_permissions').values(permissions).execute()
+  await db
+    .insertInto('sq_permissions')
+    .values(permissions)
+    .onConflict((oc) => oc.column('name').doNothing())
+    .execute()
 }

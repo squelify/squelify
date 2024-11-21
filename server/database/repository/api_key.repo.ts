@@ -26,6 +26,7 @@ export async function createApiKey(db: Kysely<Database>, options: CreateApiKeyOp
   const apiKey = await db
     .insertInto('sq_api_keys')
     .values({ id, userId, name, key, hash, isActive: isActive ? 1 : 0, expiresAt, createdAt })
+    .onConflict((oc) => oc.column('key').doNothing())
     .returningAll()
     .executeTakeFirst()
 

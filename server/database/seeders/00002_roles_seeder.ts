@@ -1,4 +1,3 @@
-import consola from 'consola'
 import { type Kysely } from 'kysely'
 import { typeid } from 'typeid-js'
 import type { Database } from '~/database/db.schema'
@@ -25,18 +24,36 @@ export default async function seed(db: Kysely<Database>): Promise<void> {
     },
   ]
 
-  await db.insertInto('sq_roles').values(roles).execute()
+  // Insert roles dengan onConflict
+  await db
+    .insertInto('sq_roles')
+    .values(roles)
+    .onConflict((oc) => oc.column('name').doNothing())
+    .execute()
 
-  // Assign permissions to roles
+  // Dapatkan role yang sudah ada
+  const existingRole = await db
+    .selectFrom('sq_roles')
+    .where('name', '=', 'admin')
+    .select(['id'])
+    .executeTakeFirst()
+
+  if (!existingRole) return
+
+  // Assign permissions ke role yang sudah ada
   const permissions = await db.selectFrom('sq_permissions').select(['id']).execute()
 
   const rolePermissions: RolePermissionInsert[] = permissions.map((permission) => ({
     id: typeid('rper').toString(),
-    roleId: adminRoleId,
+    roleId: existingRole.id,
     permissionId: permission.id,
     conditions: JSON.stringify({}),
     createdAt: now,
   }))
 
-  await db.insertInto('sq_role_permissions').values(rolePermissions).execute()
+  await db
+    .insertInto('sq_role_permissions')
+    .values(rolePermissions)
+    .onConflict((oc) => oc.columns(['roleId', 'permissionId']).doNothing())
+    .execute()
 }
