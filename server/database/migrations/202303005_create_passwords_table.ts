@@ -3,7 +3,7 @@ import { UNIX_TIMESTAMP } from '~/database/db.helper'
 import type { Database } from '~/database/db.schema'
 import { DEFAULT_PASSWORD_ALGORITHM } from '~/database/schemas/password'
 
-export async function up(db: Kysely<Database>): Promise<void> {
+export const up = async (db: Kysely<Database>): Promise<void> => {
   await db.schema
     .createTable('sq_passwords')
     .addColumn('id', 'text', (col) => col.primaryKey())
@@ -123,7 +123,7 @@ export async function up(db: Kysely<Database>): Promise<void> {
     .execute()
 }
 
-export async function down(db: Kysely<Database>): Promise<void> {
+export const down = async (db: Kysely<Database>): Promise<void> => {
   await db.schema.dropIndex('sq_idx_passwords_expires').ifExists().execute()
   await db.schema.dropIndex('sq_idx_passwords_locked').ifExists().execute()
   await db.schema.dropIndex('sq_idx_passwords_reset').ifExists().execute()

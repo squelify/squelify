@@ -14,6 +14,7 @@
  * - drop_* : Drop table or column
  * - update_* : Update existing data
  * - index_* : Create database index
+ * - seed_* : Seed database with initial data
  *
  * Usage:
  * ```
@@ -113,7 +114,7 @@ import type { Database } from '~/database/db.schema'
 
 // up migration code goes here...
 // note: up migrations are mandatory. you must implement this function.
-export async function up(db: Kysely<Database>): Promise<void> {
+export const up = async (db: Kysely<Database>): Promise<void> => {
   // Create table
   await db.schema
     .createTable('TABLE_NAME')
@@ -147,7 +148,7 @@ export async function up(db: Kysely<Database>): Promise<void> {
 
 // down migration code goes here...
 // note: down migrations are optional. you can safely delete this function.
-export async function down(db: Kysely<Database>): Promise<void> {
+export const down = async (db: Kysely<Database>): Promise<void> => {
   await db.schema.dropIndex('idx_TABLE_NAME_created_at').ifExists().execute()
   await sql\`DROP TRIGGER IF EXISTS trg_TABLE_NAME_timestamp;\`.execute(db)
   await db.schema.dropTable('TABLE_NAME').ifExists().execute()

@@ -41,7 +41,7 @@ import { type Kysely, sql } from 'kysely'
 import { UNIX_TIMESTAMP } from '~/database/db.helper'
 import type { Database } from '~/database/db.schema'
 
-export async function up(db: Kysely<Database>): Promise<void> {
+export const up = async (db: Kysely<Database>): Promise<void> => {
   await db.schema
     .createTable('sq_user_metadata')
     .addColumn('id', 'text', (col) => col.primaryKey())
@@ -108,7 +108,7 @@ export async function up(db: Kysely<Database>): Promise<void> {
     .execute()
 }
 
-export async function down(db: Kysely<Database>): Promise<void> {
+export const down = async (db: Kysely<Database>): Promise<void> => {
   await db.schema.dropIndex('sq_idx_user_metadata_public').ifExists().execute()
   await db.schema.dropIndex('sq_idx_user_metadata_lookup').ifExists().execute()
   await db.schema.dropIndex('sq_idx_user_metadata_user').ifExists().execute()

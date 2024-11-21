@@ -2,7 +2,7 @@ import { type Kysely, sql } from 'kysely'
 import { UNIX_TIMESTAMP } from '~/database/db.helper'
 import type { Database } from '~/database/db.schema'
 
-export async function up(db: Kysely<Database>): Promise<void> {
+export const up = async (db: Kysely<Database>): Promise<void> => {
   await db.schema
     .createTable('sq_sessions')
     .addColumn('id', 'text', (col) => col.primaryKey())
@@ -69,7 +69,7 @@ export async function up(db: Kysely<Database>): Promise<void> {
   `.execute(db)
 }
 
-export async function down(db: Kysely<Database>): Promise<void> {
+export const down = async (db: Kysely<Database>): Promise<void> => {
   await db.schema.dropIndex('sq_idx_sessions_cleanup').ifExists().execute()
   await db.schema.dropIndex('sq_idx_sessions_archive').ifExists().execute()
   await sql`DROP TRIGGER IF EXISTS sq_trg_sessions_cleanup;`.execute(db)

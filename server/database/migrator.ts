@@ -3,9 +3,7 @@ import { join } from 'pathe'
 import { env } from 'std-env'
 import { kyselyConfig } from '~/database/db.client'
 import type { Database } from '~/database/db.schema'
-import { ESMFileMigrationProvider } from '~/database/provider'
-
-const isRunningFromCLI = (): boolean => process.argv.length > 2
+import SquelifyMigrator from '~/database/provider'
 
 export const MIGRATION_FOLDER = join(process.cwd(), 'server/database/migrations')
 export const SEEDER_FOLDER = join(process.cwd(), 'server/database/seeders')
@@ -19,10 +17,7 @@ const migrateDBClient = new Kysely<Database>({
 
 export const migrateClient = new Migrator({
   db: migrateDBClient,
-  // provider: shouldAutoMigrate
-  //   ? new ESMFileMigrationProvider(MIGRATION_FOLDER)
-  //   : new AutomaticMigrateProvider(),
-  provider: new ESMFileMigrationProvider(MIGRATION_FOLDER),
+  provider: new SquelifyMigrator(MIGRATION_FOLDER),
   migrationTableName: '_migration',
   migrationLockTableName: '_migration_lock',
 })
@@ -57,6 +52,9 @@ export async function runSeeds(): Promise<void> {
     throw error
   }
 }
+
+// Helper function to check if the script is running from the CLI
+const isRunningFromCLI = (): boolean => process.argv.length > 2
 
 const migrationActions: Record<MigrationAction, () => Promise<void>> = {
   migrate: async () => {
