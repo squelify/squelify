@@ -2,31 +2,30 @@ import { isProduction, process } from 'std-env'
 import { generateCSRFToken } from '~/utils/string'
 import { useStorage } from '#imports'
 
-export default defineCachedEventHandler(
-  async (event) => {
-    const appConfig = event.context.appConfig
+export default defineEventHandler(async (event) => {
+  const appConfig = event.context.appConfig
 
-    // Check existing CSRF token
-    let csrfToken = getCookie(event, 'csrf_token')
+  // Check existing CSRF token
+  let csrfToken = getCookie(event, 'csrf_token')
 
-    // Generate new token if not exists or expired
-    if (!csrfToken || !validateCSRFToken(csrfToken)) {
-      csrfToken = generateCSRFToken()
+  // Generate new token if not exists or expired
+  if (!csrfToken || !validateCSRFToken(csrfToken)) {
+    csrfToken = generateCSRFToken()
 
-      // Set CSRF cookie with secure flags
-      setCookie(event, 'csrf_token', csrfToken, {
-        httpOnly: true,
-        secure: isProduction,
-        sameSite: 'strict',
-        path: '/',
-        maxAge: DURATION.MINUTE * 30,
-      })
-    }
+    // Set CSRF cookie with secure flags
+    setCookie(event, 'csrf_token', csrfToken, {
+      httpOnly: true,
+      secure: isProduction,
+      sameSite: 'strict',
+      path: '/',
+      maxAge: DURATION.MINUTE * 30,
+    })
+  }
 
-    if (process.dev) {
-      const [serverAddress] = event.context.vite.resolvedUrls.local
+  if (process.dev) {
+    const [serverAddress] = event.context.vite.resolvedUrls.local
 
-      return /* html */ `<!DOCTYPE html>
+    return /* html */ `<!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="UTF-8">
@@ -45,29 +44,29 @@ export default defineCachedEventHandler(
     <script type="module" src="${serverAddress}client/main.tsx"></script>
   </body>
 </html>`
-    }
+  }
 
-    type Manifest = Record<string, { css: string[]; file: string; isEntry: boolean }>
+  type Manifest = Record<string, { css: string[]; file: string; isEntry: boolean }>
 
-    const manifest = await useStorage('assets:vite').getItem<Manifest>(`manifest.json`)
+  const manifest = await useStorage('assets:vite').getItem<Manifest>(`manifest.json`)
 
-    if (!manifest) {
-      setResponseStatus(event, 500)
-      return 'Missing manifest'
-    }
+  if (!manifest) {
+    setResponseStatus(event, 500)
+    return 'Missing manifest'
+  }
 
-    const entryChunk = Object.values(manifest).find((entry) => entry.isEntry)
-    if (!entryChunk) {
-      setResponseStatus(event, 500)
-      return 'Missing manifest entry'
-    }
+  const entryChunk = Object.values(manifest).find((entry) => entry.isEntry)
+  if (!entryChunk) {
+    setResponseStatus(event, 500)
+    return 'Missing manifest entry'
+  }
 
-    const cssLinks = entryChunk.css
-      .map((link) => `<link rel="stylesheet" href="/${link}" />`)
-      .join('\n')
-    const scriptLinks = `<script type="module" src="/${entryChunk.file}"></script>`
+  const cssLinks = entryChunk.css
+    .map((link) => `<link rel="stylesheet" href="/${link}" />`)
+    .join('\n')
+  const scriptLinks = `<script type="module" src="/${entryChunk.file}"></script>`
 
-    return /* html */ `<!DOCTYPE html>
+  return /* html */ `<!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="UTF-8">
@@ -81,9 +80,4 @@ export default defineCachedEventHandler(
     ${scriptLinks}
   </body>
 </html>`
-  },
-  {
-    maxAge: isProduction ? 60 * 60 : 0,
-    swr: true,
-  }
-)
+})

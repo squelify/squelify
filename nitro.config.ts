@@ -46,7 +46,6 @@ export default defineNitroConfig({
   serverAssets: [
     // Frontend application assets
     { baseName: 'vite', dir: resolve('.output/client/.vite') },
-    { baseName: 'migrations', dir: resolve('server/database/migrations') },
   ],
 
   output: {

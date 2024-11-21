@@ -19,7 +19,7 @@ interface PrimarySidebarProps {
 }
 
 export default function PrimarySidebar({ user, logout }: PrimarySidebarProps) {
-  const { state: sidebarState, setOpen, isMobile } = useSidebar()
+  const { state: sidebarState /*setOpen, isMobile*/ } = useSidebar()
   const { pathname } = useLocation()
 
   const menuGroups = [
@@ -55,6 +55,16 @@ export default function PrimarySidebar({ user, logout }: PrimarySidebarProps) {
       ],
     },
   ]
+
+  // TODO: This is a workaround for the sidebar collapsed when clicking on Collections menu
+  const handleMenuItemClick = (url: string) => {
+    // if (url.startsWith('/content/collections')) {
+    //   setOpen(false)
+    // } else if (!isMobile && sidebarState !== 'collapsed') {
+    //   setOpen(true)
+    // }
+    console.debug(url)
+  }
 
   return (
     <Sidebar variant="sidebar" collapsible="icon">
@@ -112,16 +122,7 @@ export default function PrimarySidebar({ user, logout }: PrimarySidebarProps) {
                               )}
                               asChild
                             >
-                              <Link
-                                href={item.url}
-                                onClick={() => {
-                                  if (item.url.startsWith('/content/collections')) {
-                                    setOpen(false)
-                                  } else if (!isMobile && sidebarState !== 'collapsed') {
-                                    setOpen(true)
-                                  }
-                                }}
-                              >
+                              <Link href={item.url} onClick={() => handleMenuItemClick(item.url)}>
                                 <item.icon strokeWidth={1.8} />
                                 <span>{item.title}</span>
                               </Link>
@@ -138,17 +139,7 @@ export default function PrimarySidebar({ user, logout }: PrimarySidebarProps) {
                           )}
                           asChild
                         >
-                          <Link
-                            href={item.url}
-                            onClick={() => {
-                              if (item.url.startsWith('/content/collections')) {
-                                setOpen(false)
-                              } else if (!isMobile) {
-                                // desktop breakpoint
-                                setOpen(true)
-                              }
-                            }}
-                          >
+                          <Link href={item.url} onClick={() => handleMenuItemClick(item.url)}>
                             <item.icon strokeWidth={1.8} />
                             <span>{item.title}</span>
                           </Link>

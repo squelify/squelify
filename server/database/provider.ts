@@ -1,12 +1,9 @@
 import { promises as fs } from 'node:fs'
-import type { Kysely, Migration, MigrationProvider } from 'kysely'
+import type { Migration, MigrationProvider } from 'kysely'
 import { join, resolve } from 'pathe'
 import { env } from 'std-env'
 import { createStorage } from 'unstorage'
 import fsDriver from 'unstorage/drivers/fs-lite'
-import logger from '~/utils/logger'
-import type { Database } from './db.schema'
-import { MIGRATION_FOLDER } from './migrator'
 
 interface DatabaseMigration {
   readonly name: string
@@ -28,7 +25,7 @@ export default class SquelifyMigrator implements MigrationProvider {
 
     // Initialize storage with fs driver
     this.storage = createStorage({
-      driver: fsDriver({ base: 'assets:migrations' }),
+      driver: fsDriver({ base: this.resolvedPath }),
     })
   }
 
@@ -51,6 +48,10 @@ export default class SquelifyMigrator implements MigrationProvider {
     }
 
     // Automatic Migration mode
+    // const migrationKeys = await this.storage.getKeys()
+    // const migrationItems = migrationKeys.map((key) => key.slice(0, -3))
+
+    // TODO: improve this to automatically detect migrations from storage
     const importedMigrations: DatabaseMigration[] = [
       {
         name: '202303001_create_users_table',
@@ -138,25 +139,12 @@ export default class SquelifyMigrator implements MigrationProvider {
       },
     ]
 
-    // const storage = useStorage('assets:migrations')
-    // const storageKeys = await storage.getKeys()
-    // const migrationItems = storageKeys.map((key) => key.replace('.ts', ''))
-
-    // const importedMigrations: DatabaseMigration[] = await Promise.all(
-    //   migrationItems.map(async (key) => {
-    //     const importedMigration = await import(`../database/migrations/${key}`)
-    //     return { name: key, migration: importedMigration.default }
-    //   })
-    // )
-
-    const migrationItems = Object.fromEntries(
-      await Promise.all(
-        importedMigrations.map(async ({ name, migration }) => {
-          return [name, migration] as const
-        })
-      )
+    const migrationEntries = await Promise.all(
+      importedMigrations.map(async ({ name, migration }) => {
+        return [name, migration] as const
+      })
     )
 
-    return migrationItems
+    return Object.fromEntries(migrationEntries)
   }
 }
