@@ -18,8 +18,8 @@ export default async function seed(db: Kysely<Database>): Promise<void> {
       await createApiKey(trx, {
         userId: admin.id,
         name: 'System Integration Key',
-        expiresAt: null,
-        isActive: true,
+        expiry: null,
+        active: true,
         kind: 'pk',
       })
 
@@ -27,8 +27,8 @@ export default async function seed(db: Kysely<Database>): Promise<void> {
       await createApiKey(trx, {
         userId: admin.id,
         name: 'Development Testing Key',
-        expiresAt: now + DURATION.DAY * 90,
-        isActive: true,
+        expiry: now + DURATION.DAY * 90,
+        active: true,
         kind: 'pk',
       })
     }

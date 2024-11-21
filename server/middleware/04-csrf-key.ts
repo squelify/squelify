@@ -1,8 +1,6 @@
 import { typeid } from 'typeid-js'
-import { validateApiKey } from '~/database/repository/api_key.repo'
+import { ApiKeyValidationError, validateApiKey } from '~/database/repository/api_key.repo'
 import { validateCSRFToken } from '~/utils/string'
-
-const PROTECTED_METHODS = ['POST', 'PUT', 'PATCH', 'DELETE']
 
 // No protection needed
 const PUBLIC_ROUTES = [
@@ -22,8 +20,11 @@ const UNPROTECTED_ROUTES = [
   '/jwks/keys.json',
 ]
 
-const matchRoute = (pathname: string, patterns: string[]) =>
-  patterns.some((p) => (p.endsWith('/*') ? pathname.startsWith(p.slice(0, -2)) : pathname === p))
+const matchRoute = (pathname: string, patterns: string[]) => {
+  return patterns.some((p) =>
+    p.endsWith('/*') ? pathname.startsWith(p.slice(0, -2)) : pathname === p
+  )
+}
 
 export default defineEventHandler(async (event) => {
   const pathname = getRequestURL(event).pathname
@@ -32,7 +33,8 @@ export default defineEventHandler(async (event) => {
   const method = event.method
   const { db } = event.context
 
-  if (!PROTECTED_METHODS.includes(method)) return
+  // Only protect POST, PUT, PATCH, DELETE requests
+  if (!['POST', 'PUT', 'PATCH', 'DELETE'].includes(method)) return
   if (matchRoute(pathname, PUBLIC_ROUTES)) return
 
   try {
@@ -63,11 +65,10 @@ export default defineEventHandler(async (event) => {
       }
     } else {
       // External API integration using API key
-      const isValidKey = await validateApiKey(db, apiKey)
-
-      logger.debug('[csrf]', JSON.stringify({ apiKey, isValidKey }))
-
-      if (!apiKey || !isValidKey) {
+      try {
+        const isValidKey = await validateApiKey(db, apiKey)
+        logger.debug('[csrf]', JSON.stringify({ apiKey, isValidKey }))
+      } catch (error) {
         await auditLog(event, {
           action: 'login',
           entity: 'user',
@@ -75,12 +76,13 @@ export default defineEventHandler(async (event) => {
           metadata: {
             success: false,
             requestId,
-            reason: 'invalid_api_key',
+            reason: error instanceof ApiKeyValidationError ? error.message : 'invalid_api_key',
             clientInfo,
           },
           retention: 'COMPLIANCE',
         })
-        return createErrorResponse(event, 'Invalid API key', 401)
+        const errMsg = error instanceof ApiKeyValidationError ? error.message : 'Invalid API key'
+        return createErrorResponse(event, errMsg, 401)
       }
       return
     }
