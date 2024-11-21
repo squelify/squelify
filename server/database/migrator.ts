@@ -63,7 +63,7 @@ const migrationActions: Record<MigrationAction, () => Promise<void>> = {
     if (results) {
       for (const it of results) {
         if (it.status === 'Success') {
-          const message = `🍀 Migration "${it.migrationName}" was executed successfully`
+          const message = `🍀 Migration "${it.migrationName}:up" was executed successfully`
           if (isRunningFromCLI()) {
             console.info(message)
           } else {
@@ -93,7 +93,7 @@ const migrationActions: Record<MigrationAction, () => Promise<void>> = {
     if (results) {
       for (const it of results) {
         if (it.status === 'Success') {
-          console.info(`🍀 migration "${it.migrationName}" was executed successfully`)
+          console.info(`🍀 Migration "${it.migrationName}:down" was executed successfully`)
         } else if (it.status === 'Error') {
           console.error(`🔥 Failed to execute migration "${it.migrationName}"`)
         }
