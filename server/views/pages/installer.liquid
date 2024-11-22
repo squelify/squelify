@@ -66,7 +66,7 @@
             <div class="relative">
               <input type="password" name="password" id="password" required minlength="8"
                 placeholder="Enter your secure password"
-                pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$"
+                pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{8,}$"
                 title="Password must contain at least 8 characters, including uppercase, lowercase, number and special character"
                 class="mt-0.5 block w-full rounded-[0.3rem] border border-neutral-300 dark:border-neutral-600 px-3 py-2 pr-10
                 bg-white dark:bg-neutral-700 text-neutral-900 dark:text-white placeholder-neutral-400 dark:placeholder-neutral-500
@@ -82,7 +82,7 @@
               </button>
             </div>
             <p class="mt-1 px-0.5 text-sm text-neutral-500 dark:text-neutral-400">
-              Min 8 characters, 1 uppercase, 1 lowercase & 1 number.
+              Min 8 characters with 1 uppercase, 1 lowercase, 1 number & 1 special character (!@#$%^&*)
             </p>
           </div>
         </div>
