@@ -2,7 +2,7 @@ import * as Lucide from 'lucide-react'
 import { useSEOMeta } from '#/context/hooks/use-seo-meta'
 
 export default function Component() {
-  const { pageTitle } = useSEOMeta('Settings')
+  const { pageTitle } = useSEOMeta('System Settings')
 
   return (
     <div className="mx-auto flex size-full items-center justify-center">

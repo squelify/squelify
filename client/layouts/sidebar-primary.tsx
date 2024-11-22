@@ -1,5 +1,4 @@
 import consola from 'consola'
-import * as Lucide from 'lucide-react'
 import { useLocation } from 'react-router-dom'
 import { SidebarFooter, SidebarHeader } from '#/components/base-ui/sidebar'
 import { SidebarGroup, SidebarGroupContent, SidebarGroupLabel } from '#/components/base-ui/sidebar'
@@ -9,6 +8,7 @@ import { TooltipContent, TooltipProvider } from '#/components/base-ui/tooltip'
 import { Tooltip, TooltipTrigger } from '#/components/base-ui/tooltip'
 import { Link } from '#/components/link'
 import ThemeSwitcher from '#/components/theme-switcher'
+import { useMenu } from '#/context/hooks/use-menu'
 import type { UserInfo } from '#/services/types'
 import { clx } from '#/utils/helper'
 import AppCommand from './app-command'
@@ -22,40 +22,7 @@ interface PrimarySidebarProps {
 export default function PrimarySidebar({ user, logout }: PrimarySidebarProps) {
   const { state: sidebarState /*setOpen, isMobile*/ } = useSidebar()
   const { pathname } = useLocation()
-
-  const menuGroups = [
-    {
-      label: 'Main',
-      items: [
-        { title: 'Dashboard', url: '/dashboard', icon: Lucide.LayoutDashboard },
-        { title: 'Query Editor', url: '/query-editor', icon: Lucide.SquareChartGantt },
-      ],
-    },
-    {
-      label: 'Content',
-      items: [
-        { title: 'Collections', url: '/content/collections', icon: Lucide.Database },
-        { title: 'Media Library', url: '/content/media', icon: Lucide.Image },
-      ],
-    },
-    {
-      label: 'Authentication',
-      items: [
-        { title: 'Users', url: '/users/list', icon: Lucide.Users },
-        { title: 'Roles', url: '/users/roles', icon: Lucide.Shield },
-        { title: 'Permissions', url: '/users/permissions', icon: Lucide.Lock },
-      ],
-    },
-    {
-      label: 'System',
-      items: [
-        { title: 'Audit Logs', url: '/system/audit-logs', icon: Lucide.ScrollText },
-        { title: 'Webhooks', url: '/system/webhooks', icon: Lucide.Webhook },
-        { title: 'API Keys', url: '/system/api-keys', icon: Lucide.Key },
-        { title: 'Settings', url: '/system/settings', icon: Lucide.Settings2 },
-      ],
-    },
-  ]
+  const { menuGroups } = useMenu()
 
   // TODO: This is a workaround for the sidebar collapsed when clicking on Collections menu
   const handleMenuItemClick = (url: string) => {
@@ -106,7 +73,7 @@ export default function PrimarySidebar({ user, logout }: PrimarySidebarProps) {
           {menuGroups.map((group) => (
             <SidebarGroup key={group.label}>
               <SidebarGroupLabel
-                className={clx(group.label === 'Main' ? 'hidden' : 'flex', 'pointer-events-none')}
+                className={clx(group.hideLabel ? 'hidden' : 'flex', 'pointer-events-none')}
               >
                 {group.label}
               </SidebarGroupLabel>

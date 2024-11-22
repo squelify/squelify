@@ -1,5 +1,6 @@
 import { type ClassValue, clsx } from 'clsx'
 import { twMerge } from 'tailwind-merge'
+import type { MenuGroup } from '#/context/hooks/use-menu'
 
 /**
  * Combines multiple CSS class values using the `clsx` and `tailwind-merge` libraries.
@@ -9,6 +10,45 @@ import { twMerge } from 'tailwind-merge'
  */
 export function clx(...args: ClassValue[]) {
   return twMerge(clsx(...args))
+}
+
+/**
+ * Get breadcrumb items with parent group label
+ */
+export function getBreadcrumbItems(
+  pathname: string,
+  menuGroups: MenuGroup[]
+): { title: string; url: string }[] {
+  // Skip if pathname is dashboard
+  if (pathname === '/dashboard') {
+    return []
+  }
+
+  // Remove URL parameters and trailing slashes
+  const cleanPath = pathname.split('?')[0].replace(/\/+$/, '')
+  const pathSegments = cleanPath.split('/')
+
+  // Find base path without ID segments
+  const basePath = pathSegments.filter((segment) => !segment.match(/^\d+$/)).join('/')
+
+  // Find exact matching menu item and its group
+  for (const group of menuGroups) {
+    const matchingItem = group.items.find((item) => item.url === basePath)
+    if (matchingItem) {
+      // Return only the item if group label should be hidden
+      if (group.hideLabel) {
+        return [{ title: matchingItem.title, url: matchingItem.url }]
+      }
+
+      // Otherwise return both group label and item
+      return [
+        { title: group.label, url: pathname },
+        { title: matchingItem.title, url: matchingItem.url },
+      ]
+    }
+  }
+
+  return []
 }
 
 /**

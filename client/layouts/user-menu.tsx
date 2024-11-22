@@ -15,7 +15,6 @@ interface UserMenuProps {
 }
 
 export default function UserMenu({ user, sidebarState, logout }: UserMenuProps) {
-  console.info('DEBUG  user', user)
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -36,7 +35,7 @@ export default function UserMenu({ user, sidebarState, logout }: UserMenuProps) 
       </DropdownMenuTrigger>
       <DropdownMenuContent
         side={sidebarState === 'expanded' ? 'top' : 'right'}
-        className={clx(sidebarState === 'expanded' ? 'mb-2 ml-4' : 'mb-10', 'w-56')}
+        className={clx(sidebarState === 'expanded' ? 'ml-4' : 'ml-0', 'mb-2 w-56')}
       >
         <DropdownMenuItem asChild>
           <Link href="/account">
