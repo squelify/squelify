@@ -15,6 +15,7 @@ interface UserMenuProps {
 }
 
 export default function UserMenu({ user, sidebarState, logout }: UserMenuProps) {
+  console.info('DEBUG  user', user)
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>

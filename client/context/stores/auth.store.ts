@@ -1,5 +1,6 @@
 import { persistentMap } from '@nanostores/persistent'
 import type { UserInfo } from '#/services/types'
+import { storeDecode, storeEncode } from '#/utils/helper'
 
 type AuthStore = {
   accessToken: string | null
@@ -25,8 +26,8 @@ const defaultAuthStoreValues: AuthStore = {
  * @ref: https://github.com/nanostores/persistent#persistent-engines
  */
 const authStore = persistentMap<AuthStore>('auth:', defaultAuthStoreValues, {
-  encode: (value) => (typeof value === 'string' ? value : JSON.stringify(value)),
-  decode: (value) => (typeof value === 'string' ? value : JSON.parse(value)),
+  encode: storeEncode,
+  decode: storeDecode,
 })
 
 /**

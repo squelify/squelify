@@ -1,4 +1,5 @@
 import { useStore } from '@nanostores/react'
+import consola from 'consola'
 import { createContext, useCallback, useEffect, useMemo, useRef } from 'react'
 import { CookiesProvider, useCookies } from 'react-cookie'
 import type { CookieSetOptions } from 'universal-cookie'
@@ -51,30 +52,12 @@ export default function AppProvider({ children, debugScreenSize }: AppProviderPr
   const checkAuthState = useCallback(async () => {
     const sessionId = cookies[COOKIE_NAME]
 
-    console.debug('Current auth state:', {
+    consola.log('Current auth state:', {
       sessionId,
       accessToken: authState.accessToken,
+      refreshToken: authState.refreshToken,
       tokenExpiry: authState.accessTokenExpiry,
     })
-
-    // If there is no session but there is still a valid token, try refreshing
-    if (!sessionId && authState.refreshToken) {
-      try {
-        const refreshResult = await apiClient.auth.refreshToken(authState.refreshToken)
-
-        if (refreshResult?.data) {
-          setCookie(COOKIE_NAME, refreshResult.data.sessionId, {
-            maxAge: COOKIE_LIFETIME,
-            ...COOKIE_OPTIONS,
-          })
-          return
-        }
-      } catch {
-        // Jika refresh gagal, reset state
-        resetAuthState()
-        return
-      }
-    }
 
     const now = Math.floor(Date.now() / 1000)
     const hasValidToken =
@@ -87,7 +70,7 @@ export default function AppProvider({ children, debugScreenSize }: AppProviderPr
     }
 
     // Sisanya sama seperti sebelumnya
-  }, [authState, cookies, setCookie, removeCookie])
+  }, [authState, cookies, removeCookie])
 
   useEffect(() => {
     let isMounted = true

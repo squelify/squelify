@@ -1,3 +1,4 @@
+import consola from 'consola'
 import * as Lucide from 'lucide-react'
 import { useLocation } from 'react-router-dom'
 import { SidebarFooter, SidebarHeader } from '#/components/base-ui/sidebar'
@@ -63,7 +64,7 @@ export default function PrimarySidebar({ user, logout }: PrimarySidebarProps) {
     // } else if (!isMobile && sidebarState !== 'collapsed') {
     //   setOpen(true)
     // }
-    console.debug(url)
+    consola.log(url)
   }
 
   return (

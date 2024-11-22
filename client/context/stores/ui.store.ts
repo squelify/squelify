@@ -1,4 +1,5 @@
 import { persistentMap } from '@nanostores/persistent'
+import { storeDecode, storeEncode } from '#/utils/helper'
 
 export type Theme = 'dark' | 'light' | 'system'
 
@@ -22,8 +23,8 @@ const defaultUIStoreValues: UIStore = {
  * @ref: https://github.com/nanostores/persistent#persistent-engines
  */
 const uiStore = persistentMap<UIStore>('ui:', defaultUIStoreValues, {
-  encode: (value) => (typeof value === 'string' ? value : JSON.stringify(value)),
-  decode: (value) => (typeof value === 'string' ? value : JSON.parse(value)),
+  encode: storeEncode,
+  decode: storeDecode,
 })
 
 /**
