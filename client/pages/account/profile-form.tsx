@@ -1,24 +1,55 @@
+import consola from 'consola'
 import * as Lucide from 'lucide-react'
+import { useRef } from 'react'
+import { Avatar, AvatarFallback, AvatarImage } from '#/components/base-ui/avatar'
 import { Button } from '#/components/base-ui/button'
 import { Input } from '#/components/base-ui/input'
 import { Label } from '#/components/base-ui/label'
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '#/components/base-ui/select'
+import { Select, SelectItem, SelectValue } from '#/components/base-ui/select'
+import { SelectContent, SelectTrigger } from '#/components/base-ui/select'
 
 export function ProfileForm() {
+  const fileInputRef = useRef<HTMLInputElement>(null)
+
+  const handleFileSelect = () => {
+    fileInputRef.current?.click()
+  }
+
+  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0]
+    if (file) {
+      // Handle file upload logic here
+      consola.log('Selected file:', file)
+    }
+  }
+
   return (
     <div className="flex flex-col gap-6">
       <div className="mx-auto mb-6">
-        <div className="size-32 rounded-full bg-muted" />
-        <Button variant="outline" size="sm" className="mt-4">
-          <Lucide.Upload className="mr-2 h-4 w-4" />
-          Change Photo
-        </Button>
+        <div className="group relative">
+          <Avatar className="size-32">
+            <AvatarImage src="https://github.com/riipandi.png" alt="Profile photo" />
+            <AvatarFallback>AR</AvatarFallback>
+          </Avatar>
+          <div className="absolute inset-0 flex items-center justify-center rounded-full bg-black/60 opacity-0 transition-opacity group-hover:opacity-100">
+            <Button
+              size="sm"
+              variant="ghost"
+              className="text-white hover:bg-transparent hover:text-white"
+              onClick={handleFileSelect}
+            >
+              <Lucide.Upload className="mr-2 h-4 w-4" />
+              Change
+            </Button>
+          </div>
+          <input
+            ref={fileInputRef}
+            type="file"
+            accept="image/*"
+            className="hidden"
+            onChange={handleFileChange}
+          />
+        </div>
       </div>
 
       <div className="grid gap-4">
