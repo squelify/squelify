@@ -17,7 +17,7 @@ const TEMPLATE_CONFIG = {
 type SkipCacheTemplate = (typeof TEMPLATE_CONFIG.skipCacheTemplates)[number]
 
 // Custom error class
-class LiquidTemplateError extends Error {
+export class LiquidTemplateError extends Error {
   constructor(
     message: string,
     public statusCode = 500,
@@ -116,7 +116,7 @@ export async function renderTemplate(
   context?: Record<string, unknown>
 ): Promise<string> {
   const templateStorage = useStorage(TEMPLATE_CONFIG.storageKey)
-  const templateContent = await templateStorage.getItem<string>(
+  const templateContent = await templateStorage.getItem<string | Uint8Array>(
     `${templatePath}${TEMPLATE_CONFIG.extension}`
   )
 
@@ -126,8 +126,14 @@ export async function renderTemplate(
 
   try {
     const engine = getLiquidEngine()
-    const htmlContent = await engine.parseAndRender(templateContent, {
+    const content =
+      templateContent instanceof Uint8Array
+        ? new TextDecoder().decode(templateContent)
+        : templateContent
+
+    const htmlContent = await engine.parseAndRenderSync(content, {
       ...context,
+      strictVariables: true,
       renderTime: new Date(),
     })
 
@@ -137,5 +143,3 @@ export async function renderTemplate(
     throw new LiquidTemplateError('Template render failed', 500, templatePath)
   }
 }
-
-export { LiquidTemplateError }
