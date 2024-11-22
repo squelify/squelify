@@ -1,126 +1,124 @@
-import { flexRender, getCoreRowModel, useReactTable } from '@tanstack/react-table'
-import { ColumnFiltersState, SortingState, VisibilityState } from '@tanstack/react-table'
-import { getFilteredRowModel, getSortedRowModel } from '@tanstack/react-table'
-import { getPaginationRowModel } from '@tanstack/react-table'
 import * as Lucide from 'lucide-react'
 import { useState } from 'react'
 import { Button } from '#/components/base-ui/button'
-import { DropdownMenu, DropdownMenuTrigger } from '#/components/base-ui/dropdown-menu'
-import { DropdownMenuCheckboxItem, DropdownMenuContent } from '#/components/base-ui/dropdown-menu'
+import { DropdownMenu, DropdownMenuItem } from '#/components/base-ui/dropdown-menu'
+import {
+  DropdownMenuContent,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+} from '#/components/base-ui/dropdown-menu'
+import { DropdownMenuCheckboxItem, DropdownMenuTrigger } from '#/components/base-ui/dropdown-menu'
 import { Input } from '#/components/base-ui/input'
-import { Table, TableBody, TableRow } from '#/components/base-ui/table'
-import { TableCell, TableHead, TableHeader } from '#/components/base-ui/table'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '#/components/base-ui/select'
+import { Skeleton } from '#/components/base-ui/skeleton'
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '#/components/base-ui/table'
 import { useSEOMeta } from '#/context/hooks/use-seo-meta'
+import { clx } from '#/utils/helper'
 
-import type { AuditLog } from '~/database/schemas/audit_log'
-import { columns, visibleColumns } from './columns'
+// Kolom yang dapat ditampilkan/disembunyikan
+const visibleColumns = [
+  { id: 'timestamp', title: 'Timestamp' },
+  { id: 'action', title: 'Action' },
+  { id: 'entity', title: 'Entity' },
+  { id: 'user', title: 'User' },
+  { id: 'ipAddress', title: 'IP Address' },
+  { id: 'changes', title: 'Changes' },
+]
 
 export default function Component() {
-  useSEOMeta('Audit Logs')
+  const { pageTitle } = useSEOMeta('Audit Logs')
+  const [isRefreshing, setIsRefreshing] = useState(false)
+  const skeletonRows = ['skeleton-1', 'skeleton-2', 'skeleton-3', 'skeleton-4', 'skeleton-5']
 
-  const [sorting, setSorting] = useState<SortingState>([])
-  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([])
-  const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({})
-
-  const data: AuditLog[] = [
-    {
-      id: 'audit_01',
-      userId: 'user_01',
-      organizationId: 'org_01',
-      action: 'login',
-      entity: 'user',
-      entityId: 'user_01',
-      oldValues: '{}',
-      newValues: '{}',
-      metadata: '{}',
-      ipAddress: '192.168.1.1',
-      userAgent: 'Mozilla/5.0...',
-      retention: 7776000,
-      createdAt: Math.floor(Date.now() / 1000),
-    },
-    {
-      id: 'audit_02',
-      userId: 'user_01',
-      organizationId: 'org_01',
-      action: 'login',
-      entity: 'user',
-      entityId: 'user_01',
-      oldValues: '{}',
-      newValues: '{}',
-      metadata: '{}',
-      ipAddress: '192.168.1.1',
-      userAgent: 'Mozilla/5.0...',
-      retention: 7776000,
-      createdAt: Math.floor(Date.now() / 1000),
-    },
-  ]
-
-  const table = useReactTable({
-    data,
-    columns,
-    getCoreRowModel: getCoreRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
-    getSortedRowModel: getSortedRowModel(),
-    getFilteredRowModel: getFilteredRowModel(),
-    onSortingChange: setSorting,
-    onColumnFiltersChange: setColumnFilters,
-    onColumnVisibilityChange: setColumnVisibility,
-    state: {
-      sorting,
-      columnFilters,
-      columnVisibility,
-    },
-  })
+  const handleRefresh = () => {
+    setIsRefreshing(true)
+    setTimeout(() => setIsRefreshing(false), 1000)
+  }
 
   return (
-    <div className="container mx-auto w-full space-y-8 p-4 md:p-8">
-      <div className="flex items-center justify-between">
+    <div className="container mx-auto w-full space-y-4 p-4 md:space-y-6 md:p-6">
+      {/* Header Section */}
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div className="space-y-1">
-          <h1 className="font-semibold text-2xl tracking-tight">Audit Logs</h1>
+          <h1 className="font-semibold text-2xl tracking-tight">{pageTitle}</h1>
           <p className="text-muted-foreground text-sm">
-            Track all activities and changes across your organization
+            Track and monitor all activities across your organization
           </p>
         </div>
-        <div className="flex items-center gap-2">
-          <Button variant="outline" size="sm">
-            <Lucide.Download className="mr-2 h-4 w-4" />
-            Export
-          </Button>
-        </div>
+        <Button variant="outline">
+          <Lucide.Download className="mr-2 h-4 w-4" />
+          Export Logs
+        </Button>
       </div>
 
+      {/* Main Content */}
       <div className="space-y-4">
-        <div className="flex items-center justify-between">
-          <Input
-            placeholder="Filter by entity..."
-            value={(table.getColumn('entity')?.getFilterValue() as string) ?? ''}
-            onChange={(event) => table.getColumn('entity')?.setFilterValue(event.target.value)}
-            className="max-w-sm"
-          />
+        {/* Search and Filters */}
+        <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+          <div className="flex flex-1 items-center gap-2">
+            <Input placeholder="Search logs..." className="max-w-xs" />
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="outline" size="icon">
+                  <Lucide.Filter className="h-4 w-4" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="start" className="w-48">
+                <DropdownMenuLabel>Filter By Action</DropdownMenuLabel>
+                <DropdownMenuItem>Create</DropdownMenuItem>
+                <DropdownMenuItem>Update</DropdownMenuItem>
+                <DropdownMenuItem>Delete</DropdownMenuItem>
+                <DropdownMenuItem>Login</DropdownMenuItem>
+                <DropdownMenuSeparator />
+                <DropdownMenuLabel>Filter By Entity</DropdownMenuLabel>
+                <DropdownMenuItem>User</DropdownMenuItem>
+                <DropdownMenuItem>Organization</DropdownMenuItem>
+                <DropdownMenuItem>Content</DropdownMenuItem>
+                <DropdownMenuItem>Settings</DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </div>
 
           <div className="flex items-center gap-2">
-            <Button variant="outline">
-              <Lucide.RotateCw className="h-4 w-4" />
-              <span className="sr-only">Refresh</span>
+            <Select defaultValue="24h">
+              <SelectTrigger className="w-[130px]">
+                <SelectValue placeholder="Time Range" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="1h">Last hour</SelectItem>
+                <SelectItem value="24h">Last 24 hours</SelectItem>
+                <SelectItem value="7d">Last 7 days</SelectItem>
+                <SelectItem value="30d">Last 30 days</SelectItem>
+                <SelectItem value="custom">Custom range</SelectItem>
+              </SelectContent>
+            </Select>
+
+            <Button variant="outline" size="icon" onClick={handleRefresh} disabled={isRefreshing}>
+              <Lucide.RotateCw className={clx('h-4 w-4', isRefreshing && 'animate-spin')} />
             </Button>
 
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="outline">
-                  Columns
-                  <Lucide.ChevronDown className="ml-2 h-4 w-4" />
+                <Button variant="outline" size="icon">
+                  <Lucide.Settings2 className="h-4 w-4" />
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end">
                 {visibleColumns.map((column) => (
-                  <DropdownMenuCheckboxItem
-                    key={column.id}
-                    className="capitalize"
-                    checked={table.getColumn(column.id)?.getIsVisible()}
-                    onCheckedChange={(value) =>
-                      table.getColumn(column.id)?.toggleVisibility(!!value)
-                    }
-                  >
+                  <DropdownMenuCheckboxItem key={column.id} className="capitalize" checked={true}>
                     {column.title}
                   </DropdownMenuCheckboxItem>
                 ))}
@@ -129,60 +127,63 @@ export default function Component() {
           </div>
         </div>
 
+        {/* Table Section */}
         <div className="rounded-md border">
           <Table>
-            <TableHeader className="bg-muted/50">
-              {table.getHeaderGroups().map((headerGroup) => (
-                <TableRow key={headerGroup.id}>
-                  {headerGroup.headers.map((header) => (
-                    <TableHead key={header.id}>
-                      {header.isPlaceholder
-                        ? null
-                        : flexRender(header.column.columnDef.header, header.getContext())}
-                    </TableHead>
-                  ))}
-                </TableRow>
-              ))}
+            <TableHeader>
+              <TableRow>
+                <TableHead>Timestamp</TableHead>
+                <TableHead>Action</TableHead>
+                <TableHead>Entity</TableHead>
+                <TableHead>User</TableHead>
+                <TableHead>IP Address</TableHead>
+                <TableHead>Changes</TableHead>
+                <TableHead className="w-[100px]">Details</TableHead>
+              </TableRow>
             </TableHeader>
             <TableBody>
-              {table.getRowModel().rows?.length ? (
-                table.getRowModel().rows.map((row) => (
-                  <TableRow key={row.id} data-state={row.getIsSelected() && 'selected'}>
-                    {row.getVisibleCells().map((cell) => (
-                      <TableCell key={cell.id}>
-                        {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                      </TableCell>
-                    ))}
-                  </TableRow>
-                ))
-              ) : (
-                <TableRow>
-                  <TableCell colSpan={columns.length} className="h-24 text-center">
-                    No results.
+              {skeletonRows.map((key) => (
+                <TableRow key={key}>
+                  <TableCell>
+                    <Skeleton className="h-4 w-[120px] bg-muted" />
+                  </TableCell>
+                  <TableCell>
+                    <Skeleton className="h-4 w-[80px] bg-muted" />
+                  </TableCell>
+                  <TableCell>
+                    <Skeleton className="h-4 w-[100px] bg-muted" />
+                  </TableCell>
+                  <TableCell>
+                    <Skeleton className="h-4 w-[150px] bg-muted" />
+                  </TableCell>
+                  <TableCell>
+                    <Skeleton className="h-4 w-[100px] bg-muted" />
+                  </TableCell>
+                  <TableCell>
+                    <Skeleton className="h-4 w-[200px] bg-muted" />
+                  </TableCell>
+                  <TableCell>
+                    <Button variant="ghost" size="icon" className="hover:bg-muted">
+                      <Lucide.Eye className="h-4 w-4" />
+                    </Button>
                   </TableCell>
                 </TableRow>
-              )}
+              ))}
             </TableBody>
           </Table>
         </div>
 
-        <div className="flex items-center justify-end space-x-2 py-4">
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => table.previousPage()}
-            disabled={!table.getCanPreviousPage()}
-          >
-            Previous
-          </Button>
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => table.nextPage()}
-            disabled={!table.getCanNextPage()}
-          >
-            Next
-          </Button>
+        {/* Table Info */}
+        <div className="flex items-center justify-between">
+          <span className="text-muted-foreground text-sm">Showing last 100 activities</span>
+          <div className="flex items-center gap-2">
+            <Button variant="outline" size="sm" disabled>
+              Previous
+            </Button>
+            <Button variant="outline" size="sm">
+              Next
+            </Button>
+          </div>
         </div>
       </div>
     </div>
