@@ -1,0 +1,142 @@
+{% layout 'layouts/site-layout' %}
+
+<main class="min-h-screen bg-neutral-50 dark:bg-neutral-900">
+  <div class="max-w-xl mx-auto py-12 px-4">
+    <div class="text-center mb-8">
+      <img src="/favicon.svg" alt="Squelify Logo" class="w-20 h-20 mx-auto mb-4">
+      <h1 class="text-3xl font-bold text-neutral-900 dark:text-white">Welcome to Squelify</h1>
+      <p class="mt-2 text-neutral-600 dark:text-neutral-400">Let's set up your administrator account</p>
+    </div>
+
+    <div class="bg-white dark:bg-neutral-800 shadow rounded-[0.3rem] p-8">
+      <form method="POST" action="/installer" class="space-y-4">
+        <!-- Admin Account -->
+        <div class="space-y-3">
+          <h2 class="text-xl font-semibold text-neutral-900 dark:text-white">Create Admin Account</h2>
+          <div class="grid grid-cols-2 gap-4">
+            <div>
+              <label class="block text-sm font-medium text-neutral-700 dark:text-neutral-300">First Name</label>
+              <input type="text" name="firstName" required minlength="2" maxlength="50" pattern="[A-Za-z\s]+"
+                placeholder="Admin"
+                title="First name should only contain letters and spaces"
+                class="mt-0.5 block w-full rounded-[0.3rem] border border-neutral-300 dark:border-neutral-600 px-3 py-2
+                bg-white dark:bg-neutral-700 text-neutral-900 dark:text-white placeholder-neutral-400 dark:placeholder-neutral-500
+                focus:border-yellow-500 focus:ring-yellow-500">
+            </div>
+            <div>
+              <label class="block text-sm font-medium text-neutral-700 dark:text-neutral-300">Last Name</label>
+              <input type="text" name="lastName" required minlength="2" maxlength="50" pattern="[A-Za-z\s]+"
+                placeholder="Sistem"
+                title="Last name should only contain letters and spaces"
+                class="mt-0.5 block w-full rounded-[0.3rem] border border-neutral-300 dark:border-neutral-600 px-3 py-2
+                bg-white dark:bg-neutral-700 text-neutral-900 dark:text-white placeholder-neutral-400 dark:placeholder-neutral-500
+                focus:border-yellow-500 focus:ring-yellow-500">
+            </div>
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-neutral-700 dark:text-neutral-300">Email</label>
+            <input type="email" name="email" required pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$"
+              placeholder="admin@example.com"
+              title="Please enter a valid email address"
+              class="mt-0.5 block w-full rounded-[0.3rem] border border-neutral-300 dark:border-neutral-600 px-3 py-2
+              bg-white dark:bg-neutral-700 text-neutral-900 dark:text-white placeholder-neutral-400 dark:placeholder-neutral-500
+              focus:border-yellow-500 focus:ring-yellow-500">
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-neutral-700 dark:text-neutral-300">Password</label>
+            <div class="relative">
+              <input type="password" name="password" id="password" required minlength="8"
+                placeholder="Enter your secure password"
+                pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$"
+                title="Password must contain at least 8 characters, including uppercase, lowercase, number and special character"
+                class="mt-0.5 block w-full rounded-[0.3rem] border border-neutral-300 dark:border-neutral-600 px-3 py-2 pr-10
+                bg-white dark:bg-neutral-700 text-neutral-900 dark:text-white placeholder-neutral-400 dark:placeholder-neutral-500
+                focus:border-yellow-500 focus:ring-yellow-500">
+              <button type="button" onclick="togglePassword()"
+                class="absolute inset-y-0 right-0 mt-0.5 pr-3 flex items-center text-neutral-500 dark:text-neutral-400 cursor-pointer">
+                <svg id="eye-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                  stroke="currentColor" class="w-5 h-5">
+                  <path stroke-linecap="round" stroke-linejoin="round"
+                    d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z" />
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                </svg>
+              </button>
+            </div>
+            <p class="mt-1 px-0.5 text-sm text-neutral-500 dark:text-neutral-400">
+              Min 8 characters, 1 uppercase, 1 lowercase & 1 number.
+            </p>
+          </div>
+        </div>
+
+        <!-- Application Settings -->
+        <div class="space-y-3 pt-4 border-t border-neutral-200 dark:border-neutral-700">
+          <h2 class="text-xl font-semibold text-neutral-900 dark:text-white">Application Settings</h2>
+          <div>
+            <label class="block text-sm font-medium text-neutral-700 dark:text-neutral-300">Application Name</label>
+            <input type="text" name="appName" required minlength="4" maxlength="50"
+              placeholder="My Awesome App"
+              pattern="[A-Za-z0-9\s\-_]+" title="Application name can only contain letters, numbers, spaces, hyphens and underscores"
+              class="mt-0.5 block w-full rounded-[0.3rem] border border-neutral-300 dark:border-neutral-600 px-3 py-2
+              bg-white dark:bg-neutral-700 text-neutral-900 dark:text-white placeholder-neutral-400 dark:placeholder-neutral-500
+              focus:border-yellow-500 focus:ring-yellow-500">
+          </div>
+        </div>
+
+        <!-- Newsletter Opt-in -->
+        <div class="flex items-start py-1">
+          <div class="flex items-center h-5 mt-1.5">
+            <input id="newsletter" name="newsletter" type="checkbox"
+              class="h-4 w-4 rounded-[0.3rem] border-gray-300 dark:border-gray-600
+              text-yellow-500 focus:ring-yellow-500 dark:bg-gray-700">
+          </div>
+          <div class="ml-2">
+            <label for="newsletter" class="text-sm text-gray-700 dark:text-gray-300">
+              Keep me updated about new features & upcoming improvements. <br class="hidden sm:inline-block"/>By doing this you accept the
+              <a href="https://squelify.com/terms" target="_blank" rel="noopener noreferrer" class="text-yellow-600 dark:text-yellow-400 hover:underline inline-flex items-center">
+                Terms
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-4 h-4 ml-0.5">
+                  <path fill-rule="evenodd" d="M4.25 5.5a.75.75 0 00-.75.75v8.5c0 .414.336.75.75.75h8.5a.75.75 0 00.75-.75v-4a.75.75 0 011.5 0v4A2.25 2.25 0 0112.75 17h-8.5A2.25 2.25 0 012 14.75v-8.5A2.25 2.25 0 014.25 4h5a.75.75 0 010 1.5h-5z" clip-rule="evenodd" />
+                  <path fill-rule="evenodd" d="M6.194 12.753a.75.75 0 001.06.053L16.5 4.44v2.81a.75.75 0 001.5 0v-4.5a.75.75 0 00-.75-.75h-4.5a.75.75 0 000 1.5h2.553l-9.056 8.194a.75.75 0 00-.053 1.06z" clip-rule="evenodd" />
+                </svg>
+              </a>
+              and the
+              <a href="https://squelify.com/privacy" target="_blank" rel="noopener noreferrer" class="text-yellow-600 dark:text-yellow-400 hover:underline inline-flex items-center">
+                Privacy Policy
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-4 h-4 ml-0.5">
+                  <path fill-rule="evenodd" d="M4.25 5.5a.75.75 0 00-.75.75v8.5c0 .414.336.75.75.75h8.5a.75.75 0 00.75-.75v-4a.75.75 0 011.5 0v4A2.25 2.25 0 0112.75 17h-8.5A2.25 2.25 0 012 14.75v-8.5A2.25 2.25 0 014.25 4h5a.75.75 0 010 1.5h-5z" clip-rule="evenodd" />
+                  <path fill-rule="evenodd" d="M6.194 12.753a.75.75 0 001.06.053L16.5 4.44v2.81a.75.75 0 001.5 0v-4.5a.75.75 0 00-.75-.75h-4.5a.75.75 0 000 1.5h2.553l-9.056 8.194a.75.75 0 00-.053 1.06z" clip-rule="evenodd" />
+                </svg>
+              </a>.
+            </label>
+          </div>
+        </div>
+
+        <div class="pt-1">
+          <button type="submit" id="submitBtn" disabled
+            class="w-full bg-yellow-500 text-white rounded-[0.3rem] px-4 py-2
+            enabled:hover:bg-yellow-600 focus:outline-none focus:ring-2 focus:ring-yellow-500
+            dark:bg-yellow-600 enabled:dark:hover:bg-yellow-700
+            disabled:opacity-50 disabled:cursor-not-allowed">
+            Complete Installation
+          </button>
+        </div>
+      </form>
+    </div>
+
+    <div class="mt-8 text-center text-sm text-gray-500 dark:text-gray-400">
+      Need help? Check out our
+      <a href="https://squelify.com/docs" target="_blank" rel="noopener noreferrer"
+        class="text-yellow-600 dark:text-yellow-400 hover:underline inline-flex items-center">
+        documentation
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-4 h-4 ml-0.5">
+          <path fill-rule="evenodd" d="M4.25 5.5a.75.75 0 00-.75.75v8.5c0 .414.336.75.75.75h8.5a.75.75 0 00.75-.75v-4a.75.75 0 011.5 0v4A2.25 2.25 0 0112.75 17h-8.5A2.25 2.25 0 012 14.75v-8.5A2.25 2.25 0 014.25 4h5a.75.75 0 010 1.5h-5z" clip-rule="evenodd" />
+          <path fill-rule="evenodd" d="M6.194 12.753a.75.75 0 001.06.053L16.5 4.44v2.81a.75.75 0 001.5 0v-4.5a.75.75 0 00-.75-.75h-4.5a.75.75 0 000 1.5h2.553l-9.056 8.194a.75.75 0 00-.053 1.06z" clip-rule="evenodd" />
+        </svg>
+      </a>
+    </div>
+  </div>
+</main>
+
+{% block 'footerScript' %}
+  {% render 'partials/installer-script' %}
+{% endblock %}

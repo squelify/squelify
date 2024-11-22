@@ -9,9 +9,9 @@ export default defineCachedEventHandler(
       dir: 'ltr',
       name: 'Squelify',
       short_name: 'squelify',
-      description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit sed do eiusmod aliqua',
-      theme_color: '#2563eb',
-      background_color: '#0c0a09',
+      description: 'Lightweight Headless CMS and Backend Platform without hassle',
+      theme_color: '#ffde59',
+      background_color: '#0b1320',
       start_url: `${appConfig.baseURL}/?source=pwa`,
       id: `${appConfig.baseURL}/?source=pwa`,
       icons: [

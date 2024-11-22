@@ -3,7 +3,7 @@ import colors from 'tailwindcss/colors'
 import { fontFamily } from 'tailwindcss/defaultTheme'
 
 export default {
-  content: ['./client/**/*!(*.stories|*.spec|*.test).{ts,tsx}'],
+  content: ['./(client|server)/**/*!(*.stories|*.spec|*.test).{ts,tsx}'],
   darkMode: 'class',
   theme: {
     extend: {

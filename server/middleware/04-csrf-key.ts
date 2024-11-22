@@ -9,6 +9,7 @@ const PUBLIC_ROUTES = [
   '/api-docs',
   '/api-specs.json',
   '/api/assets/*',
+  '/installer',
 ]
 
 // No CSRF/API key needed
