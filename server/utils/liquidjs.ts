@@ -126,12 +126,14 @@ export async function renderTemplate(
 
   try {
     const engine = getLiquidEngine()
+
+    // TODO: get rid of this hack, read from storage as string
     const content =
       templateContent instanceof Uint8Array
         ? new TextDecoder().decode(templateContent)
         : templateContent
 
-    const htmlContent = await engine.parseAndRenderSync(content, {
+    const htmlContent = await engine.parseAndRender(content, {
       ...context,
       strictVariables: true,
       renderTime: new Date(),

@@ -17,23 +17,81 @@
     }
   }
 
-  // Form validation
   const form = document.querySelector('form');
   const submitBtn = document.getElementById('submitBtn');
   const requiredInputs = form.querySelectorAll('input[required]');
 
-  function validateForm() {
-    let isValid = true;
-    requiredInputs.forEach(input => {
-      if (!input.value || !input.checkValidity()) {
-        isValid = false;
+  function showError(input) {
+    // Only show error if field has been touched
+    if (!input.dataset.touched) return;
+
+    const errorElement = input.parentElement.querySelector('.error-message');
+    if (!errorElement) return;
+
+    if (!input.validity.valid) {
+      let message = input.title;
+
+      if (input.validity.valueMissing) {
+        message = 'This field is required';
+      } else if (input.validity.tooShort) {
+        message = `Minimum ${input.minLength} characters required`;
+      } else if (input.validity.tooLong) {
+        message = `Maximum ${input.maxLength} characters allowed`;
+      } else if (input.validity.patternMismatch) {
+        message = input.title;
       }
-    });
-    submitBtn.disabled = !isValid;
+
+      errorElement.textContent = message;
+      errorElement.classList.remove('hidden');
+    } else {
+      errorElement.textContent = '';
+      errorElement.classList.add('hidden');
+    }
   }
 
+  function validateForm(focusFirstInvalid = false) {
+    let isValid = true;
+    let firstInvalid = null;
+
+    requiredInputs.forEach(input => {
+      const isInputValid = input.value && input.checkValidity();
+      showError(input);
+
+      if (!isInputValid && !firstInvalid) {
+        firstInvalid = input;
+      }
+      isValid = isValid && isInputValid;
+    });
+
+    submitBtn.disabled = !isValid;
+
+    if (focusFirstInvalid && firstInvalid) {
+      firstInvalid.focus();
+      firstInvalid.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+  }
+
+  // Mark field as touched on blur
   requiredInputs.forEach(input => {
-    input.addEventListener('input', validateForm);
-    input.addEventListener('change', validateForm);
+    input.addEventListener('input', () => validateForm(false));
+    input.addEventListener('blur', () => {
+      input.dataset.touched = 'true';
+      validateForm(false);
+    });
   });
+
+  // Show all errors on form submit
+  form.addEventListener('submit', (e) => {
+    requiredInputs.forEach(input => {
+      input.dataset.touched = 'true';
+    });
+
+    if (!form.checkValidity()) {
+      e.preventDefault();
+      validateForm(true);
+    }
+  });
+
+  // Initial validation without showing errors
+  validateForm(false);
 </script>

@@ -6,6 +6,22 @@
       <img src="/favicon.svg" alt="Squelify Logo" class="w-20 h-20 mx-auto mb-4">
       <h1 class="text-3xl font-bold text-neutral-900 dark:text-white">Welcome to Squelify</h1>
       <p class="mt-2 text-neutral-600 dark:text-neutral-400">Let's set up your administrator account</p>
+      {% if error %}
+        <div class="mt-6 -mb-4">
+          <div class="rounded-[0.3rem] bg-red-50 dark:bg-red-900/50 p-4">
+            <div class="flex">
+              <div class="flex-shrink-0">
+                <svg class="h-5 w-5 text-red-400 dark:text-red-500" viewBox="0 0 20 20" fill="currentColor">
+                  <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.28 7.22a.75.75 0 00-1.06 1.06L8.94 10l-1.72 1.72a.75.75 0 101.06 1.06L10 11.06l1.72 1.72a.75.75 0 101.06-1.06L11.06 10l1.72-1.72a.75.75 0 00-1.06-1.06L10 8.94 8.28 7.22z" clip-rule="evenodd" />
+                </svg>
+              </div>
+              <div class="ml-3">
+                <p class="text-sm font-medium text-red-800 dark:text-red-200">{{ error }}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      {% endif %}
     </div>
 
     <div class="bg-white dark:bg-neutral-800 shadow rounded-[0.3rem] p-8">
@@ -22,15 +38,17 @@
                 class="mt-0.5 block w-full rounded-[0.3rem] border border-neutral-300 dark:border-neutral-600 px-3 py-2
                 bg-white dark:bg-neutral-700 text-neutral-900 dark:text-white placeholder-neutral-400 dark:placeholder-neutral-500
                 focus:border-yellow-500 focus:ring-yellow-500">
+              <p class="mt-1 hidden text-sm text-red-600 dark:text-red-400 error-message"></p>
             </div>
             <div>
               <label class="block text-sm font-medium text-neutral-700 dark:text-neutral-300">Last Name</label>
               <input type="text" name="lastName" required minlength="2" maxlength="50" pattern="[A-Za-z\s]+"
-                placeholder="Sistem"
+                placeholder="System"
                 title="Last name should only contain letters and spaces"
                 class="mt-0.5 block w-full rounded-[0.3rem] border border-neutral-300 dark:border-neutral-600 px-3 py-2
                 bg-white dark:bg-neutral-700 text-neutral-900 dark:text-white placeholder-neutral-400 dark:placeholder-neutral-500
                 focus:border-yellow-500 focus:ring-yellow-500">
+              <p class="mt-1 hidden text-sm text-red-600 dark:text-red-400 error-message"></p>
             </div>
           </div>
           <div>
@@ -41,6 +59,7 @@
               class="mt-0.5 block w-full rounded-[0.3rem] border border-neutral-300 dark:border-neutral-600 px-3 py-2
               bg-white dark:bg-neutral-700 text-neutral-900 dark:text-white placeholder-neutral-400 dark:placeholder-neutral-500
               focus:border-yellow-500 focus:ring-yellow-500">
+            <p class="mt-1 hidden text-sm text-red-600 dark:text-red-400 error-message"></p>
           </div>
           <div>
             <label class="block text-sm font-medium text-neutral-700 dark:text-neutral-300">Password</label>
@@ -52,8 +71,8 @@
                 class="mt-0.5 block w-full rounded-[0.3rem] border border-neutral-300 dark:border-neutral-600 px-3 py-2 pr-10
                 bg-white dark:bg-neutral-700 text-neutral-900 dark:text-white placeholder-neutral-400 dark:placeholder-neutral-500
                 focus:border-yellow-500 focus:ring-yellow-500">
-              <button type="button" onclick="togglePassword()"
-                class="absolute inset-y-0 right-0 mt-0.5 pr-3 flex items-center text-neutral-500 dark:text-neutral-400 cursor-pointer">
+              <button type="button" onclick="togglePassword()" tabindex="1"
+                class="absolute inset-y-0 right-0 mt-0.5 px-3 flex items-center text-neutral-500 dark:text-neutral-400 cursor-pointer">
                 <svg id="eye-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                   stroke="currentColor" class="w-5 h-5">
                   <path stroke-linecap="round" stroke-linejoin="round"
@@ -73,12 +92,12 @@
           <h2 class="text-xl font-semibold text-neutral-900 dark:text-white">Application Settings</h2>
           <div>
             <label class="block text-sm font-medium text-neutral-700 dark:text-neutral-300">Application Name</label>
-            <input type="text" name="appName" required minlength="4" maxlength="50"
-              placeholder="My Awesome App"
-              pattern="[A-Za-z0-9\s\-_]+" title="Application name can only contain letters, numbers, spaces, hyphens and underscores"
+            <input type="text" name="appName" required minlength="4" maxlength="50" placeholder="My Awesome App" pattern="[A-Za-z0-9\s\-_]+"
+              title="Application name can only contain letters, numbers, spaces, hyphens and underscores"
               class="mt-0.5 block w-full rounded-[0.3rem] border border-neutral-300 dark:border-neutral-600 px-3 py-2
               bg-white dark:bg-neutral-700 text-neutral-900 dark:text-white placeholder-neutral-400 dark:placeholder-neutral-500
               focus:border-yellow-500 focus:ring-yellow-500">
+            <p class="mt-1 hidden text-sm text-red-600 dark:text-red-400 error-message"></p>
           </div>
         </div>
 

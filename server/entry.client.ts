@@ -4,6 +4,28 @@ import { useStorage } from '#imports'
 
 export default defineEventHandler(async (event) => {
   const appConfig = event.context.appConfig
+  const db = event.context.db
+
+  // Check if application is installed by checking existence of admin user
+  const isInstalled = await db
+    .selectFrom('sq_users as users')
+    .innerJoin('sq_user_roles as user_roles', 'user_roles.userId', 'users.id')
+    .innerJoin('sq_roles as roles', 'roles.id', 'user_roles.roleId')
+    .where('roles.name', '=', 'admin')
+    .where('users.isActive', '=', 1)
+    .select('users.id')
+    .executeTakeFirst()
+
+  // Redirect to installer if not installed, except for installer page and assets
+  if (
+    !isInstalled &&
+    !event.path.startsWith('/installer') &&
+    !event.path.startsWith('/favicon.ico') &&
+    !event.path.startsWith('/favicon.png') &&
+    !event.path.startsWith('/favicon.svg')
+  ) {
+    return sendRedirect(event, '/installer', 302)
+  }
 
   // Check existing CSRF token
   let csrfToken = getCookie(event, 'csrf_token')
