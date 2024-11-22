@@ -1,5 +1,5 @@
 import consola from 'consola'
-import { useLocation } from 'react-router-dom'
+import { useLocation } from 'react-router'
 import { SidebarFooter, SidebarHeader } from '#/components/base-ui/sidebar'
 import { SidebarGroup, SidebarGroupContent, SidebarGroupLabel } from '#/components/base-ui/sidebar'
 import { SidebarMenu, SidebarMenuButton, SidebarMenuItem } from '#/components/base-ui/sidebar'

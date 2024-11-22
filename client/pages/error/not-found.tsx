@@ -1,5 +1,5 @@
 import * as Lucide from 'lucide-react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router'
 import { Button } from '#/components/base-ui/button'
 import { Link } from '#/components/link'
 

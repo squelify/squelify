@@ -1,5 +1,5 @@
-import type { RouteObject } from 'react-router-dom'
-import { Navigate, useRoutes } from 'react-router-dom'
+import type { RouteObject } from 'react-router'
+import { Navigate, useRoutes } from 'react-router'
 
 import AppLayout from '#/layouts/app-layout'
 import AuthLayout from '#/layouts/auth-layout'
@@ -101,7 +101,7 @@ const Routes: RouteObject[] = [
  *
  * @example
  *
- * import { BrowserRouter } from 'react-router-dom'
+ * import { BrowserRouter } from 'react-router'
  * import AppRoutes from './routes'
  *
  * export default function App() {

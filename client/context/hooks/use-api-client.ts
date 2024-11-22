@@ -1,5 +1,5 @@
 import { useMemo } from 'react'
-import { useLoaderData as useLoaderDataOriginal } from 'react-router-dom'
+import { useLoaderData as useLoaderDataOriginal } from 'react-router'
 import { env } from 'std-env'
 import { ApiClient } from '#/services'
 

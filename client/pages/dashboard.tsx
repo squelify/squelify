@@ -1,6 +1,6 @@
 import * as Lucide from 'lucide-react'
 import { useEffect, useRef, useState } from 'react'
-import { useOutletContext } from 'react-router-dom'
+import { useOutletContext } from 'react-router'
 import { toast } from 'sonner'
 import { HealthCheckResponse } from '~/api/healthz.get'
 import { Button } from '#/components/base-ui/button'

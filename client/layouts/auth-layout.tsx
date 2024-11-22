@@ -1,5 +1,5 @@
 import { ErrorBoundary } from 'react-error-boundary'
-import { Navigate, Outlet, useLocation, useSearchParams } from 'react-router-dom'
+import { Navigate, Outlet, useLocation, useSearchParams } from 'react-router'
 import ThemeSwitcher from '#/components/theme-switcher'
 import { useAuth } from '#/context/hooks/use-auth'
 import RootLayout from '#/layouts/root-layout'

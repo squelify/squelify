@@ -1,5 +1,5 @@
 import { ErrorBoundary } from 'react-error-boundary'
-import { Navigate, Outlet, useLocation } from 'react-router-dom'
+import { Navigate, Outlet, useLocation } from 'react-router'
 import { Breadcrumb, BreadcrumbList } from '#/components/base-ui/breadcrumb'
 import { BreadcrumbItem, BreadcrumbPage } from '#/components/base-ui/breadcrumb'
 import { BreadcrumbSeparator } from '#/components/base-ui/breadcrumb'

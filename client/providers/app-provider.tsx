@@ -51,12 +51,7 @@ export default function AppProvider({ children, debugScreenSize }: AppProviderPr
   const checkAuthState = useCallback(async () => {
     const sessionId = cookies[COOKIE_NAME]
 
-    consola.log('Current auth state:', {
-      sessionId,
-      accessToken: authState.accessToken,
-      refreshToken: authState.refreshToken,
-      tokenExpiry: authState.accessTokenExpiry,
-    })
+    consola.log('SESSID', sessionId)
 
     const now = Math.floor(Date.now() / 1000)
     const hasValidToken =
@@ -141,8 +136,8 @@ export default function AppProvider({ children, debugScreenSize }: AppProviderPr
   // biome-ignore lint/correctness/useExhaustiveDependencies: prevent re-render
   const logout = useCallback(async () => {
     try {
-      if (cookies.auth_session) {
-        await apiClient.auth.signout({ sessionId: cookies.auth_session })
+      if (cookies[COOKIE_NAME]) {
+        await apiClient.auth.signout({ sessionId: cookies[COOKIE_NAME] })
       }
       removeCookie(COOKIE_NAME)
       resetAuthState()

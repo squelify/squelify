@@ -3,7 +3,7 @@ import './styles/globals.css'
 
 import * as React from 'react'
 import ReactDOM from 'react-dom/client'
-import { BrowserRouter } from 'react-router-dom'
+import { BrowserRouter } from 'react-router'
 import { isProduction } from 'std-env'
 import AppProvider from '#/providers/app-provider'
 import AppRoutes from '#/routes'
@@ -21,10 +21,7 @@ if (!rootElement) {
 ReactDOM.createRoot(rootElement).render(
   <React.StrictMode>
     <AppProvider debugScreenSize={!isProduction}>
-      <BrowserRouter
-        basename="/ui"
-        future={{ v7_startTransition: true, v7_relativeSplatPath: true }}
-      >
+      <BrowserRouter basename="/ui">
         <AppRoutes />
       </BrowserRouter>
     </AppProvider>
