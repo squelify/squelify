@@ -12,7 +12,7 @@ type UIStore = {
  * The default values for the UI store, which includes the initial state of the sidebar.
  */
 const defaultUIStoreValues: UIStore = {
-  sidebar: 'expanded',
+  sidebar: 'collapsed',
   theme: 'system',
 }
 

@@ -1,5 +1,6 @@
 import { ErrorBoundary } from 'react-error-boundary'
 import { Navigate, Outlet, useLocation, useSearchParams } from 'react-router-dom'
+import ThemeSwitcher from '#/components/theme-switcher'
 import { useAuth } from '#/context/hooks/use-auth'
 import RootLayout from '#/layouts/root-layout'
 import ErrorBoundaryFallback from '#/pages/error/boundary-fallback'
@@ -20,10 +21,12 @@ export default function AuthLayout() {
       <RootLayout
         className={clx(
           'relative flex size-full min-h-screen flex-1 items-center',
-          'bg-gradient-to-bl from-brand-50/50 via-transparent',
-          'dark:from-brand-950 dark:via-transparent'
+          'dark:primary/25 bg-gradient-to-bl from-primary/10 via-transparent'
         )}
       >
+        <div className="absolute top-2.5 right-2.5 z-10 flex items-center">
+          <ThemeSwitcher />
+        </div>
         <Outlet />
       </RootLayout>
     </ErrorBoundary>

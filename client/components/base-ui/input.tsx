@@ -27,7 +27,7 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
 
             // States
             'placeholder:text-muted-foreground',
-            'focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring',
+            'focus-visible:border-primary focus-visible:outline-none focus-visible:ring-0.5 focus-visible:ring-primary',
             'disabled:cursor-not-allowed disabled:opacity-50',
 
             // Password type specific
