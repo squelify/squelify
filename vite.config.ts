@@ -1,7 +1,7 @@
 import react from '@vitejs/plugin-react'
 import consola from 'consola'
 import { resolve } from 'pathe'
-import { isProduction, isTest } from 'std-env'
+import { isTest, process } from 'std-env'
 import { type Logger as ViteLogger, defineConfig } from 'vite'
 import tsconfigPaths from 'vite-tsconfig-paths'
 import pkg from './package.json' assert { type: 'json' }
@@ -41,7 +41,7 @@ export default defineConfig({
   build: {
     manifest: true,
     emptyOutDir: true,
-    minify: isProduction,
+    minify: !process.dev,
     chunkSizeWarningLimit: 1024 * 3,
     reportCompressedSize: false,
     rollupOptions: { input: resolve('client/main.tsx') },

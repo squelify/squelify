@@ -13,7 +13,6 @@ import type { ApiResponse } from '#/services/types'
 import { clx } from '#/utils/helper'
 
 const COOKIE_NAME = 'auth_session'
-const COOKIE_LIFETIME = 60 * 60 * 24 * 7 /* 7 days */
 const COOKIE_OPTIONS: Omit<CookieSetOptions, 'maxAge'> = {
   path: '/',
   sameSite: 'lax',
@@ -68,8 +67,6 @@ export default function AppProvider({ children, debugScreenSize }: AppProviderPr
       removeCookie(COOKIE_NAME)
       return
     }
-
-    // Sisanya sama seperti sebelumnya
   }, [authState, cookies, removeCookie])
 
   useEffect(() => {
@@ -80,10 +77,10 @@ export default function AppProvider({ children, debugScreenSize }: AppProviderPr
       await checkAuthState()
     }
 
-    // Cek pertama kali
+    // Check first time
     runCheckAuthState()
 
-    // Cek setiap 5 menit
+    // Cek every 5 minutes
     const interval = setInterval(runCheckAuthState, 5 * 60 * 1000)
 
     return () => {
@@ -107,12 +104,11 @@ export default function AppProvider({ children, debugScreenSize }: AppProviderPr
         }
 
         const authData = loginResult.data
+        const now = Math.floor(Date.now() / 1000)
+        const maxAge = authData.sessionExpiry - now
 
-        // Set cookie sebelum update state
-        setCookie(COOKIE_NAME, authData.sessionId, {
-          maxAge: COOKIE_LIFETIME,
-          ...COOKIE_OPTIONS,
-        })
+        // Set cookie before updating state, cookie expiry same as the session expiry
+        setCookie(COOKIE_NAME, authData.sessionId, { maxAge, ...COOKIE_OPTIONS })
 
         const initialAuthState: AuthStore = {
           accessToken: authData.accessToken,
@@ -145,22 +141,18 @@ export default function AppProvider({ children, debugScreenSize }: AppProviderPr
   // biome-ignore lint/correctness/useExhaustiveDependencies: prevent re-render
   const logout = useCallback(async () => {
     try {
-      const sessionId = cookies.auth_session
-      if (sessionId) {
-        await apiClient.auth.signout({ sessionId })
+      if (cookies.auth_session) {
+        await apiClient.auth.signout({ sessionId: cookies.auth_session })
       }
-    } finally {
-      resetAuthState()
       removeCookie(COOKIE_NAME)
+      resetAuthState()
+    } catch (error) {
+      consola.error(error)
     }
   }, [apiClient])
 
   const authContextValues = useMemo(
-    () => ({
-      user: authState.user,
-      login,
-      logout,
-    }),
+    () => ({ user: authState.user, login, logout }),
     [authState.user, login, logout]
   )
 

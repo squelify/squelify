@@ -107,7 +107,7 @@ export default function Component() {
             <Lucide.Activity className="size-5" />
             System Overview
           </CardTitle>
-          <CardDescription>Welcome back, {ctx.user?.username}!</CardDescription>
+          <CardDescription>Welcome back, {ctx.user?.displayName}!</CardDescription>
         </CardHeader>
       </Card>
 

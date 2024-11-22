@@ -97,7 +97,7 @@ export default {
     debugScreens: {
       position: ['bottom', 'right'],
       borderTopLeftRadius: '4px',
-      printSize: 'false',
+      printSize: false,
       prefix: '',
     },
   },

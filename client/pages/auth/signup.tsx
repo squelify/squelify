@@ -52,7 +52,7 @@ export default function Page() {
       {
         loading: 'Creating account..',
         success: (response) => {
-          if (!response?.data?.user) throw new Error('Invalid response')
+          if (!response?.data?.accessToken) throw new Error('Invalid response')
 
           setTimeout(() => navigate(redirectTo), 500)
           return `Account created successfully!`
