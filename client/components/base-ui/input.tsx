@@ -26,8 +26,8 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
             'file:font-medium file:text-foreground',
 
             // States
-            'placeholder:text-muted-foreground',
-            'focus-visible:border-primary focus-visible:outline-none focus-visible:ring-0.5 focus-visible:ring-primary',
+            'placeholder:text-muted-foreground/60 focus:ring-0 focus-visible:ring-1',
+            'focus-visible:border-primary focus-visible:outline-none focus-visible:ring-primary/50',
             'disabled:cursor-not-allowed disabled:opacity-50',
 
             // Password type specific
@@ -45,7 +45,8 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
             onClick={togglePassword}
             className={clx(
               '-translate-y-1/2 absolute top-1/2 right-3',
-              'text-gray-500 hover:text-gray-700'
+              'text-muted-foreground/60 hover:text-muted-foreground',
+              'transition-colors duration-200'
             )}
           >
             {showPassword ? (
