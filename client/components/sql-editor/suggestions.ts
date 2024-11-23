@@ -1,64 +1,137 @@
 import type { SQLSuggestion } from './types'
 
-// SQLite specific keywords
-export const keywords: SQLSuggestion[] = [
-  // DDL Keywords
-  { label: 'CREATE', type: 'keyword', info: 'Create a new database object' },
-  { label: 'ALTER', type: 'keyword', info: 'Modify an existing database object' },
-  { label: 'DROP', type: 'keyword', info: 'Remove a database object' },
-  { label: 'RENAME', type: 'keyword', info: 'Rename a database object' },
-
-  // DML Keywords
-  { label: 'SELECT', type: 'keyword', info: 'Query data from tables' },
-  { label: 'INSERT INTO', type: 'keyword', info: 'Add new records' },
-  { label: 'UPDATE', type: 'keyword', info: 'Modify existing records' },
-  { label: 'DELETE FROM', type: 'keyword', info: 'Remove records' },
-  { label: 'REPLACE INTO', type: 'keyword', info: 'Insert or replace records' },
-
-  // Query Components
-  { label: 'FROM', type: 'keyword', info: 'Specify source tables' },
-  { label: 'WHERE', type: 'keyword', info: 'Filter records' },
-  { label: 'GROUP BY', type: 'keyword', info: 'Group rows' },
-  { label: 'HAVING', type: 'keyword', info: 'Filter grouped records' },
-  { label: 'ORDER BY', type: 'keyword', info: 'Sort results' },
-  { label: 'LIMIT', type: 'keyword', info: 'Limit number of rows' },
-  { label: 'OFFSET', type: 'keyword', info: 'Skip number of rows' },
-
-  // Joins
-  { label: 'JOIN', type: 'keyword', info: 'Combine rows from tables' },
-  { label: 'LEFT JOIN', type: 'keyword', info: 'Keep all records from left table' },
-  { label: 'INNER JOIN', type: 'keyword', info: 'Keep only matching records' },
-  { label: 'CROSS JOIN', type: 'keyword', info: 'Cartesian product of tables' },
-
-  // SQLite Functions
-  { label: 'COUNT', type: 'function', info: 'Count rows' },
-  { label: 'SUM', type: 'function', info: 'Calculate sum' },
-  { label: 'AVG', type: 'function', info: 'Calculate average' },
-  { label: 'MIN', type: 'function', info: 'Find minimum value' },
-  { label: 'MAX', type: 'function', info: 'Find maximum value' },
-  { label: 'COALESCE', type: 'function', info: 'Return first non-null value' },
-  { label: 'IFNULL', type: 'function', info: 'Handle null values' },
-  { label: 'RANDOM', type: 'function', info: 'Generate random value' },
-  { label: 'DATE', type: 'function', info: 'Date operations' },
-  { label: 'DATETIME', type: 'function', info: 'DateTime operations' },
-
-  // Common Clauses
-  { label: 'DISTINCT', type: 'keyword', info: 'Remove duplicates' },
-  { label: 'AS', type: 'keyword', info: 'Alias names' },
-  { label: 'IN', type: 'keyword', info: 'Multiple value comparison' },
-  { label: 'BETWEEN', type: 'keyword', info: 'Range comparison' },
-  { label: 'LIKE', type: 'keyword', info: 'Pattern matching' },
-  { label: 'IS NULL', type: 'keyword', info: 'Check for null values' },
-  { label: 'NOT NULL', type: 'keyword', info: 'Check for non-null values' },
-]
-
-// Common SQLite data types
-export const dataTypes: SQLSuggestion[] = [
-  { label: 'INTEGER', type: 'type', info: 'Whole numbers' },
-  { label: 'REAL', type: 'type', info: 'Floating point numbers' },
-  { label: 'TEXT', type: 'type', info: 'Text strings' },
-  { label: 'BLOB', type: 'type', info: 'Binary data' },
-  { label: 'NUMERIC', type: 'type', info: 'Numbers and decimals' },
-  { label: 'BOOLEAN', type: 'type', info: 'True/false values' },
-  { label: 'DATETIME', type: 'type', info: 'Date and time values' },
-]
+export const sqliteKeywords: Record<string, SQLSuggestion[]> = {
+  ddl: [
+    {
+      label: 'CREATE TABLE',
+      type: 'keyword',
+      info: 'Create new table',
+      template:
+        'CREATE TABLE table_name (\n  id INTEGER PRIMARY KEY AUTOINCREMENT,\n  name TEXT NOT NULL,\n  created_at DATETIME DEFAULT CURRENT_TIMESTAMP\n)',
+    },
+    {
+      label: 'CREATE INDEX',
+      type: 'keyword',
+      info: 'Create new index',
+      template: 'CREATE INDEX idx_name ON table_name (column_name)',
+    },
+    {
+      label: 'CREATE UNIQUE INDEX',
+      type: 'keyword',
+      info: 'Create unique index',
+      template: 'CREATE UNIQUE INDEX idx_name ON table_name (column1, column2)',
+    },
+    {
+      label: 'CREATE VIEW',
+      type: 'keyword',
+      info: 'Create view',
+      template:
+        'CREATE VIEW view_name AS\nSELECT column1, column2\nFROM table_name\nWHERE condition',
+    },
+    {
+      label: 'CREATE TRIGGER',
+      type: 'keyword',
+      info: 'Create trigger',
+      template:
+        'CREATE TRIGGER trigger_name\nAFTER INSERT ON table_name\nFOR EACH ROW\nBEGIN\n  -- trigger logic\nEND',
+    },
+    {
+      label: 'CREATE VIRTUAL TABLE',
+      type: 'keyword',
+      info: 'Create FTS table',
+      template: 'CREATE VIRTUAL TABLE table_name USING fts5(title, body)',
+    },
+    {
+      label: 'ALTER TABLE',
+      type: 'keyword',
+      info: 'Modify table',
+      template: 'ALTER TABLE table_name ADD COLUMN column_name TEXT',
+    },
+    {
+      label: 'DROP TABLE',
+      type: 'keyword',
+      info: 'Remove table',
+      template: 'DROP TABLE table_name',
+    },
+  ],
+  dml: [
+    {
+      label: 'SELECT',
+      type: 'keyword',
+      info: 'Query data',
+      template: 'SELECT column1, column2\nFROM table_name\nWHERE condition',
+    },
+    {
+      label: 'INSERT INTO',
+      type: 'keyword',
+      info: 'Insert data',
+      template: 'INSERT INTO table_name (column1, column2)\nVALUES (value1, value2)',
+    },
+    {
+      label: 'UPDATE',
+      type: 'keyword',
+      info: 'Update data',
+      template: 'UPDATE table_name\nSET column1 = value1\nWHERE condition',
+    },
+    {
+      label: 'DELETE FROM',
+      type: 'keyword',
+      info: 'Delete data',
+      template: 'DELETE FROM table_name\nWHERE condition',
+    },
+  ],
+  functions: [
+    { label: 'COUNT', type: 'function', info: 'Count rows', template: 'COUNT(*)' },
+    { label: 'SUM', type: 'function', info: 'Sum values', template: 'SUM(column)' },
+    { label: 'AVG', type: 'function', info: 'Average value', template: 'AVG(column)' },
+    { label: 'MIN', type: 'function', info: 'Minimum value', template: 'MIN(column)' },
+    { label: 'MAX', type: 'function', info: 'Maximum value', template: 'MAX(column)' },
+    {
+      label: 'GROUP_CONCAT',
+      type: 'function',
+      info: 'Concatenate values',
+      template: 'GROUP_CONCAT(column)',
+    },
+    {
+      label: 'SUBSTR',
+      type: 'function',
+      info: 'Extract substring',
+      template: 'SUBSTR(column, start, length)',
+    },
+    {
+      label: 'REPLACE',
+      type: 'function',
+      info: 'Replace text',
+      template: 'REPLACE(column, find, replace)',
+    },
+    { label: 'UPPER', type: 'function', info: 'Uppercase', template: 'UPPER(column)' },
+    { label: 'LOWER', type: 'function', info: 'Lowercase', template: 'LOWER(column)' },
+    { label: 'TRIM', type: 'function', info: 'Remove spaces', template: 'TRIM(column)' },
+    { label: 'LENGTH', type: 'function', info: 'String length', template: 'LENGTH(column)' },
+    { label: 'DATE', type: 'function', info: 'Get date', template: "DATE('now')" },
+    { label: 'DATETIME', type: 'function', info: 'Get datetime', template: "DATETIME('now')" },
+    {
+      label: 'STRFTIME',
+      type: 'function',
+      info: 'Format date',
+      template: "STRFTIME('%Y-%m-%d', column)",
+    },
+  ],
+  dataTypes: [
+    { label: 'INTEGER', type: 'type', info: 'Whole numbers' },
+    { label: 'TEXT', type: 'type', info: 'Text strings' },
+    { label: 'BLOB', type: 'type', info: 'Binary data' },
+    { label: 'REAL', type: 'type', info: 'Floating point numbers' },
+    { label: 'NUMERIC', type: 'type', info: 'Decimal numbers' },
+    { label: 'BOOLEAN', type: 'type', info: 'True/false values' },
+    { label: 'DATETIME', type: 'type', info: 'Date and time values' },
+  ],
+  constraints: [
+    { label: 'PRIMARY KEY', type: 'keyword', info: 'Primary key constraint' },
+    { label: 'FOREIGN KEY', type: 'keyword', info: 'Foreign key constraint' },
+    { label: 'UNIQUE', type: 'keyword', info: 'Unique constraint' },
+    { label: 'NOT NULL', type: 'keyword', info: 'Not null constraint' },
+    { label: 'CHECK', type: 'keyword', info: 'Check constraint' },
+    { label: 'DEFAULT', type: 'keyword', info: 'Default value' },
+  ],
+}

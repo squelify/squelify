@@ -4,10 +4,21 @@ export interface SQLEditorProps {
   tables?: string[]
   readOnly?: boolean
   placeholder?: string
+  onExecute?: (query: string) => void
 }
 
 export interface SQLSuggestion {
   label: string
-  type: string
+  type:
+    | 'keyword'
+    | 'function'
+    | 'table'
+    | 'column'
+    | 'operator'
+    | 'type'
+    | 'index'
+    | 'view'
+    | 'trigger'
   info: string
+  template?: string
 }

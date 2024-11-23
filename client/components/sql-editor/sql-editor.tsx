@@ -11,7 +11,6 @@ import type { SQLEditorProps } from './types'
 
 const DEFAULT_VALUE = '-- Write your SQL query here\n'
 
-// Base extensions that do not need to be rendered
 const baseExtensions = [
   basicSetup,
   sql(),
@@ -34,7 +33,6 @@ export function SQLEditor({
   useLayoutEffect(() => {
     if (!editorRef.current) return
 
-    // Dynamic extensions that need values ​​from props
     const dynamicExtensions = [
       autocompletion({ override: [createSQLCompletions(tables)] }),
       EditorView.editable.of(!readOnly),
