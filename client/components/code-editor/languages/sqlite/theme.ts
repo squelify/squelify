@@ -21,11 +21,14 @@ export const sqliteTheme = EditorView.theme({
       height: '8px',
     },
     '&::-webkit-scrollbar-track': {
-      background: 'transparent',
+      background: 'hsl(var(--muted) / 0.2)',
     },
     '&::-webkit-scrollbar-thumb': {
-      background: 'hsl(var(--muted) / 0.3)',
-      borderRadius: '4px',
+      background: 'hsl(var(--muted-foreground) / 0.45)',
+      borderRadius: '1px',
+      '&:hover': {
+        background: 'hsl(var(--muted-foreground) / 0.5)',
+      },
     },
   },
 
@@ -132,15 +135,18 @@ export const sqliteTheme = EditorView.theme({
       minWidth: '15rem',
       padding: '4px',
       '&::-webkit-scrollbar': {
-        width: '6px',
-        height: '6px',
+        width: '7px',
+        height: '7px',
       },
       '&::-webkit-scrollbar-track': {
-        background: 'transparent',
+        background: 'hsl(var(--muted) / 0.2)',
       },
       '&::-webkit-scrollbar-thumb': {
-        background: 'hsl(var(--muted) / 0.3)',
-        borderRadius: '3px',
+        background: 'hsl(var(--muted-foreground) / 0.35)',
+        borderRadius: '1px',
+        '&:hover': {
+          background: 'hsl(var(--muted-foreground) / 0.4)',
+        },
       },
     },
     '& > ul > li': {
@@ -186,9 +192,9 @@ export const sqliteTheme = EditorView.theme({
 
   // Documentation tooltip
   '.cm-tooltip.cm-tooltip-autocomplete .cm-completionInfo': {
-    backgroundColor: 'hsl(var(--popover) / 0.95)',
+    backgroundColor: 'hsl(var(--accent) / 0.9)',
     backdropFilter: 'blur(4px)',
-    border: '1px solid hsl(var(--border) / 0.8)',
+    border: '1px solid hsl(var(--border) / 0.6)',
     borderRadius: '4px',
     boxShadow: '0 2px 4px -1px rgb(0 0 0 / 0.05)',
     color: 'hsl(var(--popover-foreground) / 0.9)',
@@ -196,16 +202,16 @@ export const sqliteTheme = EditorView.theme({
     fontSize: '12px',
     fontWeight: '400',
     lineHeight: '1.5',
-    marginLeft: '4px',
+    marginRight: '4px',
     maxWidth: '20rem',
     padding: '6px 8px',
     position: 'absolute',
-    left: '100%',
+    right: '100%',
     top: '0',
   },
   '.cm-tooltip.cm-tooltip-autocomplete .cm-completionInfo.cm-completionInfo-right': {
-    left: 'auto',
-    right: '100%',
+    right: 'auto',
+    left: '100%',
   },
   '.cm-tooltip.cm-tooltip-autocomplete .cm-completionInfo-label': {
     color: 'hsl(var(--foreground) / 0.9)',
