@@ -17,8 +17,8 @@ export const sqliteTheme = EditorView.theme({
     fontWeight: '400',
     paddingBottom: '12px',
     '&::-webkit-scrollbar': {
-      width: '8px',
-      height: '8px',
+      width: '10px',
+      height: '10px',
     },
     '&::-webkit-scrollbar-track': {
       background: 'hsl(var(--muted) / 0.2)',
@@ -67,7 +67,7 @@ export const sqliteTheme = EditorView.theme({
 
   // Code folding
   '.cm-foldGutter': {
-    marginLeft: '-12px',
+    marginLeft: '-4px',
   },
   '.cm-gutterElement': {
     display: 'flex',
@@ -135,8 +135,8 @@ export const sqliteTheme = EditorView.theme({
       minWidth: '15rem',
       padding: '4px',
       '&::-webkit-scrollbar': {
-        width: '7px',
-        height: '7px',
+        width: '8px',
+        height: '8px',
       },
       '&::-webkit-scrollbar-track': {
         background: 'hsl(var(--muted) / 0.2)',
