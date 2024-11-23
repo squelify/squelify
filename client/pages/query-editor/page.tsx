@@ -18,11 +18,7 @@ export default function Component() {
 
   return (
     <div className="flex size-full flex-col bg-background">
-      <ResizablePanelGroup
-        autoSaveId="query-editor-layout"
-        direction="horizontal"
-        className="flex-1"
-      >
+      <ResizablePanelGroup autoSaveId="query-editor-root" direction="horizontal" className="flex-1">
         <ResizablePanel defaultSize={14} minSize={12} maxSize={20} className="bg-sidebar/80">
           <Tabs defaultValue="tables" className="h-full">
             <TabsList className="grid h-10 w-full grid-cols-2 rounded-none border-b bg-sidebar/40 px-1 py-0">
@@ -122,7 +118,7 @@ export default function Component() {
         <ResizableHandle withHandle />
 
         <ResizablePanel defaultSize={85}>
-          <ResizablePanelGroup autoSaveId="query-editor-panel-group-1" direction="vertical">
+          <ResizablePanelGroup autoSaveId="query-editor-rp" direction="vertical">
             <ResizablePanel defaultSize={60}>
               <div className="flex h-full flex-col">
                 <div className="flex h-10 items-center justify-between border-b bg-muted/20 px-3">
