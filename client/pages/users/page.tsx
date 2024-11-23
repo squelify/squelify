@@ -42,7 +42,7 @@ export default function Component() {
           </p>
         </div>
         <Button>
-          <Lucide.UserPlus className="mr-2 h-4 w-4" />
+          <Lucide.UserPlus className="mr-2 size-4" />
           Add User
         </Button>
       </div>
@@ -56,7 +56,7 @@ export default function Component() {
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button variant="outline" size="icon">
-                  <Lucide.Filter className="h-4 w-4" />
+                  <Lucide.Filter className="size-4" />
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="start" className="w-48">
@@ -88,22 +88,22 @@ export default function Component() {
             </Select>
 
             <Button variant="outline" size="icon" onClick={handleRefresh} disabled={isRefreshing}>
-              <Lucide.RotateCw className={clx('h-4 w-4', isRefreshing && 'animate-spin')} />
+              <Lucide.RotateCw className={clx('size-4', isRefreshing && 'animate-spin')} />
             </Button>
 
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button variant="outline" size="icon">
-                  <Lucide.LayoutGrid className="h-4 w-4" />
+                  <Lucide.LayoutGrid className="size-4" />
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end">
                 <DropdownMenuItem>
-                  <Lucide.LayoutList className="mr-2 h-4 w-4" />
+                  <Lucide.LayoutList className="mr-2 size-4" />
                   List View
                 </DropdownMenuItem>
                 <DropdownMenuItem>
-                  <Lucide.LayoutGrid className="mr-2 h-4 w-4" />
+                  <Lucide.LayoutGrid className="mr-2 size-4" />
                   Grid View
                 </DropdownMenuItem>
               </DropdownMenuContent>
@@ -112,7 +112,7 @@ export default function Component() {
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button variant="outline" size="icon">
-                  <Lucide.Settings2 className="h-4 w-4" />
+                  <Lucide.Settings2 className="size-4" />
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end">
@@ -132,28 +132,28 @@ export default function Component() {
           <div className="border-b bg-muted/50 px-0 py-2">
             <div className="flex items-center gap-2">
               <div className="w-[40px] pl-3">
-                <Input type="checkbox" className="h-4 w-4" />
+                <Input type="checkbox" className="size-4" />
               </div>
               <div className="flex flex-1 items-center justify-between gap-2 pr-4 md:justify-start">
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
                     <Button variant="outline" size="sm">
                       Actions
-                      <Lucide.ChevronDown className="ml-2 h-4 w-4" />
+                      <Lucide.ChevronDown className="ml-2 size-4" />
                     </Button>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent align="start">
                     <DropdownMenuItem>
-                      <Lucide.Mail className="mr-2 h-4 w-4" />
+                      <Lucide.Mail className="mr-2 size-4" />
                       Send Email
                     </DropdownMenuItem>
                     <DropdownMenuItem>
-                      <Lucide.UserX className="mr-2 h-4 w-4" />
+                      <Lucide.UserX className="mr-2 size-4" />
                       Deactivate
                     </DropdownMenuItem>
                     <DropdownMenuSeparator />
                     <DropdownMenuItem className="text-destructive">
-                      <Lucide.Trash2 className="mr-2 h-4 w-4" />
+                      <Lucide.Trash2 className="mr-2 size-4" />
                       Delete
                     </DropdownMenuItem>
                   </DropdownMenuContent>
@@ -169,7 +169,7 @@ export default function Component() {
               <TableHeader>
                 <TableRow>
                   <TableHead className="w-[40px] pl-3">
-                    <Input type="checkbox" className="h-4 w-4" />
+                    <Input type="checkbox" className="size-4" />
                   </TableHead>
                   <TableHead>Name</TableHead>
                   <TableHead>Email</TableHead>
@@ -183,7 +183,7 @@ export default function Component() {
                   skeletonRows.map((key) => (
                     <TableRow key={key}>
                       <TableCell className="pl-3">
-                        <Input type="checkbox" className="h-4 w-4" />
+                        <Input type="checkbox" className="size-4" />
                       </TableCell>
                       <TableCell>
                         <Skeleton className="h-4 w-[150px] bg-muted" />
@@ -200,10 +200,10 @@ export default function Component() {
                       <TableCell>
                         <div className="flex items-center gap-1">
                           <Button variant="ghost" size="icon" className="hover:bg-muted">
-                            <Lucide.Pencil className="h-4 w-4" />
+                            <Lucide.Pencil className="size-4" />
                           </Button>
                           <Button variant="ghost" size="icon" className="hover:bg-muted">
-                            <Lucide.MoreHorizontal className="h-4 w-4" />
+                            <Lucide.MoreHorizontal className="size-4" />
                           </Button>
                         </div>
                       </TableCell>

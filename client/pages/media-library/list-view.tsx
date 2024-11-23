@@ -22,7 +22,7 @@ export default function ListView({ items }: ListViewProps) {
       <TableHeader>
         <TableRow>
           <TableHead className="w-[40px] pl-3">
-            <Input type="checkbox" className="h-4 w-4" />
+            <Input type="checkbox" className="size-4" />
           </TableHead>
           <TableHead>Name</TableHead>
           <TableHead>Type</TableHead>
@@ -35,7 +35,7 @@ export default function ListView({ items }: ListViewProps) {
         {items.map((key) => (
           <TableRow key={key}>
             <TableCell className="pl-3">
-              <Input type="checkbox" className="h-4 w-4" />
+              <Input type="checkbox" className="size-4" />
             </TableCell>
             <TableCell>
               <div className="flex items-center gap-2">
@@ -55,26 +55,26 @@ export default function ListView({ items }: ListViewProps) {
             <TableCell>
               <div className="flex items-center gap-1">
                 <Button variant="ghost" size="icon" className="hover:bg-muted">
-                  <Lucide.Download className="h-4 w-4" />
+                  <Lucide.Download className="size-4" />
                 </Button>
                 <Popover>
                   <PopoverTrigger asChild>
                     <Button variant="ghost" size="icon" className="hover:bg-muted">
-                      <Lucide.MoreHorizontal className="h-4 w-4" />
+                      <Lucide.MoreHorizontal className="size-4" />
                     </Button>
                   </PopoverTrigger>
                   <PopoverContent align="end" className="w-48">
                     <div className="space-y-1">
                       <Button variant="ghost" size="sm" className="w-full justify-start">
-                        <Lucide.PenSquare className="mr-2 h-4 w-4" />
+                        <Lucide.PenSquare className="mr-2 size-4" />
                         Rename
                       </Button>
                       <Button variant="ghost" size="sm" className="w-full justify-start">
-                        <Lucide.Copy className="mr-2 h-4 w-4" />
+                        <Lucide.Copy className="mr-2 size-4" />
                         Copy Link
                       </Button>
                       <Button variant="ghost" size="sm" className="w-full justify-start">
-                        <Lucide.Download className="mr-2 h-4 w-4" />
+                        <Lucide.Download className="mr-2 size-4" />
                         Download
                       </Button>
                       <Button
@@ -82,7 +82,7 @@ export default function ListView({ items }: ListViewProps) {
                         size="sm"
                         className="w-full justify-start text-destructive"
                       >
-                        <Lucide.Trash2 className="mr-2 h-4 w-4" />
+                        <Lucide.Trash2 className="mr-2 size-4" />
                         Delete
                       </Button>
                     </div>

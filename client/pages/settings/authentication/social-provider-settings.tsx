@@ -1,3 +1,4 @@
+import React from 'react'
 import { Input } from '#/components/base-ui/input'
 import { Label } from '#/components/base-ui/label'
 
@@ -8,7 +9,7 @@ interface SocialProviderSettingsProps {
 
 export function SocialProviderSettings({ providerId, providerName }: SocialProviderSettingsProps) {
   return (
-    <>
+    <React.Fragment>
       <div className="grid gap-4">
         <div className="space-y-2">
           <Label>OAuth Credentials</Label>
@@ -53,6 +54,6 @@ export function SocialProviderSettings({ providerId, providerName }: SocialProvi
           </div>
         </div>
       </div>
-    </>
+    </React.Fragment>
   )
 }

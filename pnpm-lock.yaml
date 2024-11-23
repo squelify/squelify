@@ -21,8 +21,8 @@ importers:
         specifier: ^0.8.0
         version: 0.8.0(nanostores@0.11.3)(react@18.3.1)
       '@noble/hashes':
-        specifier: ^1.5.0
-        version: 1.5.0
+        specifier: ^1.6.0
+        version: 1.6.0
       '@radix-ui/react-accordion':
         specifier: ^1.2.1
         version: 1.2.1(@types/react-dom@18.3.1)(@types/react@18.3.12)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
@@ -161,6 +161,9 @@ importers:
       react-hook-form:
         specifier: ^7.53.2
         version: 7.53.2(react@18.3.1)
+      react-resizable-panels:
+        specifier: ^2.1.7
+        version: 2.1.7(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       react-router-dom:
         specifier: ^7.0.1
         version: 7.0.1(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
@@ -248,7 +251,7 @@ importers:
         version: 1.8.4
       nitropack:
         specifier: ^2.10.4
-        version: 2.10.4(@libsql/client@0.14.0)(typescript@5.6.3)
+        version: 2.10.4(@libsql/client@0.14.0)(typescript@5.7.2)
       npm-check-updates:
         specifier: ^17.1.11
         version: 17.1.11
@@ -277,14 +280,14 @@ importers:
         specifier: ^4.19.2
         version: 4.19.2
       typescript:
-        specifier: ^5.6.3
-        version: 5.6.3
+        specifier: ^5.7.2
+        version: 5.7.2
       vite:
         specifier: ^5.4.11
         version: 5.4.11(@types/node@22.8.6)(terser@5.36.0)
       vite-tsconfig-paths:
         specifier: ^5.1.3
-        version: 5.1.3(typescript@5.6.3)(vite@5.4.11(@types/node@22.8.6)(terser@5.36.0))
+        version: 5.1.3(typescript@5.7.2)(vite@5.4.11(@types/node@22.8.6)(terser@5.36.0))
 
 packages:
 
@@ -1097,6 +1100,10 @@ packages:
 
   '@noble/hashes@1.5.0':
     resolution: {integrity: sha512-1j6kQFb7QRru7eKN3ZDvRcP13rugwdxZqCjbiAVZfIJwgj2A65UmT4TgARXGlXgnRkORLTDTrO19ZErt7+QXgA==}
+    engines: {node: ^14.21.3 || >=16}
+
+  '@noble/hashes@1.6.0':
+    resolution: {integrity: sha512-YUULf0Uk4/mAA89w+k3+yUYh6NrEvxZa5T6SY3wlMvE2chHkxFUUIDI8/XW1QSC357iA5pSnqt7XEhvFOqmDyQ==}
     engines: {node: ^14.21.3 || >=16}
 
   '@nodelib/fs.scandir@2.1.5':
@@ -4014,6 +4021,12 @@ packages:
       '@types/react':
         optional: true
 
+  react-resizable-panels@2.1.7:
+    resolution: {integrity: sha512-JtT6gI+nURzhMYQYsx8DKkx6bSoOGFp7A3CwMrOb8y5jFHFyqwo9m68UhmXRw57fRVJksFn1TSlm3ywEQ9vMgA==}
+    peerDependencies:
+      react: ^16.14.0 || ^17.0.0 || ^18.0.0 || ^19.0.0 || ^19.0.0-rc
+      react-dom: ^16.14.0 || ^17.0.0 || ^18.0.0 || ^19.0.0 || ^19.0.0-rc
+
   react-router-dom@6.26.2:
     resolution: {integrity: sha512-z7YkaEW0Dy35T3/QKPYB1LjMK2R1fxnHO8kWpUMTBdfVzZrWOiY9a7CtN8HqdWtDUWd5FY6Dl8HFsqVwH4uOtQ==}
     engines: {node: '>=14.0.0'}
@@ -4489,8 +4502,8 @@ packages:
   typeid-js@1.1.0:
     resolution: {integrity: sha512-SS0GEC0/0OJ06IvGEbqc6dVa5WwQN4mDq2UG9x2D7f+CD2X/b+p2xfEPNli0DO23lmeVl45bFt/bAOQa0GB4fg==}
 
-  typescript@5.6.3:
-    resolution: {integrity: sha512-hjcS1mhfuyi4WW8IWtjP7brDrG2cuDZukyrYrSauoXGNgx0S7zceP07adYkJycEr56BOUTNPzbInooiN3fn1qw==}
+  typescript@5.7.2:
+    resolution: {integrity: sha512-i5t66RHxDvVN40HfDd1PsEThGNnlMCMT3jMUuoh9/0TaqWevNontacunWyN02LA9/fIbEWlcHZcgTKb9QoaLfg==}
     engines: {node: '>=14.17'}
     hasBin: true
 
@@ -5492,6 +5505,8 @@ snapshots:
       urlpattern-polyfill: 8.0.2
 
   '@noble/hashes@1.5.0': {}
+
+  '@noble/hashes@1.6.0': {}
 
   '@nodelib/fs.scandir@2.1.5':
     dependencies:
@@ -8130,7 +8145,7 @@ snapshots:
       react: 18.3.1
       react-dom: 18.3.1(react@18.3.1)
 
-  nitropack@2.10.4(@libsql/client@0.14.0)(typescript@5.6.3):
+  nitropack@2.10.4(@libsql/client@0.14.0)(typescript@5.7.2):
     dependencies:
       '@cloudflare/kv-asset-handler': 0.3.4
       '@netlify/functions': 2.8.2
@@ -8179,7 +8194,7 @@ snapshots:
       node-fetch-native: 1.6.4
       ofetch: 1.4.1
       ohash: 1.1.4
-      openapi-typescript: 7.4.2(typescript@5.6.3)
+      openapi-typescript: 7.4.2(typescript@5.7.2)
       pathe: 1.1.2
       perfect-debounce: 1.0.0
       pkg-types: 1.2.1
@@ -8330,14 +8345,14 @@ snapshots:
       is-docker: 2.2.1
       is-wsl: 2.2.0
 
-  openapi-typescript@7.4.2(typescript@5.6.3):
+  openapi-typescript@7.4.2(typescript@5.7.2):
     dependencies:
       '@redocly/openapi-core': 1.25.10(supports-color@9.4.0)
       ansi-colors: 4.1.3
       change-case: 5.4.4
       parse-json: 8.1.0
       supports-color: 9.4.0
-      typescript: 5.6.3
+      typescript: 5.7.2
       yargs-parser: 21.1.1
     transitivePeerDependencies:
       - encoding
@@ -8568,6 +8583,11 @@ snapshots:
       use-sidecar: 1.1.2(@types/react@18.3.12)(react@18.3.1)
     optionalDependencies:
       '@types/react': 18.3.12
+
+  react-resizable-panels@2.1.7(react-dom@18.3.1(react@18.3.1))(react@18.3.1):
+    dependencies:
+      react: 18.3.1
+      react-dom: 18.3.1(react@18.3.1)
 
   react-router-dom@6.26.2(react-dom@18.3.1(react@18.3.1))(react@18.3.1):
     dependencies:
@@ -9145,9 +9165,9 @@ snapshots:
 
   ts-interface-checker@0.1.13: {}
 
-  tsconfck@3.1.4(typescript@5.6.3):
+  tsconfck@3.1.4(typescript@5.7.2):
     optionalDependencies:
-      typescript: 5.6.3
+      typescript: 5.7.2
 
   tslib@2.8.1: {}
 
@@ -9168,7 +9188,7 @@ snapshots:
     dependencies:
       uuid: 10.0.0
 
-  typescript@5.6.3: {}
+  typescript@5.7.2: {}
 
   ua-is-frozen@0.1.2: {}
 
@@ -9382,11 +9402,11 @@ snapshots:
       '@types/unist': 3.0.3
       vfile-message: 4.0.2
 
-  vite-tsconfig-paths@5.1.3(typescript@5.6.3)(vite@5.4.11(@types/node@22.8.6)(terser@5.36.0)):
+  vite-tsconfig-paths@5.1.3(typescript@5.7.2)(vite@5.4.11(@types/node@22.8.6)(terser@5.36.0)):
     dependencies:
       debug: 4.3.7(supports-color@9.4.0)
       globrex: 0.1.2
-      tsconfck: 3.1.4(typescript@5.6.3)
+      tsconfck: 3.1.4(typescript@5.7.2)
     optionalDependencies:
       vite: 5.4.11(@types/node@22.8.6)(terser@5.36.0)
     transitivePeerDependencies:

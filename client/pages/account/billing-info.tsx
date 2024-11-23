@@ -6,7 +6,7 @@ export function BillingInfo() {
     <div className="grid gap-4">
       <div className="rounded-lg border p-3">
         <div className="flex items-center gap-4">
-          <Lucide.CreditCard className="h-5 w-5" />
+          <Lucide.CreditCard className="size-5" />
           <div className="flex-1">
             <p className="font-medium">•••• 4242</p>
             <p className="text-muted-foreground text-sm">Expires 12/24</p>
@@ -18,7 +18,7 @@ export function BillingInfo() {
       </div>
       <div className="rounded-lg border p-3">
         <div className="flex items-center gap-4">
-          <Lucide.MapPin className="h-5 w-5" />
+          <Lucide.MapPin className="size-5" />
           <div className="flex-1">
             <p className="font-medium">Billing Address</p>
             <p className="text-muted-foreground text-sm">123 Main St, City, Country</p>

@@ -11,6 +11,7 @@ import ErrorBoundaryFallback from '#/pages/error/boundary-fallback'
 import type { AppContextType } from '#/providers/app-provider'
 import { clx, getBreadcrumbItems } from '#/utils/helper'
 
+import React from 'react'
 import RootLayout from './root-layout'
 import PrimarySidebar from './sidebar-primary'
 import SecondarySidebar from './sidebar-secondary'
@@ -49,10 +50,10 @@ export default function AppLayout() {
                       {index === breadcrumbItems.length - 1 ? (
                         <BreadcrumbPage>{item.title}</BreadcrumbPage>
                       ) : (
-                        <>
+                        <React.Fragment>
                           <BreadcrumbPage>{item.title}</BreadcrumbPage>
                           <BreadcrumbSeparator />
-                        </>
+                        </React.Fragment>
                       )}
                     </BreadcrumbItem>
                   ))}

@@ -54,7 +54,7 @@ export default function Component() {
           </p>
         </div>
         <Button>
-          <Lucide.Plus className="mr-2 h-4 w-4" />
+          <Lucide.Plus className="mr-2 size-4" />
           Add Webhook
         </Button>
       </div>
@@ -68,7 +68,7 @@ export default function Component() {
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button variant="outline" size="icon">
-                  <Lucide.Filter className="h-4 w-4" />
+                  <Lucide.Filter className="size-4" />
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="start" className="w-48">
@@ -99,13 +99,13 @@ export default function Component() {
             </Select>
 
             <Button variant="outline" size="icon" onClick={handleRefresh} disabled={isRefreshing}>
-              <Lucide.RotateCw className={clx('h-4 w-4', isRefreshing && 'animate-spin')} />
+              <Lucide.RotateCw className={clx('size-4', isRefreshing && 'animate-spin')} />
             </Button>
 
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button variant="outline" size="icon">
-                  <Lucide.Settings2 className="h-4 w-4" />
+                  <Lucide.Settings2 className="size-4" />
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end">
@@ -125,28 +125,28 @@ export default function Component() {
           <div className="border-b bg-muted/50 px-0 py-2">
             <div className="flex items-center gap-2">
               <div className="w-[40px] pl-3">
-                <Input type="checkbox" className="h-4 w-4" />
+                <Input type="checkbox" className="size-4" />
               </div>
               <div className="flex flex-1 items-center justify-between gap-2 pr-4 md:justify-start">
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
                     <Button variant="outline" size="sm">
                       Actions
-                      <Lucide.ChevronDown className="ml-2 h-4 w-4" />
+                      <Lucide.ChevronDown className="ml-2 size-4" />
                     </Button>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent align="start">
                     <DropdownMenuItem>
-                      <Lucide.Play className="mr-2 h-4 w-4" />
+                      <Lucide.Play className="mr-2 size-4" />
                       Enable
                     </DropdownMenuItem>
                     <DropdownMenuItem>
-                      <Lucide.Pause className="mr-2 h-4 w-4" />
+                      <Lucide.Pause className="mr-2 size-4" />
                       Disable
                     </DropdownMenuItem>
                     <DropdownMenuSeparator />
                     <DropdownMenuItem className="text-destructive">
-                      <Lucide.Trash2 className="mr-2 h-4 w-4" />
+                      <Lucide.Trash2 className="mr-2 size-4" />
                       Delete
                     </DropdownMenuItem>
                   </DropdownMenuContent>
@@ -161,7 +161,7 @@ export default function Component() {
             <TableHeader>
               <TableRow>
                 <TableHead className="w-[40px] pl-3">
-                  <Input type="checkbox" className="h-4 w-4" />
+                  <Input type="checkbox" className="size-4" />
                 </TableHead>
                 <TableHead>Name</TableHead>
                 <TableHead>URL</TableHead>
@@ -175,7 +175,7 @@ export default function Component() {
               {skeletonRows.map((key) => (
                 <TableRow key={key}>
                   <TableCell className="pl-3">
-                    <Input type="checkbox" className="h-4 w-4" />
+                    <Input type="checkbox" className="size-4" />
                   </TableCell>
                   <TableCell>
                     <Skeleton className="h-4 w-[150px] bg-muted" />
@@ -184,7 +184,7 @@ export default function Component() {
                     <div className="flex items-center gap-2">
                       <Skeleton className="h-4 w-[200px] bg-muted" />
                       <Button variant="ghost" size="icon" className="hover:bg-muted">
-                        <Lucide.Copy className="h-4 w-4" />
+                        <Lucide.Copy className="size-4" />
                       </Button>
                     </div>
                   </TableCell>
@@ -200,10 +200,10 @@ export default function Component() {
                   <TableCell>
                     <div className="flex items-center gap-1">
                       <Button variant="ghost" size="icon" className="hover:bg-muted">
-                        <Lucide.History className="h-4 w-4" />
+                        <Lucide.History className="size-4" />
                       </Button>
                       <Button variant="ghost" size="icon" className="hover:bg-muted">
-                        <Lucide.MoreHorizontal className="h-4 w-4" />
+                        <Lucide.MoreHorizontal className="size-4" />
                       </Button>
                     </div>
                   </TableCell>

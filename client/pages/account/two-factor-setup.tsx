@@ -44,7 +44,7 @@ export function TwoFactorSetup() {
           <div className="flex items-start gap-4">
             <div className="grid flex-1 gap-1">
               <div className="flex items-center gap-2">
-                <Lucide.Smartphone className="h-4 w-4 text-muted-foreground" />
+                <Lucide.Smartphone className="size-4 text-muted-foreground" />
                 <span className="font-medium">Authenticator App</span>
               </div>
               <p className="text-muted-foreground text-sm">
@@ -77,7 +77,7 @@ export function TwoFactorSetup() {
                       <div className="flex items-center justify-between">
                         <Label>Secret Key</Label>
                         <Button variant="ghost" size="sm" className="h-8 px-2">
-                          <Lucide.Copy className="mr-2 h-4 w-4" />
+                          <Lucide.Copy className="mr-2 size-4" />
                           Copy
                         </Button>
                       </div>
@@ -133,7 +133,7 @@ export function TwoFactorSetup() {
           <div className="flex items-start gap-4">
             <div className="grid flex-1 gap-1">
               <div className="flex items-center gap-2">
-                <Lucide.Mail className="h-4 w-4 text-muted-foreground" />
+                <Lucide.Mail className="size-4 text-muted-foreground" />
                 <span className="font-medium">Email OTP</span>
               </div>
               <p className="text-muted-foreground text-sm">Receive verification codes via email</p>
@@ -147,7 +147,7 @@ export function TwoFactorSetup() {
 
       <div className="rounded-md bg-muted/50 p-4">
         <div className="flex gap-2 text-sm">
-          <Lucide.Info className="mt-0.5 h-4 w-4 flex-shrink-0 text-muted-foreground" />
+          <Lucide.Info className="mt-0.5 size-4 flex-shrink-0 text-muted-foreground" />
           <p className="text-muted-foreground">
             Two-factor authentication adds an extra layer of security to your account. You'll need
             to enter both your password and a verification code when signing in.

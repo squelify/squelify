@@ -20,7 +20,7 @@ export default function GridView({ items }: GridViewProps) {
           <CardContent className="aspect-square p-0">
             {/* Checkbox */}
             <div className="absolute top-2 left-2 z-10 opacity-0 transition-opacity group-hover:opacity-100">
-              <Input type="checkbox" className="h-4 w-4 rounded-sm border-white bg-black/20" />
+              <Input type="checkbox" className="size-4 rounded-sm border-white bg-black/20" />
             </div>
 
             {/* Preview */}
@@ -32,7 +32,7 @@ export default function GridView({ items }: GridViewProps) {
                 <Dialog>
                   <DialogTrigger asChild>
                     <Button variant="ghost" size="icon" className="text-white hover:bg-white/20">
-                      <Lucide.Eye className="h-4 w-4" />
+                      <Lucide.Eye className="size-4" />
                     </Button>
                   </DialogTrigger>
                   <DialogContent>
@@ -46,7 +46,7 @@ export default function GridView({ items }: GridViewProps) {
                 <Tooltip>
                   <TooltipTrigger asChild>
                     <Button variant="ghost" size="icon" className="text-white hover:bg-white/20">
-                      <Lucide.Download className="h-4 w-4" />
+                      <Lucide.Download className="size-4" />
                     </Button>
                   </TooltipTrigger>
                   <TooltipContent>Download</TooltipContent>
@@ -55,7 +55,7 @@ export default function GridView({ items }: GridViewProps) {
                 <Dialog>
                   <DialogTrigger asChild>
                     <Button variant="ghost" size="icon" className="text-white hover:bg-white/20">
-                      <Lucide.Info className="h-4 w-4" />
+                      <Lucide.Info className="size-4" />
                     </Button>
                   </DialogTrigger>
                   <DialogContent>
@@ -98,21 +98,21 @@ export default function GridView({ items }: GridViewProps) {
               <Popover>
                 <PopoverTrigger asChild>
                   <Button variant="ghost" size="icon" className="text-white hover:bg-white/20">
-                    <Lucide.MoreVertical className="h-4 w-4" />
+                    <Lucide.MoreVertical className="size-4" />
                   </Button>
                 </PopoverTrigger>
                 <PopoverContent align="end" className="w-48">
                   <div className="space-y-1">
                     <Button variant="ghost" size="sm" className="w-full justify-start">
-                      <Lucide.PenSquare className="mr-2 h-4 w-4" />
+                      <Lucide.PenSquare className="mr-2 size-4" />
                       Rename
                     </Button>
                     <Button variant="ghost" size="sm" className="w-full justify-start">
-                      <Lucide.Copy className="mr-2 h-4 w-4" />
+                      <Lucide.Copy className="mr-2 size-4" />
                       Copy Link
                     </Button>
                     <Button variant="ghost" size="sm" className="w-full justify-start">
-                      <Lucide.Download className="mr-2 h-4 w-4" />
+                      <Lucide.Download className="mr-2 size-4" />
                       Download
                     </Button>
                     <Button
@@ -120,7 +120,7 @@ export default function GridView({ items }: GridViewProps) {
                       size="sm"
                       className="w-full justify-start text-destructive"
                     >
-                      <Lucide.Trash2 className="mr-2 h-4 w-4" />
+                      <Lucide.Trash2 className="mr-2 size-4" />
                       Delete
                     </Button>
                   </div>

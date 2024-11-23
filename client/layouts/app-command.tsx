@@ -1,5 +1,6 @@
 import * as Lucide from 'lucide-react'
 import { useEffect, useState } from 'react'
+import React from 'react'
 import { CommandDialog, CommandSeparator, CommandShortcut } from '#/components/base-ui/command'
 import { CommandEmpty, CommandGroup, CommandInput } from '#/components/base-ui/command'
 import { CommandItem, CommandList } from '#/components/base-ui/command'
@@ -21,7 +22,7 @@ export default function AppCommand({ logout }: { logout: () => void }) {
   }, [])
 
   return (
-    <>
+    <React.Fragment>
       <Button
         onClick={() => setOpen(!open)}
         className="flex w-full select-none justify-between rounded-lg border border-input bg-background/10 py-1.5 pr-2 pl-2.5 text-muted-foreground text-xs shadow-none transition-colors hover:bg-secondary/60"
@@ -106,6 +107,6 @@ export default function AppCommand({ logout }: { logout: () => void }) {
           </CommandGroup>
         </CommandList>
       </CommandDialog>
-    </>
+    </React.Fragment>
   )
 }

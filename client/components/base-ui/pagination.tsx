@@ -56,7 +56,7 @@ const PaginationPrevious = ({
     className={clx('gap-1 pl-2.5', className)}
     {...props}
   >
-    <Lucide.ChevronLeft className="h-4 w-4" />
+    <Lucide.ChevronLeft className="size-4" />
     <span>Previous</span>
   </PaginationLink>
 )
@@ -70,7 +70,7 @@ const PaginationNext = ({ className, ...props }: React.ComponentProps<typeof Pag
     {...props}
   >
     <span>Next</span>
-    <Lucide.ChevronRight className="h-4 w-4" />
+    <Lucide.ChevronRight className="size-4" />
   </PaginationLink>
 )
 PaginationNext.displayName = 'PaginationNext'
@@ -81,7 +81,7 @@ const PaginationEllipsis = ({ className, ...props }: React.ComponentProps<'span'
     className={clx('flex h-9 w-9 items-center justify-center', className)}
     {...props}
   >
-    <Lucide.MoreHorizontal className="h-4 w-4" />
+    <Lucide.MoreHorizontal className="size-4" />
     <span className="sr-only">More pages</span>
   </span>
 )

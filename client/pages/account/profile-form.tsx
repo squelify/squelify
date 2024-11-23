@@ -38,7 +38,7 @@ export function ProfileForm() {
               className="text-white hover:bg-transparent hover:text-white"
               onClick={handleFileSelect}
             >
-              <Lucide.Upload className="mr-2 h-4 w-4" />
+              <Lucide.Upload className="mr-2 size-4" />
               Change
             </Button>
           </div>

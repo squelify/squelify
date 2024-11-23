@@ -105,7 +105,7 @@ export default function Component() {
                           variant="outline"
                           className="text-destructive hover:text-destructive"
                         >
-                          <Lucide.Power className="mr-2 h-4 w-4" />
+                          <Lucide.Power className="mr-2 size-4" />
                           Disable
                         </Button>
                       )}

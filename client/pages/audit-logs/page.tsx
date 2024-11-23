@@ -59,7 +59,7 @@ export default function Component() {
           </p>
         </div>
         <Button variant="outline">
-          <Lucide.Download className="mr-2 h-4 w-4" />
+          <Lucide.Download className="mr-2 size-4" />
           Export Logs
         </Button>
       </div>
@@ -73,7 +73,7 @@ export default function Component() {
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button variant="outline" size="icon">
-                  <Lucide.Filter className="h-4 w-4" />
+                  <Lucide.Filter className="size-4" />
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="start" className="w-48">
@@ -107,13 +107,13 @@ export default function Component() {
             </Select>
 
             <Button variant="outline" size="icon" onClick={handleRefresh} disabled={isRefreshing}>
-              <Lucide.RotateCw className={clx('h-4 w-4', isRefreshing && 'animate-spin')} />
+              <Lucide.RotateCw className={clx('size-4', isRefreshing && 'animate-spin')} />
             </Button>
 
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button variant="outline" size="icon">
-                  <Lucide.Settings2 className="h-4 w-4" />
+                  <Lucide.Settings2 className="size-4" />
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end">
@@ -164,7 +164,7 @@ export default function Component() {
                   </TableCell>
                   <TableCell>
                     <Button variant="ghost" size="icon" className="hover:bg-muted">
-                      <Lucide.Eye className="h-4 w-4" />
+                      <Lucide.Eye className="size-4" />
                     </Button>
                   </TableCell>
                 </TableRow>
