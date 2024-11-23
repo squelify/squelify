@@ -9,6 +9,7 @@ import { Table, TableHead, TableHeader } from '#/components/base-ui/table'
 import { TableBody, TableCell, TableRow } from '#/components/base-ui/table'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '#/components/base-ui/tabs'
 import { Textarea } from '#/components/base-ui/textarea'
+import SQLEditor from '#/components/sql-editor'
 import { useSEOMeta } from '#/context/hooks/use-seo-meta'
 
 export default function Component() {
@@ -157,12 +158,13 @@ export default function Component() {
                     <span>0 rows</span>
                   </div>
                 </div>
-                <Textarea
-                  value={query}
-                  onChange={(e) => setQuery(e.target.value)}
-                  className="flex-1 resize-none rounded-none border-0 bg-background font-mono text-sm shadow-none focus-visible:ring-0"
-                  placeholder="-- Write your SQL query here"
-                />
+                <div className="flex-1 overflow-hidden">
+                  <SQLEditor
+                    value={query}
+                    onChange={setQuery}
+                    tables={['users', 'posts', 'comments']}
+                  />
+                </div>
               </div>
             </ResizablePanel>
 
