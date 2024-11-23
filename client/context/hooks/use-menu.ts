@@ -41,10 +41,10 @@ export function useMenu() {
     {
       label: 'System',
       items: [
-        { title: 'Audit Logs', url: '/system/audit-logs', icon: Lucide.ScrollText },
-        { title: 'Webhooks', url: '/system/webhooks', icon: Lucide.Webhook },
-        { title: 'API Keys', url: '/system/api-keys', icon: Lucide.Key },
-        { title: 'Settings', url: '/system/settings', icon: Lucide.Settings2 },
+        { title: 'Audit Logs', url: '/audit-logs', icon: Lucide.ScrollText },
+        { title: 'Webhooks', url: '/webhooks', icon: Lucide.Webhook },
+        { title: 'API Keys', url: '/api-keys', icon: Lucide.Key },
+        { title: 'Settings', url: '/settings', icon: Lucide.Settings2 },
       ],
     },
   ]

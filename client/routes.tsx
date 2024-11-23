@@ -20,9 +20,16 @@ import MediaLibraryPage from '#/pages/media-library/page'
 import PermissionsPage from '#/pages/permissions/page'
 import QueryEditorPage from '#/pages/query-editor/page'
 import RolesPage from '#/pages/roles/page'
-import SettingsPage from '#/pages/settings/page'
 import UsersPage from '#/pages/users/page'
 import WebhooksPage from '#/pages/webhooks/page'
+
+import SettingsAuthentication from '#/pages/settings/authentication/page'
+import SettingsBackup from '#/pages/settings/backup/page'
+import SettingsEmail from '#/pages/settings/email/page'
+import SettingsGeneral from '#/pages/settings/general/page'
+import SettingsLayout from '#/pages/settings/layout'
+import SettingsLogs from '#/pages/settings/logs/page'
+import SettingsStorage from '#/pages/settings/storage/page'
 
 /**
  * Utility function to create a route object with the provided path and other properties.
@@ -70,18 +77,36 @@ const Routes: RouteObject[] = [
       }),
 
       // System
-      route('/system', {
+      route('/', {
         children: [
-          { index: true, element: <Navigate to="/system/settings" replace /> },
-          { path: '/system/audit-logs', element: <AuditLogsPage /> },
-          { path: '/system/webhooks', element: <WebhooksPage /> },
-          { path: '/system/api-keys', element: <APIKeysPage /> },
-          { path: '/system/settings', element: <SettingsPage /> },
+          { path: '/audit-logs', element: <AuditLogsPage /> },
+          { path: '/webhooks', element: <WebhooksPage /> },
+          { path: '/api-keys', element: <APIKeysPage /> },
+        ],
+      }),
+
+      // Settings
+      route('/settings', {
+        children: [
+          { index: true, element: <Navigate to="/settings/general" replace /> },
+          {
+            path: '/settings',
+            element: <SettingsLayout />,
+            children: [
+              { path: '/settings/auth', element: <SettingsAuthentication /> },
+              { path: '/settings/backup', element: <SettingsBackup /> },
+              { path: '/settings/email', element: <SettingsEmail /> },
+              { path: '/settings/general', element: <SettingsGeneral /> },
+              { path: '/settings/logs', element: <SettingsLogs /> },
+              { path: '/settings/storage', element: <SettingsStorage /> },
+            ],
+          },
         ],
       }),
     ],
     errorElement: <InternalError />,
   }),
+
   route('/', {
     element: <AuthLayout />,
     children: [
@@ -91,6 +116,7 @@ const Routes: RouteObject[] = [
       { path: '/reset-password', element: <ResetPasswordPage /> },
     ],
   }),
+
   route('*', { element: <NotFound />, errorElement: <InternalError /> }),
 ]
 

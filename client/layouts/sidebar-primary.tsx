@@ -20,18 +20,18 @@ interface PrimarySidebarProps {
 }
 
 export default function PrimarySidebar({ user, logout }: PrimarySidebarProps) {
-  const { state: sidebarState /*setOpen, isMobile*/ } = useSidebar()
+  const { state: sidebarState } = useSidebar()
   const { pathname } = useLocation()
   const { menuGroups } = useMenu()
 
-  // TODO: This is a workaround for the sidebar collapsed when clicking on Collections menu
-  const handleMenuItemClick = (url: string) => {
-    // if (url.startsWith('/content/collections')) {
-    //   setOpen(false)
-    // } else if (!isMobile && sidebarState !== 'collapsed') {
-    //   setOpen(true)
-    // }
-    consola.log(url)
+  // Helper to check the active state of the menu
+  const isMenuActive = (itemUrl: string): boolean => {
+    // Untuk settings page, cek apakah path dimulai dengan itemUrl
+    if (itemUrl.startsWith('/settings')) {
+      return pathname.startsWith(itemUrl)
+    }
+    // For other menus, exact match
+    return pathname === itemUrl
   }
 
   return (
@@ -43,7 +43,6 @@ export default function PrimarySidebar({ user, logout }: PrimarySidebarProps) {
             <SidebarMenuButton size="lg" className="pointer-events-none select-none">
               <div className="flex aspect-square size-8 items-center justify-center bg-transparent p-0.5">
                 <img src="/favicon.svg" className="size-8" alt="logo" />
-                {/* <Lucide.GalleryVerticalEnd className="size-4" /> */}
               </div>
               <div
                 className={clx(
@@ -86,11 +85,11 @@ export default function PrimarySidebar({ user, logout }: PrimarySidebarProps) {
                           <TooltipTrigger asChild>
                             <SidebarMenuButton
                               className={clx(
-                                pathname === item.url && 'bg-accent text-accent-foreground'
+                                isMenuActive(item.url) && 'bg-accent text-accent-foreground'
                               )}
                               asChild
                             >
-                              <Link href={item.url} onClick={() => handleMenuItemClick(item.url)}>
+                              <Link href={item.url}>
                                 <item.icon strokeWidth={1.8} />
                                 <span>{item.title}</span>
                               </Link>
@@ -103,11 +102,11 @@ export default function PrimarySidebar({ user, logout }: PrimarySidebarProps) {
                       ) : (
                         <SidebarMenuButton
                           className={clx(
-                            pathname === item.url && 'bg-accent text-accent-foreground'
+                            isMenuActive(item.url) && 'bg-accent text-accent-foreground'
                           )}
                           asChild
                         >
-                          <Link href={item.url} onClick={() => handleMenuItemClick(item.url)}>
+                          <Link href={item.url}>
                             <item.icon strokeWidth={1.8} />
                             <span>{item.title}</span>
                           </Link>
@@ -131,7 +130,6 @@ export default function PrimarySidebar({ user, logout }: PrimarySidebarProps) {
             <UserMenu user={user} sidebarState={sidebarState} logout={logout} />
           </SidebarMenuItem>
           <SidebarMenuItem className={clx(sidebarState === 'expanded' ? 'order-2' : 'order-1')}>
-            {/* <SidebarTrigger /> */}
             <ThemeSwitcher />
           </SidebarMenuItem>
         </SidebarMenu>
