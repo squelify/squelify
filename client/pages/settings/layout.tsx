@@ -27,7 +27,7 @@ export default function SettingsLayout() {
 
   return (
     <ErrorBoundary FallbackComponent={ErrorBoundaryFallback}>
-      <div className="container mx-auto w-full max-w-5xl space-y-6 p-4 md:p-6 lg:p-8">
+      <div className="container mx-auto w-full max-w-4xl space-y-6 p-4 md:p-6 lg:p-8">
         <header className="space-y-0.5">
           <h1 className="font-semibold text-2xl tracking-tight">System Settings</h1>
           <p className="text-muted-foreground text-sm">

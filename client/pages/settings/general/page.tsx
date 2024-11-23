@@ -17,12 +17,12 @@ export default function Component() {
     <TabsContent value="general" tabIndex={-1}>
       <div className="grid gap-6">
         <Card>
-          <CardHeader className="md:px-10 ">
+          <CardHeader className="md:px-10">
             <CardTitle>Application Settings</CardTitle>
             <CardDescription>Configure your application details</CardDescription>
           </CardHeader>
           <Separator />
-          <CardContent className="grid gap-6 pt-8 pb-10 md:px-10">
+          <CardContent className="grid gap-6 pt-6 pb-8 md:px-10">
             <div className="grid gap-2">
               <Label>Application Name</Label>
               <Input placeholder="My Application" />
@@ -52,12 +52,12 @@ export default function Component() {
         </Card>
 
         <Card>
-          <CardHeader className="md:px-10 ">
+          <CardHeader className="md:px-10">
             <CardTitle>Security Settings</CardTitle>
             <CardDescription>Configure security preferences</CardDescription>
           </CardHeader>
           <Separator />
-          <CardContent className="grid gap-6 pt-8 pb-10 md:px-10">
+          <CardContent className="grid gap-6 pt-6 pb-8 md:px-10">
             <div className="flex items-center justify-between">
               <div className="space-y-0.5">
                 <Label>Rate Limiting</Label>

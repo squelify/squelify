@@ -28,23 +28,47 @@ export function getBreadcrumbItems(
   const cleanPath = pathname.split('?')[0].replace(/\/+$/, '')
   const pathSegments = cleanPath.split('/')
 
-  // Find base path without ID segments
-  const basePath = pathSegments.filter((segment) => !segment.match(/^\d+$/)).join('/')
+  // Special handling for settings pages
+  if (cleanPath.startsWith('/settings')) {
+    const settingsGroup = menuGroups.find((group) =>
+      group.items.some((item) => item.url === '/settings')
+    )
+    if (settingsGroup) {
+      const settingsItem = settingsGroup.items.find((item) => item.url === '/settings')
+      const result = [{ title: settingsItem?.title || 'Settings', url: '/settings' }]
 
-  // Find exact matching menu item and its group
-  for (const group of menuGroups) {
-    const matchingItem = group.items.find((item) => item.url === basePath)
-    if (matchingItem) {
-      // Return only the item if group label should be hidden
-      if (group.hideLabel) {
-        return [{ title: matchingItem.title, url: matchingItem.url }]
+      // Add sub-section if exists
+      if (pathSegments.length > 2) {
+        const section = pathSegments[2]
+        result.push({
+          title: section.charAt(0).toUpperCase() + section.slice(1),
+          url: `/settings/${section}`,
+        })
       }
 
-      // Otherwise return both group label and item
-      return [
-        { title: group.label, url: pathname },
-        { title: matchingItem.title, url: matchingItem.url },
-      ]
+      return result
+    }
+  }
+
+  // Find matching menu item and its group
+  for (const group of menuGroups) {
+    const matchingItem = group.items.find((item) => {
+      // Check if current path starts with menu item URL
+      return cleanPath.startsWith(item.url)
+    })
+
+    if (matchingItem) {
+      const result = []
+
+      // Add group label if not hidden
+      if (!group.hideLabel) {
+        result.push({ title: group.label, url: pathname })
+      }
+
+      // Add menu item
+      result.push({ title: matchingItem.title, url: matchingItem.url })
+
+      return result
     }
   }
 

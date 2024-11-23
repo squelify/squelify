@@ -1,4 +1,5 @@
-import { Card, CardContent, CardHeader } from '#/components/base-ui/card'
+import { Button } from '#/components/base-ui/button'
+import { Card, CardContent, CardFooter, CardHeader } from '#/components/base-ui/card'
 import { CardDescription, CardTitle } from '#/components/base-ui/card'
 import { Label } from '#/components/base-ui/label'
 import { Select, SelectTrigger, SelectValue } from '#/components/base-ui/select'
@@ -14,12 +15,12 @@ export default function Component() {
   return (
     <TabsContent value="logs" tabIndex={-1}>
       <Card>
-        <CardHeader>
+        <CardHeader className="md:px-10">
           <CardTitle>Logging Configuration</CardTitle>
           <CardDescription>Configure system logging preferences</CardDescription>
         </CardHeader>
         <Separator />
-        <CardContent className="grid gap-6 pt-6">
+        <CardContent className="grid gap-6 pt-6 pb-8 md:px-10">
           <div className="grid gap-2">
             <Label>Log Level</Label>
             <Select>
@@ -49,6 +50,10 @@ export default function Component() {
             <Switch />
           </div>
         </CardContent>
+        <Separator />
+        <CardFooter className="flex justify-end pt-6 md:px-10">
+          <Button>Save Changes</Button>
+        </CardFooter>
       </Card>
     </TabsContent>
   )

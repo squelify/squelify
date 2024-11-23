@@ -1,4 +1,5 @@
-import { Card, CardContent, CardHeader } from '#/components/base-ui/card'
+import { Button } from '#/components/base-ui/button'
+import { Card, CardContent, CardFooter, CardHeader } from '#/components/base-ui/card'
 import { CardDescription, CardTitle } from '#/components/base-ui/card'
 import { Input } from '#/components/base-ui/input'
 import { Label } from '#/components/base-ui/label'
@@ -7,6 +8,7 @@ import { SelectContent, SelectItem } from '#/components/base-ui/select'
 import { Separator } from '#/components/base-ui/separator'
 import { TabsContent } from '#/components/base-ui/tabs'
 import { useSEOMeta } from '#/context/hooks/use-seo-meta'
+import SendTestEmailDialog from './send-test-dialog'
 
 export default function Component() {
   useSEOMeta('Email Settings')
@@ -14,12 +16,12 @@ export default function Component() {
   return (
     <TabsContent value="email" tabIndex={-1}>
       <Card>
-        <CardHeader>
+        <CardHeader className="md:px-10">
           <CardTitle>Email Configuration</CardTitle>
           <CardDescription>Configure email delivery settings</CardDescription>
         </CardHeader>
         <Separator />
-        <CardContent className="grid gap-6 pt-6">
+        <CardContent className="grid gap-6 pt-6 pb-8 md:px-10">
           <div className="grid gap-2">
             <Label>SMTP Host</Label>
             <Input placeholder="smtp.example.com" />
@@ -52,6 +54,11 @@ export default function Component() {
             <Input type="password" />
           </div>
         </CardContent>
+        <Separator />
+        <CardFooter className="flex justify-between pt-6 md:px-10">
+          <SendTestEmailDialog />
+          <Button>Save Changes</Button>
+        </CardFooter>
       </Card>
     </TabsContent>
   )

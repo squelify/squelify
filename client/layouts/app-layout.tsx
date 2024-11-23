@@ -39,9 +39,11 @@ export default function AppLayout() {
               <Separator orientation="vertical" className="mr-2 h-4" />
               <Breadcrumb key={pathname}>
                 <BreadcrumbList>
-                  <BreadcrumbItem className={clx(pathname !== '/dashboard' ? 'hidden' : 'block')}>
-                    <BreadcrumbPage>Dashboard</BreadcrumbPage>
-                  </BreadcrumbItem>
+                  {pathname === '/dashboard' && (
+                    <BreadcrumbItem>
+                      <BreadcrumbPage>Dashboard</BreadcrumbPage>
+                    </BreadcrumbItem>
+                  )}
                   {breadcrumbItems.map((item, index) => (
                     <BreadcrumbItem key={item.url}>
                       {index === breadcrumbItems.length - 1 ? (

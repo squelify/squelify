@@ -1,4 +1,5 @@
-import { Card, CardContent, CardHeader } from '#/components/base-ui/card'
+import { Button } from '#/components/base-ui/button'
+import { Card, CardContent, CardFooter, CardHeader } from '#/components/base-ui/card'
 import { CardDescription, CardTitle } from '#/components/base-ui/card'
 import { Input } from '#/components/base-ui/input'
 import { Label } from '#/components/base-ui/label'
@@ -15,12 +16,12 @@ export default function Component() {
   return (
     <TabsContent value="backup" tabIndex={-1}>
       <Card>
-        <CardHeader>
+        <CardHeader className="md:px-10">
           <CardTitle>Backup Settings</CardTitle>
           <CardDescription>Configure automated backups</CardDescription>
         </CardHeader>
         <Separator />
-        <CardContent className="grid gap-6 pt-6">
+        <CardContent className="grid gap-6 pt-6 pb-8 md:px-10">
           <div className="flex items-center justify-between">
             <div className="space-y-0.5">
               <Label>Automated Backups</Label>
@@ -46,6 +47,10 @@ export default function Component() {
             <Input type="number" placeholder="30" />
           </div>
         </CardContent>
+        <Separator />
+        <CardFooter className="flex justify-end pt-6 md:px-10">
+          <Button>Save Changes</Button>
+        </CardFooter>
       </Card>
     </TabsContent>
   )

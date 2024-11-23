@@ -12,12 +12,12 @@ export default function Component() {
     <TabsContent value="auth" tabIndex={-1}>
       <div className="grid gap-6">
         <Card>
-          <CardHeader>
+          <CardHeader className="md:px-10">
             <CardTitle>Authentication Providers</CardTitle>
             <CardDescription>Configure authentication methods and providers</CardDescription>
           </CardHeader>
           <Separator />
-          <CardContent className="grid gap-6 pt-6">
+          <CardContent className="grid gap-6 pt-6 pb-8 md:px-10">
             <AuthProviderForm />
           </CardContent>
         </Card>

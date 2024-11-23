@@ -1,10 +1,6 @@
 import * as Lucide from 'lucide-react'
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from '#/components/base-ui/accordion'
+import { Accordion, AccordionTrigger } from '#/components/base-ui/accordion'
+import { AccordionContent, AccordionItem } from '#/components/base-ui/accordion'
 import { Badge } from '#/components/base-ui/badge'
 import { Button } from '#/components/base-ui/button'
 import { Input } from '#/components/base-ui/input'
@@ -72,15 +68,16 @@ export function AuthProviderForm() {
                       {provider.description}
                     </p>
                   </div>
+
                   <Badge
                     variant={
                       provider.status === 'active'
-                        ? 'default'
+                        ? 'success'
                         : provider.status === 'configured'
-                          ? 'secondary'
-                          : 'outline'
+                          ? 'info'
+                          : 'ghost'
                     }
-                    className="shrink-0 font-medium text-xs"
+                    className="shrink-0 font-medium"
                   >
                     {provider.status === 'active'
                       ? 'Active'
@@ -139,14 +136,14 @@ export function AuthProviderForm() {
                       <Label>OAuth Credentials</Label>
                       <div className="grid gap-4 sm:grid-cols-2">
                         <div className="grid gap-2">
-                          <Input placeholder="Client ID" className="font-mono" />
+                          <Input placeholder="Client ID" />
                           <p className="text-muted-foreground text-xs">OAuth client identifier</p>
                         </div>
                         <div className="grid gap-2">
                           <Input
                             type="password"
                             placeholder="Client Secret"
-                            className="font-mono"
+                            showExternalCopyButton
                           />
                           <p className="text-muted-foreground text-xs">Keep this value secure</p>
                         </div>
@@ -155,19 +152,15 @@ export function AuthProviderForm() {
                   </div>
 
                   <div className="grid gap-4">
-                    <div className="space-y-2">
+                    <div className="grid gap-2">
                       <Label>Callback URL</Label>
                       <div className="grid gap-2">
-                        <div className="flex gap-2">
-                          <Input
-                            readOnly
-                            value={`https://example.com/auth/${provider.id}/callback`}
-                            className="w-full bg-muted/50 font-mono text-sm"
-                          />
-                          <Button variant="outline" size="icon" className="shrink-0">
-                            <Lucide.Copy className="h-4 w-4" />
-                          </Button>
-                        </div>
+                        <Input
+                          value={`https://example.com/auth/${provider.id}/callback`}
+                          className="w-full bg-muted/50 text-foreground text-sm"
+                          showCopyButton
+                          readOnly
+                        />
                         <p className="text-muted-foreground text-xs">
                           Use this URL in your {provider.name} OAuth settings
                         </p>
@@ -179,7 +172,7 @@ export function AuthProviderForm() {
                     <div className="space-y-2">
                       <Label>OAuth Scopes</Label>
                       <div className="grid gap-2">
-                        <Input placeholder="email profile openid" className="font-mono" />
+                        <Input placeholder="email profile openid" />
                         <p className="text-muted-foreground text-xs">
                           Space-separated list of required OAuth scopes
                         </p>
