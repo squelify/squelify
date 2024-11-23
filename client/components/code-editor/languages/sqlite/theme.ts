@@ -63,6 +63,7 @@ export const sqliteTheme = EditorView.theme({
   '.cm-lineNumbers': {
     minWidth: '32px',
     backgroundColor: 'hsl(var(--background))',
+    textAlign: 'right',
   },
 
   // Code folding
