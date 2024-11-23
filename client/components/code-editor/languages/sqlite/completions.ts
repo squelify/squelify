@@ -1,14 +1,18 @@
 import { CompletionContext, CompletionResult } from '@codemirror/autocomplete'
-import { sqliteKeywords } from './suggestions'
-import type { SQLSuggestion } from './types'
+import type { CompletionSuggestion, SQLiteContextData } from '../../types'
+import { sqliteKeywords } from './keywords'
 
-export function createSQLCompletions(tables: string[] = []) {
-  return function sqlCompletions(context: CompletionContext): CompletionResult | null {
+export function createSQLiteCompletions(contextData: SQLiteContextData = {}) {
+  const { tables = [] } = contextData
+
+  return function sqliteCompletions(context: CompletionContext): CompletionResult | null {
     const word = context.matchBefore(/\w*/)
     if (!word) return null
 
     const textBefore = context.state.doc.sliceString(0, context.pos)
-    const lastWord = textBefore.split(/\s+/).pop()?.toUpperCase()
+    const tokens = textBefore.split(/\s+/).filter(Boolean)
+    const lastToken = tokens[tokens.length - 1]?.toUpperCase()
+    const prevToken = tokens[tokens.length - 2]?.toUpperCase()
 
     const tableCompletions = tables.map((table) => ({
       label: table,
@@ -16,10 +20,10 @@ export function createSQLCompletions(tables: string[] = []) {
       info: `Table: ${table}`,
     }))
 
-    let options: SQLSuggestion[] = []
+    let options: CompletionSuggestion[] = []
 
     // DDL Specific Suggestions
-    if (lastWord === 'CREATE') {
+    if (lastToken === 'CREATE') {
       options = [...sqliteKeywords.ddl]
     } else if (textBefore.match(/CREATE\s+TABLE\s+$/i)) {
       options = [
@@ -65,26 +69,45 @@ export function createSQLCompletions(tables: string[] = []) {
             'vw_user_posts AS\nSELECT u.username, p.title\nFROM users u\nJOIN posts p ON u.id = p.user_id',
         },
       ]
-    } else if (lastWord === 'SELECT') {
+    }
+    // DML Specific Suggestions
+    else if (lastToken === 'SELECT') {
       options = [
         { label: '*', type: 'operator', info: 'Select all columns' },
         { label: 'DISTINCT', type: 'keyword', info: 'Select unique rows' },
         ...sqliteKeywords.functions,
       ]
-    } else if (['FROM', 'JOIN', 'UPDATE', 'INTO'].includes(lastWord || '')) {
+    } else if (prevToken === 'SELECT' && lastToken === '*') {
+      options = [{ label: 'FROM', type: 'keyword', info: 'Specify source table' }]
+    } else if (lastToken === 'FROM' || prevToken === 'FROM') {
       options = tableCompletions
-    } else if (lastWord === 'WHERE') {
+    } else if (lastToken === 'JOIN') {
+      options = tableCompletions
+    } else if (prevToken === 'JOIN' && tableCompletions.some((t) => t.label === lastToken)) {
+      options = [{ label: 'ON', type: 'keyword', info: 'Specify join condition' }]
+    } else if (lastToken === 'WHERE') {
       options = [
         { label: 'EXISTS', type: 'keyword', info: 'Subquery exists' },
         { label: 'IN', type: 'keyword', info: 'Value in set' },
         { label: 'LIKE', type: 'keyword', info: 'Pattern matching' },
         { label: 'BETWEEN', type: 'keyword', info: 'Range check' },
       ]
+    } else if (lastToken === 'GROUP') {
+      options = [{ label: 'BY', type: 'keyword', info: 'Group results' }]
+    } else if (lastToken === 'ORDER') {
+      options = [{ label: 'BY', type: 'keyword', info: 'Sort results' }]
+    } else if (prevToken === 'ORDER' && lastToken === 'BY') {
+      options = [
+        { label: 'ASC', type: 'keyword', info: 'Ascending order' },
+        { label: 'DESC', type: 'keyword', info: 'Descending order' },
+      ]
     } else if (textBefore.match(/ALTER\s+TABLE\s+$/i)) {
       options = tableCompletions
     } else if (textBefore.match(/DROP\s+(TABLE|INDEX|VIEW)\s+$/i)) {
       options = tableCompletions
-    } else {
+    }
+    // Default suggestions
+    else {
       options = [
         ...sqliteKeywords.ddl,
         ...sqliteKeywords.dml,

@@ -1,6 +1,6 @@
-import type { SQLSuggestion } from './types'
+import type { CompletionSuggestion } from '../../types'
 
-export const sqliteKeywords: Record<string, SQLSuggestion[]> = {
+export const sqliteKeywords: Record<string, CompletionSuggestion[]> = {
   ddl: [
     {
       label: 'CREATE TABLE',

@@ -1,6 +1,6 @@
 import { EditorView } from 'codemirror'
 
-export const editorTheme = EditorView.theme({
+export const sqliteTheme = EditorView.theme({
   // Root container
   '&': {
     height: '100%',

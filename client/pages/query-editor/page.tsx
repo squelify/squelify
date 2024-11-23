@@ -1,6 +1,10 @@
+import consola from 'consola'
 import * as Lucide from 'lucide-react'
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 import { Button } from '#/components/base-ui/button'
+import { DropdownMenu, DropdownMenuContent } from '#/components/base-ui/dropdown-menu'
+import { DropdownMenuShortcut } from '#/components/base-ui/dropdown-menu'
+import { DropdownMenuItem, DropdownMenuTrigger } from '#/components/base-ui/dropdown-menu'
 import { ResizablePanel, ResizablePanelGroup } from '#/components/base-ui/resizable'
 import { ResizableHandle } from '#/components/base-ui/resizable'
 import { ScrollArea } from '#/components/base-ui/scroll-area'
@@ -8,15 +12,29 @@ import { Separator } from '#/components/base-ui/separator'
 import { Table, TableHead, TableHeader } from '#/components/base-ui/table'
 import { TableBody, TableCell, TableRow } from '#/components/base-ui/table'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '#/components/base-ui/tabs'
-import { Textarea } from '#/components/base-ui/textarea'
-import SQLEditor from '#/components/sql-editor'
+import CodeEditor, { EditorRef } from '#/components/code-editor'
 import { useSEOMeta } from '#/context/hooks/use-seo-meta'
 
 export default function Component() {
   useSEOMeta('Query Editor')
 
-  const [query, setQuery] = useState('')
+  const editorRef = useRef<EditorRef>(null)
+  const [isExecuting, setIsExecuting] = useState(false)
+  const [query, setQuery] = useState('SELECT * FROM users;')
 
+  // Add query execution logic here
+  const handleExecute = async (query: string) => {
+    setIsExecuting(true)
+    try {
+      consola.log(query)
+      await new Promise((resolve) => setTimeout(resolve, 1500)) // Simulate API call
+    } finally {
+      setIsExecuting(false)
+      requestAnimationFrame(() => {
+        editorRef.current?.focus()
+      })
+    }
+  }
   return (
     <div className="flex size-full flex-col bg-background">
       <ResizablePanelGroup autoSaveId="query-editor-root" direction="horizontal" className="flex-1">
@@ -25,14 +43,14 @@ export default function Component() {
             <TabsList className="grid h-10 w-full grid-cols-2 rounded-none border-b bg-sidebar/40 px-1 py-0">
               <TabsTrigger
                 value="tables"
-                className="flex h-7 items-center justify-center gap-1.5 px-3 text-xs hover:bg-background data-[state=active]:bg-gray-200/60 data-[state=active]:shadow-none"
+                className="flex h-7 items-center justify-center gap-1.5 px-3 text-xs hover:bg-background data-[state=active]:bg-gray-200/60 data-[state=active]:shadow-none dark:data-[state=active]:bg-gray-700/60"
               >
                 <Lucide.Table className="h-3.5 w-3.5" />
                 Tables
               </TabsTrigger>
               <TabsTrigger
                 value="history"
-                className="flex h-7 items-center justify-center gap-1.5 px-3 text-xs hover:bg-background data-[state=active]:bg-gray-200/60 data-[state=active]:shadow-none"
+                className="flex h-7 items-center justify-center gap-1.5 px-3 text-xs hover:bg-background data-[state=active]:bg-gray-200/60 data-[state=active]:shadow-none dark:data-[state=active]:bg-gray-700/60"
               >
                 <Lucide.Clock className="h-3.5 w-3.5" />
                 History
@@ -124,20 +142,48 @@ export default function Component() {
               <div className="flex h-full flex-col">
                 <div className="flex h-10 items-center justify-between border-b bg-muted/20 px-3">
                   <div className="flex items-center gap-2">
-                    <Button
-                      size="sm"
-                      variant="ghost"
-                      className="h-7 bg-primary/40 px-4 text-foreground/70 text-xs hover:bg-primary/70 hover:text-foreground"
-                    >
-                      <Lucide.Play className="-ml-1 size-3" />
-                      <span>Run</span>
-                    </Button>
+                    <div className="flex">
+                      <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                          <Button
+                            size="sm"
+                            variant="ghost"
+                            className="group h-7 bg-primary/40 px-4 font-medium text-foreground/70 text-xs hover:bg-primary/70 hover:text-foreground active:scale-[0.98] active:bg-primary/80"
+                            disabled={isExecuting}
+                          >
+                            <span>Run</span>
+                            {isExecuting ? (
+                              <Lucide.Loader2 className="-mr-1 size-3 animate-spin" />
+                            ) : (
+                              <Lucide.ChevronDown className="-mr-1 size-3" />
+                            )}
+                          </Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent align="start" className="w-56 p-1">
+                          <DropdownMenuItem
+                            className="cursor-pointer rounded-sm px-2 py-1 text-muted-foreground text-sm hover:bg-primary/20 hover:text-foreground focus:bg-primary/30"
+                            onClick={() => editorRef.current?.execute()}
+                          >
+                            <span>Run Current Statement</span>
+                            <DropdownMenuShortcut>⌘↵</DropdownMenuShortcut>
+                          </DropdownMenuItem>
+                          <DropdownMenuItem
+                            className="cursor-pointer rounded-sm px-2 py-1 text-muted-foreground text-sm hover:bg-primary/20 hover:text-foreground focus:bg-primary/30"
+                            onClick={() => editorRef.current?.executeAll()}
+                          >
+                            <span>Run All Statement</span>
+                            <DropdownMenuShortcut>⇧⌘↵</DropdownMenuShortcut>
+                          </DropdownMenuItem>
+                        </DropdownMenuContent>
+                      </DropdownMenu>
+                    </div>
+
                     <Button
                       size="sm"
                       variant="ghost"
                       className="h-7 bg-secondary/80 px-4 text-muted-foreground text-xs hover:bg-muted hover:text-foreground"
                     >
-                      <Lucide.Save className="-ml-1 size-3" />
+                      <Lucide.Save className="-ml-0.5 mr-1.5 size-3" />
                       <span>Save</span>
                     </Button>
                     <Button
@@ -145,10 +191,11 @@ export default function Component() {
                       variant="ghost"
                       className="h-7 bg-secondary/80 px-4 text-muted-foreground text-xs hover:bg-muted hover:text-foreground"
                     >
-                      <Lucide.Download className="-ml-1 size-3" />
+                      <Lucide.Download className="-ml-0.5 mr-1.5 size-3" />
                       <span>Export</span>
                     </Button>
                   </div>
+
                   <div className="flex items-center gap-3 text-muted-foreground text-sm">
                     <div className="flex items-center gap-1.5">
                       <Lucide.Timer className="h-3.5 w-3.5" />
@@ -159,10 +206,15 @@ export default function Component() {
                   </div>
                 </div>
                 <div className="flex-1 overflow-hidden">
-                  <SQLEditor
-                    value={query}
+                  <CodeEditor
+                    ref={editorRef}
+                    language="sqlite"
                     onChange={setQuery}
-                    tables={['users', 'posts', 'comments']}
+                    contextData={{ tables: ['users', 'posts', 'comments'] }}
+                    onExecute={handleExecute}
+                    isExecuting={isExecuting}
+                    value={query}
+                    autoFocus
                   />
                 </div>
               </div>
@@ -175,14 +227,14 @@ export default function Component() {
                 <TabsList className="inline-flex h-9 w-full items-center justify-start rounded-none bg-muted/20 px-1">
                   <TabsTrigger
                     value="results"
-                    className="flex h-7 items-center gap-1.5 px-3 text-xs data-[state=active]:bg-gray-200/60 data-[state=active]:shadow-none"
+                    className="flex h-7 items-center gap-1.5 px-3 text-xs data-[state=active]:bg-gray-200/60 data-[state=active]:shadow-none dark:data-[state=active]:bg-gray-700/60"
                   >
                     <Lucide.Sheet className="h-3.5 w-3.5" />
                     Results
                   </TabsTrigger>
                   <TabsTrigger
                     value="messages"
-                    className="flex h-7 items-center gap-1.5 px-3 text-xs data-[state=active]:bg-gray-200/60 data-[state=active]:shadow-none"
+                    className="flex h-7 items-center gap-1.5 px-3 text-xs data-[state=active]:bg-gray-200/60 data-[state=active]:shadow-none dark:data-[state=active]:bg-gray-700/60"
                   >
                     <Lucide.MessageSquare className="h-3.5 w-3.5" />
                     Messages
