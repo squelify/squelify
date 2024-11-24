@@ -4,12 +4,13 @@ import { createError, defineEventHandler, setCookie } from 'h3'
 import { getCookie, getHeaders, getQuery, readBody } from 'h3'
 import { parse, relative, resolve } from 'pathe'
 import { createRouter } from 'radix3'
+import { libSQLClient } from '~/database/db.client'
 import { createRateLimit, getRateLimitInfo } from '~/database/repository/rate_limit.repo'
 import { DURATION } from '~/utils/datetime'
-import { createErrorResponse, getClientInfo } from '~/utils/http'
+import { createErrorResponse, createSuccessResponse, getClientInfo } from '~/utils/http'
 
 const ALLOWED_EXTENSIONS = ['.mjs', '.js']
-const FUNCTION_TIMEOUT = DURATION.SECOND * 10
+const FUNCTION_TIMEOUT = 30 * 1000 // 30 seconds (in milliseconds)
 const HTTP_METHODS = ['get', 'post', 'put', 'patch', 'delete'] as const
 type HttpMethod = (typeof HTTP_METHODS)[number]
 
@@ -32,6 +33,17 @@ const router = createRouter<RouteHandler>({
 function parseFileName(fileName: string): { routeName: string; method: HttpMethod } {
   const { name, dir } = parse(fileName)
   const parts = name.split('.')
+
+  // Handle wildcards first
+  if (parts.includes('[...]')) {
+    return {
+      routeName: `${dir ? `${dir}/` : ''}*`,
+      method:
+        (parts
+          .find((part) => HTTP_METHODS.includes(part.toLowerCase() as HttpMethod))
+          ?.toLowerCase() as HttpMethod) || 'get',
+    }
+  }
 
   // Handle index files
   if (parts[0] === 'index') {
@@ -162,8 +174,8 @@ export default defineEventHandler(async (event) => {
           const userFunction = await import(`${functionsDir}/${file}`)
           const handler = userFunction.default || userFunction
 
+          // Inject h3 utilities into the handler
           return async (event: any) => {
-            // Inject h3 utilities
             event.h3 = {
               getQuery,
               getHeaders,
@@ -177,6 +189,10 @@ export default defineEventHandler(async (event) => {
               setCookie,
               getCookie,
               createError,
+              // TODO: protect against malicious user functions especially for the database access
+              createSuccessResponse, // Return API success response
+              createErrorResponse, // Return API error response
+              db: libSQLClient, // Inject database client
             }
             return handler(event)
           }
@@ -188,12 +204,15 @@ export default defineEventHandler(async (event) => {
 
     // Match route
     const match = router.lookup(url.split('?')[0])
-    logger.debug('[functions:match]', {
-      url: url.split('?')[0],
-      found: !!match,
-      method: match?.method,
-      params: match?.params,
-    })
+    logger.debug(
+      '[functions:match]',
+      JSON.stringify({
+        url: url.split('?')[0],
+        found: !!match,
+        method: match?.method,
+        params: match?.params,
+      })
+    )
 
     if (!match) {
       return createErrorResponse(event, `Function not found: ${url}`, 404)
@@ -220,10 +239,11 @@ async function executeFunction(fn: Function, event: any) {
   const match = router.lookup(event.path.split('?')[0])
   if (match?.params) {
     if (match.params['*']) {
-      const wildcardPath = match.params['*']
+      // Make sure wildcard paths are processed correctly
+      const wildcardPath = decodeURIComponent(match.params['*'])
       event.context.params = {
         ...match.params,
-        '*': wildcardPath.split('/'),
+        '*': wildcardPath.split('/').filter(Boolean),
       }
     } else {
       event.context.params = match.params

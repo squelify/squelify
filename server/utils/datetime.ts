@@ -1,6 +1,5 @@
 // Duration in seconds
 export const DURATION = {
-  SECOND: 1,
   MINUTE: 60,
   HOUR: 60 * 60,
   DAY: 24 * 60 * 60,
