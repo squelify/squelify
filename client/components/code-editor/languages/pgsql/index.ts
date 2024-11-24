@@ -1,16 +1,16 @@
 import { sql } from '@codemirror/lang-sql'
 import type { EditorContextData, LanguageDefinition } from '../../types'
 import { createPostgreSQLCompletions } from './completions'
-import { postgresqlTheme } from './theme'
+import { pgsqlTheme } from './theme'
 
-export const postgresqlLanguage: LanguageDefinition = {
+export const pgsqlLanguage: LanguageDefinition = {
   name: 'PostgreSQL',
   extensions: [sql()],
   createCompletions: (contextData?: EditorContextData) => {
-    return createPostgreSQLCompletions(contextData?.language?.postgresql)
+    return createPostgreSQLCompletions(contextData?.language?.pgsql)
   },
   defaultValue: '-- Write your PostgreSQL query here\n',
-  theme: postgresqlTheme,
+  theme: pgsqlTheme,
   execution: {
     blockDelimiter: ';',
     supportsExecution: true,

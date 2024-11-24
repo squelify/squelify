@@ -1,6 +1,6 @@
 import type { CompletionSuggestion } from '../../types'
 
-export const postgresqlKeywords: Record<string, CompletionSuggestion[]> = {
+export const pgsqlKeywords: Record<string, CompletionSuggestion[]> = {
   ddl: [
     { label: 'CREATE TABLE', type: 'keyword', info: 'Create new table' },
     { label: 'CREATE INDEX', type: 'keyword', info: 'Create new index' },

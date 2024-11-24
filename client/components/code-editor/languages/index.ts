@@ -1,34 +1,12 @@
 import type { EditorContextData, EditorLanguage, LanguageDefinition } from '../types'
-import { postgresqlLanguage } from './postgresql'
+import { jsonLanguage } from './json'
+import { pgsqlLanguage } from './pgsql'
 import { sqliteLanguage } from './sqlite'
 
 export const languages: Record<EditorLanguage, LanguageDefinition> = {
   sqlite: sqliteLanguage,
-  postgresql: postgresqlLanguage,
-  json: {
-    name: 'JSON',
-    extensions: [],
-    createCompletions: () => () => null,
-    defaultValue: '{\n\n}',
-    formatter: (code: string) => {
-      try {
-        return JSON.stringify(JSON.parse(code), null, 2)
-      } catch {
-        return code
-      }
-    },
-    validator: (code: string) => {
-      try {
-        JSON.parse(code)
-        return { isValid: true, errors: [] }
-      } catch (e) {
-        return {
-          isValid: false,
-          errors: [{ message: e.message }],
-        }
-      }
-    },
-  },
+  pgsql: pgsqlLanguage,
+  json: jsonLanguage,
   csv: {
     name: 'CSV',
     extensions: [],

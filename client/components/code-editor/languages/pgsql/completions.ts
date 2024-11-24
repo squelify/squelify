@@ -1,11 +1,11 @@
 import { CompletionContext, CompletionResult } from '@codemirror/autocomplete'
 import type { CompletionSuggestion, CompletionType, PostgreSQLContextData } from '../../types'
-import { postgresqlKeywords } from './keywords'
+import { pgsqlKeywords } from './keywords'
 
 export function createPostgreSQLCompletions(contextData: PostgreSQLContextData = {}) {
   const { tables = [], columns = {}, schemas = [], extensions = [] } = contextData
 
-  return function postgresqlCompletions(context: CompletionContext): CompletionResult | null {
+  return function pgsqlCompletions(context: CompletionContext): CompletionResult | null {
     const word = context.matchBefore(/\w*/)
     if (!word) return null
 
@@ -40,7 +40,7 @@ export function createPostgreSQLCompletions(contextData: PostgreSQLContextData =
 
     // DDL Statements
     else if (lastToken === 'CREATE') {
-      options = postgresqlKeywords.ddl.map((kw) => ({
+      options = pgsqlKeywords.ddl.map((kw) => ({
         label: kw.label,
         type: kw.type as CompletionType,
         info: kw.info,
@@ -76,7 +76,7 @@ export function createPostgreSQLCompletions(contextData: PostgreSQLContextData =
             boost: 90,
             section: 'Columns',
           })),
-        ...postgresqlKeywords.functions.map((fn) => ({
+        ...pgsqlKeywords.functions.map((fn) => ({
           label: fn.label,
           type: fn.type as CompletionType,
           info: fn.info,
@@ -97,7 +97,7 @@ export function createPostgreSQLCompletions(contextData: PostgreSQLContextData =
           boost: 90,
           section: 'Tables',
         })),
-        ...postgresqlKeywords.joins.map((join) => ({
+        ...pgsqlKeywords.joins.map((join) => ({
           label: join.label,
           type: join.type as CompletionType,
           info: join.info,
@@ -181,21 +181,21 @@ export function createPostgreSQLCompletions(contextData: PostgreSQLContextData =
     // Default suggestions
     if (options.length === 0) {
       options = [
-        ...postgresqlKeywords.ddl.map((kw) => ({
+        ...pgsqlKeywords.ddl.map((kw) => ({
           label: kw.label,
           type: kw.type as CompletionType,
           info: kw.info,
           template: kw.template,
           section: 'DDL',
         })),
-        ...postgresqlKeywords.dml.map((kw) => ({
+        ...pgsqlKeywords.dml.map((kw) => ({
           label: kw.label,
           type: kw.type as CompletionType,
           info: kw.info,
           template: kw.template,
           section: 'DML',
         })),
-        ...postgresqlKeywords.clauses.map((clause) => ({
+        ...pgsqlKeywords.clauses.map((clause) => ({
           label: clause.label,
           type: clause.type as CompletionType,
           info: clause.info,

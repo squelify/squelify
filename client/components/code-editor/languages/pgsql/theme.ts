@@ -19,7 +19,7 @@ const postgresqlHighlightStyle = HighlightStyle.define([
   { tag: t.special(t.string), color: '#669900' },
 ])
 
-export const postgresqlTheme = [
+export const pgsqlTheme = [
   syntaxHighlighting(postgresqlHighlightStyle),
   EditorView.theme({
     '&': {

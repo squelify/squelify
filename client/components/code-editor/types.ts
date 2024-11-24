@@ -1,4 +1,4 @@
-export type EditorLanguage = 'sqlite' | 'json' | 'csv' | 'postgresql'
+export type EditorLanguage = 'sqlite' | 'json' | 'csv' | 'pgsql'
 
 export interface EditorContextData {
   schema?: {
@@ -10,7 +10,7 @@ export interface EditorContextData {
   }
   language?: {
     sqlite?: SQLiteContextData
-    postgresql?: PostgreSQLContextData
+    pgsql?: PostgreSQLContextData
     json?: JSONContextData
   }
 }
