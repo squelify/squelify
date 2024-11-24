@@ -6,6 +6,7 @@ import { autocompletion } from '@codemirror/autocomplete'
 import { EditorSelection } from '@codemirror/state'
 import { EditorView } from '@codemirror/view'
 import { placeholder } from '@codemirror/view'
+import { indentationMarkers } from '@replit/codemirror-indentation-markers'
 
 import { createCoreExtensions } from './extensions/core-extensions'
 import { createRunBlockGutter } from './extensions/run-block-gutter'
@@ -195,6 +196,20 @@ export const CodeEditor = forwardRef<EditorRef, CodeEditorProps>(function CodeEd
           if (update.docChanged) {
             onChange(update.state.doc.toString())
           }
+        }),
+        // Third-party extensions
+        indentationMarkers({
+          highlightActiveBlock: true,
+          hideFirstIndent: false,
+          markerType: 'fullScope',
+          activeThickness: 1,
+          thickness: 1,
+          colors: {
+            light: 'hsl(214.3 31.8% 91.4% / 0.5)',
+            dark: 'hsl(210 40% 96.1% / 0.2)',
+            activeLight: 'hsl(210 40% 96.1% / 0.2)',
+            activeDark: 'hsl(214.3 31.8% 91.4% / 0.5)',
+          },
         }),
       ],
       parent: editorRef.current,

@@ -78,6 +78,7 @@
         "@radix-ui/react-switch": "^1.1.1",
         "@radix-ui/react-tabs": "^1.1.1",
         "@radix-ui/react-tooltip": "^1.1.4",
+        "@replit/codemirror-indentation-markers": "^6.5.3",
         "@simplewebauthn/browser": "^11.0.0",
         "@simplewebauthn/server": "^11.0.0",
         "@tanstack/react-table": "^8.20.5",
