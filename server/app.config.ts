@@ -1,6 +1,9 @@
+import { env } from 'std-env'
+
 export interface AppConfig {
   baseURL: string
   domain: string
+  adminPath: string
   title: string
   description: string
   imageUrl: string
@@ -17,6 +20,7 @@ export interface AppConfig {
 export default {
   baseURL: 'http://localhost:3278',
   domain: 'localhost:3278',
+  adminPath: env.SQUELIFY_ADMIN_PATH || '/ui',
   title: 'Squelify',
   description: 'Lightweight Headless CMS and Backend Platform without hassle',
   imageUrl: '/images/og-image.png',

@@ -1,4 +1,5 @@
 export default defineEventHandler(async (event) => {
+  const appConfig = event.context.appConfig
   const db = event.context.db
 
   // Check if already installed
@@ -12,7 +13,9 @@ export default defineEventHandler(async (event) => {
     .executeTakeFirst()
 
   if (isInstalled) {
-    return sendRedirect(event, '/ui/login', 302)
+    // TODO: handle double slash in baseURL
+    const redirectUrl = `${appConfig.baseURL}${appConfig.adminPath}/login`
+    return sendRedirect(event, redirectUrl, 302)
   }
 
   const query = getQuery(event)

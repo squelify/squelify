@@ -33,6 +33,7 @@ const InstallerSchema = z.object({
 })
 
 export default defineEventHandler(async (event) => {
+  const appConfig = event.context.appConfig
   const db = event.context.db
   const now = Math.floor(Date.now() / 1000)
 
@@ -222,7 +223,10 @@ export default defineEventHandler(async (event) => {
         .execute()
     })
 
-    return sendRedirect(event, `/ui/login?message=${encodeURIComponent('Installation completed')}`)
+    // TODO: handle double slash in baseURL
+    const message = encodeURIComponent('Installation completed')
+    const redirectUrl = `${appConfig.baseURL}${appConfig.adminPath}/login?message=${message}`
+    return sendRedirect(event, redirectUrl)
   } catch (error) {
     if (error instanceof H3Error) {
       const err = error.data.errors[0]

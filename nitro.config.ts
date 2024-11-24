@@ -3,9 +3,11 @@ import consola from 'consola'
 import { makeDirectory } from 'make-dir'
 import { defineNitroConfig } from 'nitropack/config'
 import { resolve } from 'pathe'
-import { isCI, isDevelopment, isProduction, isTest } from 'std-env'
+import { env, isCI, isDevelopment, isProduction, isTest } from 'std-env'
 import { build as buildVite } from 'vite'
 import pkg from './package.json' assert { type: 'json' }
+
+const adminPath = env.SQUELIFY_ADMIN_PATH || '/ui'
 
 /**
  * Configures the Nitro server for the application.
@@ -19,21 +21,19 @@ export default defineNitroConfig({
   sourceMap: isDevelopment,
   compatibilityDate: '2024-11-24',
   appConfigFiles: ['~/app.config'],
-
-  handlers: [
-    // TODO: allow index route to be served by the frontend
-    { route: '/ui', handler: '~/entry.client', lazy: true },
-    { route: '/ui/**', handler: '~/entry.client', lazy: true },
-  ],
   errorHandler: '~/error.handler',
 
+  handlers: [
+    { route: adminPath, handler: '~/entry.client', lazy: true },
+    { route: `${adminPath}/**`, handler: '~/entry.client', lazy: true },
+  ],
+
   routeRules: {
-    '/ui/**': { static: true, prerender: false },
-    '/ui/docs': {
+    '/docs': {
       redirect: 'https://squelify.com/docs?utm_source=squelify&utm_medium=profile',
       prerender: false,
     },
-    '/ui/github': {
+    '/github': {
       redirect: 'https://github.com/squelify/squelify',
       prerender: false,
     },

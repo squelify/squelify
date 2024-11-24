@@ -21,7 +21,7 @@ if (!rootElement) {
 ReactDOM.createRoot(rootElement).render(
   <React.StrictMode>
     <AppProvider debugScreenSize={!isProduction}>
-      <BrowserRouter basename="/ui">
+      <BrowserRouter basename={import.meta.env.SQUELIFY_ADMIN_PATH || '/ui'}>
         <AppRoutes />
       </BrowserRouter>
     </AppProvider>
