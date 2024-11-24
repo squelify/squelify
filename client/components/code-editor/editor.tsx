@@ -9,7 +9,8 @@ import { placeholder } from '@codemirror/view'
 
 import { createCoreExtensions } from './extensions/core-extensions'
 import { createRunBlockGutter } from './extensions/run-block-gutter'
-import { languages } from './languages'
+import { createLanguageSupport } from './languages'
+import { coreTheme } from './themes/core-theme'
 import type { CodeEditorProps, EditorRef } from './types'
 
 export const CodeEditor = forwardRef<EditorRef, CodeEditorProps>(function CodeEditor(
@@ -29,15 +30,16 @@ export const CodeEditor = forwardRef<EditorRef, CodeEditorProps>(function CodeEd
   const editorRef = useRef<HTMLDivElement>(null)
   const editorViewRef = useRef<EditorView>()
 
-  const languageDef = languages[language]
+  const languageSupport = createLanguageSupport(language, contextData)
 
+  // Execute current block based on cursor position
   const executeCurrentBlock = useCallback(() => {
     if (!onExecute || !editorViewRef.current || isExecuting) return false
-    if (!languageDef.execution?.supportsBlockExecution) return false
+    if (!languageSupport.execution?.supportsBlockExecution) return false
 
     const doc = editorViewRef.current.state.doc.toString()
     const cursor = editorViewRef.current.state.selection.main.head
-    const delimiter = languageDef.execution.blockDelimiter || ';'
+    const delimiter = languageSupport.execution.blockDelimiter || ';'
 
     const blocks = doc.split(delimiter)
     let position = 0
@@ -54,42 +56,65 @@ export const CodeEditor = forwardRef<EditorRef, CodeEditorProps>(function CodeEd
 
     if (currentBlock) {
       onExecute(currentBlock)
+      return true
     }
-    return true
-  }, [onExecute, languageDef.execution, isExecuting])
+    return false
+  }, [onExecute, languageSupport.execution, isExecuting])
 
+  // Execute all content in editor
   const executeAll = useCallback(() => {
     if (!onExecute || !editorViewRef.current || isExecuting) return false
-    if (!languageDef.execution?.supportsExecution) return false
+    if (!languageSupport.execution?.supportsExecution) return false
 
     const content = editorViewRef.current.state.doc.toString()
-    onExecute(content)
-    return true
-  }, [onExecute, languageDef.execution, isExecuting])
+    if (content.trim()) {
+      onExecute(content)
+      return true
+    }
+    return false
+  }, [onExecute, languageSupport.execution, isExecuting])
 
+  // Format code using language-specific formatter
+  const formatCode = useCallback(() => {
+    if (!editorViewRef.current || !languageSupport.formatter) return
+
+    const content = editorViewRef.current.state.doc.toString()
+    const formatted = languageSupport.formatter(content)
+
+    if (formatted !== content) {
+      editorViewRef.current.dispatch({
+        changes: { from: 0, to: content.length, insert: formatted },
+      })
+    }
+  }, [languageSupport.formatter])
+
+  // Handle keyboard shortcuts
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       const isModifierPressed = e.metaKey || e.ctrlKey
 
-      if (isModifierPressed && e.code === 'Enter') {
-        if (!languageDef.execution?.supportsExecution) return
-
-        e.preventDefault()
-        if (e.shiftKey) {
-          executeAll()
-        } else {
-          executeCurrentBlock()
+      if (isModifierPressed) {
+        if (e.code === 'Enter') {
+          e.preventDefault()
+          if (e.shiftKey) {
+            executeAll()
+          } else {
+            executeCurrentBlock()
+          }
+        } else if (e.code === 'KeyS') {
+          e.preventDefault()
+          formatCode()
         }
       }
     }
 
     editorRef.current?.addEventListener('keydown', handleKeyDown, { capture: true })
-
     return () => {
       editorRef.current?.removeEventListener('keydown', handleKeyDown, { capture: true })
     }
-  }, [executeCurrentBlock, executeAll, languageDef.execution])
+  }, [executeCurrentBlock, executeAll, formatCode])
 
+  // Expose editor methods through ref
   useImperativeHandle(
     ref,
     () => ({
@@ -106,13 +131,8 @@ export const CodeEditor = forwardRef<EditorRef, CodeEditorProps>(function CodeEd
       },
       focus: () => {
         if (editorViewRef.current) {
-          // Force focus on editor container first
           editorRef.current?.focus()
-
-          // Then focus the editor view
           editorViewRef.current.focus()
-
-          // Set cursor position and scroll into view
           const pos = editorViewRef.current.state.doc.length
           editorViewRef.current.dispatch({
             selection: EditorSelection.single(pos),
@@ -120,11 +140,12 @@ export const CodeEditor = forwardRef<EditorRef, CodeEditorProps>(function CodeEd
           })
         }
       },
+      format: formatCode,
     }),
-    [executeCurrentBlock, executeAll]
+    [executeCurrentBlock, executeAll, formatCode]
   )
 
-  // biome-ignore lint/correctness/useExhaustiveDependencies: only called once
+  // biome-ignore lint/correctness/useExhaustiveDependencies: initialize editor
   useLayoutEffect(() => {
     if (!editorRef.current) return
 
@@ -133,11 +154,17 @@ export const CodeEditor = forwardRef<EditorRef, CodeEditorProps>(function CodeEd
       extensions: [
         createCoreExtensions(),
         createRunBlockGutter(onExecute),
-        ...languageDef.extensions,
-        autocompletion({ override: [languageDef.createCompletions(contextData)] }),
+        ...languageSupport.extensions,
+        autocompletion({
+          override: [languageSupport.createCompletions(contextData)],
+          defaultKeymap: true,
+          maxRenderedOptions: 100,
+        }),
         EditorView.editable.of(!readOnly && !isExecuting),
         placeholder(placeholderText),
-        languageDef.theme,
+        // Apply core theme first, then language-specific theme for proper overrides
+        coreTheme,
+        languageSupport.theme,
         EditorView.updateListener.of((update) => {
           if (update.docChanged) {
             onChange(update.state.doc.toString())
@@ -149,7 +176,6 @@ export const CodeEditor = forwardRef<EditorRef, CodeEditorProps>(function CodeEd
 
     editorViewRef.current = view
 
-    // Handle autofocus
     if (autoFocus) {
       requestAnimationFrame(() => {
         view.focus()

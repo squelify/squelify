@@ -210,7 +210,7 @@ export default function Component() {
                     ref={editorRef}
                     language="sqlite"
                     onChange={setQuery}
-                    contextData={{ tables: ['users', 'posts', 'comments'] }}
+                    // contextData={{ tables: ['users', 'posts', 'comments'] }}
                     placeholder="-- Write your query here"
                     onExecute={handleExecute}
                     isExecuting={isExecuting}
