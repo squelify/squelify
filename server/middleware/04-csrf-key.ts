@@ -9,6 +9,7 @@ const PUBLIC_ROUTES = [
   '/api-docs',
   '/api-specs.json',
   '/api/assets/*',
+  '/api/functions/*',
   '/installer',
 ]
 

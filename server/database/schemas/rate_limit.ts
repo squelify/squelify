@@ -2,7 +2,7 @@ import type { Insertable, Selectable, Updateable } from 'kysely'
 import type { ColumnType, Generated } from 'kysely'
 import { z } from 'zod'
 
-const rateLimitContextEnum = z.enum(['ip', 'user', 'email', 'global'])
+const rateLimitContextEnum = z.enum(['ip', 'user', 'email', 'global', 'functions'])
 export type RateLimitContext = z.infer<typeof rateLimitContextEnum>
 
 // Rate limit schema with validation rules

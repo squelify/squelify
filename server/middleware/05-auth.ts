@@ -79,6 +79,7 @@ export default defineEventHandler(async (event) => {
   // Only path that starts with `/api` will be checked, except for some paths.
   if (
     !pathname.startsWith('/api') ||
+    pathname.startsWith('/api/functions') ||
     pathname.startsWith('/api/healthz') ||
     pathname.startsWith('/api/settings') ||
     pathname.startsWith('/api-docs') ||
