@@ -88,6 +88,19 @@ format `YYYYMMXXX_description.sql`:
 - YYYYMM (6 digits) = Year and Month (e.g. 202412)
 - XXX (3 digits) = Sequential number within the month (e.g. 001)
 
+#### Validation Rules
+
+- File size limit: 1MB
+- Reserved prefix `sq_` not allowed
+- Valid SQLite syntax required
+- Foreign key integrity checks
+- Column naming conventions
+- Valid SQLite data types
+- Proper constraint definitions
+- Index limitations (max 5 per table)
+- View definition validation
+- Checksum verification
+
 #### Example:
 ```sql
 --- Path: _data/migrations/202411001_create_posts_table.sql

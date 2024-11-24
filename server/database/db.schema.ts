@@ -29,6 +29,7 @@ import type { IVerification } from './schemas/verification'
 interface AppMigrationSchema {
   sq_migrations: {
     name: string
+    checksum: string
     executedAt: ColumnType<Date, number | undefined, never>
   }
 }

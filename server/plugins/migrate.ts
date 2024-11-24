@@ -2,6 +2,7 @@ import { existsSync, readFileSync, readdirSync } from 'node:fs'
 import { join, resolve } from 'pathe'
 import { env } from 'std-env'
 import db, { libSQLClient } from '~/database/db.client'
+import { validateMigration } from '~/database/validator'
 import logger from '~/utils/logger'
 
 /**
@@ -28,15 +29,15 @@ export default defineNitroPlugin(async (_nitroApp) => {
     logger.info('[app]', 'Running database migrations...')
 
     // Load user migrations
-    const userPath = resolve(process.cwd(), '_data/migrations')
+    const migrationDir = resolve(process.cwd(), '_data/migrations')
 
     // Skip if migrations folder not found
-    if (!existsSync(userPath)) {
+    if (!existsSync(migrationDir)) {
       logger.info('[app]', 'No user migrations folder found, skipping...')
       return
     }
 
-    const userFiles = readdirSync(userPath)
+    const userFiles = readdirSync(migrationDir)
       .filter((f) => f.endsWith('.sql'))
       .sort()
 
@@ -66,9 +67,20 @@ export default defineNitroPlugin(async (_nitroApp) => {
     for (const file of userFiles) {
       if (executed.includes(file)) continue
 
+      // Validate migration
+      const filePath = join(migrationDir, file)
+      const validation = validateMigration(filePath)
+
+      if (!validation.isValid) {
+        logger.trace('[app]', `Migration ${file} validation failed:`, validation.errors)
+        if (validation.warnings.length > 0) {
+          logger.error('[app]', `Migration validation failed:`, validation.warnings)
+        }
+        continue
+      }
+
       const migrationName = file.replace('.sql', '')
-      const executedAt = Math.floor(Date.now() / 1000)
-      const sqlContent = readFileSync(join(userPath, file), 'utf-8')
+      const sqlContent = readFileSync(join(migrationDir, file), 'utf-8')
 
       // Log the migration content for debugging
       logger.info('[migration]', 'Executing user migration:', migrationName)
@@ -77,7 +89,14 @@ export default defineNitroPlugin(async (_nitroApp) => {
       await libSQLClient.executeMultiple(sqlContent)
 
       // Save the migration status to the database
-      await db.insertInto('sq_migrations').values({ name: migrationName, executedAt }).execute()
+      await db
+        .insertInto('sq_migrations')
+        .values({
+          name: migrationName,
+          checksum: validation.checksum,
+          executedAt: Math.floor(Date.now() / 1000),
+        })
+        .execute()
 
       logger.info('[migration]', `Migration ${migrationName} executed successfully`)
     }
