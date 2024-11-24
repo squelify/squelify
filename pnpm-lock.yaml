@@ -11,6 +11,9 @@ importers:
       '@codemirror/autocomplete':
         specifier: ^6.18.3
         version: 6.18.3(@codemirror/language@6.10.3)(@codemirror/state@6.4.1)(@codemirror/view@6.35.0)(@lezer/common@1.2.3)
+      '@codemirror/commands':
+        specifier: ^6.7.1
+        version: 6.7.1
       '@codemirror/lang-json':
         specifier: ^6.0.1
         version: 6.0.1
@@ -135,8 +138,8 @@ importers:
         specifier: ^5.9.6
         version: 5.9.6
       jsx-email:
-        specifier: ^2.1.5
-        version: 2.1.5(@jsx-email/app-preview@2.0.2(@types/node@22.8.6)(@types/react-dom@18.3.1)(@types/react@18.3.12)(react@18.3.1)(terser@5.36.0))(@jsx-email/plugin-inline@1.0.1)(@jsx-email/plugin-minify@1.0.1)(@jsx-email/plugin-pretty@1.0.0)(@types/node@22.8.6)(@types/react@18.3.12)(react@18.3.1)(terser@5.36.0)
+        specifier: ^2.2.0
+        version: 2.2.0(@jsx-email/app-preview@2.0.2(@types/node@22.8.6)(@types/react-dom@18.3.1)(@types/react@18.3.12)(react@18.3.1)(terser@5.36.0))(@jsx-email/plugin-inline@1.0.1)(@jsx-email/plugin-minify@1.0.1)(@jsx-email/plugin-pretty@1.0.0)(@types/node@22.8.6)(@types/react@18.3.12)(react@18.3.1)(terser@5.36.0)
       kysely:
         specifier: ^0.27.4
         version: 0.27.4
@@ -159,8 +162,8 @@ importers:
         specifier: ^6.9.16
         version: 6.9.16
       nuqs:
-        specifier: ^2.2.2
-        version: 2.2.2(react-router-dom@7.0.1(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react@18.3.1)
+        specifier: ^2.2.3
+        version: 2.2.3(react-router-dom@7.0.1(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react@18.3.1)
       ofetch:
         specifier: ^1.4.1
         version: 1.4.1
@@ -3360,12 +3363,12 @@ packages:
   jsonfile@6.1.0:
     resolution: {integrity: sha512-5dgndWOriYSm5cnYaJNhalLNDKOqFwyDB/rr1E9ZsGciGvKPs8R2xYGCacuf3z6K1YKDz182fd+fY3cn3pMqXQ==}
 
-  jsx-email@2.1.5:
-    resolution: {integrity: sha512-O9jfI9DuSpGt3klbqvQo3Gb70KRg2Irf6CUZZEPQPogYSufDb4YVcn1gG3saR/ei5rLuoJdE8JCRc0t1kqi29Q==}
+  jsx-email@2.2.0:
+    resolution: {integrity: sha512-1zDZgdQaAReDkN+NQ82hWSJ01uNpZNbiw7jUUoNxBxtyRjOdJx6VgWPXfKJrUuEgYWkWvo/PboE31p6FDcsqvg==}
     engines: {node: '>=18.0.0'}
     hasBin: true
     peerDependencies:
-      '@jsx-email/app-preview': ^2.0.2
+      '@jsx-email/app-preview': ^2.0.3
       '@jsx-email/plugin-inline': ^1.0.1
       '@jsx-email/plugin-minify': ^1.0.1
       '@jsx-email/plugin-pretty': ^1.0.0
@@ -3770,8 +3773,8 @@ packages:
   nth-check@2.1.1:
     resolution: {integrity: sha512-lqjrjmaOoAnWfMmBPL+XNnynZh2+swxiX3WUE0s4yEHI6m+AwrK2UZOimIRl3X/4QctVqS8AiZjFqyOGrMXb/w==}
 
-  nuqs@2.2.2:
-    resolution: {integrity: sha512-h7xI5nzLgeP/9nn1eAgRiXYRtT2HKPoIKZ541kEzkzz20grM4geb5S4OAKh84IAfHyIKlSeTo93FUhjhE7/6gA==}
+  nuqs@2.2.3:
+    resolution: {integrity: sha512-nMCcUW06KSqEXA0xp+LiRqDpIE59BVYbjZLe0HUisJAlswfihHYSsAjYTzV0lcE1thfh8uh+LqUHGdQ8qq8rfA==}
     peerDependencies:
       '@remix-run/react': '>=2'
       next: '>=14.2.0'
@@ -5449,18 +5452,18 @@ snapshots:
       micromatch: 4.0.8
       style-to-object: 1.0.8
 
-  '@jsx-email/plugin-inline@1.0.1(jsx-email@2.1.5)':
+  '@jsx-email/plugin-inline@1.0.1(jsx-email@2.2.0)':
     dependencies:
       '@adobe/css-tools': 4.4.0
       hast-util-select: 6.0.3
       hast-util-to-string: 3.0.1
-      jsx-email: 2.1.5(@jsx-email/app-preview@2.0.2(@types/node@22.8.6)(@types/react-dom@18.3.1)(@types/react@18.3.12)(react@18.3.1)(terser@5.36.0))(@jsx-email/plugin-inline@1.0.1)(@jsx-email/plugin-minify@1.0.1)(@jsx-email/plugin-pretty@1.0.0)(@types/node@22.8.6)(@types/react@18.3.12)(react@18.3.1)(terser@5.36.0)
+      jsx-email: 2.2.0(@jsx-email/app-preview@2.0.2(@types/node@22.8.6)(@types/react-dom@18.3.1)(@types/react@18.3.12)(react@18.3.1)(terser@5.36.0))(@jsx-email/plugin-inline@1.0.1)(@jsx-email/plugin-minify@1.0.1)(@jsx-email/plugin-pretty@1.0.0)(@types/node@22.8.6)(@types/react@18.3.12)(react@18.3.1)(terser@5.36.0)
       unist-util-remove: 4.0.0
       unist-util-visit: 5.0.0
 
-  '@jsx-email/plugin-minify@1.0.1(jsx-email@2.1.5)':
+  '@jsx-email/plugin-minify@1.0.1(jsx-email@2.2.0)':
     dependencies:
-      jsx-email: 2.1.5(@jsx-email/app-preview@2.0.2(@types/node@22.8.6)(@types/react-dom@18.3.1)(@types/react@18.3.12)(react@18.3.1)(terser@5.36.0))(@jsx-email/plugin-inline@1.0.1)(@jsx-email/plugin-minify@1.0.1)(@jsx-email/plugin-pretty@1.0.0)(@types/node@22.8.6)(@types/react@18.3.12)(react@18.3.1)(terser@5.36.0)
+      jsx-email: 2.2.0(@jsx-email/app-preview@2.0.2(@types/node@22.8.6)(@types/react-dom@18.3.1)(@types/react@18.3.12)(react@18.3.1)(terser@5.36.0))(@jsx-email/plugin-inline@1.0.1)(@jsx-email/plugin-minify@1.0.1)(@jsx-email/plugin-pretty@1.0.0)(@types/node@22.8.6)(@types/react@18.3.12)(react@18.3.1)(terser@5.36.0)
       rehype-minify-attribute-whitespace: 4.0.1
       rehype-minify-css-style: 4.0.1
       rehype-minify-enumerated-attribute: 5.0.1
@@ -5480,9 +5483,9 @@ snapshots:
       rehype-sort-attributes: 5.0.1
       unified: 11.0.5
 
-  '@jsx-email/plugin-pretty@1.0.0(jsx-email@2.1.5)':
+  '@jsx-email/plugin-pretty@1.0.0(jsx-email@2.2.0)':
     dependencies:
-      jsx-email: 2.1.5(@jsx-email/app-preview@2.0.2(@types/node@22.8.6)(@types/react-dom@18.3.1)(@types/react@18.3.12)(react@18.3.1)(terser@5.36.0))(@jsx-email/plugin-inline@1.0.1)(@jsx-email/plugin-minify@1.0.1)(@jsx-email/plugin-pretty@1.0.0)(@types/node@22.8.6)(@types/react@18.3.12)(react@18.3.1)(terser@5.36.0)
+      jsx-email: 2.2.0(@jsx-email/app-preview@2.0.2(@types/node@22.8.6)(@types/react-dom@18.3.1)(@types/react@18.3.12)(react@18.3.1)(terser@5.36.0))(@jsx-email/plugin-inline@1.0.1)(@jsx-email/plugin-minify@1.0.1)(@jsx-email/plugin-pretty@1.0.0)(@types/node@22.8.6)(@types/react@18.3.12)(react@18.3.1)(terser@5.36.0)
       pretty: 2.0.0
 
   '@levischuck/tiny-cbor@0.2.2': {}
@@ -7952,14 +7955,14 @@ snapshots:
     optionalDependencies:
       graceful-fs: 4.2.11
 
-  jsx-email@2.1.5(@jsx-email/app-preview@2.0.2(@types/node@22.8.6)(@types/react-dom@18.3.1)(@types/react@18.3.12)(react@18.3.1)(terser@5.36.0))(@jsx-email/plugin-inline@1.0.1)(@jsx-email/plugin-minify@1.0.1)(@jsx-email/plugin-pretty@1.0.0)(@types/node@22.8.6)(@types/react@18.3.12)(react@18.3.1)(terser@5.36.0):
+  jsx-email@2.2.0(@jsx-email/app-preview@2.0.2(@types/node@22.8.6)(@types/react-dom@18.3.1)(@types/react@18.3.12)(react@18.3.1)(terser@5.36.0))(@jsx-email/plugin-inline@1.0.1)(@jsx-email/plugin-minify@1.0.1)(@jsx-email/plugin-pretty@1.0.0)(@types/node@22.8.6)(@types/react@18.3.12)(react@18.3.1)(terser@5.36.0):
     dependencies:
       '@dot/log': 0.1.5
       '@jsx-email/app-preview': 2.0.2(@types/node@22.8.6)(@types/react-dom@18.3.1)(@types/react@18.3.12)(react@18.3.1)(terser@5.36.0)
       '@jsx-email/doiuse-email': 1.0.4
-      '@jsx-email/plugin-inline': 1.0.1(jsx-email@2.1.5)
-      '@jsx-email/plugin-minify': 1.0.1(jsx-email@2.1.5)
-      '@jsx-email/plugin-pretty': 1.0.0(jsx-email@2.1.5)
+      '@jsx-email/plugin-inline': 1.0.1(jsx-email@2.2.0)
+      '@jsx-email/plugin-minify': 1.0.1(jsx-email@2.2.0)
+      '@jsx-email/plugin-pretty': 1.0.0(jsx-email@2.2.0)
       '@parcel/watcher': 2.4.1
       '@radix-ui/react-slot': 1.1.0(@types/react@18.3.12)(react@18.3.1)
       '@unocss/core': 0.63.6
@@ -8461,7 +8464,7 @@ snapshots:
     dependencies:
       boolbase: 1.0.0
 
-  nuqs@2.2.2(react-router-dom@7.0.1(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react@18.3.1):
+  nuqs@2.2.3(react-router-dom@7.0.1(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react@18.3.1):
     dependencies:
       mitt: 3.0.1
       react: 18.3.1

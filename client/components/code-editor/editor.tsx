@@ -1,15 +1,21 @@
 import { autocompletion } from '@codemirror/autocomplete'
+import { indentWithTab } from '@codemirror/commands'
 import { defaultHighlightStyle, syntaxHighlighting } from '@codemirror/language'
 import { EditorSelection } from '@codemirror/state'
-import { lineNumbers, placeholder } from '@codemirror/view'
-import { EditorView, basicSetup } from 'codemirror'
+import { EditorView, keymap, lineNumbers, placeholder } from '@codemirror/view'
+import { basicSetup } from 'codemirror'
 import * as Lucide from 'lucide-react'
 import { forwardRef, useCallback, useEffect, useRef } from 'react'
 import { useImperativeHandle, useLayoutEffect } from 'react'
 import { languages } from './languages'
 import type { CodeEditorProps, EditorRef } from './types'
 
-const baseExtensions = [basicSetup, lineNumbers(), syntaxHighlighting(defaultHighlightStyle)]
+const baseExtensions = [
+  basicSetup,
+  lineNumbers(),
+  syntaxHighlighting(defaultHighlightStyle),
+  keymap.of([indentWithTab]),
+]
 
 export const CodeEditor = forwardRef<EditorRef, CodeEditorProps>(function CodeEditor(
   {
