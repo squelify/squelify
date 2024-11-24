@@ -1,15 +1,10 @@
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from '#/components/base-ui/card'
+import { Card, CardContent, CardHeader } from '#/components/base-ui/card'
+import { CardDescription, CardTitle } from '#/components/base-ui/card'
 import { Separator } from '#/components/base-ui/separator'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '#/components/base-ui/tabs'
 import { useSEOMeta } from '#/context/hooks/use-seo-meta'
 
-import { BillingInfo } from './billing-info'
+import { LoginHistory } from './login-history'
 import { NotificationPreferences } from './notification-preferences'
 import { PasswordForm } from './password-form'
 import { ProfileForm } from './profile-form'
@@ -34,7 +29,7 @@ export default function Component() {
           <TabsTrigger value="general">General</TabsTrigger>
           <TabsTrigger value="security">Security</TabsTrigger>
           <TabsTrigger value="notifications">Notifications</TabsTrigger>
-          <TabsTrigger value="billing">Billing</TabsTrigger>
+          <TabsTrigger value="login-history">Login History</TabsTrigger>
         </TabsList>
 
         <TabsContent value="general">
@@ -83,14 +78,14 @@ export default function Component() {
           </Card>
         </TabsContent>
 
-        <TabsContent value="billing">
+        <TabsContent value="login-history">
           <Card>
             <CardHeader className="space-y-1">
-              <CardTitle>Payment Method</CardTitle>
-              <CardDescription>Manage your payment information</CardDescription>
+              <CardTitle>Login History</CardTitle>
+              <CardDescription>Review your recent login activities</CardDescription>
             </CardHeader>
             <CardContent>
-              <BillingInfo />
+              <LoginHistory />
             </CardContent>
           </Card>
         </TabsContent>
