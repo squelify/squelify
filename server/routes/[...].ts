@@ -36,18 +36,13 @@ export default defineEventHandler(async (event) => {
     const staticDir = resolve(process.cwd(), '_data/public_html')
     if (!existsSync(staticDir)) {
       logger.info('[static]', 'No public_html folder found')
-      return
+      return 'No public_html folder found'
     }
 
     const files = await scanFunctionsDir(staticDir, staticDir)
-    if (files.length === 0) {
+    if (files.length === 0 && matchedUrl === '/') {
       logger.info('[static]', 'No static web files found')
-      return
-    }
-
-    if (matchedUrl === '/') {
-      setResponseHeader(event, 'Content-Type', 'text/plain')
-      return send(event, `Nothing to see here`)
+      return 'Nothing to see here'
     }
 
     return 'This route is intended to handle embedded static pages'

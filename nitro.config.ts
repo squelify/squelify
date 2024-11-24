@@ -94,7 +94,7 @@ export default defineNitroConfig({
   },
 
   devServer: {
-    watch: ['server', 'client', '_data/functions'],
+    watch: ['server', 'client', '_data/functions', '_data/public_html'],
   },
 
   esbuild: {
