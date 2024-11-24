@@ -2,6 +2,7 @@ import { existsSync } from 'node:fs'
 import { readdir } from 'node:fs/promises'
 import { parse, resolve } from 'node:path'
 import { createError, defineEventHandler } from 'h3'
+import { createRouter } from 'radix3'
 import { createRateLimit, getRateLimitInfo } from '~/database/repository/rate_limit.repo'
 import { DURATION } from '~/utils/datetime'
 import { getClientInfo } from '~/utils/http'
@@ -16,6 +17,12 @@ const FUNCTION_RATE_LIMITS = {
   user: { points: 200, window: DURATION.MINUTE * 15 }, // 200 requests per 15 minutes
 }
 
+// TODO: migrate to `rou3` in the future
+// Create router instance
+const router = createRouter({
+  strictTrailingSlash: true,
+})
+
 export default defineEventHandler(async (event) => {
   const url = event.path
   const functionName = url.replace('/api/functions/', '')
@@ -24,7 +31,7 @@ export default defineEventHandler(async (event) => {
   const userId = event.context.auth?.payload?.sub
 
   try {
-    // Check IP-based rate limit
+    // Rate limit checks
     const ipLimitInfo = await getRateLimitInfo(db, clientIpAddress, 'ip')
     if (ipLimitInfo.isLimited) {
       const waitMinutes = Math.ceil((ipLimitInfo.resetAt - Math.floor(Date.now() / 1000)) / 60)
@@ -34,7 +41,6 @@ export default defineEventHandler(async (event) => {
       })
     }
 
-    // Check user-based rate limit if authenticated
     if (userId) {
       const userLimitInfo = await getRateLimitInfo(db, userId, 'user')
       if (userLimitInfo.isLimited) {
@@ -47,13 +53,12 @@ export default defineEventHandler(async (event) => {
       await createRateLimit(
         db,
         userId,
-        'functions',
+        'user',
         FUNCTION_RATE_LIMITS.user.points,
         FUNCTION_RATE_LIMITS.user.window
       )
     }
 
-    // Track IP-based rate limit
     await createRateLimit(
       db,
       clientIpAddress,
@@ -62,42 +67,54 @@ export default defineEventHandler(async (event) => {
       FUNCTION_RATE_LIMITS.ip.window
     )
 
-    // Rest of the function handler code...
     const functionsDir = resolve(process.cwd(), '_data/functions')
-
     if (!existsSync(functionsDir)) {
       logger.info('[functions]', 'No user functions folder found')
       return
     }
 
     const files = await readdir(functionsDir)
-
     if (files.length === 0) {
       logger.info('[functions]', 'No user functions files found')
       return
     }
 
-    const functionFile = files.find((file) => {
+    // Register routes for each function file
+    for (const file of files) {
       const { name, ext } = parse(file)
-      return name === functionName && ALLOWED_EXTENSIONS.includes(ext)
-    })
+      if (ALLOWED_EXTENSIONS.includes(ext)) {
+        const [baseName, method = 'get'] = name.split('.')
+        const path = `/api/functions/${baseName}`
 
-    if (!functionFile) {
+        router.insert(path, {
+          method: method.toLowerCase(),
+          handler: async () => {
+            const userFunction = await import(`${functionsDir}/${file}`)
+            return userFunction.default
+          },
+        })
+      }
+    }
+
+    // Match route
+    const match = router.lookup(url)
+    if (!match) {
       throw createError({
         statusCode: 404,
         message: `Function ${functionName} not found`,
       })
     }
 
-    try {
-      const userFunction = await import(`${functionsDir}/${functionFile}`)
-      return await executeFunction(userFunction.default, event)
-    } catch (error) {
+    // Validate HTTP method
+    if (match.method !== event.method.toLowerCase()) {
       throw createError({
-        statusCode: 500,
-        message: `Error executing function: ${error.message}`,
+        statusCode: 405,
+        message: `Method ${event.method} not allowed for function ${functionName}`,
       })
     }
+
+    const handler = await match.handler()
+    return await executeFunction(handler, event)
   } catch (error) {
     logger.error('[functions]', error)
     throw error
