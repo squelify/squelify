@@ -211,6 +211,7 @@ export default function Component() {
                     language="sqlite"
                     onChange={setQuery}
                     contextData={{ tables: ['users', 'posts', 'comments'] }}
+                    placeholder="-- Write your query here"
                     onExecute={handleExecute}
                     isExecuting={isExecuting}
                     value={query}

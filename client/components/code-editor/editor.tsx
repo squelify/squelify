@@ -1,21 +1,16 @@
-import { autocompletion } from '@codemirror/autocomplete'
-import { indentWithTab } from '@codemirror/commands'
-import { defaultHighlightStyle, syntaxHighlighting } from '@codemirror/language'
-import { EditorSelection } from '@codemirror/state'
-import { EditorView, keymap, lineNumbers, placeholder } from '@codemirror/view'
-import { basicSetup } from 'codemirror'
 import * as Lucide from 'lucide-react'
 import { forwardRef, useCallback, useEffect, useRef } from 'react'
 import { useImperativeHandle, useLayoutEffect } from 'react'
+
+import { autocompletion } from '@codemirror/autocomplete'
+import { EditorSelection } from '@codemirror/state'
+import { EditorView } from '@codemirror/view'
+import { placeholder } from '@codemirror/view'
+
+import { createCoreExtensions } from './extensions/core-extensions'
+import { createRunBlockGutter } from './extensions/run-block-gutter'
 import { languages } from './languages'
 import type { CodeEditorProps, EditorRef } from './types'
-
-const baseExtensions = [
-  basicSetup,
-  lineNumbers(),
-  syntaxHighlighting(defaultHighlightStyle),
-  keymap.of([indentWithTab]),
-]
 
 export const CodeEditor = forwardRef<EditorRef, CodeEditorProps>(function CodeEditor(
   {
@@ -23,7 +18,7 @@ export const CodeEditor = forwardRef<EditorRef, CodeEditorProps>(function CodeEd
     onChange = () => {},
     language,
     readOnly = false,
-    placeholder: placeholderText = '-- Write your query here',
+    placeholder: placeholderText,
     contextData,
     onExecute,
     isExecuting = false,
@@ -136,7 +131,8 @@ export const CodeEditor = forwardRef<EditorRef, CodeEditorProps>(function CodeEd
     const view = new EditorView({
       doc: value,
       extensions: [
-        ...baseExtensions,
+        createCoreExtensions(),
+        createRunBlockGutter(onExecute),
         ...languageDef.extensions,
         autocompletion({ override: [languageDef.createCompletions(contextData)] }),
         EditorView.editable.of(!readOnly && !isExecuting),

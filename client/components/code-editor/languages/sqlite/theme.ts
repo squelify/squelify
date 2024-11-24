@@ -45,6 +45,7 @@ export const sqliteTheme = EditorView.theme({
 
   // Line numbers and gutters
   '.cm-gutters': {
+    display: 'flex',
     position: 'sticky',
     left: 0,
     backgroundColor: 'hsl(var(--background))',
@@ -54,15 +55,13 @@ export const sqliteTheme = EditorView.theme({
     fontFamily: 'ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace',
     fontSize: '13px',
     fontWeight: '400',
-    minWidth: '32px',
-    paddingLeft: '8px',
-    paddingRight: '8px',
     userSelect: 'none',
     zIndex: '1',
   },
   '.cm-lineNumbers': {
-    minWidth: '32px',
-    backgroundColor: 'hsl(var(--background))',
+    minWidth: '3.5ch',
+    paddingLeft: '20px',
+    paddingRight: '6px',
     textAlign: 'right',
   },
 
@@ -73,7 +72,7 @@ export const sqliteTheme = EditorView.theme({
   '.cm-gutterElement': {
     display: 'flex',
     alignItems: 'center',
-    justifyContent: 'center',
+    justifyContent: 'end',
     transition: 'color 0.15s',
     position: 'relative',
     lineHeight: '1.6',
@@ -234,4 +233,29 @@ export const sqliteTheme = EditorView.theme({
   '.cm-string': { color: 'hsl(var(--success))' },
   '.cm-number': { color: 'hsl(var(--warning))' },
   '.cm-comment': { color: 'hsl(var(--muted-foreground))' },
+
+  // Custom button on gutter
+  '.cm-run-block-button': {
+    all: 'unset',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'flex-start',
+    width: '24px',
+    height: '24px',
+    borderRadius: 'var(--radius)',
+    color: 'hsl(var(--primary))',
+    cursor: 'pointer',
+    transition: 'all 0.2s ease',
+    '&:hover': {
+      backgroundColor: 'hsl(var(--accent))',
+      color: 'hsl(var(--accent-foreground))',
+    },
+  },
+  '.cm-run-block-gutter': {
+    width: '24px',
+    display: 'flex',
+    alignItems: 'flex-start',
+    justifyContent: 'flex-start',
+    marginRight: '2px',
+  },
 })
