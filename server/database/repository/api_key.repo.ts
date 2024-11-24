@@ -1,3 +1,4 @@
+import consola from 'consola'
 import type { Kysely } from 'kysely'
 import { typeid } from 'typeid-js'
 import type { Database } from '~/database/db.schema'
@@ -66,6 +67,7 @@ export async function createApiKey(db: Kysely<Database>, options: CreateApiKeyOp
 
     return apiKey
   } catch (error) {
+    consola.error('Failed to create API key', error)
     if (error instanceof ApiKeyError) {
       throw error
     }

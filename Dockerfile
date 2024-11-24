@@ -41,7 +41,7 @@ COPY --from=installer /srv/server/views /srv/server/views
 COPY --from=installer /srv/.output /srv
 
 # Create the data directory and set permissions.
-RUN mkdir -p /srv/_data && chmod 0775 /srv/_data
+RUN mkdir -p /srv/_data/migrations && chmod -R 0775 /srv/_data
 
 # -----------------------------------------------------------------------------
 # Production image, copy build output files and run the application.

@@ -1,4 +1,4 @@
-import type { ColumnType } from 'kysely'
+import type { ColumnType, Generated } from 'kysely'
 
 import type { IAccount } from './schemas/account'
 import type { IApiKey } from './schemas/api_key'
@@ -23,13 +23,24 @@ import type { IUserRole } from './schemas/user_role'
 import type { IVerification } from './schemas/verification'
 
 /**
+ * The `AppMigrationSchema` interface defines the schema for the `sq_migrations`
+ * table, which stores information about user defined migrations.
+ */
+interface AppMigrationSchema {
+  sq_migrations: {
+    name: string
+    executedAt: ColumnType<Date, number | undefined, never>
+  }
+}
+
+/**
  * For Kysely's type-safety and autocompletion to work, it needs to know
  * your database structure. This requires a TypeScript Database interface,
  * that contains table names as keys and table schema interfaces as values.
  *
  * @see: https://www.kysely.dev/docs/recipes/schemas
  */
-export interface Database {
+export interface Database extends AppMigrationSchema {
   sq_accounts: IAccount
   sq_api_keys: IApiKey
   sq_audit_logs: IAuditLog

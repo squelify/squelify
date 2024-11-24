@@ -9,9 +9,9 @@ const textEncoder = new TextEncoder()
 
 // Pre-compute parameter string untuk menghindari string concatenation berulang
 const ARGON2_PARAMS = {
-  SECURE: { t: 4, m: 131072, p: 4 }, // 128MB RAM
-  BALANCED: { t: 3, m: 65536, p: 2 }, // 64MB RAM
-  FAST: { t: 2, m: 32768, p: 1 }, // 32MB RAM
+  SECURE: { t: 3, m: 32768, p: 2 }, // 32MB RAM
+  BALANCED: { t: 2, m: 16384, p: 1 }, // 16MB RAM
+  FAST: { t: 1, m: 8192, p: 1 }, // 8MB RAM
 } as const
 
 /**
@@ -131,8 +131,8 @@ function timingSafeEqual(a: string, b: string): boolean {
 // TODO: usse workers for faster hashing
 async function hashArgon2id(password: string): Promise<string> {
   const salt = randomBytes(16) // 16 bytes cukup untuk salt
-  const mode = env.ARGON2_MODE?.toUpperCase() || 'BALANCED'
-  const params = ARGON2_PARAMS[mode as keyof typeof ARGON2_PARAMS] || ARGON2_PARAMS.BALANCED
+  const mode = env.ARGON2_MODE?.toUpperCase() || 'FAST'
+  const params = ARGON2_PARAMS[mode as keyof typeof ARGON2_PARAMS] || ARGON2_PARAMS.FAST
 
   // Encode password once using TextEncoder
   const encodedPassword = textEncoder.encode(password)
@@ -164,14 +164,12 @@ async function verifyArgon2id(password: string, hashedPassword: string): Promise
 }
 
 /**
- * Hashes API token using Argon2id for secure storage
+ * Hashes API token using Scrypt for secure storage
  */
 export async function hashToken(token: string): Promise<string> {
-  const encodedToken = textEncoder.encode(token)
   const salt = randomBytes(16)
-  const params = ARGON2_PARAMS.FAST
-
-  const hash = argon2id(encodedToken, salt, params)
+  const params = SCRYPT_PARAMS.FAST
+  const hash = await scryptAsync(textEncoder.encode(token), salt, params)
   return bytesToHex(hash)
 }
 
@@ -179,10 +177,8 @@ export async function hashToken(token: string): Promise<string> {
  * Verifies API token against stored hash
  */
 export async function verifyToken(token: string, hash: string): Promise<boolean> {
-  const encodedToken = textEncoder.encode(token)
-  const params = ARGON2_PARAMS.FAST
+  const params = SCRYPT_PARAMS.FAST
   const salt = hexToBytes(hash.slice(0, 32))
-
-  const newHash = argon2id(encodedToken, salt, params)
+  const newHash = await scryptAsync(textEncoder.encode(token), salt, params)
   return timingSafeEqual(bytesToHex(newHash), hash)
 }

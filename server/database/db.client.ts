@@ -1,13 +1,3 @@
-import { createClient } from '@libsql/client'
-import { LibsqlDialect } from '@libsql/kysely-libsql'
-import { CamelCasePlugin, Kysely, ParseJSONResultsPlugin } from 'kysely'
-import type { ErrorLogEvent, KyselyConfig, QueryLogEvent } from 'kysely'
-import { makeDirectorySync } from 'make-dir'
-import { resolve } from 'pathe'
-import { env, process } from 'std-env'
-import type { Database } from '~/database/db.schema'
-import logger from '~/utils/logger'
-
 /**
  * Configures the Kysely database client with the appropriate dialect and plugins.
  *
@@ -23,23 +13,32 @@ import logger from '~/utils/logger'
  * @see https://github.com/tursodatabase/libsql-client-ts
  * @see https://github.com/tursodatabase/kysely-libsql
  */
+
+import { createClient } from '@libsql/client'
+import { LibsqlDialect } from '@libsql/kysely-libsql'
+import { CamelCasePlugin, Kysely, ParseJSONResultsPlugin } from 'kysely'
+import type { ErrorLogEvent, KyselyConfig, QueryLogEvent } from 'kysely'
+import { makeDirectorySync } from 'make-dir'
+import { resolve } from 'pathe'
+import { env, process } from 'std-env'
+import type { Database } from '~/database/db.schema'
+import logger from '~/utils/logger'
+
+const isLocalMode = env.DATABASE_MODE === 'local'
+const localDbPath = resolve(process.cwd(), '_data/data.sqlite')
+
+if (isLocalMode) {
+  logger.info('Creating local database directory...')
+  makeDirectorySync(resolve('_data'), { mode: 0o755 })
+}
+
+export const libSQLClient = createClient({
+  url: isLocalMode ? `file:${localDbPath}` : env.DATABASE_URL,
+  authToken: isLocalMode ? undefined : env.DATABASE_TOKEN,
+})
+
 export const kyselyConfig: KyselyConfig = {
-  dialect: (() => {
-    const isLocalMode = env.DATABASE_MODE === 'local'
-    const localDbPath = resolve(process.cwd(), '_data/data.sqlite')
-
-    if (isLocalMode) {
-      logger.info('Creating local database directory...')
-      makeDirectorySync(resolve('_data'), { mode: 0o755 })
-    }
-
-    return new LibsqlDialect({
-      client: createClient({
-        url: isLocalMode ? `file:${localDbPath}` : env.DATABASE_URL,
-        authToken: isLocalMode ? undefined : env.DATABASE_TOKEN,
-      }) as any /* FIXME */,
-    })
-  })(),
+  dialect: new LibsqlDialect({ client: libSQLClient }),
   plugins: [new CamelCasePlugin(), new ParseJSONResultsPlugin()],
 }
 

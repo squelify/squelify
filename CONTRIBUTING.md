@@ -75,6 +75,47 @@ To reset the database and seed the database with the default data, you can run t
 pnpm --silent squelify migrate reset --migrate --seed
 ```
 
+### User Migrations
+
+Squelify supports custom database migrations through SQL files.
+Place your migration files in `_data/migrations` directory with
+format `YYYYMMXXX_description.sql`:
+
+#### Migration Filename Format:
+
+`YYYYMMXXX` = Year Month Sequential Number
+
+- YYYYMM (6 digits) = Year and Month (e.g. 202412)
+- XXX (3 digits) = Sequential number within the month (e.g. 001)
+
+#### Example:
+```sql
+--- Path: _data/migrations/202411001_create_posts_table.sql
+
+CREATE TABLE IF NOT EXISTS posts (
+  id TEXT PRIMARY KEY,
+  title TEXT NOT NULL,
+  description TEXT,
+  is_active INTEGER NOT NULL DEFAULT 1 CHECK(is_active IN (0, 1)),
+  created_at INTEGER NOT NULL DEFAULT (strftime('%s', 'now')),
+  updated_at INTEGER,
+  deleted_at INTEGER
+) STRICT;
+
+CREATE TRIGGER IF NOT EXISTS trg_posts_timestamp
+AFTER UPDATE ON posts
+FOR EACH ROW
+BEGIN
+  UPDATE posts
+  SET updated_at = strftime('%s', 'now')
+  WHERE id = NEW.id;
+END;
+
+CREATE INDEX IF NOT EXISTS idx_posts_title ON posts(title);
+CREATE INDEX IF NOT EXISTS idx_posts_is_active ON posts(is_active);
+CREATE INDEX IF NOT EXISTS idx_posts_created_at ON posts(created_at);
+```
+
 ## Testing
 
 > TODO: add more information here
