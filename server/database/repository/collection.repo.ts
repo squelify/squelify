@@ -1,3 +1,5 @@
+// TODO: (idea) use `cid` instead of `id` for collection identifier in public API
+
 import { Kysely } from 'kysely'
 
 /**

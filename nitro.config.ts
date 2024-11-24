@@ -94,6 +94,10 @@ export default defineNitroConfig({
     },
   },
 
+  devServer: {
+    watch: ['server', 'client', '_data/functions'],
+  },
+
   esbuild: {
     options: {
       jsx: 'automatic',

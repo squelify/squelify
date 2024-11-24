@@ -159,16 +159,16 @@ export default function Component() {
                             )}
                           </Button>
                         </DropdownMenuTrigger>
-                        <DropdownMenuContent align="start" className="w-56 p-1">
+                        <DropdownMenuContent align="start" className="w-52 p-1">
                           <DropdownMenuItem
-                            className="cursor-pointer rounded-sm px-2 py-1 text-muted-foreground text-sm hover:bg-primary/20 hover:text-foreground focus:bg-primary/30"
+                            className="cursor-pointer rounded-sm px-3 py-1.5 text-muted-foreground text-xs hover:bg-primary/20 hover:text-foreground focus:bg-primary/30"
                             onClick={() => editorRef.current?.execute()}
                           >
                             <span>Run Current Statement</span>
                             <DropdownMenuShortcut>⌘↵</DropdownMenuShortcut>
                           </DropdownMenuItem>
                           <DropdownMenuItem
-                            className="cursor-pointer rounded-sm px-2 py-1 text-muted-foreground text-sm hover:bg-primary/20 hover:text-foreground focus:bg-primary/30"
+                            className="cursor-pointer rounded-sm px-3 py-1.5 text-muted-foreground text-xs hover:bg-primary/20 hover:text-foreground focus:bg-primary/30"
                             onClick={() => editorRef.current?.executeAll()}
                           >
                             <span>Run All Statement</span>
