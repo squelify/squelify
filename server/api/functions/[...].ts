@@ -1,6 +1,7 @@
 import { existsSync } from 'node:fs'
 import { readdir } from 'node:fs/promises'
-import { defineEventHandler } from 'h3'
+import { createError, defineEventHandler, setCookie } from 'h3'
+import { getCookie, getHeaders, getQuery, readBody } from 'h3'
 import { parse, relative, resolve } from 'pathe'
 import { createRouter } from 'radix3'
 import { createRateLimit, getRateLimitInfo } from '~/database/repository/rate_limit.repo'
@@ -23,6 +24,7 @@ interface RouteHandler {
   handler: () => Promise<Function>
 }
 
+// FIXME: Wildcard routes still not working
 const router = createRouter<RouteHandler>({
   strictTrailingSlash: true,
 })
@@ -78,15 +80,10 @@ async function scanFunctionsDir(dir: string, baseDir: string): Promise<string[]>
       const subFiles = await scanFunctionsDir(fullPath, baseDir)
       files.push(...subFiles)
     } else {
-      // Skip files in root directory
-      if (!relativePath.includes('/')) {
-        continue
-      }
-
       const { ext } = parse(entry.name)
       if (ALLOWED_EXTENSIONS.includes(ext)) {
         files.push(relativePath)
-        logger.debug('[functions]', `Found function: ${relativePath}`)
+        logger.debug('[functions:scan]', `Found function: ${relativePath}`)
       }
     }
   }
@@ -102,21 +99,34 @@ export default defineEventHandler(async (event) => {
   const requestMethod = event.method.toLowerCase()
 
   try {
-    // Rate limit checks...
+    // Rate limit checks
     const ipLimitInfo = await getRateLimitInfo(db, clientIpAddress, 'ip')
     if (ipLimitInfo.isLimited) {
       const waitMinutes = Math.ceil((ipLimitInfo.resetAt - Math.floor(Date.now() / 1000)) / 60)
-      const errMessage = `Too many requests. Please try again in ${waitMinutes} minute(s)`
-      return createErrorResponse(event, errMessage, 429)
+      return createErrorResponse(
+        event,
+        `Too many requests. Please try again in ${waitMinutes} minute(s)`,
+        429
+      )
     }
 
     if (userId) {
       const userLimitInfo = await getRateLimitInfo(db, userId, 'user')
       if (userLimitInfo.isLimited) {
         const waitMinutes = Math.ceil((userLimitInfo.resetAt - Math.floor(Date.now() / 1000)) / 60)
-        const errMessage = `Too many requests. Please try again in ${waitMinutes} minutes`
-        return createErrorResponse(event, errMessage, 429)
+        return createErrorResponse(
+          event,
+          `Too many requests. Please try again in ${waitMinutes} minutes`,
+          429
+        )
       }
+      await createRateLimit(
+        db,
+        userId,
+        'user',
+        FUNCTION_RATE_LIMITS.user.points,
+        FUNCTION_RATE_LIMITS.user.window
+      )
     }
 
     await createRateLimit(
@@ -148,9 +158,28 @@ export default defineEventHandler(async (event) => {
         method,
         filePath: file,
         handler: async () => {
-          logger.debug('[functions:load]', `Loading function: ${file}`)
+          logger.debug('[functions:load]', `Loading: ${file} for ${method} ${routePath}`)
           const userFunction = await import(`${functionsDir}/${file}`)
-          return userFunction.default
+          const handler = userFunction.default || userFunction
+
+          return async (event: any) => {
+            // Inject h3 utilities
+            event.h3 = {
+              getQuery,
+              getHeaders,
+              readBody: async () => {
+                if (!['post', 'put', 'patch'].includes(event.method.toLowerCase())) {
+                  const errMessage = `Method ${event.method} does not support request body`
+                  return createErrorResponse(event, errMessage, 405)
+                }
+                return readBody(event)
+              },
+              setCookie,
+              getCookie,
+              createError,
+            }
+            return handler(event)
+          }
         },
       })
 
@@ -159,10 +188,6 @@ export default defineEventHandler(async (event) => {
 
     // Match route
     const match = router.lookup(url.split('?')[0])
-    if (!match) {
-      return createErrorResponse(event, `Function not found: ${url}`, 404)
-    }
-
     logger.debug('[functions:match]', {
       url: url.split('?')[0],
       found: !!match,
@@ -170,10 +195,17 @@ export default defineEventHandler(async (event) => {
       params: match?.params,
     })
 
+    if (!match) {
+      return createErrorResponse(event, `Function not found: ${url}`, 404)
+    }
+
     // Validate HTTP method
     if (match.method !== requestMethod) {
-      const errMessage = `Method ${requestMethod.toUpperCase()} not allowed for this function`
-      return createErrorResponse(event, errMessage, 404)
+      return createErrorResponse(
+        event,
+        `Method ${requestMethod.toUpperCase()} not allowed for this function`,
+        405
+      )
     }
 
     const handler = await match.handler()
@@ -184,7 +216,6 @@ export default defineEventHandler(async (event) => {
   }
 })
 
-// Di bagian execute function
 async function executeFunction(fn: Function, event: any) {
   const match = router.lookup(event.path.split('?')[0])
   if (match?.params) {
