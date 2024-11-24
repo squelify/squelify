@@ -72,7 +72,6 @@ const createEditorTheme = (colors: typeof editorColors.light | typeof editorColo
       fontFamily: EDITOR_FONT,
       fontSize: '14px',
       fontWeight: '400',
-      paddingBottom: '12px',
       '&::-webkit-scrollbar': {
         width: '10px',
         height: '10px',
