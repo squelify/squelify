@@ -20,7 +20,7 @@ import { ScrollArea } from './scroll-area'
 const SIDEBAR_WIDTH = '14rem'
 const SIDEBAR_WIDTH_MOBILE = '18rem'
 const SIDEBAR_WIDTH_ICON = '3rem'
-const SIDEBAR_KEYBOARD_SHORTCUT = 'b'
+const SIDEBAR_KEYBOARD_SHORTCUT = 'e'
 
 type SidebarContext = {
   state: 'expanded' | 'collapsed'
@@ -94,7 +94,11 @@ const SidebarProvider = React.forwardRef<
     // Adds a keyboard shortcut to toggle the sidebar.
     React.useEffect(() => {
       const handleKeyDown = (event: KeyboardEvent) => {
-        if (event.key === SIDEBAR_KEYBOARD_SHORTCUT && (event.metaKey || event.ctrlKey)) {
+        if (
+          event.key === SIDEBAR_KEYBOARD_SHORTCUT &&
+          (event.metaKey || event.ctrlKey) &&
+          event.shiftKey
+        ) {
           event.preventDefault()
           toggleSidebar()
         }
