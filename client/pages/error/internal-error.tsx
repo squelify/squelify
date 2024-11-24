@@ -15,7 +15,7 @@ export default function InternalError() {
   }
 
   return (
-    <main className="grid h-full min-h-screen place-items-center bg-white px-6 py-24 sm:py-32 lg:px-8">
+    <main className="grid h-full min-h-screen place-items-center bg-white px-6 py-24 sm:py-32 lg:px-8 dark:bg-black">
       <div className="text-center">
         <p className="font-semibold text-base text-brand-600">Something went wrong!</p>
         <h1 className="mt-4 font-bold text-3xl text-neutral-900 tracking-tight sm:text-5xl">

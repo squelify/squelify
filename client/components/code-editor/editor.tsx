@@ -10,7 +10,7 @@ import { placeholder } from '@codemirror/view'
 import { createCoreExtensions } from './extensions/core-extensions'
 import { createRunBlockGutter } from './extensions/run-block-gutter'
 import { createLanguageSupport } from './languages'
-import { coreTheme } from './themes/core-theme'
+import { getEditorTheme } from './themes/core-theme'
 import type { CodeEditorProps, EditorRef } from './types'
 
 export const CodeEditor = forwardRef<EditorRef, CodeEditorProps>(function CodeEditor(
@@ -24,6 +24,7 @@ export const CodeEditor = forwardRef<EditorRef, CodeEditorProps>(function CodeEd
     onExecute,
     isExecuting = false,
     autoFocus = false,
+    theme = 'auto',
   },
   ref
 ) {
@@ -114,6 +115,25 @@ export const CodeEditor = forwardRef<EditorRef, CodeEditorProps>(function CodeEd
     }
   }, [executeCurrentBlock, executeAll, formatCode])
 
+  // Listen for system theme changes
+  useEffect(() => {
+    if (theme !== 'auto') return
+
+    const observer = new MutationObserver(() => {
+      if (editorViewRef.current) {
+        editorViewRef.current.destroy()
+        initializeEditor()
+      }
+    })
+
+    observer.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ['class'],
+    })
+
+    return () => observer.disconnect()
+  }, [theme])
+
   // Expose editor methods through ref
   useImperativeHandle(
     ref,
@@ -146,8 +166,15 @@ export const CodeEditor = forwardRef<EditorRef, CodeEditorProps>(function CodeEd
   )
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: initialize editor
-  useLayoutEffect(() => {
+  const initializeEditor = useCallback(() => {
     if (!editorRef.current) return
+
+    const effectiveTheme =
+      theme === 'auto'
+        ? document.documentElement.classList.contains('dark')
+          ? 'dark'
+          : 'light'
+        : theme
 
     const view = new EditorView({
       doc: value,
@@ -162,9 +189,8 @@ export const CodeEditor = forwardRef<EditorRef, CodeEditorProps>(function CodeEd
         }),
         EditorView.editable.of(!readOnly && !isExecuting),
         placeholder(placeholderText),
-        // Apply core theme first, then language-specific theme for proper overrides
-        coreTheme,
-        languageSupport.theme,
+        getEditorTheme(theme),
+        ...(languageSupport.theme[effectiveTheme] || []),
         EditorView.updateListener.of((update) => {
           if (update.docChanged) {
             onChange(update.state.doc.toString())
@@ -181,11 +207,12 @@ export const CodeEditor = forwardRef<EditorRef, CodeEditorProps>(function CodeEd
         view.focus()
       })
     }
+  }, [onChange, language, readOnly, placeholderText, isExecuting, autoFocus, theme])
 
-    return () => {
-      view.destroy()
-    }
-  }, [isExecuting])
+  useLayoutEffect(() => {
+    initializeEditor()
+    return () => editorViewRef.current?.destroy()
+  }, [initializeEditor])
 
   return (
     <div className="relative size-full">

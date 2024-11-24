@@ -1,4 +1,19 @@
-export type EditorLanguage = 'sqlite' | 'json' | 'csv' | 'pgsql'
+import { Extension } from '@codemirror/state'
+
+/**
+ * Supported editor languages for the code editor.
+ */
+export type EditorLanguage = 'sqlite' | 'json' | 'pgsql'
+
+/**
+ * Theme options for code editor appearance
+ * @typedef {('dark' | 'light' | 'auto')} EditorTheme
+ *
+ * - 'dark' - Force dark theme
+ * - 'light' - Force light theme
+ * - 'auto' - Follow system/app theme preference
+ */
+export type EditorTheme = 'dark' | 'light' | 'auto'
 
 /**
  * Editor context data for code completion and validation
@@ -88,6 +103,9 @@ export interface CodeEditorProps {
 
   /** Whether to focus the editor on mount */
   autoFocus?: boolean
+
+  /** Theme for the editor */
+  theme?: EditorTheme
 }
 
 /**
@@ -171,8 +189,11 @@ export interface LanguageDefinition {
   /** Default content when creating new editor */
   defaultValue: string
 
-  /** Custom theme configuration */
-  theme?: any
+  /** Theme configuration for light and dark modes */
+  theme: {
+    light: Extension[]
+    dark: Extension[]
+  }
 
   /** Code execution configuration */
   execution?: {

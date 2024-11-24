@@ -1,7 +1,7 @@
 import { sql } from '@codemirror/lang-sql'
 import type { EditorContextData, LanguageDefinition } from '../../types'
 import { createSQLiteCompletions } from './completions'
-import { sqliteTheme } from './theme'
+import sqliteTheme from './theme'
 
 export const sqliteLanguage: LanguageDefinition = {
   name: 'SQLite',
@@ -10,7 +10,10 @@ export const sqliteLanguage: LanguageDefinition = {
     return createSQLiteCompletions(contextData)
   },
   defaultValue: '',
-  theme: sqliteTheme,
+  theme: {
+    light: sqliteTheme.light,
+    dark: sqliteTheme.dark,
+  },
   execution: {
     blockDelimiter: ';',
     supportsExecution: true,

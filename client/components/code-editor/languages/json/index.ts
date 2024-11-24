@@ -1,7 +1,7 @@
 import { json } from '@codemirror/lang-json'
 import type { EditorContextData, LanguageDefinition } from '../../types'
 import { createJSONCompletions } from './completions'
-import { jsonTheme } from './theme'
+import jsonTheme from './theme'
 
 export const jsonLanguage: LanguageDefinition = {
   name: 'JSON',
