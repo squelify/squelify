@@ -1,6 +1,17 @@
 import { CompletionContext, CompletionResult } from '@codemirror/autocomplete'
-import type { CompletionSuggestion, CompletionType, PostgreSQLContextData } from '../../types'
+import type { CompletionSuggestion, CompletionType, SQLContextData } from '../../types'
 import { pgsqlKeywords } from './keywords'
+
+/**
+ * PostgreSQL specific context data
+ */
+export interface PostgreSQLContextData extends SQLContextData {
+  /** List of database schemas */
+  schemas?: string[]
+
+  /** List of installed database extensions */
+  extensions?: string[]
+}
 
 export function createPostgreSQLCompletions(contextData: PostgreSQLContextData = {}) {
   const { tables = [], columns = {}, schemas = [], extensions = [] } = contextData

@@ -7,7 +7,7 @@ export const pgsqlLanguage: LanguageDefinition = {
   name: 'PostgreSQL',
   extensions: [sql()],
   createCompletions: (contextData?: EditorContextData) => {
-    return createPostgreSQLCompletions(contextData?.language?.pgsql)
+    return createPostgreSQLCompletions(contextData)
   },
   defaultValue: '-- Write your PostgreSQL query here\n',
   theme: pgsqlTheme,

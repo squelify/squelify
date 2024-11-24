@@ -7,7 +7,7 @@ export const jsonLanguage: LanguageDefinition = {
   name: 'JSON',
   extensions: [json()],
   createCompletions: (contextData?: EditorContextData) => {
-    return createJSONCompletions(contextData?.language?.json)
+    return createJSONCompletions(contextData)
   },
   defaultValue: '{\n\n}',
   theme: jsonTheme,

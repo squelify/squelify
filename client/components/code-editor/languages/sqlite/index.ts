@@ -7,7 +7,7 @@ export const sqliteLanguage: LanguageDefinition = {
   name: 'SQLite',
   extensions: [sql()],
   createCompletions: (contextData?: EditorContextData) => {
-    return createSQLiteCompletions(contextData?.language?.sqlite)
+    return createSQLiteCompletions(contextData)
   },
   defaultValue: '',
   theme: sqliteTheme,

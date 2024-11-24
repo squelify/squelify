@@ -1,37 +1,112 @@
 export type EditorLanguage = 'sqlite' | 'json' | 'csv' | 'pgsql'
 
+/**
+ * Editor context data for code completion and validation
+ */
 export interface EditorContextData {
-  schema?: {
-    tables?: string[]
-    columns?: Record<string, string[]>
-    functions?: string[]
-    types?: string[]
-    constraints?: string[]
-  }
-  language?: {
-    sqlite?: SQLiteContextData
-    pgsql?: PostgreSQLContextData
-    json?: JSONContextData
-  }
+  /** List of available database table names */
+  tables?: string[]
+
+  /** Map of table names to their column names */
+  columns?: Record<string, string[]>
+
+  /** List of available database functions */
+  functions?: string[]
+
+  /** List of available data types */
+  types?: string[]
+
+  /** List of table constraints */
+  constraints?: string[]
+
+  /**
+   * Foreign key relationships between tables
+   * @example
+   * {
+   *   "posts": [{
+   *     sourceColumn: "user_id",
+   *     targetTable: "users",
+   *     targetColumn: "id"
+   *   }]
+   * }
+   */
+  foreignKeys?: Record<
+    string,
+    {
+      /** Source column containing the foreign key */
+      sourceColumn: string
+      /** Referenced target table name */
+      targetTable: string
+      /** Referenced target column name */
+      targetColumn: string
+    }[]
+  >
+
+  /** Map of table names to their indexes */
+  indexes?: Record<string, string[]>
+
+  /** List of database schemas (PostgreSQL specific) */
+  schemas?: string[]
+
+  /** List of database extensions (PostgreSQL specific) */
+  extensions?: string[]
+
+  /** JSON schema for validation and autocompletion */
+  jsonSchema?: any
+
+  /** Custom validation rules for JSON content */
+  validationRules?: any[]
 }
 
+/**
+ * Props for the CodeEditor component
+ */
 export interface CodeEditorProps {
+  /** Initial value/content of the editor */
   value?: string
+
+  /** Callback fired when editor content changes */
   onChange?: (value: string) => void
+
+  /** Programming language for syntax highlighting and completion */
   language: EditorLanguage
+
+  /** Whether the editor is in read-only mode */
   readOnly?: boolean
+
+  /** Placeholder text shown when editor is empty */
   placeholder?: string
+
+  /** Callback fired when execute command is triggered */
   onExecute?: (value: string) => void
+
+  /** Context data for code completion and validation */
   contextData?: EditorContextData
+
+  /** Whether code execution is in progress */
   isExecuting?: boolean
+
+  /** Whether to focus the editor on mount */
   autoFocus?: boolean
 }
 
+/**
+ * Editor instance methods exposed via ref
+ */
 export interface EditorRef {
+  /** Execute current statement at cursor position */
   execute: () => void
+
+  /** Execute all statements in editor */
   executeAll: () => void
+
+  /** Get current editor content */
   getValue: () => string
+
+  /** Set editor content */
   setValue: (value: string) => void
+
+  /** Focus the editor */
   focus: () => void
 }
 
@@ -54,42 +129,101 @@ export type CompletionType =
   | 'extension' // Database extensions
   | 'parameter' // Query parameters
 
+/**
+ * Code completion suggestion item
+ */
 export interface CompletionSuggestion {
+  /** Display text shown in completion list */
   label: string
+
+  /** Type of completion item for syntax highlighting */
   type: CompletionType
+
+  /** Additional information shown in tooltip */
   info: string
+
+  /** Template text to insert when item is selected */
   template?: string
+
+  /** Additional details shown next to label */
   detail?: string
+
+  /** Boost score for sorting suggestions */
   boost?: number
+
+  /** Group/section name for organizing suggestions */
   section?: string
 }
 
+/**
+ * Language configuration and behavior definition
+ */
 export interface LanguageDefinition {
+  /** Display name of the language */
   name: string
+
+  /** CodeMirror language extensions */
   extensions: any[]
+
+  /** Factory function to create completion provider */
   createCompletions: (contextData?: EditorContextData) => (context: any) => any
+
+  /** Default content when creating new editor */
   defaultValue: string
+
+  /** Custom theme configuration */
   theme?: any
+
+  /** Code execution configuration */
   execution?: {
+    /** Character that separates multiple statements */
     blockDelimiter?: string
+    /** Whether language supports executing statements */
     supportsExecution?: boolean
+    /** Whether language supports executing blocks of code */
     supportsBlockExecution?: boolean
   }
+
+  /** Code formatting function */
   formatter?: (code: string) => string
+
+  /** Code validation function */
   validator?: (code: string) => ValidationResult
 }
 
+/**
+ * Result of code validation
+ */
 export interface ValidationResult {
+  /** Whether the code is valid */
   isValid: boolean
+
+  /** List of validation errors */
   errors: Array<{
+    /** Error message */
     message: string
-    position?: { line: number; column: number }
+
+    /** Error position in code */
+    position?: {
+      /** Line number (1-based) */
+      line: number
+      /** Column number (1-based) */
+      column: number
+    }
   }>
 }
 
-export interface SQLiteContextData {
+/**
+ * Base context data for SQL databases
+ */
+export interface SQLContextData {
+  /** List of available database table names */
   tables?: string[]
+
+  /** Map of table names to their column names */
   columns?: Record<string, string[]>
+
+  /** Map of foreign key relationships between tables */
   foreignKeys?: Record<
     string,
     {
@@ -98,15 +232,7 @@ export interface SQLiteContextData {
       targetColumn: string
     }[]
   >
+
+  /** Map of table names to their indexes */
   indexes?: Record<string, string[]>
-}
-
-export interface PostgreSQLContextData extends SQLiteContextData {
-  schemas?: string[]
-  extensions?: string[]
-}
-
-export interface JSONContextData {
-  schema?: any
-  validationRules?: any[]
 }

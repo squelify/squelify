@@ -1,6 +1,17 @@
 import { CompletionContext, CompletionResult } from '@codemirror/autocomplete'
-import type { CompletionSuggestion, CompletionType, JSONContextData } from '../../types'
+import type { CompletionSuggestion, CompletionType } from '../../types'
 import { jsonKeywords } from './keywords'
+
+/**
+ * JSON specific context data
+ */
+export interface JSONContextData {
+  /** JSON schema for validation and autocompletion */
+  schema?: any
+
+  /** Custom validation rules for JSON content */
+  validationRules?: any[]
+}
 
 export function createJSONCompletions(contextData: JSONContextData = {}) {
   const { schema = {} } = contextData

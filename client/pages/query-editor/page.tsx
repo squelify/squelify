@@ -208,17 +208,13 @@ export default function Component() {
                 <div className="flex-1 overflow-hidden">
                   <CodeEditor
                     ref={editorRef}
-                    language="json"
+                    language="sqlite"
                     onChange={setQuery}
                     contextData={{
-                      language: {
-                        sqlite: {
-                          tables: ['users', 'posts'],
-                          columns: {
-                            users: ['id', 'name', 'email'],
-                            posts: ['id', 'title', 'content'],
-                          },
-                        },
+                      tables: ['users', 'posts'],
+                      columns: {
+                        users: ['id', 'name', 'email'],
+                        posts: ['id', 'title', 'content'],
                       },
                     }}
                     placeholder="-- Write your query here"

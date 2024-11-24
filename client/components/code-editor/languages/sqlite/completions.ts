@@ -1,6 +1,9 @@
 import { CompletionContext, CompletionResult } from '@codemirror/autocomplete'
-import type { CompletionSuggestion, CompletionType, SQLiteContextData } from '../../types'
+import type { CompletionSuggestion, CompletionType, SQLContextData } from '../../types'
 import { sqliteKeywords } from './keywords'
+
+// SQLiteContextData now inherits from base SQLContextData
+export type SQLiteContextData = SQLContextData
 
 export function createSQLiteCompletions(contextData: SQLiteContextData = {}) {
   const { tables = [], columns = {} } = contextData
