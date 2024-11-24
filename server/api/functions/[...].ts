@@ -32,9 +32,9 @@ function parseFileName(fileName: string): { routeName: string; method: HttpMetho
   const parts = name.split('.')
 
   // Handle index files
-  if (name === 'index' || parts[0] === 'index') {
+  if (parts[0] === 'index') {
     return {
-      routeName: dir || '', // Use directory name or empty for root
+      routeName: dir || '',
       method:
         (parts
           .find((part) => HTTP_METHODS.includes(part.toLowerCase() as HttpMethod))
@@ -45,19 +45,24 @@ function parseFileName(fileName: string): { routeName: string; method: HttpMetho
   // Find method part if exists
   const methodPart = parts.find((part) => HTTP_METHODS.includes(part.toLowerCase() as HttpMethod))
 
-  if (methodPart) {
-    // Remove method from route name
-    const routeParts = parts.filter((part) => part.toLowerCase() !== methodPart.toLowerCase())
-    return {
-      routeName: `${dir}/${routeParts[0]}`,
-      method: methodPart.toLowerCase() as HttpMethod,
+  // Handle wildcards and parameters
+  const routeParts = parts.map((part) => {
+    if (part === '[...]') {
+      return '*'
     }
-  }
+    if (part.startsWith('[') && part.endsWith(']')) {
+      return `:${part.slice(1, -1)}`
+    }
+    return part
+  })
 
-  // No method in filename, use full name as route and default to GET
+  // Build route name without method part
+  const cleanParts = routeParts.filter((part) => part.toLowerCase() !== methodPart?.toLowerCase())
+  const routeName = dir ? `${dir}/${cleanParts[0]}` : cleanParts[0]
+
   return {
-    routeName: `${dir}/${name}`,
-    method: 'get',
+    routeName,
+    method: (methodPart?.toLowerCase() as HttpMethod) || 'get',
   }
 }
 
@@ -137,27 +142,33 @@ export default defineEventHandler(async (event) => {
     // Register routes
     for (const file of files) {
       const { routeName, method } = parseFileName(file)
-
-      // Build clean route path
       const routePath = `/api/functions/${routeName}`.replace(/\/+/g, '/').replace(/\/$/, '')
 
       router.insert(routePath, {
         method,
         filePath: file,
         handler: async () => {
+          logger.debug('[functions:load]', `Loading function: ${file}`)
           const userFunction = await import(`${functionsDir}/${file}`)
           return userFunction.default
         },
       })
 
-      logger.debug('[functions]', `Registered route: ${method.toUpperCase()} ${routePath}`)
+      logger.debug('[functions:route]', `${method.toUpperCase()} ${routePath} -> ${file}`)
     }
 
     // Match route
-    const match = router.lookup(url)
+    const match = router.lookup(url.split('?')[0])
     if (!match) {
       return createErrorResponse(event, `Function not found: ${url}`, 404)
     }
+
+    logger.debug('[functions:match]', {
+      url: url.split('?')[0],
+      found: !!match,
+      method: match?.method,
+      params: match?.params,
+    })
 
     // Validate HTTP method
     if (match.method !== requestMethod) {
@@ -173,9 +184,23 @@ export default defineEventHandler(async (event) => {
   }
 })
 
+// Di bagian execute function
 async function executeFunction(fn: Function, event: any) {
+  const match = router.lookup(event.path.split('?')[0])
+  if (match?.params) {
+    if (match.params['*']) {
+      const wildcardPath = match.params['*']
+      event.context.params = {
+        ...match.params,
+        '*': wildcardPath.split('/'),
+      }
+    } else {
+      event.context.params = match.params
+    }
+  }
+
   const timeoutPromise = new Promise((_, reject) => {
-    setTimeout(() => reject(new Error('Function timeout')), FUNCTION_TIMEOUT * 1000)
+    setTimeout(() => reject(new Error('Function timeout')), FUNCTION_TIMEOUT)
   })
 
   return Promise.race([fn(event), timeoutPromise])
