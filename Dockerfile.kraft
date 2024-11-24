@@ -35,12 +35,13 @@ RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install \
 # -----------------------------------------------------------------------------
 FROM base AS builder
 
-# System utilities and generated output files from the installer stage.
-COPY --from=installer /usr/bin/tini /usr/bin/tini
+# Copy output files and config file from the installer stage.
+COPY --from=installer /srv/.config/ecosystem.json /srv/ecosystem.json
+COPY --from=installer /srv/server/views /srv/server/views
 COPY --from=installer /srv/.output /srv
 
 # Create the data directory and set permissions.
-RUN mkdir -p /srv/_data && chmod 0775 /srv/_data
+RUN mkdir -p /srv/_data/migrations && chmod -R 0775 /srv/_data
 
 # -----------------------------------------------------------------------------
 # Production image, copy build output files and run the application.
@@ -48,7 +49,7 @@ RUN mkdir -p /srv/_data && chmod 0775 /srv/_data
 FROM --platform=${PLATFORM} scratch as rootfs
 
 # Copy the build output files from the builder stage.
-COPY --from=builder /usr/bin/tini /usr/bin/tini
+COPY --from=installer /usr/bin/tini /usr/bin/tini
 COPY --from=builder /srv /srv
 
 # Copy distro configuration and some utils from the runner images.
