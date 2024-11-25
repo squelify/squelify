@@ -246,10 +246,6 @@ export function createPostgreSQLCompletions(contextData: PostgreSQLContextData =
       ]
     }
 
-    return {
-      from: word.from,
-      options,
-      validFor: /^\w*$/,
-    }
+    return { from: word.from, options, validFor: /^\w*$/ }
   }
 }

@@ -12,7 +12,7 @@ import { Separator } from '#/components/base-ui/separator'
 import { Table, TableHead, TableHeader } from '#/components/base-ui/table'
 import { TableBody, TableCell, TableRow } from '#/components/base-ui/table'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '#/components/base-ui/tabs'
-import CodeEditor, { EditorRef } from '#/components/code-editor'
+import CodeEditor, { type EditorContextData, EditorRef } from '#/components/code-editor'
 import { useSEOMeta } from '#/context/hooks/use-seo-meta'
 
 export default function Component() {
@@ -20,7 +20,15 @@ export default function Component() {
 
   const editorRef = useRef<EditorRef>(null)
   const [isExecuting, setIsExecuting] = useState(false)
-  const [query, setQuery] = useState('SELECT * FROM users;')
+  const [_query, setQuery] = useState('SELECT * FROM users;')
+
+  const editorContextData: EditorContextData = {
+    tables: ['users', 'posts'],
+    columns: {
+      users: ['id', 'name', 'email'],
+      posts: ['id', 'title', 'content'],
+    },
+  }
 
   // Add query execution logic here
   const handleExecute = async (query: string) => {
@@ -208,19 +216,12 @@ export default function Component() {
                 <div className="flex-1 overflow-hidden">
                   <CodeEditor
                     ref={editorRef}
-                    language="pgsql"
+                    language="json"
                     onChange={setQuery}
-                    contextData={{
-                      tables: ['users', 'posts'],
-                      columns: {
-                        users: ['id', 'name', 'email'],
-                        posts: ['id', 'title', 'content'],
-                      },
-                    }}
+                    contextData={editorContextData}
                     placeholder="-- Write your query here"
                     onExecute={handleExecute}
                     isExecuting={isExecuting}
-                    value={query}
                     autoFocus
                   />
                 </div>

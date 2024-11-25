@@ -95,10 +95,6 @@ export function createJSONCompletions(contextData: JSONContextData = {}) {
       }))
     }
 
-    return {
-      from: word.from,
-      options,
-      validFor: /^[\w\d]*$/,
-    }
+    return { from: word.from, options, validFor: /^[\w\d]*$/ }
   }
 }

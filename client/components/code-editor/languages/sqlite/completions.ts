@@ -235,10 +235,6 @@ export function createSQLiteCompletions(contextData: SQLiteContextData = {}) {
       ]
     }
 
-    return {
-      from: word.from,
-      options,
-      validFor: /^\w*$/,
-    }
+    return { from: word.from, options, validFor: /^\w*$/ }
   }
 }
