@@ -61,6 +61,31 @@ export function createPostgreSQLCompletions(contextData: PostgreSQLContextData =
       }))
     }
 
+    // IF NOT EXISTS Suggestions after CREATE TABLE, CREATE INDEX, CREATE TRIGGER
+    else if (
+      prevToken === 'CREATE' &&
+      (lastToken === 'TABLE' ||
+        lastToken === 'INDEX' ||
+        lastToken === 'VIEW' ||
+        lastToken === 'MATERIALIZED' ||
+        lastToken === 'FUNCTION' ||
+        lastToken === 'PROCEDURE' ||
+        lastToken === 'TRIGGER' ||
+        lastToken === 'SCHEMA' ||
+        lastToken === 'EXTENSION' ||
+        lastToken === 'TYPE')
+    ) {
+      options = [
+        {
+          label: 'IF NOT EXISTS',
+          type: 'keyword' as CompletionType,
+          info: 'Conditionally create if not exists',
+          boost: 95,
+          section: 'Clauses',
+        },
+      ]
+    }
+
     // DML Statements
     else if (lastToken === 'SELECT') {
       options = [

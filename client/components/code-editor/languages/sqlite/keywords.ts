@@ -22,6 +22,7 @@ export const sqliteKeywords: Record<string, CompletionSuggestion[]> = {
     { label: 'HAVING', type: 'keyword', info: 'Filter groups' },
     { label: 'ORDER BY', type: 'keyword', info: 'Sort results' },
     { label: 'LIMIT', type: 'keyword', info: 'Limit results' },
+    { label: 'IF NOT EXISTS', type: 'keyword', info: 'Conditionally create if not exists' },
   ],
   joins: [
     { label: 'INNER JOIN', type: 'keyword', info: 'Inner join' },

@@ -31,6 +31,7 @@ export const pgsqlKeywords: Record<string, CompletionSuggestion[]> = {
     { label: 'LIMIT', type: 'keyword', info: 'Limit results' },
     { label: 'OFFSET', type: 'keyword', info: 'Skip results' },
     { label: 'FETCH', type: 'keyword', info: 'Fetch rows' },
+    { label: 'IF NOT EXISTS', type: 'keyword', info: 'Conditionally create if not exists' },
   ],
   joins: [
     { label: 'INNER JOIN', type: 'keyword', info: 'Inner join' },

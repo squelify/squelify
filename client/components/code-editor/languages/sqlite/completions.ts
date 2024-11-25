@@ -6,7 +6,7 @@ import { sqliteKeywords } from './keywords'
 export type SQLiteContextData = SQLContextData
 
 export function createSQLiteCompletions(contextData: SQLiteContextData = {}) {
-  const { tables = [], columns = {} } = contextData
+  const { tables = [], columns = {}, variables = [] } = contextData
 
   return function sqliteCompletions(context: CompletionContext): CompletionResult | null {
     const word = context.matchBefore(/\w*/)
@@ -19,15 +19,63 @@ export function createSQLiteCompletions(contextData: SQLiteContextData = {}) {
 
     let options: CompletionSuggestion[] = []
 
+    // Data Type Suggestions
+    if (lastToken === 'AS' || lastToken === 'CAST') {
+      options = sqliteKeywords.dataTypes.map((type) => ({
+        label: type.label,
+        type: type.type as CompletionType,
+        info: type.info,
+        boost: 100,
+        section: 'Data Types',
+      }))
+    }
+
+    // Variable Suggestions
+    else if (lastToken === 'SET' || lastToken === 'WHERE') {
+      options = variables.map((variable) => ({
+        label: variable,
+        type: 'variable' as CompletionType,
+        info: `Variable: ${variable}`,
+        boost: 90,
+        section: 'Variables',
+      }))
+    }
+
     // DDL Statements
-    if (lastToken === 'CREATE') {
+    else if (lastToken === 'CREATE') {
       options = sqliteKeywords.ddl.map((kw) => ({
         label: kw.label,
         type: kw.type as CompletionType,
         info: kw.info,
-        template: kw.template,
         boost: 100,
         section: 'DDL Statements',
+      }))
+    }
+
+    // IF NOT EXISTS Suggestions after CREATE TABLE, CREATE INDEX, CREATE TRIGGER
+    else if (
+      prevToken === 'CREATE' &&
+      (lastToken === 'TABLE' || lastToken === 'INDEX' || lastToken === 'TRIGGER')
+    ) {
+      options = [
+        {
+          label: 'IF NOT EXISTS',
+          type: 'keyword' as CompletionType,
+          info: 'Conditionally create if not exists',
+          boost: 95,
+          section: 'Clauses',
+        },
+      ]
+    }
+
+    // Constraint Suggestions
+    else if (lastToken === 'CONSTRAINT' || prevToken === 'ADD') {
+      options = sqliteKeywords.constraints.map((constraint) => ({
+        label: constraint.label,
+        type: constraint.type as CompletionType,
+        info: constraint.info,
+        boost: 95,
+        section: 'Constraints',
       }))
     }
 
@@ -64,7 +112,6 @@ export function createSQLiteCompletions(contextData: SQLiteContextData = {}) {
           label: fn.label,
           type: fn.type as CompletionType,
           info: fn.info,
-          template: fn.template,
           boost: 70,
           section: 'Functions',
         })),
@@ -135,7 +182,6 @@ export function createSQLiteCompletions(contextData: SQLiteContextData = {}) {
         label: fn.label,
         type: fn.type as CompletionType,
         info: fn.info,
-        template: fn.template,
         boost: 90,
         section: 'Aggregate Functions',
       }))
@@ -148,21 +194,18 @@ export function createSQLiteCompletions(contextData: SQLiteContextData = {}) {
           label: kw.label,
           type: kw.type as CompletionType,
           info: kw.info,
-          template: kw.template,
           section: 'DDL',
         })),
         ...sqliteKeywords.dml.map((kw) => ({
           label: kw.label,
           type: kw.type as CompletionType,
           info: kw.info,
-          template: kw.template,
           section: 'DML',
         })),
         ...sqliteKeywords.functions.map((fn) => ({
           label: fn.label,
           type: fn.type as CompletionType,
           info: fn.info,
-          template: fn.template,
           section: 'Functions',
         })),
         ...tables.map((table) => ({
@@ -170,6 +213,24 @@ export function createSQLiteCompletions(contextData: SQLiteContextData = {}) {
           type: 'table' as CompletionType,
           info: `Table: ${table}`,
           section: 'Tables',
+        })),
+        ...sqliteKeywords.dataTypes.map((type) => ({
+          label: type.label,
+          type: type.type as CompletionType,
+          info: type.info,
+          section: 'Data Types',
+        })),
+        ...sqliteKeywords.constraints.map((constraint) => ({
+          label: constraint.label,
+          type: constraint.type as CompletionType,
+          info: constraint.info,
+          section: 'Constraints',
+        })),
+        ...variables.map((variable) => ({
+          label: variable,
+          type: 'variable' as CompletionType,
+          info: `Variable: ${variable}`,
+          section: 'Variables',
         })),
       ]
     }

@@ -256,4 +256,7 @@ export interface SQLContextData {
 
   /** Map of table names to their indexes */
   indexes?: Record<string, string[]>
+
+  /** List of available variables */
+  variables?: string[]
 }

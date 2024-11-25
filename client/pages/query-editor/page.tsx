@@ -208,7 +208,7 @@ export default function Component() {
                 <div className="flex-1 overflow-hidden">
                   <CodeEditor
                     ref={editorRef}
-                    language="sqlite"
+                    language="pgsql"
                     onChange={setQuery}
                     contextData={{
                       tables: ['users', 'posts'],
