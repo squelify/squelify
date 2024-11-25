@@ -216,7 +216,7 @@ export default function Component() {
                 <div className="flex-1 overflow-hidden">
                   <CodeEditor
                     ref={editorRef}
-                    language="json"
+                    language="sqlite"
                     onChange={setQuery}
                     contextData={editorContextData}
                     placeholder="-- Write your query here"

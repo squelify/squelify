@@ -3,7 +3,7 @@ import { Extension } from '@codemirror/state'
 /**
  * Supported editor languages for the code editor.
  */
-export type EditorLanguage = 'sqlite' | 'json' | 'pgsql'
+export type EditorLanguage = 'sqlite' | 'pgsql' | 'json' | 'dbml'
 
 /**
  * Theme options for code editor appearance
