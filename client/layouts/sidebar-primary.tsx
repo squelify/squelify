@@ -7,7 +7,6 @@ import { Sidebar, SidebarContent, useSidebar } from '#/components/base-ui/sideba
 import { TooltipContent, TooltipProvider } from '#/components/base-ui/tooltip'
 import { Tooltip, TooltipTrigger } from '#/components/base-ui/tooltip'
 import { Link } from '#/components/link'
-import ThemeSwitcher from '#/components/theme-switcher'
 import { useMenu } from '#/context/hooks/use-menu'
 import type { UserInfo } from '#/services/types'
 import { clx } from '#/utils/helper'
@@ -128,9 +127,6 @@ export default function PrimarySidebar({ user, logout }: PrimarySidebarProps) {
             className={clx(sidebarState === 'expanded' ? 'order-1' : 'order-2', 'flex-1')}
           >
             <UserMenu user={user} sidebarState={sidebarState} logout={logout} />
-          </SidebarMenuItem>
-          <SidebarMenuItem className={clx(sidebarState === 'expanded' ? 'order-2' : 'order-1')}>
-            <ThemeSwitcher />
           </SidebarMenuItem>
         </SidebarMenu>
       </SidebarFooter>

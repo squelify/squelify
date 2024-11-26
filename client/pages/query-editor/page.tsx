@@ -16,7 +16,7 @@ import CodeEditor, { type EditorContextData, EditorRef } from '#/components/code
 import { useSEOMeta } from '#/context/hooks/use-seo-meta'
 
 export default function Component() {
-  useSEOMeta('Query Editor')
+  useSEOMeta('SQL Console')
 
   const editorRef = useRef<EditorRef>(null)
   const [isExecuting, setIsExecuting] = useState(false)

@@ -1,6 +1,6 @@
 import { ErrorBoundary } from 'react-error-boundary'
 import { Navigate, Outlet, useLocation, useSearchParams } from 'react-router'
-import ThemeSwitcher from '#/components/theme-switcher'
+import { ThemeSwitcher } from '#/components/theme-switcher'
 import { useAuth } from '#/context/hooks/use-auth'
 import RootLayout from '#/layouts/root-layout'
 import ErrorBoundaryFallback from '#/pages/error/boundary-fallback'

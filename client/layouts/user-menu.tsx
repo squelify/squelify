@@ -1,12 +1,13 @@
 import * as Lucide from 'lucide-react'
 import { Avatar, AvatarFallback, AvatarImage } from '#/components/base-ui/avatar'
-import { DropdownMenuContent, DropdownMenuItem } from '#/components/base-ui/dropdown-menu'
+import { DropdownMenuItem, DropdownMenuLabel } from '#/components/base-ui/dropdown-menu'
+import { DropdownMenuContent, DropdownMenuGroup } from '#/components/base-ui/dropdown-menu'
 import { DropdownMenuSeparator, DropdownMenuShortcut } from '#/components/base-ui/dropdown-menu'
 import { DropdownMenu, DropdownMenuTrigger } from '#/components/base-ui/dropdown-menu'
-import { SidebarMenuButton } from '#/components/base-ui/sidebar'
+import { SidebarMenuButton, useSidebar } from '#/components/base-ui/sidebar'
 import { Link } from '#/components/link'
+import { ThemeSelector } from '#/components/theme-switcher'
 import type { UserInfo } from '#/services/types'
-import { clx } from '#/utils/helper'
 
 interface UserMenuProps {
   user: UserInfo
@@ -15,59 +16,77 @@ interface UserMenuProps {
 }
 
 export default function UserMenu({ user, sidebarState, logout }: UserMenuProps) {
+  const { isMobile } = useSidebar()
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <SidebarMenuButton>
-          {user.avatarUrl ? (
-            <Avatar className="size-5">
-              <AvatarImage src={user.avatarUrl} alt={user.username} />
-              <AvatarFallback>
-                <Lucide.CircleUser strokeWidth={1.8} />
-              </AvatarFallback>
-            </Avatar>
-          ) : (
-            <Lucide.CircleUser className="size-5" strokeWidth={1.8} />
-          )}
-          <span>{user.displayName}</span>
-          <Lucide.ChevronUp className="ml-auto" strokeWidth={1.8} />
+        <SidebarMenuButton
+          size="lg"
+          className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
+        >
+          <Avatar className="h-8 w-8 rounded-lg">
+            <AvatarImage src={user.avatarUrl} alt={user.displayName} />
+            <AvatarFallback className="rounded-lg bg-transparent">
+              <Lucide.CircleUser strokeWidth={1.8} />
+            </AvatarFallback>
+          </Avatar>
+          <div className="grid flex-1 text-left text-sm leading-tight">
+            <span className="truncate font-semibold">{user.displayName}</span>
+            <span className="truncate text-xs">{user.email}</span>
+          </div>
+          <Lucide.ChevronsUpDown className="ml-auto size-4" strokeWidth={1.8} />
         </SidebarMenuButton>
       </DropdownMenuTrigger>
       <DropdownMenuContent
-        side={sidebarState === 'expanded' ? 'top' : 'right'}
-        className={clx(sidebarState === 'expanded' ? 'ml-4' : 'ml-0', 'mb-2 w-56')}
+        className="w-[--radix-dropdown-menu-trigger-width] min-w-56 rounded-lg px-1"
+        side={sidebarState === 'collapsed' || isMobile ? 'bottom' : 'right'}
+        align="end"
+        sideOffset={4}
       >
-        <DropdownMenuItem asChild>
-          <Link href="/account">
-            <span>Account Settings</span>
-            <DropdownMenuShortcut>
-              <Lucide.UserRoundCog className="size-3" strokeWidth={1.8} />
-            </DropdownMenuShortcut>
-          </Link>
-        </DropdownMenuItem>
+        <DropdownMenuLabel className="p-0 font-normal">
+          <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
+            <Avatar className="size-8 rounded-lg">
+              <AvatarImage src={user.avatarUrl} alt={user.username} />
+              <AvatarFallback className="rounded-lg">
+                <Lucide.CircleUser className="size-8 rounded-lg" strokeWidth={1.8} />
+              </AvatarFallback>
+            </Avatar>
+            <div className="grid flex-1 text-left text-sm leading-tight">
+              <span className="truncate font-semibold">{user.displayName}</span>
+              <span className="truncate text-xs">{user.email}</span>
+            </div>
+          </div>
+        </DropdownMenuLabel>
         <DropdownMenuSeparator />
-        <DropdownMenuItem asChild>
-          <Link href="/docs" newTab>
-            <span>Documentation</span>
-            <DropdownMenuShortcut>
-              <Lucide.ExternalLink className="size-3" strokeWidth={1.8} />
-            </DropdownMenuShortcut>
-          </Link>
-        </DropdownMenuItem>
-        <DropdownMenuItem asChild>
-          <Link href="/github" newTab>
-            <span>Source Code</span>
-            <DropdownMenuShortcut>
-              <Lucide.ExternalLink className="size-3" strokeWidth={1.8} />
-            </DropdownMenuShortcut>
-          </Link>
-        </DropdownMenuItem>
+        <DropdownMenuGroup>
+          <DropdownMenuItem asChild>
+            <Link href="/account">
+              <Lucide.UserRoundCog strokeWidth={1.8} />
+              <span>Account Settings</span>
+            </Link>
+          </DropdownMenuItem>
+          <DropdownMenuItem asChild>
+            <Link href="/docs">
+              <Lucide.ExternalLink strokeWidth={1.8} />
+              <span>Documentation</span>
+            </Link>
+          </DropdownMenuItem>
+          <DropdownMenuItem>
+            <Lucide.Bell strokeWidth={1.8} />
+            Notifications
+          </DropdownMenuItem>
+        </DropdownMenuGroup>
+        <DropdownMenuSeparator />
+        <DropdownMenuGroup>
+          <DropdownMenuItem asChild>
+            <ThemeSelector />
+          </DropdownMenuItem>
+        </DropdownMenuGroup>
         <DropdownMenuSeparator />
         <DropdownMenuItem onClick={logout}>
-          <span>Sign Out</span>
-          <DropdownMenuShortcut>
-            <Lucide.LogOut className="size-3" strokeWidth={1.8} />
-          </DropdownMenuShortcut>
+          <Lucide.LogOut strokeWidth={1.8} />
+          Log out
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
