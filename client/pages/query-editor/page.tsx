@@ -37,6 +37,7 @@ export default function Component() {
       consola.log(query)
       await new Promise((resolve) => setTimeout(resolve, 1500)) // Simulate API call
     } finally {
+      setQuery(query)
       setIsExecuting(false)
       requestAnimationFrame(() => {
         editorRef.current?.focus()

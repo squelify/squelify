@@ -222,7 +222,7 @@ export const CodeEditor = forwardRef<EditorRef, CodeEditorProps>(function CodeEd
         view.focus()
       })
     }
-  }, [onChange, language, readOnly, placeholderText, isExecuting, autoFocus, theme])
+  }, [onChange, language, readOnly, placeholderText, autoFocus, theme])
 
   useLayoutEffect(() => {
     initializeEditor()
