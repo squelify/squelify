@@ -20,7 +20,7 @@ export function useMenu() {
       hideLabel: true,
       items: [
         { title: 'Dashboard', url: '/dashboard', icon: Lucide.LayoutDashboard },
-        { title: 'SQL Console', url: '/query-editor', icon: Lucide.SquareChartGantt },
+        { title: 'SQL Console', url: '/console', icon: Lucide.SquareChartGantt },
       ],
     },
     {

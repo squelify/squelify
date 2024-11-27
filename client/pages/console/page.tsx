@@ -288,4 +288,4 @@ export default function Component() {
   )
 }
 
-Component.displayName = 'QueryEditorPage'
+Component.displayName = 'SQLConsolePage'

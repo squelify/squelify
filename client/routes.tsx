@@ -16,9 +16,9 @@ import NotFound from '#/pages/error/not-found'
 import AccountPage from '#/pages/account/page'
 import APIKeysPage from '#/pages/api-keys/page'
 import CollectionsPage from '#/pages/collections/page'
+import SQLConsolePage from '#/pages/console/page'
 import MediaLibraryPage from '#/pages/media-library/page'
 import PermissionsPage from '#/pages/permissions/page'
-import QueryEditorPage from '#/pages/query-editor/page'
 import RolesPage from '#/pages/roles/page'
 import UsersPage from '#/pages/users/page'
 import WebhooksPage from '#/pages/webhooks/page'
@@ -54,7 +54,7 @@ const Routes: RouteObject[] = [
     children: [
       { index: true, element: <Navigate to="/dashboard" replace /> },
       { path: '/dashboard', element: <DashboardPage /> },
-      { path: '/query-editor', element: <QueryEditorPage /> },
+      { path: '/console', element: <SQLConsolePage /> },
       { path: '/account', element: <AccountPage /> },
 
       // User Management

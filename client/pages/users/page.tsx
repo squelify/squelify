@@ -212,7 +212,7 @@ export default function Component() {
                 ) : (
                   <TableRow>
                     <TableCell colSpan={6} className="h-24 text-center">
-                      <Lucide.Users className="mx-auto mb-2 h-8 w-8 text-muted-foreground" />
+                      <Lucide.Users className="mx-auto mb-2 size-8 text-muted-foreground" />
                       <span className="text-muted-foreground text-sm">No results.</span>
                     </TableCell>
                   </TableRow>
