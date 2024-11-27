@@ -5,6 +5,7 @@ import { Button } from '#/components/base-ui/button'
 import { DropdownMenu, DropdownMenuContent } from '#/components/base-ui/dropdown-menu'
 import { DropdownMenuShortcut } from '#/components/base-ui/dropdown-menu'
 import { DropdownMenuItem, DropdownMenuTrigger } from '#/components/base-ui/dropdown-menu'
+import { Input } from '#/components/base-ui/input'
 import { ResizablePanel, ResizablePanelGroup } from '#/components/base-ui/resizable'
 import { ResizableHandle } from '#/components/base-ui/resizable'
 import { ScrollArea } from '#/components/base-ui/scroll-area'
@@ -100,6 +101,13 @@ export default function QueryEditor() {
                   <Lucide.Download className="-ml-0.5 mr-1.5 size-3" />
                   <span>Export</span>
                 </Button>
+
+                <div className="p-0">
+                  <Input
+                    className="h-7 border-transparent bg-background px-2 font-medium text-muted-foreground text-xs shadow-none hover:border-input focus:ring-0 focus-visible:ring-0"
+                    value="Untitled query"
+                  />
+                </div>
               </div>
 
               <div className="flex items-center gap-3 text-muted-foreground text-sm">
