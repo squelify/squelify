@@ -13,7 +13,6 @@ import { getBreadcrumbItems } from '#/utils/helper'
 import React from 'react'
 import RootLayout from './root-layout'
 import PrimarySidebar from './sidebar-primary'
-import SecondarySidebar from './sidebar-secondary'
 
 export default function AppLayout() {
   const { user, logout } = useAuth()
@@ -32,7 +31,6 @@ export default function AppLayout() {
       <RootLayout className="size-full min-h-screen">
         <SidebarProvider>
           <PrimarySidebar user={user} logout={logout} />
-          {/* <SecondarySidebar /> */}
           <SidebarInset>
             <header className="sticky top-0 z-10 flex h-14 shrink-0 items-center gap-2 border-b bg-sidebar px-4">
               <Breadcrumb key={pathname}>

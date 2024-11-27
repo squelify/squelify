@@ -122,7 +122,7 @@ export default function Component() {
           <CardContent>
             <div className="flex items-center">
               <div
-                className={`mr-2 h-3 w-3 rounded-full ${healthData?.database.status === 'up' ? 'bg-green-500' : 'bg-red-500'}`}
+                className={`mr-2 size-3 rounded-full ${healthData?.database.status === 'up' ? 'bg-green-500' : 'bg-red-500'}`}
               />
               <span className="font-bold text-2xl">
                 {renderMetric(healthData?.database.status === 'up' ? 'Connected' : 'Disconnected')}
