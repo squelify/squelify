@@ -137,6 +137,10 @@ export default class SquelifyMigrator implements MigrationProvider {
         name: '202303021_create_api_keys_table',
         migration: await import('./migrations/202303021_create_api_keys_table'),
       },
+      {
+        name: '202303022_create_user_migration_table',
+        migration: await import('./migrations/202303022_create_user_migration_table'),
+      },
     ]
 
     const migrationEntries = await Promise.all(
