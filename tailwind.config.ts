@@ -14,7 +14,20 @@ export default {
       colors: {
         /* https://uxplanet.org/alternatives-to-using-pure-black-000000-for-text-and-backgrounds-54ef0e733cdb */
         black: '#0A0A0A',
-        brand: colors.amber,
+        brand: {
+          '50': '#fefbe8',
+          '100': '#fff8c2',
+          '200': '#ffec89',
+          '300': '#ffde59',
+          '400': '#fdc512',
+          '500': '#ecab06',
+          '600': '#cc8302',
+          '700': '#a35c05',
+          '800': '#86480d',
+          '900': '#723b11',
+          '950': '#431e05',
+        },
+
         primary: {
           DEFAULT: 'hsl(var(--primary))',
           foreground: 'hsl(var(--primary-foreground))',

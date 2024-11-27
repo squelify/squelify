@@ -8,7 +8,7 @@ import { useAuth } from '#/context/hooks/use-auth'
 import { useMenu } from '#/context/hooks/use-menu'
 import ErrorBoundaryFallback from '#/pages/error/boundary-fallback'
 import type { AppContextType } from '#/providers/app-provider'
-import { clx, getBreadcrumbItems } from '#/utils/helper'
+import { getBreadcrumbItems } from '#/utils/helper'
 
 import React from 'react'
 import RootLayout from './root-layout'

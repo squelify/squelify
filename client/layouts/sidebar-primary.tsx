@@ -90,7 +90,12 @@ export default function PrimarySidebar({ user, logout }: PrimarySidebarProps) {
                               asChild
                             >
                               <Link href={item.url}>
-                                <item.icon strokeWidth={1.8} />
+                                <item.icon
+                                  className={clx(
+                                    isMenuActive(item.url) && 'bg-accent text-brand-500'
+                                  )}
+                                  strokeWidth={1.8}
+                                />
                                 <span>{item.title}</span>
                               </Link>
                             </SidebarMenuButton>
@@ -107,7 +112,10 @@ export default function PrimarySidebar({ user, logout }: PrimarySidebarProps) {
                           asChild
                         >
                           <Link href={item.url}>
-                            <item.icon strokeWidth={1.8} />
+                            <item.icon
+                              className={clx(isMenuActive(item.url) && 'bg-accent text-brand-500')}
+                              strokeWidth={1.8}
+                            />
                             <span>{item.title}</span>
                           </Link>
                         </SidebarMenuButton>
