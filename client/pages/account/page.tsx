@@ -1,17 +1,31 @@
-import { Card, CardContent, CardHeader } from '#/components/base-ui/card'
-import { CardDescription, CardTitle } from '#/components/base-ui/card'
+import { useQueryState } from 'nuqs'
 import { Separator } from '#/components/base-ui/separator'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '#/components/base-ui/tabs'
+import { Tabs, TabsList, TabsTrigger } from '#/components/base-ui/tabs'
 import { useSEOMeta } from '#/context/hooks/use-seo-meta'
 
-import { LoginHistory } from './login-history'
-import { NotificationPreferences } from './notification-preferences'
-import { PasswordForm } from './password-form'
-import { ProfileForm } from './profile-form'
-import { TwoFactorSetup } from './two-factor-setup'
+import TabGeneral from './tab-general'
+import TabLoginHistory from './tab-login-history'
+import TabNotifications from './tab-notifications'
+import TabSecurity from './tab-security'
+
+interface AccountSettingsTab {
+  label: string
+  value: string
+}
+
+const ACCOUNT_TABS: AccountSettingsTab[] = [
+  { label: 'General', value: 'general' },
+  { label: 'Security', value: 'security' },
+  { label: 'Notifications', value: 'notifications' },
+  { label: 'Login History', value: 'login-history' },
+]
 
 export default function Component() {
   const { pageTitle } = useSEOMeta('Account Settings')
+
+  // Extract the active section from the query parameter
+  const [activeTab, setActiveTab] = useQueryState('activeTab')
+  const activeSection = activeTab || 'general'
 
   return (
     <div className="mx-auto w-full max-w-3xl space-y-6 p-4 md:p-6 lg:p-8">
@@ -24,71 +38,19 @@ export default function Component() {
 
       <Separator />
 
-      <Tabs defaultValue="general" className="space-y-4">
+      <Tabs value={activeSection} defaultValue={activeSection} className="space-y-4">
         <TabsList className="grid w-full grid-cols-4">
-          <TabsTrigger value="general">General</TabsTrigger>
-          <TabsTrigger value="security">Security</TabsTrigger>
-          <TabsTrigger value="notifications">Notifications</TabsTrigger>
-          <TabsTrigger value="login-history">Login History</TabsTrigger>
+          {ACCOUNT_TABS.map((tab) => (
+            <TabsTrigger key={tab.value} value={tab.value} onClick={() => setActiveTab(tab.value)}>
+              {tab.label}
+            </TabsTrigger>
+          ))}
         </TabsList>
 
-        <TabsContent value="general">
-          <Card>
-            <CardHeader className="space-y-1">
-              <CardTitle>Profile Information</CardTitle>
-              <CardDescription>Update your profile information and preferences</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <ProfileForm />
-            </CardContent>
-          </Card>
-        </TabsContent>
-
-        <TabsContent value="security" className="space-y-4">
-          <Card>
-            <CardHeader className="space-y-1">
-              <CardTitle>Change Password</CardTitle>
-              <CardDescription>Update your password to keep your account secure</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <PasswordForm />
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardHeader className="space-y-1">
-              <CardTitle>Two-Factor Authentication</CardTitle>
-              <CardDescription>Add an extra layer of security to your account</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <TwoFactorSetup />
-            </CardContent>
-          </Card>
-        </TabsContent>
-
-        <TabsContent value="notifications">
-          <Card>
-            <CardHeader className="space-y-1">
-              <CardTitle>Notification Preferences</CardTitle>
-              <CardDescription>Choose how you want to be notified</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <NotificationPreferences />
-            </CardContent>
-          </Card>
-        </TabsContent>
-
-        <TabsContent value="login-history">
-          <Card>
-            <CardHeader className="space-y-1">
-              <CardTitle>Login History</CardTitle>
-              <CardDescription>Review your recent login activities</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <LoginHistory />
-            </CardContent>
-          </Card>
-        </TabsContent>
+        <TabGeneral />
+        <TabSecurity />
+        <TabNotifications />
+        <TabLoginHistory />
       </Tabs>
     </div>
   )

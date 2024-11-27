@@ -1,24 +1,12 @@
 import * as Lucide from 'lucide-react'
 import { useState } from 'react'
 import { Button } from '#/components/base-ui/button'
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from '#/components/base-ui/dialog'
+import { Dialog, DialogDescription, DialogFooter, DialogHeader } from '#/components/base-ui/dialog'
+import { DialogContent, DialogTitle, DialogTrigger } from '#/components/base-ui/dialog'
 import { Input } from '#/components/base-ui/input'
-import {
-  InputOTP,
-  InputOTPGroup,
-  InputOTPSeparator,
-  InputOTPSlot,
-} from '#/components/base-ui/input-otp'
+import { InputOTP, InputOTPGroup, InputOTPSlot } from '#/components/base-ui/input-otp'
+import { InputOTPSeparator } from '#/components/base-ui/input-otp'
 import { Label } from '#/components/base-ui/label'
-import { Separator } from '#/components/base-ui/separator'
 
 export function TwoFactorSetup() {
   const [showSetupDialog, setShowSetupDialog] = useState(false)
