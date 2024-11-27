@@ -26,8 +26,8 @@ export default function PrimarySidebar({ user, logout }: PrimarySidebarProps) {
 
   // Helper to check the active state of the menu
   const isMenuActive = (itemUrl: string): boolean => {
-    // Untuk settings page, cek apakah path dimulai dengan itemUrl
-    if (itemUrl.startsWith('/settings')) {
+    // For the settings page, check whether the path starts with itemUrl
+    if (itemUrl.startsWith('/settings') || itemUrl.startsWith('/console')) {
       return pathname.startsWith(itemUrl)
     }
     // For other menus, exact match

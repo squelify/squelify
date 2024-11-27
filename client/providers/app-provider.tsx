@@ -1,5 +1,6 @@
 import { useStore } from '@nanostores/react'
 import consola from 'consola'
+import { NuqsAdapter } from 'nuqs/adapters/react'
 import { createContext, useCallback, useEffect, useMemo, useRef } from 'react'
 import { CookiesProvider, useCookies } from 'react-cookie'
 import type { CookieSetOptions } from 'universal-cookie'
@@ -153,11 +154,13 @@ export default function AppProvider({ children, debugScreenSize }: AppProviderPr
 
   return (
     <CookiesProvider defaultSetOptions={COOKIE_OPTIONS}>
-      <SEOMetaProvider defaultSuffix="Squelify">
-        <AuthContext.Provider value={authContextValues}>
-          <div className={clx(debugScreenSize && 'debug-breakpoints')}>{children}</div>
-        </AuthContext.Provider>
-      </SEOMetaProvider>
+      <NuqsAdapter>
+        <SEOMetaProvider defaultSuffix="Squelify">
+          <AuthContext.Provider value={authContextValues}>
+            <div className={clx(debugScreenSize && 'debug-breakpoints')}>{children}</div>
+          </AuthContext.Provider>
+        </SEOMetaProvider>
+      </NuqsAdapter>
     </CookiesProvider>
   )
 }

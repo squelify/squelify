@@ -54,8 +54,8 @@ const Routes: RouteObject[] = [
     children: [
       { index: true, element: <Navigate to="/dashboard" replace /> },
       { path: '/dashboard', element: <DashboardPage /> },
-      { path: '/console', element: <SQLConsolePage /> },
       { path: '/account', element: <AccountPage /> },
+      { path: '/console', element: <SQLConsolePage /> },
 
       // User Management
       route('/users', {

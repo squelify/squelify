@@ -22,6 +22,7 @@ const SETTINGS_TABS: SettingsTab[] = [
 
 export default function SettingsLayout() {
   const location = useLocation()
+
   // Extract the active section from the path
   const activeSection = location.pathname.split('/settings/')[1] || 'general'
 
