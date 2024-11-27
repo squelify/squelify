@@ -76,7 +76,7 @@ export default function UserMenu({ user, sidebarState, logout }: UserMenuProps) 
             <Avatar className="size-8 rounded-lg">
               <AvatarImage src={user.avatarUrl} alt={user.username} />
               <AvatarFallback className="rounded-lg bg-transparent">
-                <Lucide.CircleUser className="size-8 rounded-lg" strokeWidth={1.8} />
+                <Lucide.CircleUser className="size-8 rounded-lg" strokeWidth={1.6} />
               </AvatarFallback>
             </Avatar>
             <div className="grid flex-1 text-left text-sm leading-tight">
@@ -93,15 +93,18 @@ export default function UserMenu({ user, sidebarState, logout }: UserMenuProps) 
               <span>Account Settings</span>
             </Link>
           </DropdownMenuItem>
+          <DropdownMenuSeparator />
           <DropdownMenuItem asChild>
             <Link href="/docs">
               <Lucide.ExternalLink strokeWidth={1.8} />
               <span>Documentation</span>
             </Link>
           </DropdownMenuItem>
-          <DropdownMenuItem>
-            <Lucide.Bell strokeWidth={1.8} />
-            Notifications
+          <DropdownMenuItem asChild>
+            <Link href="/github">
+              <Lucide.ExternalLink strokeWidth={1.8} />
+              <span>Source Code</span>
+            </Link>
           </DropdownMenuItem>
         </DropdownMenuGroup>
         <DropdownMenuSeparator />

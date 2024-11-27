@@ -3,8 +3,7 @@ import { Navigate, Outlet, useLocation } from 'react-router'
 import { Breadcrumb, BreadcrumbList } from '#/components/base-ui/breadcrumb'
 import { BreadcrumbItem, BreadcrumbPage } from '#/components/base-ui/breadcrumb'
 import { BreadcrumbSeparator } from '#/components/base-ui/breadcrumb'
-import { Separator } from '#/components/base-ui/separator'
-import { SidebarInset, SidebarProvider, SidebarTrigger } from '#/components/base-ui/sidebar'
+import { SidebarInset, SidebarProvider } from '#/components/base-ui/sidebar'
 import { useAuth } from '#/context/hooks/use-auth'
 import { useMenu } from '#/context/hooks/use-menu'
 import ErrorBoundaryFallback from '#/pages/error/boundary-fallback'
@@ -36,8 +35,6 @@ export default function AppLayout() {
           {/* <SecondarySidebar /> */}
           <SidebarInset>
             <header className="sticky top-0 z-10 flex h-14 shrink-0 items-center gap-2 border-b bg-sidebar px-4">
-              <SidebarTrigger className="-ml-1" />
-              <Separator orientation="vertical" className="mr-2 h-4" />
               <Breadcrumb key={pathname}>
                 <BreadcrumbList>
                   {pathname === '/dashboard' && (

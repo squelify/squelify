@@ -1,9 +1,10 @@
-import consola from 'consola'
+import * as Lucide from 'lucide-react'
 import { useLocation } from 'react-router'
+import { Button } from '#/components/base-ui/button'
 import { SidebarFooter, SidebarHeader } from '#/components/base-ui/sidebar'
 import { SidebarGroup, SidebarGroupContent, SidebarGroupLabel } from '#/components/base-ui/sidebar'
 import { SidebarMenu, SidebarMenuButton, SidebarMenuItem } from '#/components/base-ui/sidebar'
-import { Sidebar, SidebarContent, useSidebar } from '#/components/base-ui/sidebar'
+import { Sidebar, SidebarContent, SidebarTrigger, useSidebar } from '#/components/base-ui/sidebar'
 import { TooltipContent, TooltipProvider } from '#/components/base-ui/tooltip'
 import { Tooltip, TooltipTrigger } from '#/components/base-ui/tooltip'
 import { Link } from '#/components/link'
@@ -19,7 +20,7 @@ interface PrimarySidebarProps {
 }
 
 export default function PrimarySidebar({ user, logout }: PrimarySidebarProps) {
-  const { state: sidebarState } = useSidebar()
+  const { state: sidebarState, toggleSidebar } = useSidebar()
   const { pathname } = useLocation()
   const { menuGroups } = useMenu()
 
@@ -122,11 +123,46 @@ export default function PrimarySidebar({ user, logout }: PrimarySidebarProps) {
 
       {/* Sidebar Footer */}
       <SidebarFooter>
-        <SidebarMenu className="flex flex-col gap-2 group-data-[state=expanded]:flex-row group-data-[state=expanded]:items-center">
+        <SidebarMenu
+          className={clx(
+            sidebarState === 'expanded' ? 'gap-0.5' : 'gap-2',
+            'flex flex-col group-data-[state=expanded]:flex-row group-data-[state=expanded]:items-center'
+          )}
+        >
           <SidebarMenuItem
             className={clx(sidebarState === 'expanded' ? 'order-1' : 'order-2', 'flex-1')}
           >
             <UserMenu user={user} sidebarState={sidebarState} logout={logout} />
+          </SidebarMenuItem>
+          <SidebarMenuItem
+            className={clx(sidebarState === 'expanded' ? 'order-2' : 'order-1', 'h-full w-8')}
+          >
+            <TooltipProvider>
+              <Tooltip delayDuration={100}>
+                <TooltipTrigger asChild>
+                  <Button
+                    data-sidebar="trigger"
+                    variant="ghost"
+                    size="icon"
+                    className={clx(
+                      sidebarState === 'expanded' ? 'size-full' : 'size-8',
+                      'text-muted-foreground'
+                    )}
+                    onClick={toggleSidebar}
+                  >
+                    {sidebarState === 'expanded' ? (
+                      <Lucide.ArrowLeftToLine strokeWidth={2} />
+                    ) : (
+                      <Lucide.ArrowRightToLine strokeWidth={2} />
+                    )}
+                    <span className="sr-only">Toggle Sidebar</span>
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent side={sidebarState === 'collapsed' ? 'right' : 'top'}>
+                  <p>Toggle Sidebar</p>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
           </SidebarMenuItem>
         </SidebarMenu>
       </SidebarFooter>

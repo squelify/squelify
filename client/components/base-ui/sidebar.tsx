@@ -1,7 +1,7 @@
 import { useStore } from '@nanostores/react'
 import { Slot } from '@radix-ui/react-slot'
 import { VariantProps, cva } from 'class-variance-authority'
-import { PanelLeft } from 'lucide-react'
+import * as Lucide from 'lucide-react'
 import * as React from 'react'
 
 import { Button } from '#/components/base-ui/button'
@@ -259,7 +259,7 @@ const SidebarTrigger = React.forwardRef<
   React.ElementRef<typeof Button>,
   React.ComponentProps<typeof Button>
 >(({ className, onClick, ...props }, ref) => {
-  const { toggleSidebar } = useSidebar()
+  const { toggleSidebar, state } = useSidebar()
 
   return (
     <Button
@@ -274,7 +274,7 @@ const SidebarTrigger = React.forwardRef<
       }}
       {...props}
     >
-      <PanelLeft />
+      {state === 'expanded' ? <Lucide.PanelLeftClose /> : <Lucide.PanelLeftOpen />}
       <span className="sr-only">Toggle Sidebar</span>
     </Button>
   )
