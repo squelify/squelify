@@ -8,7 +8,7 @@ export default function TabQuery() {
     <TabsContent value="query">
       <Accordion type="single" collapsible className="-mt-2 size-full" defaultValue="saved-queries">
         <AccordionItem value="saved-queries">
-          <AccordionTrigger className="px-4 py-2 text-xs hover:bg-accent hover:no-underline">
+          <AccordionTrigger className="px-4 py-3 text-xs hover:bg-accent hover:no-underline">
             Saved Queries
           </AccordionTrigger>
           <AccordionContent className="size-full p-2">
@@ -45,7 +45,7 @@ export default function TabQuery() {
         </AccordionItem>
 
         <AccordionItem value="history">
-          <AccordionTrigger className="px-4 py-2 text-xs hover:bg-accent hover:no-underline">
+          <AccordionTrigger className="px-4 py-3 text-xs hover:bg-accent hover:no-underline">
             Query History
           </AccordionTrigger>
           <AccordionContent className="size-full p-2">

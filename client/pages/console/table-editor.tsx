@@ -3,7 +3,7 @@ import { ResizablePanel, ResizablePanelGroup } from '#/components/base-ui/resiza
 
 export default function TableEditor() {
   return (
-    <ResizablePanel>
+    <ResizablePanel defaultSize={86} minSize={80} maxSize={86}>
       <ResizablePanelGroup autoSaveId="table-editor" direction="vertical">
         <ResizablePanel defaultSize={100}>
           <div className="mx-auto flex size-full items-center justify-center">

@@ -42,7 +42,7 @@ export default function QueryEditor() {
     }
   }
   return (
-    <ResizablePanel defaultSize={85}>
+    <ResizablePanel defaultSize={86} minSize={80} maxSize={86}>
       <ResizablePanelGroup autoSaveId="query-editor" direction="vertical">
         <ResizablePanel defaultSize={60}>
           <div className="flex h-full flex-col">
