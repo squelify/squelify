@@ -1,7 +1,11 @@
 import * as Lucide from 'lucide-react'
 import { Accordion, AccordionTrigger } from '#/components/base-ui/accordion'
 import { AccordionContent, AccordionItem } from '#/components/base-ui/accordion'
+import { Button } from '#/components/base-ui/button'
+import { Input } from '#/components/base-ui/input'
 import { TabsContent } from '#/components/base-ui/tabs'
+import { TooltipContent, TooltipProvider } from '#/components/base-ui/tooltip'
+import { Tooltip, TooltipTrigger } from '#/components/base-ui/tooltip'
 import { clx } from '#/utils/helper'
 
 export default function TabQuery() {
@@ -51,8 +55,32 @@ export default function TabQuery() {
   ]
 
   return (
-    <TabsContent value="query">
-      <Accordion type="multiple" className="-mt-2 size-full">
+    <TabsContent value="query" className="m-0">
+      <div className="flex w-full flex-row items-center justify-between gap-2 border-b p-3">
+        <div className="flex-1">
+          <Input
+            className="h-8 w-full bg-background text-xs shadow-none focus:ring-0 focus-visible:ring-1 focus-visible:ring-sidebar-ring"
+            placeholder="Search query..."
+          />
+        </div>
+        <TooltipProvider>
+          <Tooltip delayDuration={100}>
+            <TooltipTrigger asChild>
+              <Button
+                variant="outline"
+                size="icon"
+                className="size-8 text-muted-foreground shadow-none"
+              >
+                <Lucide.CopyPlus className="size-3.5 text-muted-foreground" strokeWidth={1.8} />
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent side="left" sideOffset={4}>
+              <p>New Query</p>
+            </TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
+      </div>
+      <Accordion type="multiple" className="size-full">
         <AccordionItem value="saved-queries">
           <AccordionTrigger className="px-4 py-3 text-xs hover:bg-accent hover:no-underline">
             Saved Queries
