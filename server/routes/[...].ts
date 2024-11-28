@@ -1,32 +1,10 @@
-import { existsSync } from 'node:fs'
-import { readdir } from 'node:fs/promises'
-import { defineEventHandler } from 'h3'
-import { parse, relative, resolve } from 'pathe'
+import { createReadStream, existsSync } from 'node:fs'
+import { stat } from 'node:fs/promises'
+import { H3Error, sendError, sendStream } from 'h3'
+import { extname, join, resolve } from 'pathe'
 
-const ALLOWED_EXTENSIONS = ['.html', '.css', '.json']
-
-async function scanFunctionsDir(dir: string, baseDir: string): Promise<string[]> {
-  const entries = await readdir(dir, { withFileTypes: true })
-  const files: string[] = []
-
-  for (const entry of entries) {
-    const fullPath = resolve(dir, entry.name)
-    const relativePath = relative(baseDir, fullPath)
-
-    if (entry.isDirectory()) {
-      const subFiles = await scanFunctionsDir(fullPath, baseDir)
-      files.push(...subFiles)
-    } else {
-      const { ext } = parse(entry.name)
-      if (ALLOWED_EXTENSIONS.includes(ext)) {
-        files.push(relativePath)
-        logger.debug('[static:scan]', `Found static file: ${relativePath}`)
-      }
-    }
-  }
-
-  return files
-}
+const ALLOWED_EXTENSIONS = ['html', 'css', 'json', 'js', 'png', 'jpg', 'jpeg', 'gif', 'svg']
+const DEFAULT_INDEX_FILE = 'index.html'
 
 export default defineEventHandler(async (event) => {
   const url = event.path
@@ -34,20 +12,40 @@ export default defineEventHandler(async (event) => {
 
   try {
     const staticDir = resolve(process.cwd(), '_data/public_html')
+    logger.debug('Static directory:', staticDir)
+
     if (!existsSync(staticDir)) {
-      logger.info('[static]', 'No public_html folder found')
-      return 'No public_html folder found'
+      logger.error('No public_html folder found')
+      return sendError(event, new H3Error('No public_html folder found'))
     }
 
-    const files = await scanFunctionsDir(staticDir, staticDir)
-    if (files.length === 0 && matchedUrl === '/') {
-      logger.info('[static]', 'No static web files found')
-      return 'Nothing to see here'
+    let filePath = join(staticDir, matchedUrl)
+    logger.debug('File path:', filePath)
+
+    // Check if the path is a directory and try to serve the default index file
+    const fileStat = await stat(filePath)
+    if (fileStat.isDirectory()) {
+      filePath = join(filePath, DEFAULT_INDEX_FILE)
+      logger.debug('Directory detected, trying index file:', filePath)
     }
 
-    return 'This route is intended to handle embedded static pages'
+    if (!existsSync(filePath)) {
+      logger.error('File not found:', matchedUrl)
+      return sendError(event, new H3Error('File not found'))
+    }
+
+    const fileExt = extname(filePath).slice(1)
+    if (!ALLOWED_EXTENSIONS.includes(fileExt)) {
+      logger.error('File type not allowed:', fileExt)
+      return sendError(event, new H3Error('File type not allowed'))
+    }
+
+    const fileStream = createReadStream(filePath)
+    setHeader(event, 'Cache-Control', 'public, max-age=3600')
+
+    return sendStream(event, fileStream)
   } catch (error) {
-    logger.error('[static]', error)
-    throw error
+    logger.error('Internal Server Error:', error)
+    return sendError(event, new H3Error('Internal Server Error'))
   }
 })

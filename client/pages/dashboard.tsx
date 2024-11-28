@@ -46,7 +46,7 @@ export default function Component() {
 
     const handleError = (error: unknown) => {
       logger.error('[ERROR] Health Check Failed:', error)
-      toast.error('Health Check Error', {
+      toast.error('Dashboard Health Check Error', {
         description: error instanceof Error ? error.message : 'Failed to check system health',
       })
     }
