@@ -3,6 +3,7 @@ import { typeid } from 'typeid-js'
 import { z } from 'zod'
 import { createUserSession, verifyUserCredentials } from '~/database/repository/auth.repo'
 import { getActiveJWK } from '~/database/repository/jwk.repo'
+import { DURATION } from '~/utils/datetime'
 import { JWTPayload } from '~/utils/jwt'
 
 export interface ILoginResponse {
@@ -132,7 +133,7 @@ export default defineEventHandler(async (event) => {
       secure: isProduction,
       sameSite: 'lax',
       path: '/',
-      maxAge: 60 * 60 * 24 * 7,
+      maxAge: DURATION.DAY * 7,
     })
 
     await auditLog(event, {

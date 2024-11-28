@@ -1,4 +1,5 @@
 import type { User } from '~/database/schemas/user'
+import { DURATION } from '~/utils/datetime'
 
 export interface IUserInfoResponse {
   user: User & {
@@ -117,6 +118,6 @@ export default defineCachedEventHandler(
   },
   {
     shouldBypassCache: (e) => handleBypassCache(e),
-    maxAge: 60 * 60 * 12 * 30 /* 1 month */,
+    maxAge: DURATION.MONTH,
   }
 )

@@ -1,5 +1,6 @@
 import { z } from 'zod'
 import { isTableExists } from '~/database/repository/collection.repo'
+import { DURATION } from '~/utils/datetime'
 
 export interface ICollectionResponse {
   items: Record<string, any>[]
@@ -68,7 +69,7 @@ export default defineCachedEventHandler(
   },
   {
     shouldBypassCache: (e) => handleBypassCache(e),
-    maxAge: 60 * 60 /* 1 hour */,
+    maxAge: DURATION.HOUR,
   }
 )
 

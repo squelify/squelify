@@ -1,4 +1,5 @@
 import { env } from 'std-env'
+import { DURATION } from '~/utils/datetime'
 
 export default defineCachedEventHandler(
   async (_event) => {
@@ -15,7 +16,7 @@ export default defineCachedEventHandler(
   },
   {
     shouldBypassCache: (e) => handleBypassCache(e),
-    maxAge: 60 * 60 /* 1 hour */,
+    maxAge: DURATION.HOUR,
   }
 )
 

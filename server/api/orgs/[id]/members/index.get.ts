@@ -1,4 +1,5 @@
 import { z } from 'zod'
+import { DURATION } from '~/utils/datetime'
 
 export interface IListMembersResponse {
   members: Array<{
@@ -114,6 +115,6 @@ export default defineCachedEventHandler(
   },
   {
     shouldBypassCache: (e) => handleBypassCache(e),
-    maxAge: 60 * 60 /* 1 hour */,
+    maxAge: DURATION.HOUR,
   }
 )

@@ -1,3 +1,5 @@
+import { DURATION } from '~/utils/datetime'
+
 export interface IGetUserResponse {
   user: {
     id: string
@@ -88,7 +90,7 @@ export default defineCachedEventHandler(
   },
   {
     shouldBypassCache: (e) => handleBypassCache(e),
-    maxAge: 60 * 60 /* 1 hour */,
+    maxAge: DURATION.HOUR,
   }
 )
 

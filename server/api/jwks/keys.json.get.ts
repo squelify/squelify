@@ -83,7 +83,7 @@ export default defineCachedEventHandler(
   },
   {
     shouldBypassCache: (e) => handleBypassCache(e),
-    maxAge: 60 * 60 * 12 * 30 /* 30 days */,
+    maxAge: DURATION.MONTH,
   }
 )
 

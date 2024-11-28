@@ -1,3 +1,5 @@
+import { DURATION } from '~/utils/datetime'
+
 export default defineCachedEventHandler(
   async (event) => {
     const appConfig = event.context.appConfig
@@ -58,6 +60,6 @@ export default defineCachedEventHandler(
   },
   {
     shouldBypassCache: (e) => handleBypassCache(e),
-    maxAge: 60 * 60 * 12 * 7 /* 7 days */,
+    maxAge: DURATION.DAY * 7,
   }
 )
