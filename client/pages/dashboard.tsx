@@ -23,7 +23,7 @@ export default function Component() {
   useSEOMeta('Dashboard')
 
   const ctx = useOutletContext<AppContextType>()
-  const apiClient = useRef(useApiClient()).current
+  const { current: apiClient } = useRef(useApiClient())
 
   const lastCheckTimeRef = useRef<number>(0)
   const retryCountRef = useRef<number>(0)
@@ -90,7 +90,7 @@ export default function Component() {
     const intervalId = setInterval(doHealthCheck, HEALTH_CHECK_CONFIG.interval)
 
     return () => clearInterval(intervalId)
-  }, [apiClient])
+  }, [])
 
   const healthData = healthDataRef.current
 

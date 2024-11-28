@@ -6,6 +6,7 @@ import { authStore } from '#/context/stores/auth.store'
 import { LOG_LEVEL } from '#/utils/logger'
 
 import AccountService from './modules/account.service'
+import ApiKeyService from './modules/api-key.service'
 import AuditLogService from './modules/auditlog.service'
 import AuthService from './modules/auth.service'
 import CollectionService from './modules/collection.service'
@@ -45,6 +46,7 @@ export default class ApiClient {
   }
 
   account: AccountService
+  apiKey: ApiKeyService
   auditlog: AuditLogService
   auth: AuthService
   collection: CollectionService
@@ -94,6 +96,7 @@ export default class ApiClient {
 
     // Initialize the services
     this.account = new AccountService(this)
+    this.apiKey = new ApiKeyService(this)
     this.auditlog = new AuditLogService(this)
     this.auth = new AuthService(this)
     this.collection = new CollectionService(this)

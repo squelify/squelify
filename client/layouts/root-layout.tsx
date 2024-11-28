@@ -26,7 +26,7 @@ const HEALTH_CHECK_CONFIG = {
 
 export default function RootLayout({ children, className }: RootLayoutProps) {
   const { showBoundary } = useErrorBoundary()
-  const apiClient = useRef(useApiClient()).current
+  const { current: apiClient } = useRef(useApiClient())
   const lastCheckTimeRef = useRef<number>(0)
   const retryCountRef = useRef<number>(0)
 
@@ -105,7 +105,7 @@ export default function RootLayout({ children, className }: RootLayoutProps) {
     const intervalId = setInterval(doHealthCheck, HEALTH_CHECK_CONFIG.interval)
 
     return () => clearInterval(intervalId)
-  }, [apiClient, showBoundary])
+  }, [showBoundary])
 
   return (
     <React.Fragment>
