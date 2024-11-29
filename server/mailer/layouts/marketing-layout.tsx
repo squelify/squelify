@@ -1,6 +1,6 @@
 import { Container, Hr, Html, Link, Preview, Section, Text } from 'jsx-email'
 import { Body, ColorScheme, Head, Tailwind } from 'jsx-email'
-import * as React from 'react'
+import React from 'react'
 import { isProduction } from 'std-env'
 import appConfig from '~/app.config'
 import AppLogo from './app-logo'

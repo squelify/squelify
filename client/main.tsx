@@ -1,7 +1,7 @@
 import './styles/fontface.css'
 import './styles/globals.css'
 
-import * as React from 'react'
+import React from 'react'
 import ReactDOM from 'react-dom/client'
 import { BrowserRouter } from 'react-router'
 import { isProduction } from 'std-env'

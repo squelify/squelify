@@ -10,7 +10,7 @@ importers:
     dependencies:
       '@codemirror/autocomplete':
         specifier: ^6.18.3
-        version: 6.18.3(@codemirror/language@6.10.5)(@codemirror/state@6.4.1)(@codemirror/view@6.35.0)(@lezer/common@1.2.3)
+        version: 6.18.3(@codemirror/language@6.10.6)(@codemirror/state@6.4.1)(@codemirror/view@6.35.0)(@lezer/common@1.2.3)
       '@codemirror/commands':
         specifier: ^6.7.1
         version: 6.7.1
@@ -21,8 +21,8 @@ importers:
         specifier: ^6.8.0
         version: 6.8.0(@codemirror/view@6.35.0)
       '@codemirror/language':
-        specifier: ^6.10.5
-        version: 6.10.5
+        specifier: ^6.10.6
+        version: 6.10.6
       '@codemirror/state':
         specifier: ^6.4.1
         version: 6.4.1
@@ -39,8 +39,8 @@ importers:
         specifier: ^0.10.2
         version: 0.10.2(nanostores@0.11.3)
       '@nanostores/react':
-        specifier: ^0.8.1
-        version: 0.8.1(nanostores@0.11.3)(react@18.3.1)
+        specifier: ^0.8.2
+        version: 0.8.2(nanostores@0.11.3)(react@18.3.1)
       '@noble/hashes':
         specifier: ^1.6.1
         version: 1.6.1
@@ -106,7 +106,7 @@ importers:
         version: 1.1.4(@types/react-dom@18.3.1)(@types/react@18.3.12)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@replit/codemirror-indentation-markers':
         specifier: ^6.5.3
-        version: 6.5.3(@codemirror/language@6.10.5)(@codemirror/state@6.4.1)(@codemirror/view@6.35.0)
+        version: 6.5.3(@codemirror/language@6.10.6)(@codemirror/state@6.4.1)(@codemirror/view@6.35.0)
       '@simplewebauthn/browser':
         specifier: ^12.0.0
         version: 12.0.0
@@ -490,8 +490,8 @@ packages:
   '@codemirror/lang-sql@6.8.0':
     resolution: {integrity: sha512-aGLmY4OwGqN3TdSx3h6QeA1NrvaYtF7kkoWR/+W7/JzB0gQtJ+VJxewlnE3+VImhA4WVlhmkJr109PefOOhjLg==}
 
-  '@codemirror/language@6.10.5':
-    resolution: {integrity: sha512-sECWJyNmwqw6mSO6Qf0IVPHwhEnuYbqHBZaaIbdcXtZ6Y2r5vU/dxgC7K1ppWaJFy8XGtTBC0Pd60qI7NfJreQ==}
+  '@codemirror/language@6.10.6':
+    resolution: {integrity: sha512-KrsbdCnxEztLVbB5PycWXFxas4EOyk/fPAfruSOnDDppevQgid2XZ+KbJ9u+fDikP/e7MW7HPBTvTb8JlZK9vA==}
 
   '@codemirror/lint@6.8.3':
     resolution: {integrity: sha512-GSGfKxCo867P7EX1k2LoCrjuQFeqVgPGRRsSl4J4c0KMkD+k1y6WYvTQkzv0iZ8JhLJDujEvlnMchv4CZQLh3Q==}
@@ -1147,12 +1147,12 @@ packages:
     peerDependencies:
       nanostores: ^0.9.0 || ^0.10.0 || ^0.11.0
 
-  '@nanostores/react@0.8.1':
-    resolution: {integrity: sha512-wu6tv+RR0KX0lv1ASSMaTbB41kQLD1MUHtE9bVHVJuISK1XB0U2J0pdlSThILMxynL8PUm6F1jOr4DLvxeIoug==}
+  '@nanostores/react@0.8.2':
+    resolution: {integrity: sha512-DW4lIsDpdGqHvr9Ah/5InSsl9GFkIQOiA6FdKbordUT9BNNoAWcObwtCUyNfEhe6UEOC+Kw9rbdU8EcyoZjAGA==}
     engines: {node: ^18.0.0 || >=20.0.0}
     peerDependencies:
       nanostores: ^0.9.0 || ^0.10.0 || ^0.11.0
-      react: '>=18.0.0 || 19.0.0-rc'
+      react: '>=18.0.0 || >=19.0.0-rc'
 
   '@neon-rs/load@0.0.4':
     resolution: {integrity: sha512-kTPhdZyTQxB+2wpiRcFWrDcejc4JI6tkPuS7UZCG4l6Zvc5kU/gGQ/ozvHTh1XR5tS+UlfAfGuPajjzQjCiHCw==}
@@ -5100,29 +5100,29 @@ snapshots:
     dependencies:
       mime: 3.0.0
 
-  '@codemirror/autocomplete@6.18.3(@codemirror/language@6.10.5)(@codemirror/state@6.4.1)(@codemirror/view@6.35.0)(@lezer/common@1.2.3)':
+  '@codemirror/autocomplete@6.18.3(@codemirror/language@6.10.6)(@codemirror/state@6.4.1)(@codemirror/view@6.35.0)(@lezer/common@1.2.3)':
     dependencies:
-      '@codemirror/language': 6.10.5
+      '@codemirror/language': 6.10.6
       '@codemirror/state': 6.4.1
       '@codemirror/view': 6.35.0
       '@lezer/common': 1.2.3
 
   '@codemirror/commands@6.7.1':
     dependencies:
-      '@codemirror/language': 6.10.5
+      '@codemirror/language': 6.10.6
       '@codemirror/state': 6.4.1
       '@codemirror/view': 6.35.0
       '@lezer/common': 1.2.3
 
   '@codemirror/lang-json@6.0.1':
     dependencies:
-      '@codemirror/language': 6.10.5
+      '@codemirror/language': 6.10.6
       '@lezer/json': 1.0.2
 
   '@codemirror/lang-sql@6.8.0(@codemirror/view@6.35.0)':
     dependencies:
-      '@codemirror/autocomplete': 6.18.3(@codemirror/language@6.10.5)(@codemirror/state@6.4.1)(@codemirror/view@6.35.0)(@lezer/common@1.2.3)
-      '@codemirror/language': 6.10.5
+      '@codemirror/autocomplete': 6.18.3(@codemirror/language@6.10.6)(@codemirror/state@6.4.1)(@codemirror/view@6.35.0)(@lezer/common@1.2.3)
+      '@codemirror/language': 6.10.6
       '@codemirror/state': 6.4.1
       '@lezer/common': 1.2.3
       '@lezer/highlight': 1.2.1
@@ -5130,7 +5130,7 @@ snapshots:
     transitivePeerDependencies:
       - '@codemirror/view'
 
-  '@codemirror/language@6.10.5':
+  '@codemirror/language@6.10.6':
     dependencies:
       '@codemirror/state': 6.4.1
       '@codemirror/view': 6.35.0
@@ -5668,7 +5668,7 @@ snapshots:
     dependencies:
       nanostores: 0.11.3
 
-  '@nanostores/react@0.8.1(nanostores@0.11.3)(react@18.3.1)':
+  '@nanostores/react@0.8.2(nanostores@0.11.3)(react@18.3.1)':
     dependencies:
       nanostores: 0.11.3
       react: 18.3.1
@@ -6467,9 +6467,9 @@ snapshots:
 
   '@remix-run/router@1.19.2': {}
 
-  '@replit/codemirror-indentation-markers@6.5.3(@codemirror/language@6.10.5)(@codemirror/state@6.4.1)(@codemirror/view@6.35.0)':
+  '@replit/codemirror-indentation-markers@6.5.3(@codemirror/language@6.10.6)(@codemirror/state@6.4.1)(@codemirror/view@6.35.0)':
     dependencies:
-      '@codemirror/language': 6.10.5
+      '@codemirror/language': 6.10.6
       '@codemirror/state': 6.4.1
       '@codemirror/view': 6.35.0
 
@@ -7101,9 +7101,9 @@ snapshots:
 
   codemirror@6.0.1(@lezer/common@1.2.3):
     dependencies:
-      '@codemirror/autocomplete': 6.18.3(@codemirror/language@6.10.5)(@codemirror/state@6.4.1)(@codemirror/view@6.35.0)(@lezer/common@1.2.3)
+      '@codemirror/autocomplete': 6.18.3(@codemirror/language@6.10.6)(@codemirror/state@6.4.1)(@codemirror/view@6.35.0)(@lezer/common@1.2.3)
       '@codemirror/commands': 6.7.1
-      '@codemirror/language': 6.10.5
+      '@codemirror/language': 6.10.6
       '@codemirror/lint': 6.8.3
       '@codemirror/search': 6.5.8
       '@codemirror/state': 6.4.1

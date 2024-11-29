@@ -1,4 +1,4 @@
-import * as React from 'react'
+import React from 'react'
 import { clx } from '#/utils/helper'
 
 const Card = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElement>>(

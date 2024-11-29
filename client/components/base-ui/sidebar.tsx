@@ -2,7 +2,7 @@ import { useStore } from '@nanostores/react'
 import { Slot } from '@radix-ui/react-slot'
 import { VariantProps, cva } from 'class-variance-authority'
 import * as Lucide from 'lucide-react'
-import * as React from 'react'
+import React from 'react'
 
 import { Button } from '#/components/base-ui/button'
 import { Input } from '#/components/base-ui/input'

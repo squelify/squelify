@@ -1,5 +1,5 @@
 import * as Lucide from 'lucide-react'
-import * as React from 'react'
+import React from 'react'
 import { toast } from 'sonner'
 import { Button } from '#/components/base-ui/button'
 import { Tooltip, TooltipProvider } from '#/components/base-ui/tooltip'

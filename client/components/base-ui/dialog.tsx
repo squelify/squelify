@@ -1,6 +1,6 @@
 import * as DialogPrimitive from '@radix-ui/react-dialog'
 import { Cross2Icon } from '@radix-ui/react-icons'
-import * as React from 'react'
+import React from 'react'
 import { clx } from '#/utils/helper'
 
 const Dialog = DialogPrimitive.Root
