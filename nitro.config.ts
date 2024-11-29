@@ -3,11 +3,9 @@ import consola from 'consola'
 import { makeDirectory } from 'make-dir'
 import { defineNitroConfig } from 'nitropack/config'
 import { resolve } from 'pathe'
-import { env, isCI, isDevelopment, isProduction, isTest } from 'std-env'
+import { isCI, isDevelopment, isProduction, isTest } from 'std-env'
 import { build as buildVite } from 'vite'
 import pkg from './package.json' assert { type: 'json' }
-
-const adminPath = env.SQUELIFY_ADMIN_PATH || '/ui'
 
 /**
  * Configures the Nitro server for the application.
@@ -22,11 +20,6 @@ export default defineNitroConfig({
   compatibilityDate: '2024-11-24',
   appConfigFiles: ['~/app.config'],
   errorHandler: '~/error.handler',
-
-  handlers: [
-    { route: adminPath, handler: '~/entry.client', lazy: true },
-    { route: `${adminPath}/**`, handler: '~/entry.client', lazy: true },
-  ],
 
   routeRules: {
     '/docs': {
@@ -72,7 +65,7 @@ export default defineNitroConfig({
   },
 
   experimental: {
-    openAPI: false,
+    openAPI: true,
   },
 
   openAPI: {
