@@ -65,7 +65,7 @@ export default defineNitroConfig({
   },
 
   experimental: {
-    openAPI: true,
+    openAPI: isDevelopment,
   },
 
   openAPI: {
