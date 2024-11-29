@@ -1,4 +1,5 @@
 import * as Lucide from 'lucide-react'
+import { useMemo, useRef, useState } from 'react'
 import { Accordion, AccordionTrigger } from '#/components/base-ui/accordion'
 import { AccordionContent, AccordionItem } from '#/components/base-ui/accordion'
 import { Button } from '#/components/base-ui/button'
@@ -9,6 +10,10 @@ import { Tooltip, TooltipTrigger } from '#/components/base-ui/tooltip'
 import { clx } from '#/utils/helper'
 
 export default function TabQuery() {
+  const [inputValue, setInputValue] = useState('')
+  const [debouncedValue, setDebouncedValue] = useState('')
+  const timeoutRef = useRef<ReturnType<typeof setTimeout>>()
+
   const savedQueriesItem = [
     {
       id: 1,
@@ -54,13 +59,44 @@ export default function TabQuery() {
     },
   ]
 
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value
+    setInputValue(value)
+
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current)
+    }
+
+    timeoutRef.current = setTimeout(() => {
+      setDebouncedValue(value)
+    }, 150)
+  }
+
+  const filteredSavedQueries = useMemo(
+    () =>
+      savedQueriesItem.filter((item) =>
+        item.name.toLowerCase().includes(debouncedValue.toLowerCase())
+      ),
+    [debouncedValue]
+  )
+
+  const filteredQueryHistory = useMemo(
+    () =>
+      queryHistoryItem.filter((item) =>
+        item.query.toLowerCase().includes(debouncedValue.toLowerCase())
+      ),
+    [debouncedValue]
+  )
+
   return (
     <TabsContent value="query" className="m-0">
       <div className="flex w-full flex-row items-center justify-between gap-2 border-b p-3">
         <div className="flex-1">
           <Input
-            className="h-8 w-full bg-background text-xs shadow-none focus:ring-0 focus-visible:ring-1 focus-visible:ring-sidebar-ring"
+            onChange={handleInputChange}
+            className="h-8 w-full bg-background text-xs shadow-none focus:ring-0 focus-visible:ring-1 focus-visible:ring-primary/50"
             placeholder="Search query..."
+            value={inputValue}
           />
         </div>
         <TooltipProvider>
@@ -80,14 +116,14 @@ export default function TabQuery() {
           </Tooltip>
         </TooltipProvider>
       </div>
-      <Accordion type="multiple" className="size-full">
+      <Accordion type="multiple" className="size-full" defaultValue={['saved-queries', 'history']}>
         <AccordionItem value="saved-queries">
           <AccordionTrigger className="px-4 py-3 text-xs hover:bg-accent hover:no-underline">
             Saved Queries
           </AccordionTrigger>
           <AccordionContent className="size-full p-2">
             <div className="-mt-1 space-y-1">
-              {savedQueriesItem.map((item) => (
+              {filteredSavedQueries.map((item) => (
                 <div
                   key={item.id}
                   className={clx(
@@ -114,7 +150,7 @@ export default function TabQuery() {
           </AccordionTrigger>
           <AccordionContent className="size-full p-2">
             <div className="-mt-1 space-y-1">
-              {queryHistoryItem.map((item) => (
+              {filteredQueryHistory.map((item) => (
                 <div
                   key={item.id}
                   className="group select-none rounded px-2.5 py-1.5 hover:bg-background"

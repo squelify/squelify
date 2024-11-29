@@ -155,6 +155,9 @@ importers:
       make-dir:
         specifier: ^5.0.0
         version: 5.0.0
+      moderndash:
+        specifier: ^4.0.0
+        version: 4.0.0
       nanostores:
         specifier: ^0.11.3
         version: 0.11.3
@@ -3124,6 +3127,9 @@ packages:
   hookable@5.5.3:
     resolution: {integrity: sha512-Yc+BQe8SvoXH1643Qez1zqLRmbA5rCL+sSmk6TVos0LWVfNIB7PGncdlId77WzLGSIB5KaWgTaNTs2lNVEI6VQ==}
 
+  hotscript@1.0.13:
+    resolution: {integrity: sha512-C++tTF1GqkGYecL+2S1wJTfoH6APGAsbb7PAWQ3iVIwgG/EFseAfEVOKFgAFq4yK3+6j1EjUD4UQ9dRJHX/sSQ==}
+
   html-enumerated-attributes@1.1.1:
     resolution: {integrity: sha512-fxfswuADQ6N6RmCUYoCEIw09Zbk/h8GJSJsbiQ3Uw3mkQegJ5b7Eu5Tpxl2xDUq9meWmivHe0GFieG2qHl2j4A==}
 
@@ -3649,6 +3655,10 @@ packages:
 
   mlly@1.7.2:
     resolution: {integrity: sha512-tN3dvVHYVz4DhSXinXIk7u9syPYaJvio118uomkovAtWBT+RdbP6Lfh/5Lvo519YMmwBafwlh20IPTXIStscpA==}
+
+  moderndash@4.0.0:
+    resolution: {integrity: sha512-77kEJCsBo3YzqIrO4ZWHo1h7q8f8ZIRxQ0DE0fEvj3rZWsfTMLeRzctBjkz2zKM1BAIQsOqB79jm3dZ4RDFmqw==}
+    engines: {node: '>=20', npm: '>=10'}
 
   mri@1.2.0:
     resolution: {integrity: sha512-tzzskb3bG8LvYGFF/mDTpq3jpI6Q9wc3LEmBaghu+DdCssd1FakN7Bc0hVNmEyGq1bq3RgfkCb3cmQLpNPOroA==}
@@ -4556,6 +4566,10 @@ packages:
 
   type-fest@4.26.1:
     resolution: {integrity: sha512-yOGpmOAL7CkKe/91I5O3gPICmJNLJ1G4zFYVAsRHg7M64biSnPtRj0WNQt++bRkjYOqjWXrhnUw1utzmVErAdg==}
+    engines: {node: '>=16'}
+
+  type-fest@4.27.0:
+    resolution: {integrity: sha512-3IMSWgP7C5KSQqmo1wjhKrwsvXAtF33jO3QY+Uy++ia7hqvgSK6iXbbg5PbDBc1P2ZbNEDgejOrN4YooXvhwCw==}
     engines: {node: '>=16'}
 
   typeid-js@1.1.0:
@@ -7766,6 +7780,8 @@ snapshots:
 
   hookable@5.5.3: {}
 
+  hotscript@1.0.13: {}
+
   html-enumerated-attributes@1.1.1: {}
 
   html-minifier@4.0.0:
@@ -8318,6 +8334,11 @@ snapshots:
       pathe: 1.1.2
       pkg-types: 1.2.1
       ufo: 1.5.4
+
+  moderndash@4.0.0:
+    dependencies:
+      hotscript: 1.0.13
+      type-fest: 4.27.0
 
   mri@1.2.0: {}
 
@@ -9376,6 +9397,8 @@ snapshots:
   type-fest@3.13.1: {}
 
   type-fest@4.26.1: {}
+
+  type-fest@4.27.0: {}
 
   typeid-js@1.1.0:
     dependencies:

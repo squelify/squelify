@@ -335,7 +335,7 @@ const SidebarInput = React.forwardRef<
       ref={ref}
       data-sidebar="input"
       className={clx(
-        'h-8 w-full bg-background shadow-none focus:ring-0 focus-visible:ring-1 focus-visible:ring-sidebar-ring',
+        'h-8 w-full bg-background shadow-none focus:ring-0 focus-visible:ring-1 focus-visible:ring-primary/50',
         className
       )}
       {...props}
