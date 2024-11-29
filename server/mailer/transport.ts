@@ -1,5 +1,5 @@
 import { createTransport } from 'nodemailer'
-import { env, isDevelopment } from 'std-env'
+import { env, isDevelopment, isProduction } from 'std-env'
 
 /**
  * Sometimes nodemailer has issue `No overload matches this call`.
@@ -15,7 +15,7 @@ export default createTransport({
 
   // Use `true` for port 465, `false` for all other ports
   secure: Number(env.SMTP_PORT) === 465,
-  tls: { rejectUnauthorized: !isDevelopment },
+  tls: { rejectUnauthorized: isProduction },
   pool: true, // Use pooled connections
   maxConnections: 5, // Max 5 connections
   maxMessages: 100, // Max 100 messages per connection
