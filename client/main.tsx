@@ -5,6 +5,7 @@ import React from 'react'
 import ReactDOM from 'react-dom/client'
 import { BrowserRouter } from 'react-router'
 import AppProvider from '#/providers/app-provider'
+import TRPCProviders from '#/providers/trpc-provider'
 import AppRoutes from '#/routes'
 
 const rootElement = document.getElementById('root')
@@ -20,9 +21,11 @@ if (!rootElement) {
 ReactDOM.createRoot(rootElement).render(
   <React.StrictMode>
     <BrowserRouter basename={import.meta.env.SQUELIFY_ADMIN_PATH || '/ui'}>
-      <AppProvider debugScreenSize={import.meta.env.DEV}>
-        <AppRoutes />
-      </AppProvider>
+      <TRPCProviders>
+        <AppProvider debugScreenSize={import.meta.env.DEV}>
+          <AppRoutes />
+        </AppProvider>
+      </TRPCProviders>
     </BrowserRouter>
   </React.StrictMode>
 )

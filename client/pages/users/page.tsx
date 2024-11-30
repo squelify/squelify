@@ -12,7 +12,9 @@ import { Skeleton } from '#/components/base-ui/skeleton'
 import { Table, TableBody, TableCell, TableRow } from '#/components/base-ui/table'
 import { TableHead, TableHeader } from '#/components/base-ui/table'
 import { useSEOMeta } from '#/context/hooks/use-seo-meta'
+import { trpc } from '#/trpc/client'
 import { clx } from '#/utils/helper'
+import { UserTable } from './user-table'
 
 const visibleColumns = [
   { id: 'name', title: 'Name' },
@@ -24,11 +26,15 @@ const visibleColumns = [
 export default function Component() {
   const { pageTitle } = useSEOMeta('Users')
   const [isRefreshing, setIsRefreshing] = useState(false)
-  const skeletonRows = ['skeleton-1', 'skeleton-2', 'skeleton-3', 'skeleton-4', 'skeleton-5']
 
-  const handleRefresh = () => {
+  const { data: users, isLoading, refetch } = trpc.userList.useQuery()
+
+  console.info('DEBUG', { isLoading, users })
+
+  const handleRefresh = async () => {
     setIsRefreshing(true)
-    setTimeout(() => setIsRefreshing(false), 1000)
+    await refetch()
+    setIsRefreshing(false)
   }
 
   return (
@@ -164,67 +170,12 @@ export default function Component() {
           </div>
 
           {/* Table Content */}
-          <div className="overflow-x-auto">
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead className="w-[40px] pl-3">
-                    <Input type="checkbox" className="size-4" />
-                  </TableHead>
-                  <TableHead>Name</TableHead>
-                  <TableHead>Email</TableHead>
-                  <TableHead>Role</TableHead>
-                  <TableHead>Status</TableHead>
-                  <TableHead className="w-[100px]">Actions</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {skeletonRows.length > 0 ? (
-                  skeletonRows.map((key) => (
-                    <TableRow key={key}>
-                      <TableCell className="pl-3">
-                        <Input type="checkbox" className="size-4" />
-                      </TableCell>
-                      <TableCell>
-                        <Skeleton className="h-4 w-[150px] bg-muted" />
-                      </TableCell>
-                      <TableCell>
-                        <Skeleton className="h-4 w-[200px] bg-muted" />
-                      </TableCell>
-                      <TableCell>
-                        <Skeleton className="h-4 w-[100px] bg-muted" />
-                      </TableCell>
-                      <TableCell>
-                        <Skeleton className="h-4 w-[80px] bg-muted" />
-                      </TableCell>
-                      <TableCell>
-                        <div className="flex items-center gap-1">
-                          <Button variant="ghost" size="icon" className="hover:bg-muted">
-                            <Lucide.Pencil className="size-4" />
-                          </Button>
-                          <Button variant="ghost" size="icon" className="hover:bg-muted">
-                            <Lucide.MoreHorizontal className="size-4" />
-                          </Button>
-                        </div>
-                      </TableCell>
-                    </TableRow>
-                  ))
-                ) : (
-                  <TableRow>
-                    <TableCell colSpan={6} className="h-24 text-center">
-                      <Lucide.Users className="mx-auto mb-2 size-8 text-muted-foreground" />
-                      <span className="text-muted-foreground text-sm">No results.</span>
-                    </TableCell>
-                  </TableRow>
-                )}
-              </TableBody>
-            </Table>
-          </div>
+          <UserTable users={users} isLoading={isLoading} />
         </div>
 
         {/* Table Info */}
         <div className="flex items-center justify-end text-muted-foreground text-sm">
-          Showing 1-5 of 100 users
+          Showing {users?.length || 0} users
         </div>
       </div>
     </div>
