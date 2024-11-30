@@ -69,6 +69,7 @@ Built by developers, for developers. Here's what you get:
   - [TypeScript](https://www.typescriptlang.org) - Type-safe development
   - [LibSQL](https://turso.tech/libsql) - SQLite for Modern Applications
   - [Kysely](https://kysely.dev) - Type-safe SQL query builder
+  - [tRPC](https://trpc.io/) - End-to-end typesafe APIs made easy.
 
 ## 🏃 Getting Started
 
