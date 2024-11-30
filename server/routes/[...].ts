@@ -3,6 +3,7 @@ import { handleSPAClient } from '~/handler/spa.handler'
 import { handleStaticWeb } from '~/handler/static.handler'
 import { handleTRPC } from '~/handler/trpc.handler'
 import { appRouter } from '~/trpc'
+import { createContext } from '~/trpc/trpc'
 
 export default defineEventHandler(async (event) => {
   const appConfig = event.context.appConfig
@@ -11,11 +12,7 @@ export default defineEventHandler(async (event) => {
   if (matchedUrl.startsWith('/trpc/')) {
     return handleTRPC(event, {
       router: appRouter,
-      createContext: () => ({
-        event,
-        db: event.context.db,
-        appConfig: event.context.appConfig,
-      }),
+      createContext,
     })
   }
 

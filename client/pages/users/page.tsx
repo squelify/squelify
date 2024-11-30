@@ -1,5 +1,4 @@
 import * as Lucide from 'lucide-react'
-import { useState } from 'react'
 import { Button } from '#/components/base-ui/button'
 import { DropdownMenu, DropdownMenuItem } from '#/components/base-ui/dropdown-menu'
 import { DropdownMenuContent } from '#/components/base-ui/dropdown-menu'
@@ -8,9 +7,6 @@ import { DropdownMenuCheckboxItem, DropdownMenuTrigger } from '#/components/base
 import { Input } from '#/components/base-ui/input'
 import { Select, SelectItem, SelectValue } from '#/components/base-ui/select'
 import { SelectContent, SelectTrigger } from '#/components/base-ui/select'
-import { Skeleton } from '#/components/base-ui/skeleton'
-import { Table, TableBody, TableCell, TableRow } from '#/components/base-ui/table'
-import { TableHead, TableHeader } from '#/components/base-ui/table'
 import { useSEOMeta } from '#/context/hooks/use-seo-meta'
 import { trpc } from '#/trpc/client'
 import { clx } from '#/utils/helper'
@@ -25,17 +21,9 @@ const visibleColumns = [
 
 export default function Component() {
   const { pageTitle } = useSEOMeta('Users')
-  const [isRefreshing, setIsRefreshing] = useState(false)
+  const { data: users, isLoading, refetch } = trpc.user.list.useQuery()
 
-  const { data: users, isLoading, refetch } = trpc.userList.useQuery()
-
-  console.info('DEBUG', { isLoading, users })
-
-  const handleRefresh = async () => {
-    setIsRefreshing(true)
-    await refetch()
-    setIsRefreshing(false)
-  }
+  const handleRefresh = async () => await refetch()
 
   return (
     <div className="container mx-auto w-full space-y-4 p-4 md:space-y-6 md:p-6">
@@ -93,8 +81,8 @@ export default function Component() {
               </SelectContent>
             </Select>
 
-            <Button variant="outline" size="icon" onClick={handleRefresh} disabled={isRefreshing}>
-              <Lucide.RotateCw className={clx('size-4', isRefreshing && 'animate-spin')} />
+            <Button variant="outline" size="icon" onClick={handleRefresh} disabled={isLoading}>
+              <Lucide.RotateCw className={clx('size-4', isLoading && 'animate-spin')} />
             </Button>
 
             <DropdownMenu>
