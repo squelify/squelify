@@ -1,7 +1,7 @@
 import { isProduction } from 'std-env'
 import { typeid } from 'typeid-js'
 import { z } from 'zod'
-import { findUserByEmail } from '~/database/repository/user.repo'
+import userRepo from '~/database/repository/user.repo'
 
 export interface IForgotPasswordResponse {
   verification: {
@@ -22,10 +22,10 @@ export default defineEventHandler(async (event) => {
   const db = event.context.db
 
   try {
-    const body = await requireValidatedBody(event, PasswordRecoverySchema)
+    const repo = userRepo(db)
     const now = Math.floor(Date.now() / 1000)
-
-    const user = await findUserByEmail(body.email)
+    const body = await requireValidatedBody(event, PasswordRecoverySchema)
+    const user = await repo.findByEmail(body.email)
 
     if (!user) {
       await auditLog(event, {
