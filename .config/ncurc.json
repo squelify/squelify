@@ -8,5 +8,5 @@
     "silent": false,
     "install": "always",
     "packageManager": "pnpm",
-    "reject": []
+    "reject": ["@tanstack/react-query"]
 }

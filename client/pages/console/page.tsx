@@ -42,7 +42,7 @@ export default function Component() {
         className="flex size-full flex-1 flex-col bg-background"
       >
         <ResizablePanel defaultSize={14} minSize={14} maxSize={20} className="bg-sidebar/80">
-          <Tabs value={activeSection} defaultValue={activeSection}>
+          <Tabs value={activeSection} defaultValue={activeSection} className="h-full">
             <TabsList className="grid h-10 w-full grid-cols-2 gap-1 rounded-none border-b bg-sidebar/40 px-2 py-0">
               {CONSOLE_TABS.map((tab) => (
                 <TabsTrigger
@@ -59,10 +59,8 @@ export default function Component() {
                 </TabsTrigger>
               ))}
             </TabsList>
-            <ScrollArea className="size-full">
-              <TabTable />
-              <TabQuery />
-            </ScrollArea>
+            <TabTable />
+            <TabQuery />
           </Tabs>
         </ResizablePanel>
         <ResizableHandle withHandle />

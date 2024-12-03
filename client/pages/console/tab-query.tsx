@@ -89,8 +89,8 @@ export default function TabQuery() {
   )
 
   return (
-    <TabsContent value="query" className="m-0">
-      <div className="flex w-full flex-row items-center justify-between gap-2 border-b p-3">
+    <TabsContent value="query" className="-mt-10 mx-0 h-full pt-10">
+      <div className="flex h-12 w-full flex-row items-center justify-between gap-2 border-b p-3">
         <div className="flex-1">
           <Input
             onChange={handleInputChange}
