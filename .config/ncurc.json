@@ -8,5 +8,5 @@
     "silent": false,
     "install": "always",
     "packageManager": "pnpm",
-    "reject": ["@tanstack/react-query"]
+    "reject": ["@tanstack/react-query", "react-day-picker"]
 }
