@@ -107,8 +107,8 @@ export default {
       },
     },
     debugScreens: {
-      position: ['bottom', 'right'],
-      borderTopLeftRadius: '4px',
+      position: ['top', 'right'],
+      borderBottomLeftRadius: '4px',
       printSize: false,
       prefix: '',
     },

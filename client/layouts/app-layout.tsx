@@ -18,7 +18,7 @@ import PrimarySidebar from './sidebar-primary'
 const LAYOUT_STYLES = {
   root: 'size-full min-h-screen',
   header: clx('fixed top-0 z-10 flex h-14 w-full items-center gap-2 border-b bg-sidebar px-4'),
-  main: clx('mt-14 flex-1', 'h-full overflow-y-auto', 'bg-background'),
+  main: clx('h-full flex-1 overflow-y-auto bg-background pt-14'),
 } as const
 
 export default function AppLayout() {
