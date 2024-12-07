@@ -42,7 +42,7 @@ export default defineConfig({
     manifest: true,
     emptyOutDir: true,
     minify: !process.dev,
-    chunkSizeWarningLimit: 1024 * 3,
+    chunkSizeWarningLimit: 1024 * 8,
     reportCompressedSize: false,
     rollupOptions: { input: resolve('client/main.tsx') },
     outDir: resolve('.output/client'),

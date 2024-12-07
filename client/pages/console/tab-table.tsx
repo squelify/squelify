@@ -2,13 +2,8 @@ import * as Lucide from 'lucide-react'
 import { useMemo, useRef, useState } from 'react'
 import { Button } from '#/components/base-ui/button'
 import { Input } from '#/components/base-ui/input'
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '#/components/base-ui/select'
+import { Select, SelectTrigger, SelectValue } from '#/components/base-ui/select'
+import { SelectContent, SelectItem } from '#/components/base-ui/select'
 import { TabsContent } from '#/components/base-ui/tabs'
 import { TooltipContent, TooltipProvider } from '#/components/base-ui/tooltip'
 import { Tooltip, TooltipTrigger } from '#/components/base-ui/tooltip'

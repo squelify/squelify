@@ -1,0 +1,32 @@
+.custom-datagrid {
+    .gdg-style {
+        &::-webkit-scrollbar {
+            width: 10px;
+            height: 10px;
+        }
+
+        &::-webkit-scrollbar-track {
+            background: var(--scrollbar-track, hsl(210 40% 96.1% / 0.2));
+        }
+
+        &::-webkit-scrollbar-thumb {
+            background: var(--scrollbar-thumb, hsl(215 16% 46.1% / 0.45));
+            border-radius: 1px;
+        }
+
+        &::-webkit-scrollbar-thumb:hover {
+            background: var(--scrollbar-hover, hsl(215 16% 46.1% / 0.5));
+        }
+    }
+
+    /* Firefox */
+    scrollbar-width: thin;
+    scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-track);
+}
+
+/* Dark mode overrides */
+:root[class~="dark"] .custom-datagrid {
+    --scrollbar-track: hsl(225 12% 16% / 0.2);
+    --scrollbar-thumb: hsl(215 6% 72% / 0.35);
+    --scrollbar-hover: hsl(215 6% 72% / 0.4);
+}

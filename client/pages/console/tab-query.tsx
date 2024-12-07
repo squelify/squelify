@@ -12,7 +12,7 @@ import { clx } from '#/utils/helper'
 export default function TabQuery() {
   const [inputValue, setInputValue] = useState('')
   const [debouncedValue, setDebouncedValue] = useState('')
-  const timeoutRef = useRef<ReturnType<typeof setTimeout>>()
+  const timeoutRef = useRef<ReturnType<typeof setTimeout>>(null)
 
   const savedQueriesItem = [
     {

@@ -1,3 +1,5 @@
+import { GridColumn } from '@glideapps/glide-data-grid'
+import { copycat } from '@snaplet/copycat'
 import consola from 'consola'
 import * as Lucide from 'lucide-react'
 import { useRef, useState } from 'react'
@@ -10,10 +12,55 @@ import { ResizablePanel, ResizablePanelGroup } from '#/components/base-ui/resiza
 import { ResizableHandle } from '#/components/base-ui/resizable'
 import { ScrollArea } from '#/components/base-ui/scroll-area'
 import { Separator } from '#/components/base-ui/separator'
-import { Table, TableHead, TableHeader } from '#/components/base-ui/table'
-import { TableBody, TableCell, TableRow } from '#/components/base-ui/table'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '#/components/base-ui/tabs'
 import CodeEditor, { type EditorContextData, EditorRef } from '#/components/code-editor'
+import DataGrid from '#/components/datagrid'
+
+type DummyItem = {
+  name: string
+  company: string
+  email: string
+  phone: string
+}
+
+const TOTAL_ROWS = 100
+
+// Helper function untuk generate data
+const generateDummyData = (count: number): DummyItem[] => {
+  return Array.from({ length: count }, (_, index) => ({
+    name: copycat.fullName(`person-${index}`),
+    company: copycat.words(`company-${index}`),
+    email: copycat.email(`person-${index}`).toLowerCase(),
+    phone: copycat.phoneNumber(`person-${index}`),
+  }))
+}
+
+// Ganti definisi data yang ada dengan:
+const data = generateDummyData(TOTAL_ROWS)
+
+// Grid columns may also provide icon, overlayIcon, menu, style, and theme overrides
+const columns: GridColumn[] = [
+  {
+    id: 'name',
+    title: 'Name',
+    width: 150,
+  },
+  {
+    id: 'company',
+    title: 'Company',
+    width: 150,
+  },
+  {
+    id: 'email',
+    title: 'Email',
+    width: 150,
+  },
+  {
+    id: 'phone',
+    title: 'Phone',
+    width: 150,
+  },
+]
 
 export default function QueryEditor() {
   const editorRef = useRef<EditorRef>(null)
@@ -137,52 +184,44 @@ export default function QueryEditor() {
         <ResizableHandle withHandle />
 
         <ResizablePanel defaultSize={40}>
-          <Tabs defaultValue="results" className="h-full pt-1">
-            <TabsList className="inline-flex h-9 w-full items-center justify-start rounded-none bg-muted/20 px-1">
+          <Tabs defaultValue="results" className="h-full space-y-0">
+            <TabsList className="inline-flex h-8 w-full items-center justify-start rounded-none bg-muted/20">
               <TabsTrigger
                 value="results"
-                className="flex h-7 items-center gap-1.5 px-3 text-xs data-[state=active]:bg-gray-200/60 data-[state=active]:shadow-none dark:data-[state=active]:bg-gray-700/60"
+                className="flex h-6 w-full items-center gap-1.5 px-3 text-xs data-[state=active]:bg-gray-200/60 data-[state=active]:shadow-none dark:data-[state=active]:bg-gray-700/60"
               >
                 <Lucide.Sheet className="size-3.5" />
                 Results
               </TabsTrigger>
               <TabsTrigger
                 value="messages"
-                className="flex h-7 items-center gap-1.5 px-3 text-xs data-[state=active]:bg-gray-200/60 data-[state=active]:shadow-none dark:data-[state=active]:bg-gray-700/60"
+                className="flex h-6 w-full items-center gap-1.5 px-3 text-xs data-[state=active]:bg-gray-200/60 data-[state=active]:shadow-none dark:data-[state=active]:bg-gray-700/60"
               >
                 <Lucide.MessageSquare className="size-3.5" />
                 Messages
               </TabsTrigger>
             </TabsList>
 
-            <TabsContent value="results" className="h-[calc(100%-34px)] border-t bg-sidebar/80">
-              <ScrollArea className="h-full">
-                <div className="min-w-max">
-                  <Table>
-                    <TableHeader>
-                      <TableRow className="bg-background/60 hover:bg-background/80">
-                        <TableHead className="text-sm">id</TableHead>
-                        <TableHead className="text-sm">name</TableHead>
-                        <TableHead className="text-sm">email</TableHead>
-                        <TableHead className="text-sm">created_at</TableHead>
-                      </TableRow>
-                    </TableHeader>
-                    <TableBody>
-                      <TableRow className="hover:bg-background/60">
-                        <TableCell className="font-mono text-sm">1</TableCell>
-                        <TableCell className="font-mono text-sm">John Doe</TableCell>
-                        <TableCell className="font-mono text-sm">john@example.com</TableCell>
-                        <TableCell className="font-mono text-sm">2024-01-01</TableCell>
-                      </TableRow>
-                    </TableBody>
-                  </Table>
+            <TabsContent value="results" className="h-[calc(100%-32px)]" asChild>
+              <div className="custom-datagrid border-t bg-sidebar/80">
+                <DataGrid
+                  data={data}
+                  columns={columns}
+                  enableCopyPaste
+                  enableRowMarkers
+                  enableMultiSelect
+                  onSelectionChange={(selection) => {
+                    consola.log('Selection:', selection)
+                  }}
+                />
+              </div>
+            </TabsContent>
+            <TabsContent value="messages" className="h-[calc(100%-32px)]">
+              <ScrollArea className="size-full border-t bg-sidebar/80 p-3">
+                <div className="rounded bg-background/60 p-3 font-mono text-sm">
+                  Query executed successfully
                 </div>
               </ScrollArea>
-            </TabsContent>
-            <TabsContent value="messages" className="size-full border-t bg-sidebar p-3">
-              <div className="rounded bg-background/60 p-3 font-mono text-sm">
-                Query executed successfully
-              </div>
             </TabsContent>
           </Tabs>
         </ResizablePanel>
