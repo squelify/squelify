@@ -16,11 +16,13 @@ export interface MenuGroup {
 export function useMenu() {
   const menuGroups: MenuGroup[] = [
     {
-      label: 'Main',
+      label: 'Workspace',
       hideLabel: true,
       items: [
         { title: 'Dashboard', url: '/dashboard', icon: Lucide.LayoutDashboard },
         { title: 'SQL Console', url: '/console', icon: Lucide.SquareChartGantt },
+        { title: 'User Management', url: '/users', icon: Lucide.Users },
+        { title: 'Authorization', url: '/authorization', icon: Lucide.ShieldCheck },
       ],
     },
     {
@@ -28,14 +30,6 @@ export function useMenu() {
       items: [
         { title: 'Collections', url: '/content/collections', icon: Lucide.Database },
         { title: 'Media Library', url: '/content/media', icon: Lucide.Image },
-      ],
-    },
-    {
-      label: 'Authentication',
-      items: [
-        { title: 'Users', url: '/users/list', icon: Lucide.Users },
-        { title: 'Roles', url: '/users/roles', icon: Lucide.Shield },
-        { title: 'Permissions', url: '/users/permissions', icon: Lucide.Lock },
       ],
     },
     {

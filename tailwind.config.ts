@@ -1,5 +1,4 @@
 import type { Config } from 'tailwindcss'
-import colors from 'tailwindcss/colors'
 import { fontFamily } from 'tailwindcss/defaultTheme'
 
 export default {
@@ -26,7 +25,6 @@ export default {
           '900': '#723b11',
           '950': '#431e05',
         },
-
         primary: {
           DEFAULT: 'hsl(var(--primary))',
           foreground: 'hsl(var(--primary-foreground))',
@@ -106,19 +104,11 @@ export default {
         'accordion-up': 'accordion-up 0.2s ease-out',
       },
     },
-    debugScreens: {
-      position: ['top', 'right'],
-      borderBottomLeftRadius: '4px',
-      printSize: false,
-      prefix: '',
-    },
   },
   plugins: [
-    require('@tailwindcss/forms'),
     require('@tailwindcss/aspect-ratio'),
     require('@tailwindcss/typography'),
     require('tailwindcss-animate'),
     require('tailwindcss-motion'),
-    require('tailwind-debug-breakpoints'),
   ],
 } satisfies Config

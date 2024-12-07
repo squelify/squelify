@@ -8,7 +8,7 @@ import { Sidebar, SidebarContent, useSidebar } from '#/components/base-ui/sideba
 import { TooltipContent, TooltipProvider } from '#/components/base-ui/tooltip'
 import { Tooltip, TooltipTrigger } from '#/components/base-ui/tooltip'
 import { Link } from '#/components/link'
-import { useMenu } from '#/context/hooks/use-menu'
+import { MenuItem, useMenu } from '#/context/hooks/use-menu'
 import type { UserInfo } from '#/services/types'
 import { clx } from '#/utils/helper'
 import AppCommand from './app-command'
@@ -19,6 +19,36 @@ interface PrimarySidebarProps {
   logout: () => void
 }
 
+interface MenuItemProps {
+  item: MenuItem
+  isActive: boolean
+}
+
+const CollapsedMenuItem = ({ item, isActive }: MenuItemProps) => (
+  <Tooltip delayDuration={100}>
+    <TooltipTrigger asChild>
+      <SidebarMenuButton className={clx(isActive && 'bg-accent text-accent-foreground')} asChild>
+        <Link href={item.url}>
+          <item.icon className={clx(isActive && 'bg-accent text-brand-500')} strokeWidth={1.8} />
+          <span>{item.title}</span>
+        </Link>
+      </SidebarMenuButton>
+    </TooltipTrigger>
+    <TooltipContent side="right">
+      <p>{item.title}</p>
+    </TooltipContent>
+  </Tooltip>
+)
+
+const ExpandedMenuItem = ({ item, isActive }: MenuItemProps) => (
+  <SidebarMenuButton className={clx(isActive && 'bg-accent text-accent-foreground')} asChild>
+    <Link href={item.url}>
+      <item.icon className={clx(isActive && 'bg-accent text-brand-500')} strokeWidth={1.8} />
+      <span>{item.title}</span>
+    </Link>
+  </SidebarMenuButton>
+)
+
 export default function PrimarySidebar({ user, logout }: PrimarySidebarProps) {
   const { state: sidebarState, toggleSidebar } = useSidebar()
   const { pathname } = useLocation()
@@ -26,12 +56,9 @@ export default function PrimarySidebar({ user, logout }: PrimarySidebarProps) {
 
   // Helper to check the active state of the menu
   const isMenuActive = (itemUrl: string): boolean => {
-    // For the settings page, check whether the path starts with itemUrl
-    if (itemUrl.startsWith('/settings') || itemUrl.startsWith('/console')) {
-      return pathname.startsWith(itemUrl)
-    }
-    // For other menus, exact match
-    return pathname === itemUrl
+    const specialPaths = ['/settings', '/content', '/authorization']
+    const isSpecialPath = specialPaths.some((path) => itemUrl.startsWith(path))
+    return isSpecialPath ? pathname.startsWith(itemUrl) : pathname === itemUrl
   }
 
   return (
@@ -71,54 +98,17 @@ export default function PrimarySidebar({ user, logout }: PrimarySidebarProps) {
         <TooltipProvider>
           {menuGroups.map((group) => (
             <SidebarGroup key={group.label}>
-              <SidebarGroupLabel
-                className={clx(group.hideLabel ? 'hidden' : 'flex', 'pointer-events-none')}
-              >
-                {group.label}
-              </SidebarGroupLabel>
+              {!group.hideLabel && (
+                <SidebarGroupLabel className="pointer-events-none">{group.label}</SidebarGroupLabel>
+              )}
               <SidebarGroupContent>
                 <SidebarMenu>
                   {group.items.map((item) => (
-                    <SidebarMenuItem key={item.title}>
+                    <SidebarMenuItem key={item.url}>
                       {sidebarState === 'collapsed' ? (
-                        <Tooltip delayDuration={100}>
-                          <TooltipTrigger asChild>
-                            <SidebarMenuButton
-                              className={clx(
-                                isMenuActive(item.url) && 'bg-accent text-accent-foreground'
-                              )}
-                              asChild
-                            >
-                              <Link href={item.url}>
-                                <item.icon
-                                  className={clx(
-                                    isMenuActive(item.url) && 'bg-accent text-brand-500'
-                                  )}
-                                  strokeWidth={1.8}
-                                />
-                                <span>{item.title}</span>
-                              </Link>
-                            </SidebarMenuButton>
-                          </TooltipTrigger>
-                          <TooltipContent side="right">
-                            <p>{item.title}</p>
-                          </TooltipContent>
-                        </Tooltip>
+                        <CollapsedMenuItem item={item} isActive={isMenuActive(item.url)} />
                       ) : (
-                        <SidebarMenuButton
-                          className={clx(
-                            isMenuActive(item.url) && 'bg-accent text-accent-foreground'
-                          )}
-                          asChild
-                        >
-                          <Link href={item.url}>
-                            <item.icon
-                              className={clx(isMenuActive(item.url) && 'bg-accent text-brand-500')}
-                              strokeWidth={1.8}
-                            />
-                            <span>{item.title}</span>
-                          </Link>
-                        </SidebarMenuButton>
+                        <ExpandedMenuItem item={item} isActive={isMenuActive(item.url)} />
                       )}
                     </SidebarMenuItem>
                   ))}
