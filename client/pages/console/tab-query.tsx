@@ -110,7 +110,7 @@ export default function TabQuery() {
                 <Lucide.CopyPlus className="size-3.5 text-muted-foreground" strokeWidth={1.8} />
               </Button>
             </TooltipTrigger>
-            <TooltipContent side="left" sideOffset={4}>
+            <TooltipContent side="bottom" sideOffset={4}>
               <p>New Query</p>
             </TooltipContent>
           </Tooltip>

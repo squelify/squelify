@@ -89,7 +89,7 @@ export default function QueryEditor() {
       <ResizablePanelGroup autoSaveId="query-editor" direction="vertical">
         <ResizablePanel defaultSize={60}>
           <div className="flex h-full flex-col">
-            <div className="flex h-10 items-center justify-between border-b bg-muted/20 px-3">
+            <div className="flex h-10 items-center justify-between border-b bg-muted/20 px-2">
               <div className="flex items-center gap-2">
                 <div className="flex">
                   <DropdownMenu>
@@ -132,7 +132,7 @@ export default function QueryEditor() {
                   variant="ghost"
                   className="h-7 bg-secondary/80 px-4 text-muted-foreground text-xs hover:bg-muted hover:text-foreground"
                 >
-                  <Lucide.Save className="-ml-0.5 mr-1.5 size-3" />
+                  <Lucide.Save className="-ml-0.5 mr-1 size-3" />
                   <span>Save</span>
                 </Button>
 
