@@ -50,14 +50,8 @@ export default function AppLayout() {
                   )}
                   {breadcrumbItems.map((item, index) => (
                     <BreadcrumbItem key={item.url}>
-                      {index === breadcrumbItems.length - 1 ? (
-                        <BreadcrumbPage>{item.title}</BreadcrumbPage>
-                      ) : (
-                        <React.Fragment>
-                          <BreadcrumbPage>{item.title}</BreadcrumbPage>
-                          <BreadcrumbSeparator />
-                        </React.Fragment>
-                      )}
+                      <BreadcrumbPage>{item.title}</BreadcrumbPage>
+                      {index < breadcrumbItems.length - 1 && <BreadcrumbSeparator />}
                     </BreadcrumbItem>
                   ))}
                 </BreadcrumbList>
