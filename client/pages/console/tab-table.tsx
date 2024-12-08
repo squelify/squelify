@@ -1,14 +1,64 @@
 import * as Lucide from 'lucide-react'
+import { useQueryState } from 'nuqs'
 import { useMemo, useRef, useState } from 'react'
 import { Button } from '#/components/base-ui/button'
+import { DropdownMenu, DropdownMenuContent } from '#/components/base-ui/dropdown-menu'
+import { DropdownMenuGroup, DropdownMenuPortal } from '#/components/base-ui/dropdown-menu'
+import { DropdownMenuSub, DropdownMenuSubContent } from '#/components/base-ui/dropdown-menu'
+import { DropdownMenuItem, DropdownMenuSeparator } from '#/components/base-ui/dropdown-menu'
+import { DropdownMenuSubTrigger, DropdownMenuTrigger } from '#/components/base-ui/dropdown-menu'
 import { Input } from '#/components/base-ui/input'
 import { Select, SelectTrigger, SelectValue } from '#/components/base-ui/select'
 import { SelectContent, SelectItem } from '#/components/base-ui/select'
 import { TabsContent } from '#/components/base-ui/tabs'
 import { TooltipContent, TooltipProvider } from '#/components/base-ui/tooltip'
 import { Tooltip, TooltipTrigger } from '#/components/base-ui/tooltip'
+import { clx } from '#/utils/helper'
+
+const MenuItemTable = () => {
+  return (
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild>
+        <Button variant="ghost" className="size-5 p-1.5">
+          <Lucide.Ellipsis className="invisible size-3.5 group-hover:visible" />
+        </Button>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent className="w-44" align="center" side="bottom">
+        <DropdownMenuGroup>
+          <DropdownMenuItem className="flex gap-2 px-2 py-1.5 text-xs">
+            <Lucide.FilePenLine className="size-4" strokeWidth={1.8} />
+            <spanm>Edit Table</spanm>
+          </DropdownMenuItem>
+          <DropdownMenuItem className="flex gap-2 px-2 py-1.5 text-xs">
+            <Lucide.Copy className="size-4" strokeWidth={1.8} />
+            <spanm>Duplicate Table</spanm>
+          </DropdownMenuItem>
+          <DropdownMenuSub>
+            <DropdownMenuSubTrigger className="flex gap-2 px-2 py-1.5 text-xs">
+              <Lucide.Download className="size-4" strokeWidth={1.8} />
+              <spanm>Export Data</spanm>
+            </DropdownMenuSubTrigger>
+            <DropdownMenuPortal>
+              <DropdownMenuSubContent>
+                <DropdownMenuItem className="text-xs">Export as CSV</DropdownMenuItem>
+                <DropdownMenuItem className="text-xs">Export as SQL</DropdownMenuItem>
+              </DropdownMenuSubContent>
+            </DropdownMenuPortal>
+          </DropdownMenuSub>
+        </DropdownMenuGroup>
+        <DropdownMenuSeparator />
+        <DropdownMenuItem className="flex gap-2 px-2 py-1.5 text-xs">
+          <Lucide.Trash className="size-4" strokeWidth={1.8} />
+          <spanm>Delete Table</spanm>
+        </DropdownMenuItem>
+      </DropdownMenuContent>
+    </DropdownMenu>
+  )
+}
 
 export default function TabTable() {
+  const [collectionId, setCollectionId] = useQueryState('collectionId')
+
   const [inputValue, setInputValue] = useState('')
   const [debouncedValue, setDebouncedValue] = useState('')
   const timeoutRef = useRef<ReturnType<typeof setTimeout>>(null)
@@ -69,18 +119,24 @@ export default function TabTable() {
       <div className="-mt-12 flex h-full flex-col justify-between pt-12">
         <div className="h-full space-y-1 p-2">
           {filteredTables.map((item) => (
-            <div
+            <Button
+              size="sm"
               key={item.id}
-              className="group flex select-none items-center justify-between rounded px-2.5 py-1.5 text-muted-foreground text-sm hover:bg-background hover:text-foreground"
+              variant="ghost"
+              className={clx(
+                collectionId === item.id.toString()
+                  ? 'bg-accent text-accent-foreground'
+                  : 'text-muted-foreground',
+                'group flex w-full justify-between rounded'
+              )}
+              onClick={() => setCollectionId(item.id.toString())}
             >
-              <div className="flex items-center gap-2">
+              <span className="flex items-center gap-2">
                 <Lucide.Table2 className="size-3.5" />
-                <span>{item.name}</span>
-              </div>
-              <span className="invisible font-semibold text-muted-foreground/60 text-xs group-hover:visible">
-                {item.rows} rows
+                {item.name}
               </span>
-            </div>
+              <MenuItemTable />
+            </Button>
           ))}
           {filteredTables.length === 0 && (
             <div className="px-2.5 py-1.5 text-muted-foreground text-sm">No tables found</div>

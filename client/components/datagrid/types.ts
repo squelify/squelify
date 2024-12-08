@@ -15,6 +15,7 @@ export interface DataGridProps<T> extends Partial<DataEditorProps> {
   searchInputRef?: React.RefObject<HTMLInputElement | null>
   rowHeight?: number
   customTheme?: Partial<Theme>
+  className?: string
 }
 
 export interface SearchState {

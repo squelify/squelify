@@ -1,10 +1,12 @@
-import '../../styles/datagrid.css'
 import '@glideapps/glide-data-grid/dist/index.css'
 import { CompactSelection, DataEditor, GridCellKind } from '@glideapps/glide-data-grid'
 import type { GridCell, GridColumn, GridSelection, Item } from '@glideapps/glide-data-grid'
 import { useCallback, useEffect, useRef, useState } from 'react'
+import { clx } from '#/utils/helper'
+
 import { calculateColumnWidths, useDataGridTheme } from './helper'
 import { DataGridProps, SearchState } from './types'
+import '../../styles/datagrid.css'
 
 export function DataGrid<T extends Record<string, any>>({
   data,
@@ -16,6 +18,7 @@ export function DataGrid<T extends Record<string, any>>({
   searchInputRef: externalSearchInputRef,
   rowHeight = 28, // Slightly smaller default
   customTheme,
+  className,
 }: DataGridProps<T>) {
   // States and Refs
   const defaultSearchInputRef = useRef<HTMLInputElement>(null)
@@ -121,7 +124,7 @@ export function DataGrid<T extends Record<string, any>>({
 
   return (
     <DataEditor
-      className="gdg-style"
+      className={clx('gdg-style', className)}
       getCellContent={getCellContent}
       onColumnResize={handleColumnResize}
       columns={columns.map((col) => ({ ...col, width: columnSizes[col.id] }))}

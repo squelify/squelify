@@ -25,7 +25,7 @@ const shortcuts = [
   {
     title: 'API & Webhooks',
     description: 'Manage API keys and webhooks',
-    icon: Lucide.Blocks,
+    icon: Lucide.Bolt,
     actions: [
       { label: 'API Key', icon: Lucide.Key, href: '/api-keys' },
       { label: 'Webhooks', icon: Lucide.Webhook, href: '/webhooks' },

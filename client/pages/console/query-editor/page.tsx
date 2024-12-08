@@ -91,7 +91,7 @@ export default function Page() {
     <ResizablePanel defaultSize={86} minSize={80} maxSize={86}>
       <ResizablePanelGroup autoSaveId="query-editor" direction="vertical">
         <ResizablePanel defaultSize={60}>
-          <div className="flex h-full flex-col">
+          <div className="flex size-full flex-col">
             <div className="flex h-10 items-center justify-between border-b bg-muted/20 px-2">
               <div className="flex items-center gap-2">
                 <div className="flex">
