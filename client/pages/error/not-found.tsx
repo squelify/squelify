@@ -4,20 +4,19 @@ import { Button } from '#/components/base-ui/button'
 import { Link } from '#/components/link'
 
 export default function NotFound() {
-  const canGoBack = window?.history?.length > 2
   const navigate = useNavigate()
 
   return (
-    <div className="mx-auto flex size-full h-full min-h-screen items-center justify-center">
+    <div className="mx-auto flex size-full h-full min-h-screen items-center justify-center bg-background">
       <div className="flex h-full max-w-2xl flex-col items-center p-4 text-center">
         <div className="mb-10">
           <Lucide.Frown
-            className="size-24 text-muted-foreground hover:text-primary"
+            className="size-24 text-muted-foreground transition-colors hover:text-brand-500 dark:hover:text-brand-400"
             strokeWidth={2.4}
           />
         </div>
         <div>
-          <h1 className="mb-6 font-bold text-2xl">404 Not found</h1>
+          <h1 className="mb-6 font-bold text-2xl text-foreground">404 Not found</h1>
           <h3 className="font-semibold text-foreground text-xl tracking-tight">
             Sorry, we can't find that page.
           </h3>
@@ -28,13 +27,13 @@ export default function NotFound() {
           </p>
         </div>
         <div className="mt-8">
-          {canGoBack ? (
-            <Button variant="default" className="min-w-40" onClick={() => navigate(-1)}>
+          {window?.history?.length > 2 ? (
+            <Button variant="default" onClick={() => navigate(-1)}>
               <Lucide.ArrowLeft className="size-4" strokeWidth={1.8} />
               <span>Go Back</span>
             </Button>
           ) : (
-            <Button variant="default" className="min-w-40" asChild>
+            <Button variant="default" asChild>
               <Link href="/">
                 <Lucide.ArrowLeft className="size-4" strokeWidth={1.8} />
                 <span>Go to Main Page</span>

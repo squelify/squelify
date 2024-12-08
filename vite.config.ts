@@ -44,7 +44,10 @@ export default defineConfig({
     minify: !process.dev,
     chunkSizeWarningLimit: 1024 * 8,
     reportCompressedSize: false,
-    rollupOptions: { input: resolve('client/main.tsx') },
+    rollupOptions: {
+      input: resolve('client/main.tsx'),
+      // external: ['@glideapps/glide-data-grid'],
+    },
     outDir: resolve('.output/client'),
   },
   customLogger: !isTest ? viteLogger : undefined,
