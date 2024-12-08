@@ -20,7 +20,7 @@ if (!rootElement) {
 // @ref: https://react.dev/blog/2022/03/08/react-18-upgrade-guide#react
 ReactDOM.createRoot(rootElement).render(
   <React.StrictMode>
-    <BrowserRouter basename="_admin_">
+    <BrowserRouter basename="/admin">
       <TRPCProviders>
         <AppProvider debugScreenSize={import.meta.env.DEV}>
           <AppRoutes />

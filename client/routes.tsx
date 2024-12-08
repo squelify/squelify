@@ -57,6 +57,9 @@ export default function AppRoutes() {
   return (
     <Suspense fallback={<PageLoader />}>
       <Routes>
+        {/* Root page */}
+        <Route index={true} element={<Navigate to="dashboard" replace />} />
+
         {/* Auth routes */}
         <Route element={<AuthGroup.Layout />} errorElement={<InternalError />}>
           <Route path="login" element={<AuthGroup.SignIn />} />

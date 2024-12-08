@@ -20,7 +20,7 @@ export interface AppConfig {
 export default {
   baseURL: 'http://localhost:3278',
   domain: 'localhost:3278',
-  adminPath: '/_admin_',
+  adminPath: '/admin',
   title: 'Squelify',
   description: 'Lightweight Headless CMS and Backend Platform without hassle',
   imageUrl: '/images/og-image.png',
