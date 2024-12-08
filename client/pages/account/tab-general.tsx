@@ -38,7 +38,10 @@ export default function TabGeneral() {
             <div className="mx-auto mb-6">
               <div className="group relative">
                 <Avatar className="size-32">
-                  <AvatarImage src="https://github.com/riipandi.png" alt="Profile photo" />
+                  <AvatarImage
+                    src="https://avatars.githubusercontent.com/u/921834?v=4"
+                    alt="Profile photo"
+                  />
                   <AvatarFallback>AR</AvatarFallback>
                 </Avatar>
                 <div className="absolute inset-0 flex items-center justify-center rounded-full bg-black/60 opacity-0 transition-opacity group-hover:opacity-100">

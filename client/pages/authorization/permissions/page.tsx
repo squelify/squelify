@@ -39,7 +39,7 @@ export default function Page() {
       {/* Search and Filters */}
       <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
         <div className="flex flex-1 items-center gap-2">
-          <Input placeholder="Search permissions..." className="max-w-xs" />
+          <Input placeholder="Search permissions..." className="max-w-sm" />
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="outline" size="icon">

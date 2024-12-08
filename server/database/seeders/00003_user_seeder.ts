@@ -34,6 +34,7 @@ export default async function seed(db: Kysely<Database>): Promise<void> {
       username: 'admin',
       firstName: 'Admin',
       lastName: 'Sistem',
+      avatarUrl: 'https://avatars.githubusercontent.com/u/921834?v=4',
       isActive: 1,
       createdAt: now,
     }
