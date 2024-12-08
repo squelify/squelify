@@ -23,7 +23,7 @@ const visibleColumns = [
   { id: 'status', title: 'Status' },
 ]
 
-export default function Component() {
+export default function Page() {
   useSEOMeta('Roles')
 
   const [isRefreshing, setIsRefreshing] = useState(false)
@@ -184,5 +184,3 @@ export default function Component() {
     </TabsContent>
   )
 }
-
-Component.displayName = 'RolesPage'

@@ -9,7 +9,7 @@ import { Switch } from '#/components/base-ui/switch'
 import { TabsContent } from '#/components/base-ui/tabs'
 import { useSEOMeta } from '#/context/hooks/use-seo-meta'
 
-export default function Component() {
+export default function Page() {
   useSEOMeta('Logs Settings')
 
   return (
@@ -58,5 +58,3 @@ export default function Component() {
     </TabsContent>
   )
 }
-
-Component.displayName = 'SettingsLogs'

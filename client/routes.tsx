@@ -8,7 +8,6 @@ const NotFound = lazy(() => import('#/pages/error/not-found'))
 const InternalError = lazy(() => import('#/pages/error/internal-error'))
 const Dashboard = lazy(() => import('#/pages/dashboard'))
 const Account = lazy(() => import('#/pages/account/page'))
-const SQLConsole = lazy(() => import('#/pages/console/page'))
 const AuditLog = lazy(() => import('#/pages/audit-log/page'))
 const Webhooks = lazy(() => import('#/pages/webhooks/page'))
 const ApiKeys = lazy(() => import('#/pages/api-keys/page'))
@@ -28,6 +27,13 @@ const AuthzGroup = {
   Layout: lazy(() => import('#/pages/authorization/layout')),
   Roles: lazy(() => import('#/pages/authorization/roles/page')),
   Permissions: lazy(() => import('#/pages/authorization/permissions/page')),
+}
+
+// SQL Console feature group
+const SQLConsoleGroup = {
+  Layout: lazy(() => import('#/pages/console/layout')),
+  Table: lazy(() => import('#/pages/console/table-editor/page')),
+  Query: lazy(() => import('#/pages/console/query-editor/page')),
 }
 
 // Content feature group
@@ -63,10 +69,19 @@ export default function AppRoutes() {
         <Route element={<AppLayout />} errorElement={<InternalError />}>
           <Route path="dashboard" element={<Dashboard />} />
           <Route path="account" element={<Account />} />
-          <Route path="console" element={<SQLConsole />} />
           <Route path="audit-log" element={<AuditLog />} />
           <Route path="webhooks" element={<Webhooks />} />
           <Route path="api-keys" element={<ApiKeys />} />
+
+          <Route
+            path="console"
+            element={<SQLConsoleGroup.Layout />}
+            errorElement={<InternalError />}
+          >
+            <Route index={true} element={<Navigate to="table" replace />} />
+            <Route path="table" element={<SQLConsoleGroup.Table />} />
+            <Route path="query" element={<SQLConsoleGroup.Query />} />
+          </Route>
 
           {/* User management routes */}
           <Route path="users" element={<UsersList />} />

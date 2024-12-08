@@ -15,6 +15,7 @@ import { Separator } from '#/components/base-ui/separator'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '#/components/base-ui/tabs'
 import CodeEditor, { type EditorContextData, EditorRef } from '#/components/code-editor'
 import DataGrid from '#/components/datagrid'
+import { useSEOMeta } from '#/context/hooks/use-seo-meta'
 
 type DummyItem = {
   name: string
@@ -46,7 +47,9 @@ const columns: GridColumn[] = [
   { id: 'phone', title: 'Phone', width: 150 },
 ]
 
-export default function QueryEditor() {
+export default function Page() {
+  useSEOMeta('SQL Query Console')
+
   const editorRef = useRef<EditorRef>(null)
   const [isExecuting, setIsExecuting] = useState(false)
   const [_query, setQuery] = useState('SELECT * FROM users;')

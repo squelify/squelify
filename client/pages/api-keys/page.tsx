@@ -6,22 +6,11 @@ import { DropdownMenuContent } from '#/components/base-ui/dropdown-menu'
 import { DropdownMenuLabel, DropdownMenuSeparator } from '#/components/base-ui/dropdown-menu'
 import { DropdownMenuCheckboxItem, DropdownMenuTrigger } from '#/components/base-ui/dropdown-menu'
 import { Input } from '#/components/base-ui/input'
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '#/components/base-ui/select'
+import { Select, SelectTrigger, SelectValue } from '#/components/base-ui/select'
+import { SelectContent, SelectItem } from '#/components/base-ui/select'
 import { Skeleton } from '#/components/base-ui/skeleton'
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from '#/components/base-ui/table'
+import { Table, TableHead, TableHeader } from '#/components/base-ui/table'
+import { TableBody, TableCell, TableRow } from '#/components/base-ui/table'
 import { useSEOMeta } from '#/context/hooks/use-seo-meta'
 import { clx } from '#/utils/helper'
 
@@ -34,7 +23,7 @@ const visibleColumns = [
   { id: 'status', title: 'Status' },
 ]
 
-export default function Component() {
+export default function Page() {
   const { pageTitle } = useSEOMeta('API Keys')
   const [isRefreshing, setIsRefreshing] = useState(false)
   const skeletonRows = ['skeleton-1', 'skeleton-2', 'skeleton-3', 'skeleton-4', 'skeleton-5']
@@ -226,5 +215,3 @@ export default function Component() {
     </div>
   )
 }
-
-Component.displayName = 'APIKeysPage'

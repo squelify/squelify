@@ -19,7 +19,7 @@ const visibleColumns = [
   { id: 'status', title: 'Status' },
 ]
 
-export default function Component() {
+export default function Page() {
   const { pageTitle } = useSEOMeta('User Management')
   const { data: users, isLoading, refetch } = trpc.user.list.useQuery()
 
@@ -169,5 +169,3 @@ export default function Component() {
     </div>
   )
 }
-
-Component.displayName = 'UsersPage'

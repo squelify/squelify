@@ -23,7 +23,7 @@ const visibleColumns = [
   { id: 'roles', title: 'Assigned Roles' },
 ]
 
-export default function Component() {
+export default function Page() {
   useSEOMeta('Permissions')
 
   const [isRefreshing, setIsRefreshing] = useState(false)
@@ -186,5 +186,3 @@ export default function Component() {
     </TabsContent>
   )
 }
-
-Component.displayName = 'PermissionsPage'

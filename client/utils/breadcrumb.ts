@@ -15,21 +15,54 @@ export function getBreadcrumbItems(
   const cleanPath = pathname.split('?')[0].replace(/\/+$/, '')
   const pathSegments = cleanPath.split('/')
 
+  // Check standalone routes first
+  const standaloneResult = handleStandaloneRoute(cleanPath)
+  if (standaloneResult.length) return standaloneResult
+
   // Handle special routes
   if (cleanPath.startsWith('/settings')) {
     return handleSettingsRoute(pathSegments)
   }
 
   if (cleanPath.startsWith('/content')) {
-    return handleContentRoute(cleanPath, menuGroups)
+    return handleContentRoute(cleanPath)
   }
 
   if (cleanPath.startsWith('/authorization')) {
     return handleAuthorizationRoute(pathSegments)
   }
 
+  if (cleanPath.startsWith('/console')) {
+    return handleConsoleRoute(pathSegments)
+  }
+
   // Default menu item lookup
   return findMenuItemBreadcrumb(cleanPath, menuGroups)
+}
+
+/**
+ * Handle standalone route breadcrumbs
+ */
+function handleStandaloneRoute(path: string): { title: string; url: string }[] {
+  const standalonePages: Record<string, string> = {
+    account: 'My Account',
+    'audit-log': 'Audit Log',
+    webhooks: 'Webhooks',
+    'api-keys': 'API Keys',
+    users: 'Users',
+  }
+
+  const segment = path.split('/')[1]
+  if (standalonePages[segment]) {
+    return [
+      {
+        title: standalonePages[segment],
+        url: `/${segment}`,
+      },
+    ]
+  }
+
+  return []
 }
 
 /**
@@ -52,21 +85,20 @@ function handleSettingsRoute(segments: string[]): { title: string; url: string }
 /**
  * Handle content route breadcrumbs
  */
-function handleContentRoute(
-  path: string,
-  menuGroups: MenuGroup[]
-): { title: string; url: string }[] {
-  const contentGroup = menuGroups.find((group) =>
-    group.items.some((item) => item.url.startsWith('/content'))
-  )
-
-  if (!contentGroup) return []
-
+function handleContentRoute(path: string): { title: string; url: string }[] {
   const result = [{ title: 'Content', url: '/content' }]
-  const matchingItem = contentGroup.items.find((item) => path.startsWith(item.url))
 
-  if (matchingItem) {
-    result.push({ title: matchingItem.title, url: matchingItem.url })
+  const contentPages: Record<string, string> = {
+    collections: 'Collections',
+    media: 'Media Library',
+  }
+
+  const section = path.split('/')[2]
+  if (contentPages[section]) {
+    result.push({
+      title: contentPages[section],
+      url: `/content/${section}`,
+    })
   }
 
   return result
@@ -88,6 +120,28 @@ function handleAuthorizationRoute(segments: string[]): { title: string; url: str
     result.push({
       title: authPages[section],
       url: `/authorization/${section}`,
+    })
+  }
+
+  return result
+}
+
+/**
+ * Handle console route breadcrumbs
+ */
+function handleConsoleRoute(segments: string[]): { title: string; url: string }[] {
+  const result = [{ title: 'SQL Console', url: '/console' }]
+
+  const section = segments[segments.length - 1]
+  const consolePages: Record<string, string> = {
+    table: 'Table Editor',
+    query: 'Query Editor',
+  }
+
+  if (consolePages[section]) {
+    result.push({
+      title: consolePages[section],
+      url: `/console/${section}`,
     })
   }
 

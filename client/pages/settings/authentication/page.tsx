@@ -14,7 +14,7 @@ import { useSEOMeta } from '#/context/hooks/use-seo-meta'
 import { EmailProviderSettings } from './email-provider-settings'
 import { SocialProviderSettings } from './social-provider-settings'
 
-export default function Component() {
+export default function Page() {
   useSEOMeta('Authentication Settings')
 
   const { providers } = useAuthProviders()
@@ -123,5 +123,3 @@ export default function Component() {
     </TabsContent>
   )
 }
-
-Component.displayName = 'SettingsAuth'

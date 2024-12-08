@@ -56,7 +56,7 @@ export default function PrimarySidebar({ user, logout }: PrimarySidebarProps) {
 
   // Helper to check the active state of the menu
   const isMenuActive = (itemUrl: string): boolean => {
-    const specialPaths = ['/settings', '/content', '/authorization']
+    const specialPaths = ['/settings', '/console', '/content', '/authorization']
     const isSpecialPath = specialPaths.some((path) => itemUrl.startsWith(path))
     return isSpecialPath ? pathname.startsWith(itemUrl) : pathname === itemUrl
   }

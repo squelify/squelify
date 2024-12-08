@@ -38,7 +38,7 @@ const visibleColumns = [
   { id: 'changes', title: 'Changes' },
 ]
 
-export default function Component() {
+export default function Page() {
   const { pageTitle } = useSEOMeta('Audit Log')
   const [isRefreshing, setIsRefreshing] = useState(false)
   const skeletonRows = ['skeleton-1', 'skeleton-2', 'skeleton-3', 'skeleton-4', 'skeleton-5']
@@ -189,5 +189,3 @@ export default function Component() {
     </div>
   )
 }
-
-Component.displayName = 'AuditLogPage'

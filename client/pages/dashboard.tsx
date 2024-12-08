@@ -19,7 +19,7 @@ const HEALTH_CHECK_CONFIG = {
   retryDelay: 1000, // 1 second
 } as const
 
-export default function Component() {
+export default function Page() {
   useSEOMeta('Dashboard')
 
   const ctx = useOutletContext<AppContextType>()
@@ -301,5 +301,3 @@ export default function Component() {
     </div>
   )
 }
-
-Component.displayName = 'DashboardPage'

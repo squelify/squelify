@@ -1,7 +1,10 @@
 import * as Lucide from 'lucide-react'
 import { ResizablePanel, ResizablePanelGroup } from '#/components/base-ui/resizable'
+import { useSEOMeta } from '#/context/hooks/use-seo-meta'
 
-export default function TableEditor() {
+export default function Page() {
+  useSEOMeta('Table Editor')
+
   return (
     <ResizablePanel defaultSize={86} minSize={80} maxSize={86}>
       <ResizablePanelGroup autoSaveId="table-editor" direction="vertical">

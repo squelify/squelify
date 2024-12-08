@@ -1,7 +1,7 @@
 import * as Lucide from 'lucide-react'
 import { useSEOMeta } from '#/context/hooks/use-seo-meta'
 
-export default function Component() {
+export default function Page() {
   useSEOMeta('WIP')
 
   return (
@@ -22,5 +22,3 @@ export default function Component() {
     </div>
   )
 }
-
-Component.displayName = 'WorkInProgress'

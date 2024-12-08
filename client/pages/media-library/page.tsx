@@ -35,7 +35,7 @@ const visibleColumns = [
   { id: 'modified', title: 'Modified' },
 ]
 
-export default function Component() {
+export default function Page() {
   const { pageTitle } = useSEOMeta('Media Library')
   const [isRefreshing, setIsRefreshing] = useState(false)
   const uiState = useStore(uiStore)
@@ -246,5 +246,3 @@ export default function Component() {
     </div>
   )
 }
-
-Component.displayName = 'MediaLibraryPage'

@@ -20,7 +20,7 @@ const ACCOUNT_TABS: AccountSettingsTab[] = [
   { label: 'Login History', value: 'login-history' },
 ]
 
-export default function Component() {
+export default function Page() {
   const { pageTitle } = useSEOMeta('Account Settings')
 
   // Extract the active section from the query parameter
@@ -55,5 +55,3 @@ export default function Component() {
     </div>
   )
 }
-
-Component.displayName = 'AccountSettingsPage'

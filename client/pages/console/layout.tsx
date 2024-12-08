@@ -1,19 +1,16 @@
 import type { LucideIcon } from 'lucide-react'
 import * as Lucide from 'lucide-react'
-import { useQueryState } from 'nuqs'
 import { ErrorBoundary } from 'react-error-boundary'
+import { Outlet, useLocation } from 'react-router'
 import { ResizablePanel, ResizablePanelGroup } from '#/components/base-ui/resizable'
 import { ResizableHandle } from '#/components/base-ui/resizable'
-import { ScrollArea } from '#/components/base-ui/scroll-area'
 import { Tabs, TabsList, TabsTrigger } from '#/components/base-ui/tabs'
-import { useSEOMeta } from '#/context/hooks/use-seo-meta'
+import { Link } from '#/components/link'
 import ErrorBoundaryFallback from '#/pages/error/boundary-fallback'
 import { clx } from '#/utils/helper'
 
-import QueryEditor from './query-editor'
 import TabQuery from './tab-query'
 import TabTable from './tab-table'
-import TableEditor from './table-editor'
 
 interface ConsoleTab {
   label: string
@@ -27,12 +24,9 @@ const CONSOLE_TABS: ConsoleTab[] = [
   { label: 'Query', value: 'query', href: '/console/query', icon: Lucide.Clock },
 ]
 
-export default function Component() {
-  useSEOMeta('SQL Console')
-
-  // Extract the active section from the query parameter
-  const [activeTab, setActiveTab] = useQueryState('activeTab')
-  const activeSection = activeTab || 'table'
+export default function SQLConsoleLayout() {
+  const location = useLocation()
+  const activeSection = location.pathname.split('/')[2] || 'table'
 
   return (
     <ErrorBoundary FallbackComponent={ErrorBoundaryFallback}>
@@ -45,17 +39,17 @@ export default function Component() {
           <Tabs value={activeSection} defaultValue={activeSection} className="h-full">
             <TabsList className="grid h-10 w-full grid-cols-2 gap-1 rounded-none border-b bg-sidebar/40 px-2 py-0">
               {CONSOLE_TABS.map((tab) => (
-                <TabsTrigger
-                  key={tab.value}
-                  value={tab.value}
-                  className={clx(
-                    'flex h-7 items-center justify-center gap-1.5 px-3 text-xs hover:bg-background',
-                    'data-[state=active]:bg-gray-200/60 data-[state=active]:shadow-none dark:data-[state=active]:bg-gray-700/60'
-                  )}
-                  onClick={() => setActiveTab(tab.value)}
-                >
-                  <tab.icon className="size-3.5" strokeWidth={1.6} />
-                  <span>{tab.label}</span>
+                <TabsTrigger key={tab.value} value={tab.value} asChild>
+                  <Link
+                    href={tab.href}
+                    className={clx(
+                      'flex h-7 items-center justify-center gap-1.5 px-3 text-xs hover:bg-background',
+                      'data-[state=active]:bg-gray-200/60 data-[state=active]:shadow-none dark:data-[state=active]:bg-gray-700/60'
+                    )}
+                  >
+                    <tab.icon className="size-3.5" strokeWidth={1.6} />
+                    <span>{tab.label}</span>
+                  </Link>
                 </TabsTrigger>
               ))}
             </TabsList>
@@ -64,10 +58,8 @@ export default function Component() {
           </Tabs>
         </ResizablePanel>
         <ResizableHandle withHandle />
-        {activeSection === 'query' ? <QueryEditor /> : <TableEditor />}
+        <Outlet />
       </ResizablePanelGroup>
     </ErrorBoundary>
   )
 }
-
-Component.displayName = 'SQLConsolePage'

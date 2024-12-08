@@ -11,7 +11,7 @@ import { Tooltip, TooltipTrigger } from '#/components/base-ui/tooltip'
 export default function TabTable() {
   const [inputValue, setInputValue] = useState('')
   const [debouncedValue, setDebouncedValue] = useState('')
-  const timeoutRef = useRef<ReturnType<typeof setTimeout>>()
+  const timeoutRef = useRef<ReturnType<typeof setTimeout>>(null)
 
   const tableItems = [
     { id: 1, name: 'users', rows: 12 },
