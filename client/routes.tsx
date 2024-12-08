@@ -6,7 +6,7 @@ import PageLoader from '#/components/page-loader'
 const AppLayout = lazy(() => import('#/layouts/app-layout'))
 const NotFound = lazy(() => import('#/pages/error/not-found'))
 const InternalError = lazy(() => import('#/pages/error/internal-error'))
-const Dashboard = lazy(() => import('#/pages/dashboard'))
+const Dashboard = lazy(() => import('#/pages/dashboard/page'))
 const Account = lazy(() => import('#/pages/account/page'))
 const AuditLog = lazy(() => import('#/pages/audit-log/page'))
 const Webhooks = lazy(() => import('#/pages/webhooks/page'))
