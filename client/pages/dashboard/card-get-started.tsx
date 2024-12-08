@@ -18,11 +18,11 @@ export default function CardGetStarted() {
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center gap-2 text-base">
-              <Lucide.Key className="size-4" />
+              <Lucide.LockKeyhole className="size-4" />
               Authentication
             </CardTitle>
           </CardHeader>
-          <CardContent className="-mt-2 space-y-4">
+          <CardContent className="-mt-3 space-y-6">
             <div className="space-y-2">
               <p className="text-muted-foreground text-sm">Set up user authentication with:</p>
               <ul className="list-inside list-disc space-y-1 text-sm">
@@ -32,25 +32,32 @@ export default function CardGetStarted() {
                 <li>Passkey (WebAuthn)</li>
               </ul>
             </div>
-            <Button variant="outline" className="w-full" asChild>
-              <Link href="/settings/auth">
-                <Lucide.ArrowRight className="mr-2 size-4" />
-                <span>Configure Auth</span>
-              </Link>
-            </Button>
+            <div className="inline-flex w-full items-center justify-between gap-2">
+              {[
+                { label: 'Manage Users', icon: Lucide.Users2, href: '/settings/api/keys/new' },
+                { label: 'Roles & Permissions', icon: Lucide.Shield, href: '/settings/api' },
+              ].map((action) => (
+                <Button key={action.label} variant="outline" size="sm" className="w-full" asChild>
+                  <Link href={action.href}>
+                    <action.icon className="-ml-1 mr-1 size-4" />
+                    {action.label}
+                  </Link>
+                </Button>
+              ))}
+            </div>
           </CardContent>
         </Card>
 
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center gap-2 text-base">
-              <Lucide.Database className="size-4" />
+              <Lucide.Image className="size-4" />
               Content Management
             </CardTitle>
           </CardHeader>
-          <CardContent className="-mt-2 space-y-4">
+          <CardContent className="-mt-3 space-y-6">
             <div className="space-y-2">
-              <p className="text-muted-foreground text-sm">Start managing content with:</p>
+              <p className="text-muted-foreground text-sm">Create and manage content types:</p>
               <ul className="list-inside list-disc space-y-1 text-sm">
                 <li>Dynamic content types</li>
                 <li>Flexible modeling</li>
@@ -58,23 +65,30 @@ export default function CardGetStarted() {
                 <li>Media library</li>
               </ul>
             </div>
-            <Button variant="outline" className="w-full" asChild>
-              <Link href="/content">
-                <Lucide.ArrowRight className="mr-2 size-4" />
-                <span>Create Content</span>
-              </Link>
-            </Button>
+            <div className="inline-flex w-full items-center justify-between gap-2">
+              {[
+                { label: 'New Content', icon: Lucide.Plus, href: '/content/new' },
+                { label: 'Browse Media', icon: Lucide.FolderOpen, href: '/media' },
+              ].map((action) => (
+                <Button key={action.label} variant="outline" size="sm" className="w-full" asChild>
+                  <Link href={action.href}>
+                    <action.icon className="-ml-1 mr-1 size-4" />
+                    {action.label}
+                  </Link>
+                </Button>
+              ))}
+            </div>
           </CardContent>
         </Card>
 
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center gap-2 text-base">
-              <Lucide.Wrench className="size-4" />
+              <Lucide.Blocks className="size-4" />
               Developer Tools
             </CardTitle>
           </CardHeader>
-          <CardContent className="-mt-2 space-y-4">
+          <CardContent className="-mt-3 space-y-6">
             <div className="space-y-2">
               <p className="text-muted-foreground text-sm">Access developer features:</p>
               <ul className="list-inside list-disc space-y-1 text-sm">
@@ -84,12 +98,19 @@ export default function CardGetStarted() {
                 <li>Webhooks</li>
               </ul>
             </div>
-            <Button variant="outline" className="w-full" asChild>
-              <Link href="/docs" newTab>
-                <Lucide.ArrowRight className="mr-2 size-4" />
-                <span>View API Docs</span>
-              </Link>
-            </Button>
+            <div className="inline-flex w-full items-center justify-between gap-2">
+              {[
+                { label: 'API Keys', icon: Lucide.Key, href: '/settings/api/keys/new' },
+                { label: 'Webhooks', icon: Lucide.Webhook, href: '/settings/api' },
+              ].map((action) => (
+                <Button key={action.label} variant="outline" size="sm" className="w-full" asChild>
+                  <Link href={action.href}>
+                    <action.icon className="-ml-1 mr-1 size-4" />
+                    {action.label}
+                  </Link>
+                </Button>
+              ))}
+            </div>
           </CardContent>
         </Card>
       </CardContent>
