@@ -35,7 +35,7 @@ export function useMenu() {
     {
       label: 'System',
       items: [
-        { title: 'Audit Logs', url: '/audit-logs', icon: Lucide.ScrollText },
+        { title: 'Audit Log', url: '/audit-log', icon: Lucide.ScrollText },
         { title: 'Webhooks', url: '/webhooks', icon: Lucide.Webhook },
         { title: 'API Keys', url: '/api-keys', icon: Lucide.Key },
         { title: 'Settings', url: '/settings', icon: Lucide.Settings2 },

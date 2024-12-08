@@ -52,7 +52,7 @@ export async function cleanupRateLimits(db: Kysely<Database>): Promise<void> {
     .execute()
 }
 
-export async function cleanupAuditLogs(db: Kysely<Database>): Promise<void> {
+export async function cleanupAuditLog(db: Kysely<Database>): Promise<void> {
   const now = Math.floor(Date.now() / 1000)
 
   // Batch delete to prevent blocking

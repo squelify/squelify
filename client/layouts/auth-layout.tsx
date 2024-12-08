@@ -24,7 +24,7 @@ export default function AuthLayout() {
           'dark:primary/25 bg-gradient-to-bl from-primary/10 via-transparent'
         )}
       >
-        <div className="absolute top-2.5 right-2.5 z-10 flex items-center">
+        <div className="absolute top-3 right-3 z-10 flex items-center">
           <ThemeSwitcher />
         </div>
         <Outlet />

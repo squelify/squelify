@@ -9,7 +9,7 @@ const InternalError = lazy(() => import('#/pages/error/internal-error'))
 const Dashboard = lazy(() => import('#/pages/dashboard'))
 const Account = lazy(() => import('#/pages/account/page'))
 const SQLConsole = lazy(() => import('#/pages/console/page'))
-const AuditLogs = lazy(() => import('#/pages/audit-logs/page'))
+const AuditLog = lazy(() => import('#/pages/audit-log/page'))
 const Webhooks = lazy(() => import('#/pages/webhooks/page'))
 const ApiKeys = lazy(() => import('#/pages/api-keys/page'))
 const UsersList = lazy(() => import('#/pages/users/page'))
@@ -64,7 +64,7 @@ export default function AppRoutes() {
           <Route path="dashboard" element={<Dashboard />} />
           <Route path="account" element={<Account />} />
           <Route path="console" element={<SQLConsole />} />
-          <Route path="audit-logs" element={<AuditLogs />} />
+          <Route path="audit-log" element={<AuditLog />} />
           <Route path="webhooks" element={<Webhooks />} />
           <Route path="api-keys" element={<ApiKeys />} />
 

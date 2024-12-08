@@ -117,7 +117,7 @@ export async function auditLogBatch(event: H3Event, logs: AuditLogParams[]) {
   })
 }
 
-export async function exportAuditLogs(filters: AuditLogFilters) {
+export async function exportAuditLog(filters: AuditLogFilters) {
   if (!isAuditEnabled) return []
 
   const query = db.selectFrom('sq_audit_logs')

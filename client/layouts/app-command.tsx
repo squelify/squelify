@@ -75,7 +75,7 @@ export default function AppCommand({ logout }: { logout: () => void }) {
           <CommandGroup heading="System">
             <CommandItem>
               <Lucide.ScrollText className="mr-2 size-4" />
-              <span>Audit Logs</span>
+              <span>Audit Log</span>
             </CommandItem>
             <CommandItem>
               <Lucide.Webhook className="mr-2 size-4" />

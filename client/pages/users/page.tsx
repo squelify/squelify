@@ -20,7 +20,7 @@ const visibleColumns = [
 ]
 
 export default function Component() {
-  const { pageTitle } = useSEOMeta('Users')
+  const { pageTitle } = useSEOMeta('User Management')
   const { data: users, isLoading, refetch } = trpc.user.list.useQuery()
 
   const handleRefresh = async () => await refetch()
