@@ -142,7 +142,7 @@ export default function Page() {
               <TableHead>Description</TableHead>
               <TableHead>Scope</TableHead>
               <TableHead>Roles</TableHead>
-              <TableHead className="w-[100px]">Actions</TableHead>
+              <TableHead className="w-[120px]">Actions</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>

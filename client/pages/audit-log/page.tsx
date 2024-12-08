@@ -138,7 +138,7 @@ export default function Page() {
                 <TableHead>User</TableHead>
                 <TableHead>IP Address</TableHead>
                 <TableHead>Changes</TableHead>
-                <TableHead className="w-[100px]">Details</TableHead>
+                <TableHead className="w-[120px]">Details</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
