@@ -1,8 +1,8 @@
 import { createReadStream, existsSync, readdirSync } from 'node:fs'
 import { stat } from 'node:fs/promises'
+import process from 'node:process'
 import { type H3Event, createError, sendStream } from 'h3'
 import { extname, join, resolve } from 'pathe'
-import { process } from 'std-env'
 
 const ALLOWED_EXTENSIONS = ['html', 'css', 'json', 'js', 'png', 'jpg', 'jpeg', 'gif', 'svg']
 const DEFAULT_INDEX_FILE = 'index.html'

@@ -19,7 +19,7 @@ export default defineNitroConfig({
   sourceMap: isDevelopment,
   compatibilityDate: '2024-11-24',
   appConfigFiles: ['~/app.config'],
-  errorHandler: '~/error.handler',
+  errorHandler: '~/handler/error.handler',
 
   routeRules: {
     '/docs': {
@@ -86,48 +86,10 @@ export default defineNitroConfig({
     },
   },
 
-  devServer: {
-    watch: ['server', 'client', '_data/functions', '_data/public_html'],
-  },
+  devServer: { watch: ['server', 'client', '_data/functions', '_data/public_html'] },
+  esbuild: { options: { jsx: 'automatic' } },
 
-  esbuild: {
-    options: {
-      jsx: 'automatic',
-    },
-  },
-
-  // TODO: modify rollupConfig to use React frontend
+  // TODO: modify rollupConfig instead of Vite to use React frontend
   // This is a temporary workaround, with a better solution coming in the future!
-  typescript: {
-    tsConfig: {
-      compilerOptions: {
-        allowJs: true, // `false` for React
-        allowSyntheticDefaultImports: true,
-        forceConsistentCasingInFileNames: true,
-        // jsx: 'react-jsx', // preserve | `react-jsx` for React
-        // jsxFactory: 'React.createElement', // Disable for React or React.createElement
-        // jsxFragmentFactory: 'React.Fragment', // Disable for React or React.Fragment
-        module: 'ESNext',
-        moduleResolution: 'Bundler',
-        noEmit: true,
-        resolveJsonModule: true,
-        strict: false, // `true` for React
-        target: 'ESNext',
-        tsBuildInfoFile: '../../node_modules/.tsbuildinfo',
-        // Extra options for React
-        disableSizeLimit: false,
-        esModuleInterop: true,
-        incremental: true,
-        lib: ['DOM', 'DOM.Iterable', 'ESNext'],
-        moduleDetection: 'auto',
-        noImplicitAny: false, // `true` for React
-        noUncheckedIndexedAccess: true,
-        skipLibCheck: true,
-        useDefineForClassFields: true,
-        verbatimModuleSyntax: false,
-        paths: { '#/*': ['../../client/*'] },
-      },
-      include: ['../../client/**/*'],
-    },
-  },
+  typescript: { strict: true, generateTsConfig: false },
 })

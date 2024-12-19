@@ -14,13 +14,14 @@
  * @see https://github.com/tursodatabase/kysely-libsql
  */
 
+import process from 'node:process'
 import { createClient } from '@libsql/client'
 import { LibsqlDialect } from '@libsql/kysely-libsql'
 import { CamelCasePlugin, Kysely, ParseJSONResultsPlugin } from 'kysely'
 import type { ErrorLogEvent, KyselyConfig, QueryLogEvent } from 'kysely'
 import { makeDirectorySync } from 'make-dir'
 import { resolve } from 'pathe'
-import { env, process } from 'std-env'
+import { env } from 'std-env'
 import type { Database } from '~/database/db.schema'
 import logger from '~/utils/logger'
 
@@ -33,8 +34,8 @@ if (isLocalMode) {
 }
 
 export const libSQLClient = createClient({
-  url: isLocalMode ? `file:${localDbPath}` : env.DATABASE_URL,
-  authToken: isLocalMode ? undefined : env.DATABASE_TOKEN,
+  url: isLocalMode ? `file:${localDbPath}` : String(env.DATABASE_URL),
+  authToken: isLocalMode ? undefined : String(env.DATABASE_TOKEN),
 })
 
 export const kyselyConfig: KyselyConfig = {

@@ -48,6 +48,16 @@ export async function handleSPAClient(event: H3Event, options: SPAClientOptions)
   const pageTitle = title ? `${appConfig.title} ${title}` : appConfig.title
 
   if (process.dev) {
+    // Check Vite server
+    if (!event.context.vite) {
+      throw new Error('Vite server not initialized')
+    }
+
+    // Check resolvedUrls
+    if (!event.context.vite.resolvedUrls?.local?.length) {
+      throw new Error('Vite server URLs not resolved')
+    }
+
     const [serverAddress] = event.context.vite.resolvedUrls.local
 
     return /* html */ `<!DOCTYPE html>

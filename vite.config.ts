@@ -1,22 +1,13 @@
+// TODO: move to `nitro.config.ts`
+
 import react from '@vitejs/plugin-react'
 import consola from 'consola'
 import { resolve } from 'pathe'
-import { isTest, process } from 'std-env'
+import { isProduction, isTest } from 'std-env'
 import { type Logger as ViteLogger, defineConfig } from 'vite'
 import tsconfigPaths from 'vite-tsconfig-paths'
 import pkg from './package.json' assert { type: 'json' }
 
-const viteLogger: ViteLogger = {
-  info: (msg: string) => consola.info(msg),
-  warn: (msg: string) => consola.warn(msg),
-  warnOnce: (msg: string) => consola.warn(msg),
-  error: (msg: string) => consola.error(msg),
-  clearScreen: () => {},
-  hasErrorLogged: () => true,
-  hasWarned: false,
-}
-
-// TODO: move to `nitro.config.ts`
 export default defineConfig({
   clearScreen: true,
   plugins: [react(), tsconfigPaths()],
@@ -41,7 +32,7 @@ export default defineConfig({
   build: {
     manifest: true,
     emptyOutDir: true,
-    minify: !process.dev,
+    minify: isProduction,
     chunkSizeWarningLimit: 1024 * 8,
     reportCompressedSize: false,
     rollupOptions: {
@@ -50,5 +41,15 @@ export default defineConfig({
     },
     outDir: resolve('.output/client'),
   },
-  customLogger: !isTest ? viteLogger : undefined,
+  customLogger: !isTest
+    ? ({
+        info: (msg: string) => consola.info(msg),
+        warn: (msg: string) => consola.warn(msg),
+        warnOnce: (msg: string) => consola.warn(msg),
+        error: (msg: string) => consola.error(msg),
+        clearScreen: () => {},
+        hasErrorLogged: () => true,
+        hasWarned: false,
+      } as ViteLogger)
+    : undefined,
 })

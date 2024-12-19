@@ -1,0 +1,37 @@
+{
+    "$schema": "https://json.schemastore.org/tsconfig",
+    "compilerOptions": {
+        "allowJs": true,
+        "allowSyntheticDefaultImports": true,
+        "declaration": false,
+        "disableSizeLimit": false,
+        "esModuleInterop": true,
+        "forceConsistentCasingInFileNames": true,
+        "incremental": true,
+        "jsx": "react-jsx",
+        "lib": ["DOM", "DOM.Iterable", "ESNext"],
+        "module": "ESNext",
+        "moduleDetection": "auto",
+        "moduleResolution": "Bundler",
+        "noEmit": true,
+        "noImplicitAny": true,
+        "noUncheckedIndexedAccess": false,
+        "resolveJsonModule": true,
+        "skipLibCheck": true,
+        "sourceMap": true,
+        "strict": true,
+        "target": "ESNext",
+        "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.app.tsbuildinfo",
+        "useDefineForClassFields": true,
+        "verbatimModuleSyntax": true,
+        "baseUrl": ".",
+        "paths": {
+            "#imports": ["./.nitro/types/nitro-imports"],
+            "#/*": ["./client/*"],
+            "~/*": ["./server/*"],
+            "~~/*": ["./*"]
+        }
+    },
+    "include": ["./client/**/*", "./server/**/*", "./.nitro/types/nitro.d.ts", "./**/*"],
+    "exclude": ["vite.config.ts"]
+}

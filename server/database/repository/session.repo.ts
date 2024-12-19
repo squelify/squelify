@@ -1,5 +1,5 @@
 import { Kysely } from 'kysely'
-import { Database } from '~/database/db.schema'
+import type { Database } from '~/database/db.schema'
 import { DURATION } from '~/utils/datetime'
 
 export async function cleanupExpiredSessions(db: Kysely<Database>) {

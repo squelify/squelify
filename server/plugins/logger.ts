@@ -25,6 +25,6 @@ export default defineNitroPlugin(({ hooks }) => {
   })
 
   hooks.hook('error', async (error, { event }) => {
-    logger.error('[app]', event.path, error)
+    logger.error('[app]', event?.path, error)
   })
 })

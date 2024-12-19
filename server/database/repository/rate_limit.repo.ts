@@ -1,11 +1,8 @@
 import { Kysely, sql } from 'kysely'
 import { typeid } from 'typeid-js'
-import { Database } from '~/database/db.schema'
-import {
-  RATE_LIMIT_DEFAULTS,
-  RateLimitContext,
-  RateLimitInsert,
-} from '~/database/schemas/rate_limit'
+import type { Database } from '~/database/db.schema'
+import { RATE_LIMIT_DEFAULTS } from '~/database/schemas/rate_limit'
+import type { RateLimitContext, RateLimitInsert } from '~/database/schemas/rate_limit'
 
 interface RateLimitInfo {
   isLimited: boolean

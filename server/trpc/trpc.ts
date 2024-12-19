@@ -2,8 +2,8 @@ import { initTRPC } from '@trpc/server'
 import type { H3Event } from 'h3'
 import type { Kysely } from 'kysely'
 import superjson from 'superjson'
-import { AppConfig } from '~/app.config'
-import { Database } from '~/database/db.schema'
+import type { AppConfig } from '~/app.config'
+import type { Database } from '~/database/db.schema'
 
 export interface Context {
   event: H3Event

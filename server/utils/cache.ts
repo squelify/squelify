@@ -3,7 +3,7 @@ import { hash } from 'ohash'
 import { isProduction } from 'std-env'
 
 export function handleBypassCache(event: H3Event): boolean {
-  return !isProduction || event.node.req.url?.includes('nocache')
+  return !isProduction || event.node.req.url?.includes('nocache') || false
 }
 
 export function generateCacheKey(value: string): string {

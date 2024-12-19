@@ -2,7 +2,7 @@ import { argon2id } from '@noble/hashes/argon2'
 import { scryptAsync } from '@noble/hashes/scrypt'
 import { bytesToHex, hexToBytes, randomBytes } from '@noble/hashes/utils'
 import { env } from 'std-env'
-import { PasswordAlgorithm, passwordAlgorithmEnum } from '~/database/schemas/password'
+import { type PasswordAlgorithm, passwordAlgorithmEnum } from '~/database/schemas/password'
 
 // Cache TextEncoder instance
 const textEncoder = new TextEncoder()

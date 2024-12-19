@@ -8,6 +8,6 @@ export default defineEventHandler((event) => {
 
 declare module 'h3' {
   interface H3EventContext {
-    db?: Kysely<Database>
+    db: Kysely<Database>
   }
 }

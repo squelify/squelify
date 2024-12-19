@@ -42,7 +42,7 @@
         "cleanup:dev": "pnpm dlx rimraf .{output,client,build,data,dist,nitro}",
         "cleanup:deps": "pnpm dlx rimraf pnpm-lock.yaml node_modules tests-results",
         "changelog-full": "git-cliff -o CHANGELOG.md -c .config/cliff-full.toml",
-        "squelify": "tsx -r dotenv/config server/cmd/index.ts",
+        "cmd": "tsx -r dotenv/config server/cmd/index.ts",
         "typecheck": "tsc -b"
     },
     "dependencies": {
