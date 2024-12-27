@@ -13,7 +13,6 @@
         "module": "ESNext",
         "moduleDetection": "auto",
         "moduleResolution": "Bundler",
-        "noEmit": true,
         "noImplicitAny": true,
         "noUncheckedIndexedAccess": false,
         "resolveJsonModule": true,
@@ -23,7 +22,7 @@
         "target": "ESNext",
         "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.app.tsbuildinfo",
         "useDefineForClassFields": true,
-        "verbatimModuleSyntax": true,
+        "verbatimModuleSyntax": false,
         "baseUrl": ".",
         "paths": {
             "#imports": ["./.nitro/types/nitro-imports"],
@@ -33,5 +32,5 @@
         }
     },
     "include": ["./client/**/*", "./server/**/*", "./.nitro/types/nitro.d.ts", "./**/*"],
-    "exclude": ["vite.config.ts"]
+    "exclude": ["vite.config.ts", "storybook-static"]
 }

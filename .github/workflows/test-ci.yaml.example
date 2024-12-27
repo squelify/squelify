@@ -15,16 +15,14 @@ jobs:
     name: Test
     runs-on: ubuntu-latest
     services:
-      postgres:
-        image: postgres:15-alpine
-        env:
-          POSTGRES_DB: squelify
-          POSTGRES_USER: dbmaster
-          POSTGRES_PASSWORD: securedb
+      libsql:
+        image: ghcr.io/tursodatabase/libsql-server:latest
         ports:
-          - 5432:5432
-      redis:
-        image: redis:7-alpine
+          - 5001:5001
+          - 8080:8080
+          - 8081:8081
+      valkey:
+        image: valkey/valkey:8-bookworm
         ports:
           - 6379:6379
     steps:

@@ -1,34 +1,27 @@
-import { ErrorBoundary } from 'react-error-boundary'
-import { Navigate, Outlet, useLocation, useSearchParams } from 'react-router'
-import { ThemeSwitcher } from '#/components/theme-switcher'
-import { useAuth } from '#/context/hooks/use-auth'
-import RootLayout from '#/layouts/root-layout'
-import ErrorBoundaryFallback from '#/pages/error/boundary-fallback'
-import { clx } from '#/utils/helper'
+import { Suspense } from 'react'
+import { Navigate, Outlet, useSearchParams } from 'react-router'
+import { Card } from '#/components/base-ui'
+import PageLoader from '#/components/loaders/page-loader'
 
 export default function AuthLayout() {
-  const { user } = useAuth()
-
   const [searchParams] = useSearchParams()
-  const redirectTo = searchParams.get('redirect_to') || '/dashboard'
+  const redirectPath = searchParams.get('redirect_to') || '/dashboard'
+  const isAuthenticated = false
 
-  if (user) {
-    return <Navigate to={redirectTo} replace />
+  if (isAuthenticated) {
+    return <Navigate to={redirectPath} replace />
   }
 
   return (
-    <ErrorBoundary FallbackComponent={ErrorBoundaryFallback}>
-      <RootLayout
-        className={clx(
-          'relative flex size-full min-h-screen flex-1 items-center',
-          'dark:primary/25 bg-gradient-to-bl from-primary/10 via-transparent'
-        )}
-      >
-        <div className="absolute top-3 right-3 z-10 flex items-center">
-          <ThemeSwitcher />
-        </div>
-        <Outlet />
-      </RootLayout>
-    </ErrorBoundary>
+    <div className="flex min-h-screen items-center justify-center bg-slate-50 p-4">
+      <div className="w-full max-w-md">
+        {/* Card Component */}
+        <Card className="p-8">
+          <Suspense fallback={<PageLoader />}>
+            <Outlet />
+          </Suspense>
+        </Card>
+      </div>
+    </div>
   )
 }

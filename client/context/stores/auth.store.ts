@@ -1,50 +1,38 @@
 import { persistentMap } from '@nanostores/persistent'
-import type { UserInfo } from '#/services/types'
+import type { AuthState } from '#/services/types/auth'
 import { storeDecode, storeEncode } from '#/utils/helper'
 
-type AuthStore = {
-  accessToken: string | null
-  refreshToken: string | null
-  accessTokenExpiry: number | null
-  refreshTokenExpiry: number | null
-  user: UserInfo | null
-}
-
-// Default values for the AuthStore
-const defaultAuthStoreValues: AuthStore = {
-  accessToken: null,
-  refreshToken: null,
-  accessTokenExpiry: null,
-  refreshTokenExpiry: null,
+/**
+ * The default values for the auth store
+ */
+const defaultAuthStoreValues: AuthState = {
+  isAuthenticated: false,
+  isLoading: true,
   user: null,
 }
 
 /**
- * A persistent map store for the Auth state, with the default values for the sidebar state.
- * Using key-value map store. It will keep each key in separated localStorage key.
- * You can switch localStorage to any other storage for all used stores.
- * @ref: https://github.com/nanostores/persistent#persistent-engines
+ * A persistent map store for the auth state.
+ * Using key-value map store that keeps each key in separated localStorage key.
  */
-const authStore = persistentMap<AuthStore>('auth:', defaultAuthStoreValues, {
+const authStore = persistentMap<AuthState>('auth:', defaultAuthStoreValues, {
   encode: storeEncode,
   decode: storeDecode,
 })
 
 /**
- * Saves the current authentication state to the persistent store.
- * @param values - A partial object of the AuthStore type, containing the values to be updated in the store.
+ * Updates the auth state by merging the provided partial auth store values
+ * with the existing values.
  */
-function saveAuthState(values: Partial<AuthStore>) {
+function updateAuthState(values: Partial<AuthState>) {
   authStore.set({ ...authStore.get(), ...values })
 }
 
 /**
- * Resets the authentication state to the default values.
- * This function can be used to log out the user and clear the authentication state.
+ * Resets the auth store to its default values
  */
 function resetAuthState() {
   authStore.set(defaultAuthStoreValues)
 }
 
-export { authStore, defaultAuthStoreValues, saveAuthState, resetAuthState }
-export type { AuthStore }
+export { authStore, defaultAuthStoreValues, updateAuthState, resetAuthState }

@@ -1,3 +1,5 @@
+import { getClientInfo } from '~/utils/http'
+
 export default defineNitroPlugin(({ hooks }) => {
   hooks.hook('request', (event) => {
     // Set precise timestamp when request starts

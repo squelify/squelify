@@ -41,6 +41,10 @@ dist/
 .build
 .wrangler
 
+# Vite config
+vite.config.*
+!vite.config.ts
+
 # envars
 .env.*
 !.env.example
@@ -66,10 +70,8 @@ fly*.toml*
 !fly*.example.toml
 
 # Miscellaneous
-vite.config.*
-!vite.config.ts
-RELEASE_NOTE.md
 slim.report.json
+RELEASE_NOTE.md
 .unikraft/
 
 # Terraform

@@ -1,45 +1,26 @@
 /**
  * Configures the Kysely database client with the appropriate dialect and plugins.
  *
- * The configuration is determined based on the `DATABASE_MODE` environment variable:
- * - If `DATABASE_MODE` is 'local', a local SQLite database is used, and the database directory is created if it doesn't exist.
- * - Otherwise, the `DATABASE_URL` and `DATABASE_TOKEN` environment variables are used to connect to a remote database.
- *
  * The configuration includes the following plugins:
  * - `CamelCasePlugin`: Automatically converts column names to camelCase.
  * - `ParseJSONResultsPlugin`: Automatically parses JSON columns.
  *
  * @see https://www.kysely.dev/docs/dialects
- * @see https://github.com/tursodatabase/libsql-client-ts
- * @see https://github.com/tursodatabase/kysely-libsql
+ * @see https://github.com/kysely-org/kysely-postgres-js
  */
 
-import process from 'node:process'
-import { createClient } from '@libsql/client'
-import { LibsqlDialect } from '@libsql/kysely-libsql'
 import { CamelCasePlugin, Kysely, ParseJSONResultsPlugin } from 'kysely'
 import type { ErrorLogEvent, KyselyConfig, QueryLogEvent } from 'kysely'
-import { makeDirectorySync } from 'make-dir'
-import { resolve } from 'pathe'
+import { PostgresJSDialect } from 'kysely-postgres-js'
+import postgres from 'postgres'
 import { env } from 'std-env'
 import type { Database } from '~/database/db.schema'
 import logger from '~/utils/logger'
 
-const isLocalMode = env.DATABASE_MODE === 'local'
-const localDbPath = resolve(process.cwd(), '_data/data.sqlite')
-
-if (isLocalMode) {
-  logger.info('Creating local database directory...')
-  makeDirectorySync(resolve('_data'), { mode: 0o755 })
-}
-
-export const libSQLClient = createClient({
-  url: isLocalMode ? `file:${localDbPath}` : String(env.DATABASE_URL),
-  authToken: isLocalMode ? undefined : String(env.DATABASE_TOKEN),
-})
-
 export const kyselyConfig: KyselyConfig = {
-  dialect: new LibsqlDialect({ client: libSQLClient }),
+  dialect: new PostgresJSDialect({
+    postgres: postgres(String(env.DATABASE_URL)),
+  }),
   plugins: [new CamelCasePlugin(), new ParseJSONResultsPlugin()],
 }
 
@@ -47,7 +28,7 @@ export const kyselyConfig: KyselyConfig = {
 export default new Kysely<Database>({
   ...kyselyConfig,
   log: (event: QueryLogEvent | ErrorLogEvent): void => {
-    const isTraceMode = String(env.SQUELIFY_LOG_LEVEL).toLowerCase() === 'trace'
+    const isTraceMode = String(env.APP_LOG_LEVEL).toLowerCase() === 'trace'
 
     if (event.level === 'query' && isTraceMode) {
       logger.query('[kysely]', event.query.sql, event.query.parameters)

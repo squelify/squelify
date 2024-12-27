@@ -1,7 +1,27 @@
 import { z } from 'zod'
 import userRepo from '~/database/repository/user.repo'
-import { UserSchema } from '~/database/schemas/user'
-import { publicProcedure, router } from '../trpc'
+import { type UserInsert, UserSchema } from '~/database/schemas/user'
+import { publicProcedure, router } from '~/trpc'
+import type { ContextTRPC } from '~/trpc/types'
+
+// Input schema derived from UserSchema
+const CreateUserSchema = UserSchema.pick({
+  firstName: true,
+  lastName: true,
+  username: true,
+  avatarUrl: true,
+  isActive: true,
+})
+  .partial({
+    lastName: true,
+    username: true,
+    avatarUrl: true,
+    isActive: true,
+  })
+  .strict()
+
+// Type for input validation
+type CreateUserInput = z.infer<typeof CreateUserSchema>
 
 export const userRouter = router({
   list: publicProcedure.query(({ ctx }) => {
@@ -13,15 +33,8 @@ export const userRouter = router({
   }),
 
   create: publicProcedure
-    .input(
-      z.object({
-        firstName: UserSchema.shape.firstName,
-        lastName: UserSchema.shape.lastName,
-        username: UserSchema.shape.username,
-        avatarUrl: UserSchema.shape.avatarUrl,
-      })
-    )
-    .mutation(({ ctx, input }) => {
-      return userRepo(ctx.db).create(input)
+    .input(CreateUserSchema)
+    .mutation(async ({ ctx, input }: { ctx: ContextTRPC; input: CreateUserInput }) => {
+      return userRepo(ctx.db).create(input as UserInsert)
     }),
 })

@@ -6,9 +6,6 @@ export type Theme = 'dark' | 'light' | 'system'
 type UIStore = {
   sidebar: 'expanded' | 'collapsed'
   theme: Theme
-  viewMode: {
-    media: 'grid' | 'list'
-  }
 }
 
 /**
@@ -17,9 +14,6 @@ type UIStore = {
 const defaultUIStoreValues: UIStore = {
   sidebar: 'collapsed',
   theme: 'system',
-  viewMode: {
-    media: 'list',
-  },
 }
 
 /**

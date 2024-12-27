@@ -1,24 +1,25 @@
+/**
+ * Configures the Nitro server for the application.
+ * @see https://nitro.unjs.io/config
+ */
+
 import 'dotenv/config'
 import consola from 'consola'
 import { makeDirectory } from 'make-dir'
 import { defineNitroConfig } from 'nitropack/config'
 import { resolve } from 'pathe'
 import { isCI, isDevelopment, isProduction, isTest } from 'std-env'
-import { build as buildVite } from 'vite'
+import { build as vite } from 'vite'
 import pkg from './package.json' assert { type: 'json' }
 
-/**
- * Configures the Nitro server for the application.
- * @see https://nitro.unjs.io/config
- */
 export default defineNitroConfig({
-  srcDir: 'server',
+  compatibilityDate: '2024-11-24',
   preset: 'node-server',
   serveStatic: 'node',
+  srcDir: 'server',
   minify: isProduction,
   sourceMap: isDevelopment,
-  compatibilityDate: '2024-11-24',
-  appConfigFiles: ['~/app.config'],
+  appConfigFiles: ['~~/app.config'],
   errorHandler: '~/handler/error.handler',
 
   routeRules: {
@@ -33,13 +34,8 @@ export default defineNitroConfig({
   },
 
   publicAssets: [{ dir: resolve('public') }],
+  serverAssets: [{ baseName: 'vite', dir: resolve('.output/client/.vite') }],
   compressPublicAssets: { gzip: isProduction, brotli: isProduction },
-
-  serverAssets: [
-    // Frontend application assets
-    { baseName: 'vite', dir: resolve('.output/client/.vite') },
-    { baseName: 'views', dir: resolve('server/views') },
-  ],
 
   output: {
     dir: resolve('.output'),
@@ -53,7 +49,7 @@ export default defineNitroConfig({
       await makeDirectory(resolve('_data'), { mode: 0o755 })
 
       consola.info('Building frontend application...')
-      await buildVite().then(() => consola.success('Frontend application built!'))
+      await vite().then(() => consola.success('Frontend application built!'))
     },
     compiled: (_nitro) => {
       // Do something with the compiled Nitro instance.
@@ -63,6 +59,13 @@ export default defineNitroConfig({
       }
     },
   },
+
+  devServer: { watch: ['server', 'client', '_data/functions', '_data/public_html'] },
+  esbuild: { options: { jsx: 'automatic' } },
+
+  // TODO: modify rollupConfig instead of Vite to use React frontend
+  // This is a temporary workaround, with a better solution coming in the future!
+  typescript: { strict: true, generateTsConfig: false },
 
   experimental: {
     openAPI: isDevelopment,
@@ -85,11 +88,4 @@ export default defineNitroConfig({
       swagger: false,
     },
   },
-
-  devServer: { watch: ['server', 'client', '_data/functions', '_data/public_html'] },
-  esbuild: { options: { jsx: 'automatic' } },
-
-  // TODO: modify rollupConfig instead of Vite to use React frontend
-  // This is a temporary workaround, with a better solution coming in the future!
-  typescript: { strict: true, generateTsConfig: false },
 })

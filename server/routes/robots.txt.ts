@@ -1,3 +1,4 @@
+import { handleBypassCache } from '~/utils/cache'
 import { DURATION } from '~/utils/datetime'
 
 export default defineCachedEventHandler(

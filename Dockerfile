@@ -36,7 +36,7 @@ RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install \
 FROM base AS builder
 
 # Copy output files and config file from the installer stage.
-COPY --from=installer /srv/.config/ecosystem.json /srv/ecosystem.json
+COPY --from=installer /srv/ecosystem.json /srv/ecosystem.json
 COPY --from=installer /srv/server/views /srv/server/views
 COPY --from=installer /srv/.output /srv
 

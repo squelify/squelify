@@ -3,7 +3,8 @@ import { join } from 'pathe'
 import { env } from 'std-env'
 import { kyselyConfig } from '~/database/db.client'
 import type { Database } from '~/database/db.schema'
-import SquelifyMigrator from '~/database/provider'
+import NitroMigrator from '~/database/provider'
+import logger from '~/utils/logger'
 
 export const MIGRATION_FOLDER = join(process.cwd(), 'server/database/migrations')
 export const SEEDER_FOLDER = join(process.cwd(), 'server/database/seeders')
@@ -12,14 +13,17 @@ type MigrationAction = 'migrate' | 'rollback' | 'reset'
 
 export const migrateDBClient = new Kysely<Database>({
   ...kyselyConfig,
-  log: env.SQUELIFY_LOG_LEVEL === 'trace' ? ['error', 'query'] : ['error'],
+  log: env.APP_LOG_LEVEL === 'trace' ? ['error', 'query'] : ['error'],
 })
 
 export const migrateClient = new Migrator({
   db: migrateDBClient,
-  provider: new SquelifyMigrator(MIGRATION_FOLDER),
+  provider: new NitroMigrator(MIGRATION_FOLDER),
   migrationTableName: '_migration',
   migrationLockTableName: '_migration_lock',
+  // WARNING: You must create the schema `internal` before running migrations.
+  migrationTableSchema: 'internal',
+  allowUnorderedMigrations: false,
 })
 
 interface DatabaseSeeder {
@@ -31,10 +35,10 @@ export async function runSeeds(): Promise<void> {
   try {
     const seeders: DatabaseSeeder[] = [
       { name: 'permissions', seeder: await import('./seeders/00001_permissions_seeder') },
-      { name: 'roles', seeder: await import('./seeders/00002_roles_seeder') },
-      { name: 'users', seeder: await import('./seeders/00003_user_seeder') },
-      { name: 'jwks', seeder: await import('./seeders/00004_jwk_seeder') },
-      { name: 'api_keys', seeder: await import('./seeders/00005_api_key_seeder') },
+      // { name: 'roles', seeder: await import('./seeders/00002_roles_seeder') },
+      // { name: 'users', seeder: await import('./seeders/00003_user_seeder') },
+      // { name: 'jwks', seeder: await import('./seeders/00004_jwk_seeder') },
+      // { name: 'api_keys', seeder: await import('./seeders/00005_api_key_seeder') },
     ]
 
     if (seeders.length > 0) {

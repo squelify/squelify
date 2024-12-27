@@ -133,15 +133,7 @@
     },
     "files": {
         "ignoreUnknown": true,
-        "include": [
-            "**/*.js",
-            "**/*.mjs",
-            "**/*.ts",
-            "**/*.tsx",
-            "**/*.css",
-            "**/*.json",
-            ".swcrc"
-        ],
-        "ignore": [".github", ".nitro", ".output", ".build", ".dist", "public"]
+        "include": ["**/*.js", "**/*.mjs", "**/*.ts", "**/*.tsx", "**/*.css", "**/*.json"],
+        "ignore": [".github", ".nitro", ".output", ".build", ".dist", "public", "_data"]
     }
 }
