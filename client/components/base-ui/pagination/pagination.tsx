@@ -1,5 +1,5 @@
 import * as Lucide from 'lucide-react'
-import React from 'react'
+import * as React from 'react'
 import { Link } from '#/components/link'
 import { clx } from '#/utils/helper'
 import { ButtonProps, buttonVariants } from '../button/button'

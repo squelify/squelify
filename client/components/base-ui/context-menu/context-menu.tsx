@@ -1,6 +1,6 @@
 import * as ContextMenuPrimitive from '@radix-ui/react-context-menu'
 import * as Lucide from 'lucide-react'
-import React from 'react'
+import * as React from 'react'
 import { clx } from '#/utils/helper'
 
 const ContextMenu = ContextMenuPrimitive.Root

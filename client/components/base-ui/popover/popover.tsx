@@ -1,5 +1,5 @@
 import * as PopoverPrimitive from '@radix-ui/react-popover'
-import React from 'react'
+import * as React from 'react'
 import { clx } from '#/utils/helper'
 
 const Popover = PopoverPrimitive.Root

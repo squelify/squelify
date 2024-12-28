@@ -1,6 +1,6 @@
 import useEmblaCarousel, { type UseEmblaCarouselType } from 'embla-carousel-react'
 import * as Lucide from 'lucide-react'
-import React from 'react'
+import * as React from 'react'
 import { clx } from '#/utils/helper'
 import { Button } from '../button/button'
 

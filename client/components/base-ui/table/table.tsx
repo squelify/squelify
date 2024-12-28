@@ -1,4 +1,4 @@
-import React from 'react'
+import * as React from 'react'
 import { clx } from '#/utils/helper'
 
 const Table = React.forwardRef<HTMLTableElement, React.HTMLAttributes<HTMLTableElement>>(

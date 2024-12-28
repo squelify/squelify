@@ -1,5 +1,5 @@
 import * as SwitchPrimitives from '@radix-ui/react-switch'
-import React from 'react'
+import * as React from 'react'
 import { clx } from '#/utils/helper'
 
 const Switch = React.forwardRef<

@@ -1,7 +1,7 @@
 import { type DialogProps, DialogTitle } from '@radix-ui/react-dialog'
 import { Command as CommandPrimitive } from 'cmdk'
 import { Search } from 'lucide-react'
-import React from 'react'
+import * as React from 'react'
 import { clx } from '#/utils/helper'
 import { Dialog, DialogContent } from '../dialog/dialog'
 

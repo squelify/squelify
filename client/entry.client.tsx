@@ -27,7 +27,7 @@ const AppRoutes = () => {
 ReactDOM.createRoot(rootElement).render(
   <React.StrictMode>
     <ErrorBoundary fallback={<BoundaryError />}>
-      <BrowserRouter basename="/">
+      <BrowserRouter basename="/admin">
         <AuthProvider>
           <Suspense fallback={<PageLoader />}>
             <AppRoutes />

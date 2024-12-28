@@ -1,5 +1,5 @@
 import * as Lucide from 'lucide-react'
-import React from 'react'
+import * as React from 'react'
 import { DayPicker } from 'react-day-picker'
 import { clx } from '#/utils/helper'
 import { buttonVariants } from '../button/button'

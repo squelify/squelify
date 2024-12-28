@@ -1,11 +1,11 @@
 import { Suspense } from 'react'
-import { NavLink, Navigate, Outlet, useLocation, useNavigate } from 'react-router'
+import { NavLink, Navigate, Outlet, useLocation } from 'react-router'
 import PageLoader from '#/components/loaders/page-loader'
 import { useAuth } from '#/context/hooks/use-auth'
 import { clx } from '#/utils/helper'
 
 const styles = {
-  layout: 'min-h-screen bg-background',
+  layout: 'min-h-screen bg-sidebar-background',
   sidebar:
     'fixed top-0 left-0 h-screen w-64 bg-white border-r border-sidebar-border p-4 flex flex-col bg-sidebar-background',
   sidebarHeader: 'mb-8',

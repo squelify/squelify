@@ -1,6 +1,6 @@
 import { DashIcon } from '@radix-ui/react-icons'
 import { OTPInput, OTPInputContext } from 'input-otp'
-import React from 'react'
+import * as React from 'react'
 import { clx } from '#/utils/helper'
 
 const InputOTP = React.forwardRef<

@@ -1,5 +1,5 @@
 import * as Lucide from 'lucide-react'
-import React from 'react'
+import * as React from 'react'
 import { toast } from 'sonner'
 import { clx } from '#/utils/helper'
 import { Button } from '../button/button'

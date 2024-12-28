@@ -1,5 +1,5 @@
 import * as AlertDialogPrimitive from '@radix-ui/react-alert-dialog'
-import React from 'react'
+import * as React from 'react'
 import { clx } from '#/utils/helper'
 import { buttonVariants } from '../button/button'
 

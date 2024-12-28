@@ -21,6 +21,12 @@ export default defineNitroConfig({
   sourceMap: isDevelopment,
   appConfigFiles: ['~~/app.config'],
   errorHandler: '~/handler/error.handler',
+  renderer: '~/entry.server.ts',
+
+  handlers: [
+    { route: '/installer', handler: '~/handler/installer.handler' },
+    { route: '/robots.txt', handler: '~/handler/robots.handler' },
+  ],
 
   routeRules: {
     '/docs': {
