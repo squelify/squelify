@@ -5,47 +5,45 @@ import type { User, UserInsert } from '~/database/schemas/user'
 export default function createUserRepository(db: Kysely<Database>) {
   return {
     findMany: async (): Promise<User[]> => {
-      return await db.selectFrom('users').selectAll().execute()
+      return await db.selectFrom('sq_users').selectAll().execute()
     },
 
-    findById: async <SE extends SelectExpression<Database, 'users'>>(
+    findById: async <SE extends SelectExpression<Database, 'sq_users'>>(
       id: string,
       cols?: readonly SE[]
-    ): Promise<Partial<User> | null> => {
+    ): Promise<Partial<User> | undefined> => {
       try {
-        const query = db.selectFrom('users').where('id', '=', id)
+        const query = db.selectFrom('sq_users').where('id', '=', id)
         const result = cols
           ? await query.select(cols).executeTakeFirst()
           : await query.selectAll().executeTakeFirst()
 
-        return result || null
+        return result || undefined
       } catch (error) {
         logger.error('[app]', `Error finding user with id ${id}:`, error)
         throw new Error(`Failed to find user with id ${id}`)
       }
     },
-
-    findByEmail: async (email: string): Promise<Partial<User> | null> => {
+    findByEmail: async (email: string): Promise<Partial<User> | undefined> => {
       try {
         const result = await db
-          .selectFrom('users as u')
-          .innerJoin('emails as e', 'e.userId', 'u.id')
-          .where('e.email', '=', email)
-          .where('e.isPrimary', '=', 1)
-          .where('u.isActive', '=', 1)
-          .select(['u.id', 'u.firstName', 'u.lastName', 'e.email'])
+          .selectFrom('sq_users as users')
+          .innerJoin('sq_emails as emails', 'emails.userId', 'users.id')
+          .where('emails.email', '=', email)
+          .where('emails.isPrimary', '=', 1)
+          .where('users.isActive', '=', 1)
+          .select(['users.id', 'users.firstName', 'users.lastName', 'emails.email'])
           .executeTakeFirst()
 
-        return result || null
+        return result || undefined
       } catch (error) {
         logger.error('[app]', `Error finding user with email ${email}:`, error)
         throw new Error(`Failed to find user with email ${email}`)
       }
     },
-
     findActive: async (username: string) => {
       return db
-        .selectFrom('users')
+        .selectFrom('sq_users')
         .select(['id', 'username', 'firstName', 'lastName', 'isActive'])
         .where('username', '=', username)
         .where('isActive', '=', 1)
@@ -54,7 +52,7 @@ export default function createUserRepository(db: Kysely<Database>) {
     },
 
     create: async (data: UserInsert): Promise<User> => {
-      const result = await db.insertInto('users').values(data).returningAll().executeTakeFirst()
+      const result = await db.insertInto('sq_users').values(data).returningAll().executeTakeFirst()
       if (!result) {
         throw new Error('Failed to create user')
       }

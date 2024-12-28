@@ -59,7 +59,7 @@ export default defineNitroErrorHandler((error, event) => {
       <main className="mx-auto w-full max-w-5xl rounded-xl border border-slate-200 bg-white px-10 py-12 shadow-sm dark:border-slate-800 dark:bg-slate-900">
         <div className="space-y-6">
           <div className="space-y-4 text-center">
-            <h1 className="bg-gradient-to-r from-blue-500 to-indigo-600 bg-clip-text font-black text-8xl text-transparent">
+            <h1 className="bg-gradient-to-r from-brand-500 to-indigo-600 bg-clip-text font-black text-8xl text-transparent">
               {error.statusCode}
             </h1>
             <h2 className="font-bold text-3xl text-slate-900 dark:text-white">
@@ -102,13 +102,13 @@ export default defineNitroErrorHandler((error, event) => {
           <div className="mx-auto grid max-w-sm grid-cols-2 gap-4">
             <a
               href={appConfig.baseURL}
-              className="inline-flex w-full items-center justify-center rounded-md bg-blue-600 px-5 py-2.5 font-medium text-sm text-white shadow transition-all duration-200 hover:bg-blue-700 hover:shadow-md dark:bg-blue-500 dark:hover:bg-blue-600"
+              className="inline-flex w-full items-center justify-center rounded-md bg-brand-600 px-5 py-2.5 font-medium text-sm text-white shadow transition-all duration-200 hover:bg-brand-700 hover:shadow-md dark:bg-brand-500 dark:hover:bg-brand-600"
             >
               Return Home
             </a>
             <button
               type="button"
-              className="inline-flex w-full items-center justify-center rounded-md border border-blue-200 bg-blue-50 px-5 py-2.5 font-medium text-blue-600 text-sm shadow transition-all duration-200 hover:bg-blue-100 hover:shadow-md dark:border-blue-800 dark:bg-blue-900/30 dark:text-blue-400 dark:hover:bg-blue-900/50"
+              className="inline-flex w-full items-center justify-center rounded-md border border-brand-200 bg-brand-50 px-5 py-2.5 font-medium text-brand-600 text-sm shadow transition-all duration-200 hover:bg-brand-100 hover:shadow-md dark:border-brand-800 dark:bg-brand-900/30 dark:text-brand-400 dark:hover:bg-brand-900/50"
               onClick={() => window.location.reload()}
             >
               Try Again

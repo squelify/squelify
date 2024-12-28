@@ -112,37 +112,34 @@ export default defineCommand({
 // Down migrations are optional. you can safely delete this function.
 
 import { type Kysely, sql } from 'kysely'
-import { ISO_TIMESTAMP, createTriggerUpdatedAt, dropTriggerUpdatedAt } from '~/database/db.helper'
+import { addColumnTimestamps } from '~/database/db.helper'
+import { createTriggerUpdatedAt, dropTriggerUpdatedAt } from '~/database/db.helper'
 import type { Database } from '~/database/db.schema'
 
 export const up = async (db: Kysely<Database>): Promise<void> => {
-  // Execute SQL statements with specific schema
-  const dbSchema = db.schema.withSchema('public')
-
   // Create table
-  await dbSchema
+  await db.schema
     .createTable('TABLE_NAME')
     .addColumn('id', 'text', (col) => col.primaryKey())
-    .addColumn('created_at', 'timestamptz', (col) => col.notNull().defaultTo(ISO_TIMESTAMP))
-    .addColumn('updated_at', 'timestamptz')
-    .modifyEnd(sql\`USING heap\`)
+    .$call(addColumnTimestamps)
+    .modifyEnd(sql\`STRICT\`)
     .execute()
 
   // Create auto-update trigger
-  await createTriggerUpdatedAt('public', 'TABLE_NAME').execute(db)
+  await createTriggerUpdatedAt('TABLE_NAME').execute(db)
 
   // Create indexes for primary key
-  await dbSchema.createIndex('idx_TABLE_NAME_id').on('TABLE_NAME').column('id').execute()
+  await db.schema.createIndex('idx_TABLE_NAME_id').on('TABLE_NAME').column('id').execute()
 
   // Create indexes for created_at
-  await dbSchema
+  await db.schema
     .createIndex('idx_TABLE_NAME_created_at')
     .on('TABLE_NAME')
     .column('created_at')
     .execute()
 
   // Create indexes for updated_at
-  await dbSchema
+  await db.schema
     .createIndex('idx_TABLE_NAME_updated_at')
     .on('TABLE_NAME')
     .column('updated_at')
@@ -150,12 +147,11 @@ export const up = async (db: Kysely<Database>): Promise<void> => {
 }
 
 export const down = async (db: Kysely<Database>): Promise<void> => {
-  const dbSchema = db.schema.withSchema('public')
-  await dbSchema.dropIndex('idx_TABLE_NAME_updated_at').ifExists().execute()
-  await dbSchema.dropIndex('idx_TABLE_NAME_created_at').ifExists().execute()
-  await dbSchema.dropIndex('idx_TABLE_NAME_id').ifExists().execute()
-  await dropTriggerUpdatedAt('public', 'TABLE_NAME').execute(db)
-  await dbSchema.dropTable('TABLE_NAME').ifExists().execute()
+  await db.schema.dropIndex('idx_TABLE_NAME_updated_at').ifExists().execute()
+  await db.schema.dropIndex('idx_TABLE_NAME_created_at').ifExists().execute()
+  await db.schema.dropIndex('idx_TABLE_NAME_id').ifExists().execute()
+  await dropTriggerUpdatedAt('TABLE_NAME').execute(db)
+  await db.schema.dropTable('TABLE_NAME').ifExists().execute()
 }`
 
       // Check migration name uniqueness after folder exists

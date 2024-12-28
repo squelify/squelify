@@ -7,7 +7,7 @@ const styles = {
   form: 'space-y-4',
   inputGroup: 'space-y-1.5',
   links: 'mt-6 flex items-center justify-between text-sm text-slate-600',
-  link: 'hover:text-blue-600 transition-colors',
+  link: 'hover:text-brand-600 transition-colors',
 } as const
 
 export default function SignIn() {

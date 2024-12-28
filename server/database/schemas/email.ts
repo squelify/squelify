@@ -1,4 +1,5 @@
-import type { Generated, Insertable, Selectable, Updateable } from 'kysely'
+import type { Insertable, Selectable, Updateable } from 'kysely'
+import type { ColumnType, Generated } from 'kysely'
 import { z } from 'zod'
 
 // Email schema with validation rules
@@ -7,9 +8,9 @@ export const EmailSchema = z.object({
   userId: z.string(),
   email: z.string().email({ message: 'Invalid email address' }),
   isPrimary: z.number().min(0).max(1).default(0),
-  verifiedAt: z.string().datetime({ offset: true }).nullable(),
-  createdAt: z.string().datetime({ offset: true }).optional(),
-  updatedAt: z.string().datetime({ offset: true }).nullable(),
+  verifiedAt: z.custom<ColumnType<number | null>>().nullable(),
+  createdAt: z.custom<ColumnType<number>>().optional(),
+  updatedAt: z.custom<ColumnType<number | null>>().nullable(),
 })
 
 // Table interface for Kysely

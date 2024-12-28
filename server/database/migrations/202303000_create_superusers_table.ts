@@ -8,43 +8,39 @@ import { createTriggerUpdatedAt, dropTriggerUpdatedAt } from '~/database/db.help
 import type { Database } from '~/database/db.schema'
 
 export const up = async (db: Kysely<Database>): Promise<void> => {
-  // Execute SQL statements with specific schema
-  const dbSchema = db.schema.withSchema('internal')
-
   // Create table
-  await dbSchema
-    .createTable('superusers')
+  await db.schema
+    .createTable('sq_superusers')
     .addColumn('id', 'text', (col) => col.primaryKey())
     .$call(addColumnTimestamps)
-    .modifyEnd(sql`USING heap`)
+    .modifyEnd(sql`STRICT`)
     .execute()
 
   // Create auto-update trigger
-  await createTriggerUpdatedAt('internal', 'superusers').execute(db)
+  await createTriggerUpdatedAt('sq_superusers', true).execute(db)
 
   // Create indexes for primary key
-  await dbSchema.createIndex('idx_superusers_id').on('superusers').column('id').execute()
+  await db.schema.createIndex('sq_idx_superusers_id').on('sq_superusers').column('id').execute()
 
   // Create indexes for created_at
-  await dbSchema
-    .createIndex('idx_superusers_created_at')
-    .on('superusers')
+  await db.schema
+    .createIndex('sq_idx_superusers_created_at')
+    .on('sq_superusers')
     .column('created_at')
     .execute()
 
   // Create indexes for updated_at
-  await dbSchema
-    .createIndex('idx_superusers_updated_at')
-    .on('superusers')
+  await db.schema
+    .createIndex('sq_idx_superusers_updated_at')
+    .on('sq_superusers')
     .column('updated_at')
     .execute()
 }
 
 export const down = async (db: Kysely<Database>): Promise<void> => {
-  const dbSchema = db.schema.withSchema('internal')
-  await dbSchema.dropIndex('idx_superusers_updated_at').ifExists().execute()
-  await dbSchema.dropIndex('idx_superusers_created_at').ifExists().execute()
-  await dbSchema.dropIndex('idx_superusers_id').ifExists().execute()
-  await dropTriggerUpdatedAt('internal', 'superusers').execute(db)
-  await dbSchema.dropTable('superusers').ifExists().execute()
+  await db.schema.dropIndex('sq_idx_superusers_updated_at').ifExists().execute()
+  await db.schema.dropIndex('sq_idx_superusers_created_at').ifExists().execute()
+  await db.schema.dropIndex('sq_idx_superusers_id').ifExists().execute()
+  await dropTriggerUpdatedAt('sq_superusers', true).execute(db)
+  await db.schema.dropTable('sq_superusers').ifExists().execute()
 }

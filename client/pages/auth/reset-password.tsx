@@ -8,7 +8,7 @@ const styles = {
   form: 'space-y-4',
   inputGroup: 'space-y-1.5',
   footer: 'mt-6 text-center text-sm text-slate-600',
-  link: 'text-blue-600 hover:text-blue-700 transition-colors',
+  link: 'text-brand-600 hover:text-brand-700 transition-colors',
   error: 'text-sm text-red-600 mt-1',
 } as const
 

@@ -21,17 +21,26 @@ export interface WithSoftDeleteSchema {
   deletedAt: ColumnType<Date | null, string | undefined, string | undefined>
 }
 
-// Postgres-specific function, returns the current timestamp in ISO8601 format.
+// Define timestamp formats as constants for reusability
+const TIMESTAMP = {
+  UNIX: `strftime('%s', 'now')`,
+  ISO: `strftime('%Y-%m-%dT%H:%M:%fZ', 'now')`,
+} as const
+
+// SQLite-specific function, returns the current Unix timestamp.
+export const UNIX_TIMESTAMP = sql.raw(`(${TIMESTAMP.UNIX})`)
+
+// SQLite-specific function, returns the current timestamp in ISO8601 format.
 // For zod compatibility, we need to use the ISO8601 format.
 // Use this: z.string().datetime({ offset: true })
-export const ISO_TIMESTAMP = sql`CURRENT_TIMESTAMP`
+export const ISO_TIMESTAMP = sql.raw(`(${TIMESTAMP.ISO})`)
 
 export const addColumnTimestamps = <T extends string, C extends string = never>(
   builder: CreateTableBuilder<T, C>
 ) => {
   return builder
-    .addColumn('created_at', 'timestamptz', (col) => col.notNull().defaultTo(ISO_TIMESTAMP))
-    .addColumn('updated_at', 'timestamptz')
+    .addColumn('created_at', 'text', (col) => col.defaultTo(ISO_TIMESTAMP).notNull())
+    .addColumn('updated_at', 'text', (col) => col.defaultTo(ISO_TIMESTAMP).notNull())
 }
 
 export const addColumnSoftDelete = <T extends string, C extends string = never>(
@@ -43,17 +52,18 @@ export function json<T>(value: T): RawBuilder<T> {
   return sql`CAST(${JSON.stringify(value)} AS JSONB)`
 }
 
-export function dropTrigger(triggerName: string, tableName: string): RawBuilder<string> {
-  return sql.raw(`DROP TRIGGER IF EXISTS ${triggerName} ON ${tableName};`)
-}
-
-export function dropTriggerUpdatedAt(schema: string, table: string): RawBuilder<string> {
-  return dropTrigger(`trg_${table}_updated_at`, `${schema}.${table}`)
-}
-
-export function createTriggerUpdatedAt(schema: string, table: string): RawBuilder<string> {
-  return sql.raw(`CREATE TRIGGER trg_${table}_updated_at
-    BEFORE UPDATE ON ${schema}.${table} FOR EACH ROW
-    EXECUTE FUNCTION fn_updated_at_value();
+export function createTriggerUpdatedAt(table: string, isInternal = false): RawBuilder<string> {
+  const triggerName = `${isInternal ? 'sq_' : ''}trg_${table}_updated_at`
+  return sql.raw(`CREATE TRIGGER IF NOT EXISTS ${triggerName}
+    AFTER UPDATE ON ${table} FOR EACH ROW
+    BEGIN
+      UPDATE ${table} SET updated_at = ${TIMESTAMP.UNIX}
+      WHERE id = NEW.id;
+    END;
   `)
+}
+
+export function dropTriggerUpdatedAt(table: string, isInternal = false): RawBuilder<string> {
+  const triggerName = `${isInternal ? 'sq_' : ''}trg_${table}_updated_at`
+  return sql.raw(`DROP TRIGGER IF EXISTS ${triggerName};`)
 }

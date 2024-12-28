@@ -1,11 +1,35 @@
 import { env } from 'std-env'
 
-const appConfig = {
-  baseURL: env.APP_BASE_URL || 'http://localhost:3278',
-  title: 'Nitro Application',
-  description: 'Build fast and modern web applications with Nitro',
+export interface AppConfig {
+  baseURL: string
+  domain: string
+  adminPath: string
+  title: string
+  description: string
+  imageUrl: string
+  twitterUsername: string
+  authorEmail: string
+  address: string
+  socials: {
+    github: string
+    twitter: string
+    linkedin: string
+  }
 }
 
-export type AppConfig = typeof appConfig
-
-export default appConfig
+export default {
+  baseURL: env.SQUELIFY_BASE_URL || 'http://localhost:3278',
+  domain: 'localhost:3278',
+  adminPath: '/admin',
+  title: 'Squelify',
+  description: 'Lightweight Headless CMS and Backend Platform without hassle',
+  imageUrl: '/images/og-image.png',
+  twitterUsername: '@riipandi',
+  authorEmail: 'hi@squelify.com',
+  address: 'The Internet',
+  socials: {
+    github: 'https://github.com/riipandi',
+    twitter: 'https://twitter.com/riipandi',
+    linkedin: 'https://www.linkedin.com/in/aris-ripandi/',
+  },
+} satisfies AppConfig

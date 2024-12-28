@@ -4,7 +4,7 @@ const SVGLoader = () => (
     height={30}
     viewBox="0 0 120 30"
     xmlns="http://www.w3.org/2000/svg"
-    className="text-blue-400 dark:text-blue-500"
+    className="text-brand-400 dark:text-brand-500"
     fill="currentColor"
   >
     <circle cx={15} cy={15} r={15}>

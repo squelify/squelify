@@ -1,22 +1,23 @@
-import type { Generated, Insertable, Selectable, Updateable } from 'kysely'
+import type { Insertable, Selectable, Updateable } from 'kysely'
+import type { ColumnType, Generated } from 'kysely'
 import { z } from 'zod'
 
 // User schema with validation rules
 export const UserSchema = z.object({
   id: z.custom<Generated<string>>(),
-  firstName: z.string().min(2, 'First name must be at least 2 characters'),
+  firstName: z.string().min(2, 'Nama depan minimal 2 karakter'),
   lastName: z.string().nullable(),
   username: z
     .string()
-    .min(4, 'Username must be at least 4 characters')
-    .max(50, 'Username must be a maximum of 50 characters')
-    .regex(/^[a-z0-9_]+$/, 'Usernames may only contain lowercase letters, numbers and underscores')
+    .min(3, 'Username minimal 3 karakter')
+    .max(50, 'Username maksimal 50 karakter')
+    .regex(/^[a-z0-9_]+$/, 'Username hanya boleh mengandung huruf kecil, angka, dan underscore')
     .nullable(),
-  avatarUrl: z.string().url('Invalid avatar URL').nullable(),
+  avatarUrl: z.string().url('URL avatar tidak valid').nullable(),
   isActive: z.number().min(0).max(1).default(1),
-  createdAt: z.string().datetime({ offset: true }).optional(),
-  updatedAt: z.string().datetime({ offset: true }).nullable(),
-  deletedAt: z.string().datetime({ offset: true }).nullable(),
+  createdAt: z.custom<ColumnType<number>>().optional(),
+  updatedAt: z.custom<ColumnType<number | null>>().nullable(),
+  deletedAt: z.custom<ColumnType<number | null>>().nullable(),
 })
 
 // Table interface for Kysely

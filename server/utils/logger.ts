@@ -156,7 +156,7 @@ function log(
   const logMessage = ` ${filteredMessage}` // Space after prefix for consistent alignment
 
   // Handle silent mode for debug logs
-  if (level === 'debug' && env.APP_LOG_LEVEL?.toLowerCase() === 'silent') {
+  if (level === 'debug' && env.SQUELIFY_LOG_LEVEL?.toLowerCase() === 'silent') {
     return
   }
 
