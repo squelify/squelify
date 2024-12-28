@@ -107,8 +107,8 @@ export async function requireValidatedBody<T extends z.ZodType>(
 }
 
 export function getClientInfo(event: H3Event) {
-  const clientIpAddress = getRequestIP(event, { xForwardedFor: true })
-  const clientInfo = event.headers.get('X-Client-Info')
+  const clientIpAddress = getRequestIP(event, { xForwardedFor: true }) || ''
+  const clientInfo = event.headers.get('X-Client-Info') || ''
   const userAgent = event.headers.get('User-Agent') || ''
   const userAgentHash = sha256base64(userAgent)
 

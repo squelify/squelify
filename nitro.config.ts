@@ -13,7 +13,7 @@ import { build as vite } from 'vite'
 import pkg from './package.json' assert { type: 'json' }
 
 export default defineNitroConfig({
-  compatibilityDate: '2024-11-24',
+  compatibilityDate: '2024-12-29',
   preset: 'node-server',
   serveStatic: 'node',
   srcDir: 'server',
