@@ -9,6 +9,8 @@ interface SPAClientOptions {
   title?: string
 }
 
+type Manifest = Record<string, { css: string[]; file: string; isEntry: boolean }>
+
 export async function handleSPAClient(event: H3Event, options: SPAClientOptions) {
   const { entryName, title } = options
   const appConfig = event.context.appConfig
@@ -81,8 +83,6 @@ export async function handleSPAClient(event: H3Event, options: SPAClientOptions)
   </body>
 </html>`
   }
-
-  type Manifest = Record<string, { css: string[]; file: string; isEntry: boolean }>
 
   const manifest = await useStorage('assets:vite').getItem<Manifest>(`manifest.json`)
 

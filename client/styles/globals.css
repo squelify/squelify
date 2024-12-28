@@ -27,7 +27,7 @@
     --color-destructive-foreground: var(--destructive-foreground);
 
     /* Components Colors */
-    --color-card-background: var(--card-background);
+    --color-card: var(--card-background);
     --color-card-foreground: var(--card-foreground);
     --color-popover-background: var(--popover-background);
     --color-popover-foreground: varl(--popover-foreground);
@@ -114,7 +114,7 @@
     :root {
         --background: oklch(96% 0.02 252);
         --foreground: oklch(25% 0.02 252);
-        --card: oklch(100% 0 0);
+        --card-background: oklch(100% 0 0);
         --card-foreground: oklch(25% 0.02 252);
         --popover: oklch(100% 0 0);
         --popover-foreground: oklch(25% 0.02 252);
@@ -160,7 +160,7 @@
         :root {
             --background: oklch(20% 0.02 252);
             --foreground: oklch(96% 0.01 252);
-            --card: oklch(25% 0.02 252);
+            --card-background: oklch(25% 0.02 252);
             --card-foreground: oklch(96% 0.01 252);
             --popover: oklch(25% 0.02 252);
             --popover-foreground: oklch(96% 0.01 252);
@@ -221,5 +221,123 @@
     }
     body {
         @apply bg-background text-foreground font-sans;
+    }
+}
+
+@layer base {
+    .installer-container {
+        @apply min-h-screen bg-background text-foreground;
+    }
+
+    .installer-wrapper {
+        @apply mx-auto max-w-xl px-4 py-12;
+    }
+
+    .installer-header {
+        @apply mb-8 text-center;
+    }
+
+    .installer-logo {
+        @apply mx-auto mb-4 size-20;
+    }
+
+    .installer-title {
+        @apply font-bold text-xl text-foreground;
+    }
+
+    .installer-subtitle {
+        @apply mt-2 text-muted-foreground;
+    }
+
+    .installer-error-wrapper {
+        @apply -mb-4 mt-6;
+    }
+
+    .installer-error-container {
+        @apply rounded-[0.3rem] p-4 bg-error text-error-foreground;
+    }
+
+    .installer-error-icon {
+        @apply size-5 text-error;
+    }
+
+    .installer-error-text {
+        @apply font-medium text-sm text-error-foreground;
+    }
+
+    .installer-form-container {
+        @apply rounded-[0.3rem] p-8 shadow bg-card text-card-foreground;
+    }
+
+    .installer-form-section {
+        @apply space-y-3;
+    }
+
+    .installer-grid-container {
+        @apply grid grid-cols-2 gap-4;
+    }
+
+    .installer-input-group {
+        @apply space-y-3;
+    }
+
+    .installer-input {
+        @apply mt-0.5 block w-full rounded-[0.3rem] px-3 py-2 bg-background border-border text-foreground placeholder:text-muted-foreground focus:border-ring focus:ring-ring;
+    }
+
+    .installer-label {
+        @apply block font-medium text-sm text-foreground;
+    }
+
+    .installer-password-container {
+        @apply relative;
+    }
+
+    .installer-password-toggle {
+        @apply absolute inset-y-0 right-0 mt-0.5 flex cursor-pointer items-center px-3 text-muted-foreground;
+    }
+
+    .installer-password-hint {
+        @apply mt-1 px-0.5 text-sm text-muted-foreground;
+    }
+
+    .installer-divider {
+        @apply space-y-3 border-t pt-4 border-border;
+    }
+
+    .installer-checkbox-group {
+        @apply flex items-start py-1;
+    }
+
+    .installer-checkbox-wrapper {
+        @apply mt-1.5 flex h-5 items-center;
+    }
+
+    .installer-checkbox {
+        @apply size-4 rounded-[0.3rem] border-border text-primary focus:border-ring focus:ring-ring;
+    }
+
+    .installer-checkbox-label {
+        @apply ml-2 text-sm text-foreground;
+    }
+
+    .installer-submit-container {
+        @apply pt-1;
+    }
+
+    .installer-submit-button {
+        @apply w-full rounded-[0.3rem] px-4 py-2 bg-primary text-primary-foreground focus:outline-none focus:ring-2 hover:enabled:brightness-90 disabled:cursor-not-allowed disabled:opacity-50;
+    }
+
+    .installer-footer {
+        @apply mt-8 text-center text-sm text-muted-foreground;
+    }
+
+    .installer-link {
+        @apply inline-flex items-center text-primary hover:underline;
+    }
+
+    .installer-external-icon {
+        @apply ml-0.5 size-3.5;
     }
 }

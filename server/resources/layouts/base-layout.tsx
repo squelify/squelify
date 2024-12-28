@@ -2,9 +2,10 @@ interface BaseLayoutProps {
   children: React.ReactNode
   csrfToken: string
   title: string
+  cssLinks?: string[]
 }
 
-export default function BaseLayout({ children, csrfToken, title }: BaseLayoutProps) {
+export default function BaseLayout({ children, csrfToken, title, cssLinks }: BaseLayoutProps) {
   return (
     <html lang="en" className="h-full">
       <head>
@@ -15,13 +16,13 @@ export default function BaseLayout({ children, csrfToken, title }: BaseLayoutPro
         <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
         <link rel="icon" type="image/png" href="/favicon.png" />
         <link rel="manifest" href="/site.webmanifest" />
-        <script src="https://cdn.tailwindcss.com" />
+        {cssLinks?.map((link) => (
+          <link key={link} rel="stylesheet" href={`/${link}`} />
+        ))}
         <script src="/installer.js" defer />
         <title>{title}</title>
       </head>
-      <body className="h-full bg-white text-gray-900 antialiased dark:bg-gray-950 dark:text-gray-100">
-        {children}
-      </body>
+      <body>{children}</body>
     </html>
   )
 }

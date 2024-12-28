@@ -1,4 +1,5 @@
 import './styles/globals.css'
+// import './styles/installer.css'
 
 import React, { Suspense } from 'react'
 import ReactDOM from 'react-dom/client'

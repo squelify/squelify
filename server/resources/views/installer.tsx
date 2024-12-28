@@ -4,54 +4,35 @@ export default function Page() {
   const errorMessage = null
 
   return (
-    <main className="min-h-screen bg-gray-50 dark:bg-gray-900">
-      <div className="mx-auto max-w-xl px-4 py-12">
-        <div className="mb-8 text-center">
-          <img src="/favicon.svg" alt="Squelify Logo" className="mx-auto mb-4 h-20 w-20" />
-          <h1 className="font-bold text-3xl text-gray-900 dark:text-white">Welcome to Squelify</h1>
-          <p className="mt-2 text-gray-600 dark:text-gray-400">
-            Let's set up your administrator account
-          </p>
+    <main className="installer-container">
+      <div className="installer-wrapper">
+        <div className="installer-header">
+          <img src="/favicon.svg" className="installer-logo" alt="Squelify" />
+          <h1 className="installer-title">Welcome to Squelify</h1>
+          <p className="installer-subtitle">Let's set up your administrator account</p>
           {errorMessage && (
-            <div className="-mb-4 mt-6">
-              <div className="rounded-[0.3rem] bg-red-50 p-4 dark:bg-red-900/50">
+            <div className="installer-error-wrapper">
+              <div className="installer-error-container">
                 <div className="flex">
                   <div className="flex-shrink-0">
-                    <svg
-                      className="size-5 text-red-400 dark:text-red-500"
-                      viewBox="0 0 20 20"
-                      fill="currentColor"
-                    >
-                      <path
-                        fillRule="evenodd"
-                        d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.28 7.22a.75.75 0 00-1.06 1.06L8.94 10l-1.72 1.72a.75.75 0 101.06 1.06L10 11.06l1.72 1.72a.75.75 0 101.06-1.06L11.06 10l1.72-1.72a.75.75 0 00-1.06-1.06L10 8.94 8.28 7.22z"
-                        clipRule="evenodd"
-                      />
-                    </svg>
+                    <Lucide.BadgeInfo className="installer-error-icon" />
                   </div>
                   <div className="ml-3">
-                    <p className="font-medium text-red-800 text-sm dark:text-red-200">
-                      {errorMessage}
-                    </p>
+                    <p className="installer-error-text">{errorMessage}</p>
                   </div>
                 </div>
               </div>
             </div>
           )}
         </div>
-        <div className="rounded-[0.3rem] bg-white p-8 shadow dark:bg-gray-800">
+
+        <div className="installer-form-container">
           <form method="POST" action="/installer" className="space-y-4">
-            {/* Admin Account */}
-            <div className="space-y-3">
-              <h2 className="font-semibold text-gray-900 text-xl dark:text-white">
-                Create Admin Account
-              </h2>
-              <div className="grid grid-cols-2 gap-4">
+            <div className="installer-form-section">
+              <h2 className="installer-title">Create Admin Account</h2>
+              <div className="installer-grid-container">
                 <div>
-                  <label
-                    htmlFor="firstName"
-                    className="block font-medium text-gray-700 text-sm dark:text-gray-300"
-                  >
+                  <label htmlFor="firstName" className="installer-label">
                     First Name
                   </label>
                   <input
@@ -63,15 +44,11 @@ export default function Page() {
                     pattern="[A-Za-z\s]+"
                     placeholder="Admin"
                     title="First name should only contain letters and spaces"
-                    className="mt-0.5 block w-full rounded-[0.3rem] border border-gray-300 bg-white px-3 py-2 text-gray-900 placeholder-gray-400 focus:border-yellow-500 focus:ring-yellow-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-500"
+                    className="installer-input"
                   />
-                  <p className="error-message mt-1 hidden text-red-600 text-sm dark:text-red-400" />
                 </div>
                 <div>
-                  <label
-                    htmlFor="lastName"
-                    className="block font-medium text-gray-700 text-sm dark:text-gray-300"
-                  >
+                  <label htmlFor="lastName" className="installer-label">
                     Last Name
                   </label>
                   <input
@@ -83,16 +60,13 @@ export default function Page() {
                     pattern="[A-Za-z\s]+"
                     placeholder="System"
                     title="Last name should only contain letters and spaces"
-                    className="mt-0.5 block w-full rounded-[0.3rem] border border-gray-300 bg-white px-3 py-2 text-gray-900 placeholder-gray-400 focus:border-yellow-500 focus:ring-yellow-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-500"
+                    className="installer-input"
                   />
-                  <p className="error-message mt-1 hidden text-red-600 text-sm dark:text-red-400" />
                 </div>
               </div>
+
               <div>
-                <label
-                  htmlFor="email"
-                  className="block font-medium text-gray-700 text-sm dark:text-gray-300"
-                >
+                <label htmlFor="email" className="installer-label">
                   Email
                 </label>
                 <input
@@ -102,18 +76,15 @@ export default function Page() {
                   pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$"
                   placeholder="admin@example.com"
                   title="Please enter a valid email address"
-                  className="mt-0.5 block w-full rounded-[0.3rem] border border-gray-300 bg-white px-3 py-2 text-gray-900 placeholder-gray-400 focus:border-yellow-500 focus:ring-yellow-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-500"
+                  className="installer-input"
                 />
-                <p className="error-message mt-1 hidden text-red-600 text-sm dark:text-red-400" />
               </div>
+
               <div>
-                <label
-                  htmlFor="password"
-                  className="block font-medium text-gray-700 text-sm dark:text-gray-300"
-                >
+                <label htmlFor="password" className="installer-label">
                   Password
                 </label>
-                <div className="relative">
+                <div className="installer-password-container">
                   <input
                     type="password"
                     name="password"
@@ -123,33 +94,28 @@ export default function Page() {
                     placeholder="Enter your secure password"
                     pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{8,}$"
                     title="Password must contain at least 8 characters, including uppercase, lowercase, number and special character"
-                    className="mt-0.5 block w-full rounded-[0.3rem] border border-gray-300 bg-white px-3 py-2 pr-10 text-gray-900 placeholder-gray-400 focus:border-yellow-500 focus:ring-yellow-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-500"
+                    className="installer-input"
                   />
                   <button
                     type="button"
-                    className="absolute inset-y-0 right-0 mt-0.5 flex cursor-pointer items-center px-3 text-gray-500 dark:text-gray-400"
+                    className="installer-password-toggle"
                     onClick={() => console.info('Show password')}
                     tabIndex={-1}
                   >
                     <Lucide.Eye className="size-5" />
                   </button>
                 </div>
-                <p className="mt-1 px-0.5 text-gray-500 text-sm dark:text-gray-400">
+                <p className="installer-password-hint">
                   Min 8 characters with 1 uppercase, 1 lowercase, 1 number &amp; 1 special character
                   (!@#$%^&amp;*)
                 </p>
               </div>
             </div>
-            {/* Application Settings */}
-            <div className="space-y-3 border-gray-200 border-t pt-4 dark:border-gray-700">
-              <h2 className="font-semibold text-gray-900 text-xl dark:text-white">
-                Application Settings
-              </h2>
+
+            <div className="installer-divider">
+              <h2 className="installer-title">Application Settings</h2>
               <div>
-                <label
-                  htmlFor="appName"
-                  className="block font-medium text-gray-700 text-sm dark:text-gray-300"
-                >
+                <label htmlFor="appName" className="installer-label">
                   Application Name
                 </label>
                 <input
@@ -162,23 +128,22 @@ export default function Page() {
                   placeholder="My Awesome App"
                   pattern="[A-Za-z0-9\s\-_]+"
                   title="Application name can only contain letters, numbers, spaces, hyphens and underscores"
-                  className="mt-0.5 block w-full rounded-[0.3rem] border border-gray-300 bg-white px-3 py-2 text-gray-900 placeholder-gray-400 focus:border-yellow-500 focus:ring-yellow-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-500"
+                  className="installer-input"
                 />
-                <p className="error-message mt-1 hidden text-red-600 text-sm dark:text-red-400" />
               </div>
             </div>
-            {/* Newsletter Opt-in */}
-            <div className="flex items-start py-1">
-              <div className="mt-1.5 flex h-5 items-center">
+
+            <div className="installer-checkbox-group">
+              <div className="installer-checkbox-wrapper">
                 <input
                   id="newsletter"
                   name="newsletter"
                   type="checkbox"
-                  className="size-4 rounded-[0.3rem] border-gray-300 text-yellow-500 focus:ring-yellow-500 dark:border-gray-600 dark:bg-gray-700"
+                  className="installer-checkbox"
                 />
               </div>
               <div className="ml-2">
-                <label htmlFor="newsletter" className="text-gray-700 text-sm dark:text-gray-300">
+                <label htmlFor="newsletter" className="installer-checkbox-label">
                   Keep me updated about new features &amp; upcoming improvements.{' '}
                   <br className="hidden sm:inline-block" />
                   By doing this you accept the{' '}
@@ -186,30 +151,31 @@ export default function Page() {
                     href="https://squelify.com/terms"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex items-center text-yellow-600 hover:underline dark:text-yellow-400"
+                    className="installer-link"
                   >
                     <span>Terms</span>
-                    <Lucide.ExternalLink className="ml-0.5 size-3.5" />
+                    <Lucide.ExternalLink className="installer-external-icon" />
                   </a>
                   {' and the '}
                   <a
                     href="https://squelify.com/privacy"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex items-center text-yellow-600 hover:underline dark:text-yellow-400"
+                    className="installer-link"
                   >
                     <span>Privacy Policy</span>
-                    <Lucide.ExternalLink className="ml-0.5 size-3.5" />
+                    <Lucide.ExternalLink className="installer-external-icon" />
                   </a>
                   .
                 </label>
               </div>
             </div>
-            <div className="pt-1">
+
+            <div className="installer-submit-container">
               <button
                 type="submit"
                 id="submitBtn"
-                className="w-full rounded-[0.3rem] bg-yellow-500 px-4 py-2 text-white focus:outline-none focus:ring-2 focus:ring-yellow-500 enabled:hover:bg-yellow-600 disabled:cursor-not-allowed disabled:opacity-50 dark:bg-yellow-600 enabled:dark:hover:bg-yellow-700"
+                className="installer-submit-button"
                 disabled={false}
               >
                 Complete Installation
@@ -217,16 +183,17 @@ export default function Page() {
             </div>
           </form>
         </div>
-        <div className="mt-8 text-center text-gray-500 text-sm dark:text-gray-400">
+
+        <div className="installer-footer">
           Need help? Check out our{' '}
           <a
             href="https://squelify.com/docs"
-            className="inline-flex items-center text-yellow-600 hover:underline dark:text-yellow-400"
+            className="installer-link"
             rel="noopener noreferrer"
             target="_blank"
           >
             <span>documentation</span>
-            <Lucide.ExternalLink className="ml-0.5 size-3.5" />
+            <Lucide.ExternalLink className="installer-external-icon" />
           </a>
         </div>
       </div>
