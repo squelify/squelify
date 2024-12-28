@@ -4,14 +4,12 @@ export default function Page() {
   const errorMessage = null
 
   return (
-    <main className="min-h-screen bg-neutral-50 dark:bg-neutral-900">
+    <main className="min-h-screen bg-gray-50 dark:bg-gray-900">
       <div className="mx-auto max-w-xl px-4 py-12">
         <div className="mb-8 text-center">
           <img src="/favicon.svg" alt="Squelify Logo" className="mx-auto mb-4 h-20 w-20" />
-          <h1 className="font-bold text-3xl text-neutral-900 dark:text-white">
-            Welcome to Squelify
-          </h1>
-          <p className="mt-2 text-neutral-600 dark:text-neutral-400">
+          <h1 className="font-bold text-3xl text-gray-900 dark:text-white">Welcome to Squelify</h1>
+          <p className="mt-2 text-gray-600 dark:text-gray-400">
             Let's set up your administrator account
           </p>
           {errorMessage && (
@@ -41,18 +39,18 @@ export default function Page() {
             </div>
           )}
         </div>
-        <div className="rounded-[0.3rem] bg-white p-8 shadow dark:bg-neutral-800">
+        <div className="rounded-[0.3rem] bg-white p-8 shadow dark:bg-gray-800">
           <form method="POST" action="/installer" className="space-y-4">
             {/* Admin Account */}
             <div className="space-y-3">
-              <h2 className="font-semibold text-neutral-900 text-xl dark:text-white">
+              <h2 className="font-semibold text-gray-900 text-xl dark:text-white">
                 Create Admin Account
               </h2>
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <label
                     htmlFor="firstName"
-                    className="block font-medium text-neutral-700 text-sm dark:text-neutral-300"
+                    className="block font-medium text-gray-700 text-sm dark:text-gray-300"
                   >
                     First Name
                   </label>
@@ -65,14 +63,14 @@ export default function Page() {
                     pattern="[A-Za-z\s]+"
                     placeholder="Admin"
                     title="First name should only contain letters and spaces"
-                    className="mt-0.5 block w-full rounded-[0.3rem] border border-neutral-300 bg-white px-3 py-2 text-neutral-900 placeholder-neutral-400 focus:border-yellow-500 focus:ring-yellow-500 dark:border-neutral-600 dark:bg-neutral-700 dark:text-white dark:placeholder-neutral-500"
+                    className="mt-0.5 block w-full rounded-[0.3rem] border border-gray-300 bg-white px-3 py-2 text-gray-900 placeholder-gray-400 focus:border-yellow-500 focus:ring-yellow-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-500"
                   />
                   <p className="error-message mt-1 hidden text-red-600 text-sm dark:text-red-400" />
                 </div>
                 <div>
                   <label
                     htmlFor="lastName"
-                    className="block font-medium text-neutral-700 text-sm dark:text-neutral-300"
+                    className="block font-medium text-gray-700 text-sm dark:text-gray-300"
                   >
                     Last Name
                   </label>
@@ -85,7 +83,7 @@ export default function Page() {
                     pattern="[A-Za-z\s]+"
                     placeholder="System"
                     title="Last name should only contain letters and spaces"
-                    className="mt-0.5 block w-full rounded-[0.3rem] border border-neutral-300 bg-white px-3 py-2 text-neutral-900 placeholder-neutral-400 focus:border-yellow-500 focus:ring-yellow-500 dark:border-neutral-600 dark:bg-neutral-700 dark:text-white dark:placeholder-neutral-500"
+                    className="mt-0.5 block w-full rounded-[0.3rem] border border-gray-300 bg-white px-3 py-2 text-gray-900 placeholder-gray-400 focus:border-yellow-500 focus:ring-yellow-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-500"
                   />
                   <p className="error-message mt-1 hidden text-red-600 text-sm dark:text-red-400" />
                 </div>
@@ -93,7 +91,7 @@ export default function Page() {
               <div>
                 <label
                   htmlFor="email"
-                  className="block font-medium text-neutral-700 text-sm dark:text-neutral-300"
+                  className="block font-medium text-gray-700 text-sm dark:text-gray-300"
                 >
                   Email
                 </label>
@@ -104,14 +102,14 @@ export default function Page() {
                   pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$"
                   placeholder="admin@example.com"
                   title="Please enter a valid email address"
-                  className="mt-0.5 block w-full rounded-[0.3rem] border border-neutral-300 bg-white px-3 py-2 text-neutral-900 placeholder-neutral-400 focus:border-yellow-500 focus:ring-yellow-500 dark:border-neutral-600 dark:bg-neutral-700 dark:text-white dark:placeholder-neutral-500"
+                  className="mt-0.5 block w-full rounded-[0.3rem] border border-gray-300 bg-white px-3 py-2 text-gray-900 placeholder-gray-400 focus:border-yellow-500 focus:ring-yellow-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-500"
                 />
                 <p className="error-message mt-1 hidden text-red-600 text-sm dark:text-red-400" />
               </div>
               <div>
                 <label
                   htmlFor="password"
-                  className="block font-medium text-neutral-700 text-sm dark:text-neutral-300"
+                  className="block font-medium text-gray-700 text-sm dark:text-gray-300"
                 >
                   Password
                 </label>
@@ -125,32 +123,32 @@ export default function Page() {
                     placeholder="Enter your secure password"
                     pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{8,}$"
                     title="Password must contain at least 8 characters, including uppercase, lowercase, number and special character"
-                    className="mt-0.5 block w-full rounded-[0.3rem] border border-neutral-300 bg-white px-3 py-2 pr-10 text-neutral-900 placeholder-neutral-400 focus:border-yellow-500 focus:ring-yellow-500 dark:border-neutral-600 dark:bg-neutral-700 dark:text-white dark:placeholder-neutral-500"
+                    className="mt-0.5 block w-full rounded-[0.3rem] border border-gray-300 bg-white px-3 py-2 pr-10 text-gray-900 placeholder-gray-400 focus:border-yellow-500 focus:ring-yellow-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-500"
                   />
                   <button
                     type="button"
-                    className="absolute inset-y-0 right-0 mt-0.5 flex cursor-pointer items-center px-3 text-neutral-500 dark:text-neutral-400"
+                    className="absolute inset-y-0 right-0 mt-0.5 flex cursor-pointer items-center px-3 text-gray-500 dark:text-gray-400"
                     onClick={() => console.info('Show password')}
                     tabIndex={-1}
                   >
                     <Lucide.Eye className="size-5" />
                   </button>
                 </div>
-                <p className="mt-1 px-0.5 text-neutral-500 text-sm dark:text-neutral-400">
+                <p className="mt-1 px-0.5 text-gray-500 text-sm dark:text-gray-400">
                   Min 8 characters with 1 uppercase, 1 lowercase, 1 number &amp; 1 special character
                   (!@#$%^&amp;*)
                 </p>
               </div>
             </div>
             {/* Application Settings */}
-            <div className="space-y-3 border-neutral-200 border-t pt-4 dark:border-neutral-700">
-              <h2 className="font-semibold text-neutral-900 text-xl dark:text-white">
+            <div className="space-y-3 border-gray-200 border-t pt-4 dark:border-gray-700">
+              <h2 className="font-semibold text-gray-900 text-xl dark:text-white">
                 Application Settings
               </h2>
               <div>
                 <label
                   htmlFor="appName"
-                  className="block font-medium text-neutral-700 text-sm dark:text-neutral-300"
+                  className="block font-medium text-gray-700 text-sm dark:text-gray-300"
                 >
                   Application Name
                 </label>
@@ -164,7 +162,7 @@ export default function Page() {
                   placeholder="My Awesome App"
                   pattern="[A-Za-z0-9\s\-_]+"
                   title="Application name can only contain letters, numbers, spaces, hyphens and underscores"
-                  className="mt-0.5 block w-full rounded-[0.3rem] border border-neutral-300 bg-white px-3 py-2 text-neutral-900 placeholder-neutral-400 focus:border-yellow-500 focus:ring-yellow-500 dark:border-neutral-600 dark:bg-neutral-700 dark:text-white dark:placeholder-neutral-500"
+                  className="mt-0.5 block w-full rounded-[0.3rem] border border-gray-300 bg-white px-3 py-2 text-gray-900 placeholder-gray-400 focus:border-yellow-500 focus:ring-yellow-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-500"
                 />
                 <p className="error-message mt-1 hidden text-red-600 text-sm dark:text-red-400" />
               </div>
