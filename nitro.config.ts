@@ -26,6 +26,7 @@ export default defineNitroConfig({
   handlers: [
     { route: '/installer', handler: '~/handler/installer.handler' },
     { route: '/robots.txt', handler: '~/handler/robots.handler' },
+    { route: '/site.webmanifest', handler: '~/handler/manifest.handler' },
   ],
 
   routeRules: {

@@ -63,9 +63,10 @@ export async function handleSPAClient(event: H3Event, options: SPAClientOptions)
     return /* html */ `<!DOCTYPE html>
 <html lang="en">
   <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="csrf-token" content="${csrfToken}">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="csrf-token" content="${csrfToken}" />
+    <link rel="manifest" href="/site.webmanifest" />
     <title>${pageTitle}</title>
   </head>
   <body>
@@ -107,9 +108,10 @@ export async function handleSPAClient(event: H3Event, options: SPAClientOptions)
   return /* html */ `<!DOCTYPE html>
 <html lang="en">
   <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="csrf-token" content="${csrfToken}">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="csrf-token" content="${csrfToken}" />
+    <link rel="manifest" href="/site.webmanifest" />
     <title>${pageTitle}</title>
     ${cssLinks}
   </head>

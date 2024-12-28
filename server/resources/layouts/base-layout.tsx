@@ -14,6 +14,7 @@ export default function BaseLayout({ children, csrfToken, title }: BaseLayoutPro
         <link rel="icon" type="image/x-icon" href="/favicon.ico" />
         <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
         <link rel="icon" type="image/png" href="/favicon.png" />
+        <link rel="manifest" href="/site.webmanifest" />
         <script src="https://cdn.tailwindcss.com" />
         <script src="/installer.js" defer />
         <title>{title}</title>
