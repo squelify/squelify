@@ -16,7 +16,7 @@ export default function AdminLayout() {
   }
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-slate-50 p-4">
+    <div className="flex min-h-screen items-center justify-center bg-gray-50 p-4">
       <div className="w-full max-w-md">
         {/* Card Component */}
         <div className="bg-white p-8">

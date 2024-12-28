@@ -56,16 +56,16 @@ export default defineNitroErrorHandler((error, event) => {
 
   const html = renderToStaticMarkup(
     <ErrorLayout title={appConfig.title} csrfToken="xxxxxxxxxxxxxxxxxxxxxxxxx">
-      <main className="mx-auto w-full max-w-5xl rounded-xl border border-slate-200 bg-white px-10 py-12 shadow-sm dark:border-slate-800 dark:bg-slate-900">
+      <main className="mx-auto w-full max-w-5xl rounded-xl border border-gray-200 bg-white px-10 py-12 shadow-sm dark:border-gray-800 dark:bg-gray-900">
         <div className="space-y-6">
           <div className="space-y-4 text-center">
             <h1 className="bg-gradient-to-r from-brand-500 to-indigo-600 bg-clip-text font-black text-8xl text-transparent">
               {error.statusCode}
             </h1>
-            <h2 className="font-bold text-3xl text-slate-900 dark:text-white">
+            <h2 className="font-bold text-3xl text-gray-900 dark:text-white">
               Something went wrong!
             </h2>
-            <p className="mx-auto max-w-xl text-lg text-slate-600 dark:text-slate-400">
+            <p className="mx-auto max-w-xl text-gray-600 text-lg dark:text-gray-400">
               {error.message ||
                 'The page you are looking for might have been removed or is temporarily unavailable.'}
             </p>

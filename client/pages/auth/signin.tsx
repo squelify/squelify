@@ -3,10 +3,10 @@ import { Button, FormLabel, Input } from '#/components/base-ui'
 import { Link } from '#/components/link'
 
 const styles = {
-  title: 'text-2xl font-bold text-slate-800 mb-6 text-center',
+  title: 'text-2xl font-bold text-gray-800 mb-6 text-center',
   form: 'space-y-4',
   inputGroup: 'space-y-1.5',
-  links: 'mt-6 flex items-center justify-between text-sm text-slate-600',
+  links: 'mt-6 flex items-center justify-between text-sm text-gray-600',
   link: 'hover:text-brand-600 transition-colors',
 } as const
 

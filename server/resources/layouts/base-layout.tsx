@@ -12,10 +12,13 @@ export default function BaseLayout({ children, csrfToken, title }: BaseLayoutPro
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <meta name="csrf-token" content={csrfToken} />
         <link rel="icon" type="image/x-icon" href="/favicon.ico" />
+        <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+        <link rel="icon" type="image/png" href="/favicon.png" />
         <script src="https://cdn.tailwindcss.com" />
+        <script src="/installer.js" defer />
         <title>{title}</title>
       </head>
-      <body className="h-full bg-white text-slate-900 antialiased dark:bg-slate-950 dark:text-slate-100">
+      <body className="h-full bg-white text-gray-900 antialiased dark:bg-gray-950 dark:text-gray-100">
         {children}
       </body>
     </html>

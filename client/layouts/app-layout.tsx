@@ -9,12 +9,12 @@ const styles = {
   sidebar:
     'fixed top-0 left-0 h-screen w-64 bg-white border-r border-sidebar-border p-4 flex flex-col bg-sidebar-background',
   sidebarHeader: 'mb-8',
-  sidebarTitle: 'text-xl font-bold text-slate-800',
+  sidebarTitle: 'text-xl font-bold text-gray-800',
   navGroup: 'space-y-2 flex-1', // tambah flex-1 untuk spacing
   navLink: {
     base: 'flex items-center px-4 py-2 rounded-lg transition-colors',
     active: 'bg-brand-50 text-brand-600',
-    inactive: 'text-slate-600 hover:bg-slate-100',
+    inactive: 'text-gray-600 hover:bg-gray-100',
   },
   logoutButton:
     'flex items-center px-4 py-2 mt-auto text-red-600 hover:bg-red-50 rounded-lg transition-colors',

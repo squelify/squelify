@@ -3,11 +3,11 @@ import { Link, useSearchParams } from 'react-router'
 import { Button, FormLabel, Input } from '#/components/base-ui'
 
 const styles = {
-  title: 'text-2xl font-bold text-slate-800 mb-2 text-center',
-  subtitle: 'text-slate-600 text-center mb-6',
+  title: 'text-2xl font-bold text-gray-800 mb-2 text-center',
+  subtitle: 'text-gray-600 text-center mb-6',
   form: 'space-y-4',
   inputGroup: 'space-y-1.5',
-  footer: 'mt-6 text-center text-sm text-slate-600',
+  footer: 'mt-6 text-center text-sm text-gray-600',
   link: 'text-brand-600 hover:text-brand-700 transition-colors',
   error: 'text-sm text-red-600 mt-1',
 } as const
