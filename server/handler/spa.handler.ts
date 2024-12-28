@@ -1,7 +1,7 @@
 import { type H3Event } from 'h3'
 import { process } from 'std-env'
 import { DURATION } from '~/utils/datetime'
-import { generateCSRFToken, validateCSRFToken } from '~/utils/string'
+import { generateCSRFToken } from '~/utils/string'
 import { useStorage } from '#imports'
 
 interface SPAClientOptions {
@@ -10,8 +10,24 @@ interface SPAClientOptions {
 }
 
 export async function handleSPAClient(event: H3Event, options: SPAClientOptions) {
-  const appConfig = event.context.appConfig
   const { entryName, title } = options
+  const appConfig = event.context.appConfig
+  const db = event.context.db
+
+  // Check if application is installed by checking existence of admin user
+  const isInstalled = await db
+    .selectFrom('sq_users as users')
+    .innerJoin('sq_user_roles as user_roles', 'user_roles.userId', 'users.id')
+    .innerJoin('sq_roles as roles', 'roles.id', 'user_roles.roleId')
+    .where('roles.name', '=', 'admin')
+    .where('users.isActive', '=', 1)
+    .select('users.id')
+    .executeTakeFirst()
+
+  // Redirect to installer if not installed
+  if (!isInstalled) {
+    return sendRedirect(event, '/installer', 302)
+  }
 
   // Check existing CSRF token
   let csrfToken = getCookie(event, 'csrf_token')
@@ -74,18 +90,19 @@ export async function handleSPAClient(event: H3Event, options: SPAClientOptions)
     return 'Missing manifest'
   }
 
-  const entryChunk = Object.values(manifest).find((c) => c.isEntry && c.file.includes(entryName))
+  const entryChunk = Object.values(manifest).find(
+    (chunk) => chunk.isEntry && chunk.file.includes(entryName)
+  )
 
   if (!entryChunk) {
     setResponseStatus(event, 500)
     return `Missing ${entryName} entry chunk`
   }
 
+  const scriptLinks = `<script type="module" src="/${entryChunk.file}"></script>`
   const cssLinks = entryChunk.css
     .map((link) => `<link rel="stylesheet" href="/${link}" />`)
     .join('\n')
-
-  const scriptLinks = `<script type="module" src="/${entryChunk.file}"></script>`
 
   return /* html */ `<!DOCTYPE html>
 <html lang="en">
