@@ -2,8 +2,9 @@ import consola from 'consola'
 import { H3Error, sendError } from 'h3'
 import { handleSPAClient } from '~/handler/spa.handler'
 import { handleStaticWeb } from '~/handler/static.handler'
-// import { handleTRPC } from '~/handler/trpc.handler'
-// import { appRouter, createContext } from '~/trpc'
+import { handleTRPC } from '~/handler/trpc.handler'
+import { createContext } from '~/trpc/context'
+import { appRouter } from '~/trpc/router'
 
 export default defineEventHandler(async (event) => {
   const appConfig = event.context.appConfig
@@ -39,13 +40,12 @@ export default defineEventHandler(async (event) => {
     )
   }
 
-  // FIXME: `Cannot access '_____$1' before initialization`
-  // if (matchedUrl.startsWith('/trpc/')) {
-  //   return handleTRPC(event, {
-  //     router: appRouter,
-  //     createContext,
-  //   })
-  // }
+  if (matchedUrl.startsWith('/trpc/')) {
+    return handleTRPC(event, {
+      router: appRouter,
+      createContext,
+    })
+  }
 
   if (matchedUrl.startsWith(appConfig.adminPath)) {
     return handleSPAClient(event, { entryName: 'entry.client' })
