@@ -225,6 +225,66 @@
 }
 
 @layer base {
+    .error-layout {
+        @apply flex min-h-screen items-center justify-center bg-gradient-to-br from-white to-gray-100 p-4 dark:from-gray-950 dark:to-gray-900;
+    }
+    .error-main {
+        @apply mx-auto w-full max-w-5xl rounded-xl border-border bg-card px-10 py-12 shadow-sm;
+    }
+    .error-content {
+        @apply space-y-6;
+    }
+    .error-header {
+        @apply space-y-4 text-center;
+    }
+    .error-code {
+        @apply bg-gradient-to-r from-brand-500 to-indigo-600 bg-clip-text font-black text-8xl text-transparent;
+    }
+    .error-title {
+        @apply font-bold text-3xl text-foreground;
+    }
+    .error-message {
+        @apply mx-auto max-w-xl text-muted-foreground text-lg;
+    }
+    .error-stack {
+        @apply space-y-6;
+    }
+    .error-stack-container {
+        @apply max-h-max overflow-auto rounded-lg border-rose-200 bg-rose-50 p-6 text-left dark:border-rose-900 dark:bg-rose-900/30;
+    }
+    .error-stack-content {
+        @apply font-mono text-sm leading-relaxed;
+    }
+    .error-type {
+        @apply mb-2;
+    }
+    .error-type-label {
+        @apply font-semibold text-rose-800 dark:text-rose-300;
+    }
+    .error-type-value {
+        @apply text-rose-700 dark:text-rose-400;
+    }
+    .error-cause {
+        @apply mt-4 border-rose-200 border-t pt-4 dark:border-rose-800;
+    }
+    .error-cause-label {
+        @apply font-semibold text-rose-800 dark:text-rose-300;
+    }
+    .error-cause-value {
+        @apply mt-2 whitespace-pre-wrap text-rose-700 dark:text-rose-400;
+    }
+    .error-actions {
+        @apply mx-auto grid max-w-sm grid-cols-2 gap-4;
+    }
+    .error-action-primary {
+        @apply inline-flex w-full items-center justify-center rounded-md bg-primary px-5 py-2.5 font-medium text-sm text-primary-foreground shadow transition-all duration-200 hover:brightness-90 hover:shadow-md;
+    }
+    .error-action-secondary {
+        @apply inline-flex w-full items-center justify-center rounded-md border border-border bg-muted px-5 py-2.5 font-medium text-sm text-muted-foreground shadow transition-all duration-200 hover:bg-accent hover:shadow-md;
+    }
+}
+
+@layer base {
     .installer-container {
         @apply min-h-screen bg-background text-foreground;
     }
