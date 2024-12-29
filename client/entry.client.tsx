@@ -13,6 +13,7 @@ import { SEOMetaProvider } from '#/context/providers/seo-provider'
 import ThemeProvider from '#/context/providers/theme-provider'
 import TRPCProvider from '#/context/providers/trpc-provider'
 
+import appConfig from '~~/app.config'
 import { adminRoutes } from '#/routes/admin'
 import { protectedRoutes } from '#/routes/protected'
 import { catchAllRoute, publicRoutes } from '#/routes/public'
@@ -33,7 +34,7 @@ const AppRoutes = () => {
 ReactDOM.createRoot(rootElement).render(
   <React.StrictMode>
     <ErrorBoundary fallback={<BoundaryError />}>
-      <BrowserRouter basename="/admin">
+      <BrowserRouter basename={appConfig.adminPath}>
         <NuqsAdapter>
           <ThemeProvider defaultTheme="system">
             <TRPCProvider>
