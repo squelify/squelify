@@ -1,6 +1,7 @@
+import './styles/fontface.css'
 import './styles/globals.css'
-// import './styles/installer.css'
 
+import { NuqsAdapter } from 'nuqs/adapters/react'
 import React, { Suspense } from 'react'
 import ReactDOM from 'react-dom/client'
 import { ErrorBoundary } from 'react-error-boundary'
@@ -8,6 +9,10 @@ import { BrowserRouter, useRoutes } from 'react-router'
 import BoundaryError from '#/components/errors/boundary'
 import PageLoader from '#/components/loaders/page-loader'
 import { AuthProvider } from '#/context/providers/auth-provider'
+import { SEOMetaProvider } from '#/context/providers/seo-provider'
+import ThemeProvider from '#/context/providers/theme-provider'
+import TRPCProvider from '#/context/providers/trpc-provider'
+
 import { adminRoutes } from '#/routes/admin'
 import { protectedRoutes } from '#/routes/protected'
 import { catchAllRoute, publicRoutes } from '#/routes/public'
@@ -29,11 +34,19 @@ ReactDOM.createRoot(rootElement).render(
   <React.StrictMode>
     <ErrorBoundary fallback={<BoundaryError />}>
       <BrowserRouter basename="/admin">
-        <AuthProvider>
-          <Suspense fallback={<PageLoader />}>
-            <AppRoutes />
-          </Suspense>
-        </AuthProvider>
+        <NuqsAdapter>
+          <ThemeProvider defaultTheme="system">
+            <TRPCProvider>
+              <SEOMetaProvider defaultSuffix="Squelify">
+                <AuthProvider>
+                  <Suspense fallback={<PageLoader />}>
+                    <AppRoutes />
+                  </Suspense>
+                </AuthProvider>
+              </SEOMetaProvider>
+            </TRPCProvider>
+          </ThemeProvider>
+        </NuqsAdapter>
       </BrowserRouter>
     </ErrorBoundary>
   </React.StrictMode>
