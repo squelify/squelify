@@ -1,5 +1,13 @@
-import { useCallback, useEffect, useMemo, useState } from 'react'
-import { useSEOMetaContext } from '#/context/providers/seo-provider'
+import { useCallback, useContext, useEffect, useMemo, useState } from 'react'
+import { AppContext } from '#/context/provider'
+
+const useSEOMetaContext = () => {
+  const context = useContext(AppContext)
+  if (context === undefined) {
+    throw new Error('useSEOMeta must be used within a AppProvider')
+  }
+  return context
+}
 
 interface SEOMetaOptions {
   separator?: string | null
@@ -44,7 +52,7 @@ interface SEOMetaOptions {
  *   )
  * }
  *
- * Note: This hook must be used within a SEOMetaProvider component.
+ * Note: This hook must be used within a AppProvider component.
  */
 export function useSEOMeta(initialTitle: string, options?: SEOMetaOptions) {
   const { separator, suffix, description, image, url, twitterUsername } = options || {}

@@ -2,7 +2,7 @@ import * as Lucide from 'lucide-react'
 import { Button } from '#/components/base-ui'
 import { DropdownMenu, DropdownMenuShortcut, DropdownMenuTrigger } from '#/components/base-ui'
 import { DropdownMenuContent, DropdownMenuItem } from '#/components/base-ui'
-import { useTheme } from '#/context/providers/theme-provider'
+import { useTheme } from '#/context/hooks/use-theme'
 
 export function ThemeSwitcher() {
   const { setTheme } = useTheme()

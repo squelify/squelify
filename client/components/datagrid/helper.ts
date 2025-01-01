@@ -1,6 +1,6 @@
 import type { GridColumn, Theme } from '@glideapps/glide-data-grid'
 import { useMemo } from 'react'
-import { useTheme } from '#/context/providers/theme-provider'
+import { useTheme } from '#/context/hooks/use-theme'
 import { darkTheme, lightTheme } from './styles'
 
 // Helper function to calculate text width (can be memoized if needed)
