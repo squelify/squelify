@@ -42,3 +42,10 @@ export * from './textarea/textarea'
 export * from './toggle-group/toggle-group'
 export * from './toggle/toggle'
 export * from './tooltip/tooltip'
+
+// Extra components
+// Combobox: The Combobox is built using a composition of the <Popover /> and the <Command /> components.
+// Data Table: Powerful table and datagrids built using TanStack Table.
+// Date Picker: A date picker component with range and presets.
+// Menubar: A visually persistent menu common in desktop applications that provides quick access to a consistent set of commands.
+// Navigation Menu: A collection of links for navigating websites.
