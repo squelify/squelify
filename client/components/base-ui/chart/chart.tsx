@@ -79,6 +79,8 @@ ${colorConfig
   )
 }
 
+const ChartTooltip = RechartsPrimitive.Tooltip
+
 const ChartTooltipContent = React.forwardRef<
   HTMLDivElement,
   React.ComponentProps<typeof RechartsPrimitive.Tooltip> &
@@ -263,4 +265,4 @@ ChartContainer.displayName = 'Chart'
 ChartTooltipContent.displayName = 'ChartTooltip'
 ChartLegendContent.displayName = 'ChartLegend'
 
-export { ChartContainer, ChartTooltipContent, ChartLegendContent }
+export { ChartContainer, ChartTooltip, ChartTooltipContent, ChartLegendContent, ChartStyle }
