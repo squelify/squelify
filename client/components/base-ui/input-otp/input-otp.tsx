@@ -2,6 +2,13 @@ import { DashIcon } from '@radix-ui/react-icons'
 import { OTPInput, OTPInputContext } from 'input-otp'
 import * as React from 'react'
 import { clx } from '#/utils/helper'
+import {
+  inputOTPCaretInnerStyles,
+  inputOTPCaretStyles,
+  inputOTPGroupStyles,
+  inputOTPSlotStyles,
+  inputOTPStyles,
+} from './input-otp.css'
 
 const InputOTP = React.forwardRef<
   React.ComponentRef<typeof OTPInput>,
@@ -9,23 +16,18 @@ const InputOTP = React.forwardRef<
 >(({ className, containerClassName, ...props }, ref) => (
   <OTPInput
     ref={ref}
-    containerClassName={clx(
-      'flex items-center gap-2 has-[:disabled]:opacity-50',
-      containerClassName
-    )}
-    className={clx('disabled:cursor-not-allowed', className)}
+    containerClassName={clx(inputOTPStyles({ container: true }), containerClassName)}
+    className={clx(inputOTPStyles(), className)}
     {...props}
   />
 ))
-InputOTP.displayName = 'InputOTP'
 
 const InputOTPGroup = React.forwardRef<
   React.ComponentRef<'div'>,
   React.ComponentPropsWithoutRef<'div'>
 >(({ className, ...props }, ref) => (
-  <div ref={ref} className={clx('flex items-center', className)} {...props} />
+  <div ref={ref} className={clx(inputOTPGroupStyles(), className)} {...props} />
 ))
-InputOTPGroup.displayName = 'InputOTPGroup'
 
 const InputOTPSlot = React.forwardRef<
   React.ComponentRef<'div'>,
@@ -37,24 +39,19 @@ const InputOTPSlot = React.forwardRef<
   return (
     <div
       ref={ref}
-      className={clx(
-        'relative flex h-9 w-9 items-center justify-center border-input border-y border-r text-sm shadow-sm transition-all first:rounded-l-md first:border-l last:rounded-r-md',
-        isActive && 'z-10 ring-1 ring-ring',
-        className
-      )}
+      className={clx(inputOTPSlotStyles(), className)}
+      data-active={isActive}
       {...props}
     >
       {char}
       {hasFakeCaret && (
-        <div className="pointer-events-none absolute inset-0 flex items-center justify-center">
-          <div className="h-4 w-px animate-caret-blink bg-foreground duration-1000" />
+        <div className={inputOTPCaretStyles()}>
+          <div className={inputOTPCaretInnerStyles()} />
         </div>
       )}
     </div>
   )
 })
-
-InputOTPSlot.displayName = 'InputOTPSlot'
 
 const InputOTPSeparator = React.forwardRef<
   React.ComponentRef<'div'>,
@@ -64,6 +61,10 @@ const InputOTPSeparator = React.forwardRef<
     <DashIcon />
   </div>
 ))
+
+InputOTP.displayName = 'InputOTP'
+InputOTPGroup.displayName = 'InputOTPGroup'
+InputOTPSlot.displayName = 'InputOTPSlot'
 InputOTPSeparator.displayName = 'InputOTPSeparator'
 
 export { InputOTP, InputOTPGroup, InputOTPSlot, InputOTPSeparator }

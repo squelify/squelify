@@ -2,14 +2,20 @@ import { CheckIcon } from '@radix-ui/react-icons'
 import * as RadioGroupPrimitive from '@radix-ui/react-radio-group'
 import * as React from 'react'
 import { clx } from '#/utils/helper'
+import {
+  radioGroupIndicatorStyles,
+  radioGroupItemStyles,
+  radioGroupStyles,
+} from './radio-group.css'
 
 const RadioGroup = React.forwardRef<
   React.ComponentRef<typeof RadioGroupPrimitive.Root>,
   React.ComponentPropsWithoutRef<typeof RadioGroupPrimitive.Root>
 >(({ className, ...props }, ref) => {
-  return <RadioGroupPrimitive.Root className={clx('grid gap-2', className)} {...props} ref={ref} />
+  return (
+    <RadioGroupPrimitive.Root className={clx(radioGroupStyles(), className)} {...props} ref={ref} />
+  )
 })
-RadioGroup.displayName = RadioGroupPrimitive.Root.displayName
 
 const RadioGroupItem = React.forwardRef<
   React.ComponentRef<typeof RadioGroupPrimitive.Item>,
@@ -18,18 +24,17 @@ const RadioGroupItem = React.forwardRef<
   return (
     <RadioGroupPrimitive.Item
       ref={ref}
-      className={clx(
-        'aspect-square size-4 rounded-full border border-primary text-primary shadow focus:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50',
-        className
-      )}
+      className={clx(radioGroupItemStyles(), className)}
       {...props}
     >
-      <RadioGroupPrimitive.Indicator className="flex items-center justify-center">
+      <RadioGroupPrimitive.Indicator className={radioGroupIndicatorStyles()}>
         <CheckIcon className="size-3.5 fill-primary" />
       </RadioGroupPrimitive.Indicator>
     </RadioGroupPrimitive.Item>
   )
 })
+
+RadioGroup.displayName = RadioGroupPrimitive.Root.displayName
 RadioGroupItem.displayName = RadioGroupPrimitive.Item.displayName
 
 export { RadioGroup, RadioGroupItem }

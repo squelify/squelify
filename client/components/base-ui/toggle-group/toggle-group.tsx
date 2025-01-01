@@ -1,34 +1,26 @@
 import * as ToggleGroupPrimitive from '@radix-ui/react-toggle-group'
-import { type VariantProps } from 'class-variance-authority'
 import * as React from 'react'
 import { clx } from '#/utils/helper'
-import { toggleStyles } from '../toggle/toggle'
+import { type ToggleVariants, toggleStyles } from '../toggle/toggle.css'
+import { toggleGroupStyles } from './toggle-group.css'
 
-const ToggleGroupContext = React.createContext<VariantProps<typeof toggleStyles>>({
+const ToggleGroupContext = React.createContext<ToggleVariants>({
   size: 'default',
   variant: 'default',
 })
 
 const ToggleGroup = React.forwardRef<
   React.ComponentRef<typeof ToggleGroupPrimitive.Root>,
-  React.ComponentPropsWithoutRef<typeof ToggleGroupPrimitive.Root> &
-    VariantProps<typeof toggleStyles>
+  React.ComponentPropsWithoutRef<typeof ToggleGroupPrimitive.Root> & ToggleVariants
 >(({ className, variant, size, children, ...props }, ref) => (
-  <ToggleGroupPrimitive.Root
-    ref={ref}
-    className={clx('flex items-center justify-center gap-1', className)}
-    {...props}
-  >
+  <ToggleGroupPrimitive.Root ref={ref} className={clx(toggleGroupStyles(), className)} {...props}>
     <ToggleGroupContext.Provider value={{ variant, size }}>{children}</ToggleGroupContext.Provider>
   </ToggleGroupPrimitive.Root>
 ))
 
-ToggleGroup.displayName = ToggleGroupPrimitive.Root.displayName
-
 const ToggleGroupItem = React.forwardRef<
   React.ComponentRef<typeof ToggleGroupPrimitive.Item>,
-  React.ComponentPropsWithoutRef<typeof ToggleGroupPrimitive.Item> &
-    VariantProps<typeof toggleStyles>
+  React.ComponentPropsWithoutRef<typeof ToggleGroupPrimitive.Item> & ToggleVariants
 >(({ className, children, variant, size, ...props }, ref) => {
   const context = React.useContext(ToggleGroupContext)
 
@@ -49,6 +41,7 @@ const ToggleGroupItem = React.forwardRef<
   )
 })
 
+ToggleGroup.displayName = ToggleGroupPrimitive.Root.displayName
 ToggleGroupItem.displayName = ToggleGroupPrimitive.Item.displayName
 
 export { ToggleGroup, ToggleGroupItem }

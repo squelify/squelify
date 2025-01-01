@@ -1,6 +1,7 @@
 import * as SeparatorPrimitive from '@radix-ui/react-separator'
 import * as React from 'react'
 import { clx } from '#/utils/helper'
+import { type SeparatorVariants, separatorStyles } from './separator.css'
 
 const Separator = React.forwardRef<
   React.ComponentRef<typeof SeparatorPrimitive.Root>,
@@ -10,14 +11,11 @@ const Separator = React.forwardRef<
     ref={ref}
     decorative={decorative}
     orientation={orientation}
-    className={clx(
-      'shrink-0 bg-border',
-      orientation === 'horizontal' ? 'h-[1px] w-full' : 'h-full w-[1px]',
-      className
-    )}
+    className={clx(separatorStyles({ orientation }), className)}
     {...props}
   />
 ))
+
 Separator.displayName = SeparatorPrimitive.Root.displayName
 
 export { Separator }

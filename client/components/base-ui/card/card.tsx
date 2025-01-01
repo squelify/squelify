@@ -1,50 +1,47 @@
 import * as React from 'react'
-import { clx } from '#/utils/helper'
-import {
-  type CardVariants,
-  cardContentStyles,
-  cardDescriptionStyles,
-  cardFooterStyles,
-  cardHeaderStyles,
-  cardStyles,
-  cardTitleStyles,
-} from './card.css'
+import { cardStyles } from './card.css'
 
-const Card = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElement> & CardVariants>(
-  ({ className, ...props }, ref) => (
-    <div ref={ref} className={clx(cardStyles(), className)} {...props} />
-  )
+const Card = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElement>>(
+  ({ className, ...props }, ref) => {
+    const styles = cardStyles()
+    return <div ref={ref} className={styles.root({ className })} {...props} />
+  }
 )
 
 const CardHeader = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElement>>(
-  ({ className, ...props }, ref) => (
-    <div ref={ref} className={clx(cardHeaderStyles(), className)} {...props} />
-  )
+  ({ className, ...props }, ref) => {
+    const styles = cardStyles()
+    return <div ref={ref} className={styles.header({ className })} {...props} />
+  }
 )
 
 const CardTitle = React.forwardRef<HTMLParagraphElement, React.HTMLAttributes<HTMLHeadingElement>>(
-  ({ className, ...props }, ref) => (
-    <h3 ref={ref} className={clx(cardTitleStyles(), className)} {...props} />
-  )
+  ({ className, ...props }, ref) => {
+    const styles = cardStyles()
+    return <h3 ref={ref} className={styles.title({ className })} {...props} />
+  }
 )
 
 const CardDescription = React.forwardRef<
   HTMLParagraphElement,
   React.HTMLAttributes<HTMLParagraphElement>
->(({ className, ...props }, ref) => (
-  <p ref={ref} className={clx(cardDescriptionStyles(), className)} {...props} />
-))
+>(({ className, ...props }, ref) => {
+  const styles = cardStyles()
+  return <p ref={ref} className={styles.description({ className })} {...props} />
+})
 
 const CardContent = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElement>>(
-  ({ className, ...props }, ref) => (
-    <div ref={ref} className={clx(cardContentStyles(), className)} {...props} />
-  )
+  ({ className, ...props }, ref) => {
+    const styles = cardStyles()
+    return <div ref={ref} className={styles.content({ className })} {...props} />
+  }
 )
 
 const CardFooter = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElement>>(
-  ({ className, ...props }, ref) => (
-    <div ref={ref} className={clx(cardFooterStyles(), className)} {...props} />
-  )
+  ({ className, ...props }, ref) => {
+    const styles = cardStyles()
+    return <div ref={ref} className={styles.footer({ className })} {...props} />
+  }
 )
 
 Card.displayName = 'Card'

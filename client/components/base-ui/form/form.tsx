@@ -5,6 +5,12 @@ import { Controller, FormProvider, useFormContext } from 'react-hook-form'
 import type { ControllerProps, FieldPath, FieldValues } from 'react-hook-form'
 import { clx } from '#/utils/helper'
 import { Label } from '../label/label'
+import {
+  formDescriptionStyles,
+  formItemStyles,
+  formLabelStyles,
+  formMessageStyles,
+} from './form.css'
 
 const Form = FormProvider
 
@@ -65,12 +71,11 @@ const FormItem = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivEl
 
     return (
       <FormItemContext.Provider value={{ id }}>
-        <div ref={ref} className={clx('space-y-2', className)} {...props} />
+        <div ref={ref} className={clx(formItemStyles(), className)} {...props} />
       </FormItemContext.Provider>
     )
   }
 )
-FormItem.displayName = 'FormItem'
 
 const FormLabel = React.forwardRef<
   React.ComponentRef<typeof LabelPrimitive.Root>,
@@ -81,13 +86,12 @@ const FormLabel = React.forwardRef<
   return (
     <Label
       ref={ref}
-      className={clx(error && 'text-destructive', className)}
+      className={clx(formLabelStyles({ error: !!error }), className)}
       htmlFor={formItemId}
       {...props}
     />
   )
 })
-FormLabel.displayName = 'FormLabel'
 
 const FormControl = React.forwardRef<
   React.ComponentRef<typeof Slot>,
@@ -99,13 +103,12 @@ const FormControl = React.forwardRef<
     <Slot
       ref={ref}
       id={formItemId}
-      aria-describedby={!error ? `${formDescriptionId}` : `${formDescriptionId} ${formMessageId}`}
+      aria-describedby={!error ? formDescriptionId : `${formDescriptionId} ${formMessageId}`}
       aria-invalid={!!error}
       {...props}
     />
   )
 })
-FormControl.displayName = 'FormControl'
 
 const FormDescription = React.forwardRef<
   HTMLParagraphElement,
@@ -117,12 +120,11 @@ const FormDescription = React.forwardRef<
     <p
       ref={ref}
       id={formDescriptionId}
-      className={clx('text-[0.8rem] text-muted-foreground', className)}
+      className={clx(formDescriptionStyles(), className)}
       {...props}
     />
   )
 })
-FormDescription.displayName = 'FormDescription'
 
 const FormMessage = React.forwardRef<
   HTMLParagraphElement,
@@ -136,16 +138,16 @@ const FormMessage = React.forwardRef<
   }
 
   return (
-    <p
-      ref={ref}
-      id={formMessageId}
-      className={clx('font-medium text-[0.8rem] text-destructive', className)}
-      {...props}
-    >
+    <p ref={ref} id={formMessageId} className={clx(formMessageStyles(), className)} {...props}>
       {body}
     </p>
   )
 })
+
+FormItem.displayName = 'FormItem'
+FormLabel.displayName = 'FormLabel'
+FormControl.displayName = 'FormControl'
+FormDescription.displayName = 'FormDescription'
 FormMessage.displayName = 'FormMessage'
 
 export {

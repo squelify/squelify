@@ -1,24 +1,25 @@
 import * as ScrollAreaPrimitive from '@radix-ui/react-scroll-area'
 import * as React from 'react'
 import { clx } from '#/utils/helper'
+import {
+  scrollAreaStyles,
+  scrollAreaViewportStyles,
+  scrollBarStyles,
+  scrollBarThumbStyles,
+} from './scroll-area.css'
 
 const ScrollArea = React.forwardRef<
   React.ComponentRef<typeof ScrollAreaPrimitive.Root>,
   React.ComponentPropsWithoutRef<typeof ScrollAreaPrimitive.Root>
 >(({ className, children, ...props }, ref) => (
-  <ScrollAreaPrimitive.Root
-    ref={ref}
-    className={clx('relative overflow-hidden', className)}
-    {...props}
-  >
-    <ScrollAreaPrimitive.Viewport className="h-full w-full rounded-[inherit]">
+  <ScrollAreaPrimitive.Root ref={ref} className={clx(scrollAreaStyles(), className)} {...props}>
+    <ScrollAreaPrimitive.Viewport className={scrollAreaViewportStyles()}>
       {children}
     </ScrollAreaPrimitive.Viewport>
     <ScrollBar />
     <ScrollAreaPrimitive.Corner />
   </ScrollAreaPrimitive.Root>
 ))
-ScrollArea.displayName = ScrollAreaPrimitive.Root.displayName
 
 const ScrollBar = React.forwardRef<
   React.ComponentRef<typeof ScrollAreaPrimitive.ScrollAreaScrollbar>,
@@ -27,17 +28,14 @@ const ScrollBar = React.forwardRef<
   <ScrollAreaPrimitive.ScrollAreaScrollbar
     ref={ref}
     orientation={orientation}
-    className={clx(
-      'flex touch-none select-none transition-colors',
-      orientation === 'vertical' && 'h-full w-2.5 border-l border-l-transparent p-[1px]',
-      orientation === 'horizontal' && 'h-2.5 flex-col border-t border-t-transparent p-[1px]',
-      className
-    )}
+    className={clx(scrollBarStyles({ orientation }), className)}
     {...props}
   >
-    <ScrollAreaPrimitive.ScrollAreaThumb className="relative flex-1 rounded-full bg-border" />
+    <ScrollAreaPrimitive.ScrollAreaThumb className={scrollBarThumbStyles()} />
   </ScrollAreaPrimitive.ScrollAreaScrollbar>
 ))
+
+ScrollArea.displayName = ScrollAreaPrimitive.Root.displayName
 ScrollBar.displayName = ScrollAreaPrimitive.ScrollAreaScrollbar.displayName
 
 export { ScrollArea, ScrollBar }
