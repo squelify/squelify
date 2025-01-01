@@ -2,6 +2,14 @@ import { ChevronRightIcon, DotsHorizontalIcon } from '@radix-ui/react-icons'
 import { Slot } from '@radix-ui/react-slot'
 import * as React from 'react'
 import { clx } from '#/utils/helper'
+import {
+  breadcrumbEllipsisStyles,
+  breadcrumbItemStyles,
+  breadcrumbLinkStyles,
+  breadcrumbListStyles,
+  breadcrumbPageStyles,
+  breadcrumbSeparatorStyles,
+} from './breadcrumb.css'
 
 const Breadcrumb = React.forwardRef<
   HTMLElement,
@@ -10,30 +18,17 @@ const Breadcrumb = React.forwardRef<
   }
 >(({ ...props }, ref) => <nav ref={ref} aria-label="breadcrumb" {...props} />)
 
-Breadcrumb.displayName = 'Breadcrumb'
-
 const BreadcrumbList = React.forwardRef<HTMLOListElement, React.ComponentPropsWithoutRef<'ol'>>(
   ({ className, ...props }, ref) => (
-    <ol
-      ref={ref}
-      className={clx(
-        'flex flex-wrap items-center gap-1.5 break-words text-muted-foreground text-sm sm:gap-2.5',
-        className
-      )}
-      {...props}
-    />
+    <ol ref={ref} className={clx(breadcrumbListStyles(), className)} {...props} />
   )
 )
-
-BreadcrumbList.displayName = 'BreadcrumbList'
 
 const BreadcrumbItem = React.forwardRef<HTMLLIElement, React.ComponentPropsWithoutRef<'li'>>(
   ({ className, ...props }, ref) => (
-    <li ref={ref} className={clx('inline-flex items-center gap-1.5', className)} {...props} />
+    <li ref={ref} className={clx(breadcrumbItemStyles(), className)} {...props} />
   )
 )
-
-BreadcrumbItem.displayName = 'BreadcrumbItem'
 
 const BreadcrumbLink = React.forwardRef<
   HTMLAnchorElement,
@@ -42,50 +37,37 @@ const BreadcrumbLink = React.forwardRef<
   }
 >(({ asChild, className, ...props }, ref) => {
   const Comp = asChild ? Slot : 'a'
-
-  return (
-    <Comp
-      ref={ref}
-      className={clx('transition-colors hover:text-foreground', className)}
-      {...props}
-    />
-  )
+  return <Comp ref={ref} className={clx(breadcrumbLinkStyles(), className)} {...props} />
 })
-
-BreadcrumbLink.displayName = 'BreadcrumbLink'
 
 const BreadcrumbPage = React.forwardRef<HTMLSpanElement, React.ComponentPropsWithoutRef<'span'>>(
   ({ className, ...props }, ref) => (
     <span
       ref={ref}
-      aria-disabled="true"
       aria-current="page"
-      className={clx('font-normal text-foreground', className)}
+      aria-disabled="true"
+      className={clx(breadcrumbPageStyles(), className)}
       {...props}
     />
   )
 )
 
-BreadcrumbPage.displayName = 'BreadcrumbPage'
-
 const BreadcrumbSeparator = ({ children, className, ...props }: React.ComponentProps<'span'>) => (
   <span
     role="presentation"
     aria-hidden="true"
-    className={clx('[&>svg]:h-3.5 [&>svg]:w-3.5', className)}
+    className={clx(breadcrumbSeparatorStyles(), className)}
     {...props}
   >
     {children ?? <ChevronRightIcon />}
   </span>
 )
 
-BreadcrumbSeparator.displayName = 'BreadcrumbSeparator'
-
 const BreadcrumbEllipsis = ({ className, ...props }: React.ComponentProps<'span'>) => (
   <span
     role="presentation"
     aria-hidden="true"
-    className={clx('flex h-9 w-9 items-center justify-center', className)}
+    className={clx(breadcrumbEllipsisStyles(), className)}
     {...props}
   >
     <DotsHorizontalIcon className="size-4" />
@@ -93,6 +75,12 @@ const BreadcrumbEllipsis = ({ className, ...props }: React.ComponentProps<'span'
   </span>
 )
 
+Breadcrumb.displayName = 'Breadcrumb'
+BreadcrumbList.displayName = 'BreadcrumbList'
+BreadcrumbItem.displayName = 'BreadcrumbItem'
+BreadcrumbLink.displayName = 'BreadcrumbLink'
+BreadcrumbPage.displayName = 'BreadcrumbPage'
+BreadcrumbSeparator.displayName = 'BreadcrumbSeparator'
 BreadcrumbEllipsis.displayName = 'BreadcrumbElipssis'
 
 export {

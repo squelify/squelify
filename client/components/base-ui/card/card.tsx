@@ -1,55 +1,57 @@
 import * as React from 'react'
 import { clx } from '#/utils/helper'
+import {
+  type CardVariants,
+  cardContentStyles,
+  cardDescriptionStyles,
+  cardFooterStyles,
+  cardHeaderStyles,
+  cardStyles,
+  cardTitleStyles,
+} from './card.css'
 
-const Card = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElement>>(
+const Card = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElement> & CardVariants>(
   ({ className, ...props }, ref) => (
-    <div
-      ref={ref}
-      className={clx('rounded-lg border bg-card text-card-foreground shadow-sm', className)}
-      {...props}
-    />
+    <div ref={ref} className={clx(cardStyles(), className)} {...props} />
   )
 )
-Card.displayName = 'Card'
 
 const CardHeader = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElement>>(
   ({ className, ...props }, ref) => (
-    <div ref={ref} className={clx('flex flex-col space-y-1.5 p-6', className)} {...props} />
+    <div ref={ref} className={clx(cardHeaderStyles(), className)} {...props} />
   )
 )
-CardHeader.displayName = 'CardHeader'
 
 const CardTitle = React.forwardRef<HTMLParagraphElement, React.HTMLAttributes<HTMLHeadingElement>>(
   ({ className, ...props }, ref) => (
-    <h3
-      ref={ref}
-      className={clx('font-semibold leading-none tracking-tight', className)}
-      {...props}
-    />
+    <h3 ref={ref} className={clx(cardTitleStyles(), className)} {...props} />
   )
 )
-CardTitle.displayName = 'CardTitle'
 
 const CardDescription = React.forwardRef<
   HTMLParagraphElement,
   React.HTMLAttributes<HTMLParagraphElement>
 >(({ className, ...props }, ref) => (
-  <p ref={ref} className={clx('text-muted-foreground text-sm', className)} {...props} />
+  <p ref={ref} className={clx(cardDescriptionStyles(), className)} {...props} />
 ))
-CardDescription.displayName = 'CardDescription'
 
 const CardContent = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElement>>(
   ({ className, ...props }, ref) => (
-    <div ref={ref} className={clx('p-6 pt-0', className)} {...props} />
+    <div ref={ref} className={clx(cardContentStyles(), className)} {...props} />
   )
 )
-CardContent.displayName = 'CardContent'
 
 const CardFooter = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElement>>(
   ({ className, ...props }, ref) => (
-    <div ref={ref} className={clx('flex items-center p-6 pt-0', className)} {...props} />
+    <div ref={ref} className={clx(cardFooterStyles(), className)} {...props} />
   )
 )
+
+Card.displayName = 'Card'
+CardHeader.displayName = 'CardHeader'
+CardTitle.displayName = 'CardTitle'
+CardDescription.displayName = 'CardDescription'
+CardContent.displayName = 'CardContent'
 CardFooter.displayName = 'CardFooter'
 
 export { Card, CardHeader, CardFooter, CardTitle, CardDescription, CardContent }
