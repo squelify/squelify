@@ -2,7 +2,7 @@
 
 services:
   libsql:
-    image: ghcr.io/tursodatabase/libsql-server:latest
+    image: ghcr.io/tursodatabase/libsql-server:${LIBSQL_VERSION:-latest}
     container_name: squelify_libsql
     hostname: libsql
     ports:

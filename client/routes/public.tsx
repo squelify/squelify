@@ -6,9 +6,10 @@ import { ROUTES } from '#/constants/routes'
 
 // Lazy load the components for better performance
 const AuthLayout = lazy(() => import('#/layouts/auth-layout'))
-const ForgotPassword = lazy(() => import('#/pages/auth/forgot-password'))
-const ResetPassword = lazy(() => import('#/pages/auth/reset-password'))
+const ForgotPassword = lazy(() => import('#/pages/auth/password/forgot'))
+const ResetPassword = lazy(() => import('#/pages/auth/password/reset'))
 const SignIn = lazy(() => import('#/pages/auth/signin'))
+const SignUp = lazy(() => import('#/pages/auth/signup'))
 
 export const publicRoutes: RouteObject[] = [
   { path: ROUTES.HOME, element: <Navigate to={ROUTES.DASHBOARD} replace /> },
@@ -16,6 +17,7 @@ export const publicRoutes: RouteObject[] = [
     element: <AuthLayout />,
     children: [
       { path: ROUTES.LOGIN, element: <SignIn /> },
+      { path: ROUTES.SIGNUP, element: <SignUp /> },
       { path: ROUTES.FORGOT_PASSWORD, element: <ForgotPassword /> },
       { path: ROUTES.RESET_PASSWORD, element: <ResetPassword /> },
     ],

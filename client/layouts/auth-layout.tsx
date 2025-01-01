@@ -1,27 +1,33 @@
 import { Suspense } from 'react'
 import { Navigate, Outlet, useSearchParams } from 'react-router'
-import { Card } from '#/components/base-ui'
 import PageLoader from '#/components/loaders/page-loader'
+import { ThemeSwitcher } from '#/components/theme/theme-switcher'
+import { useAuth } from '#/context/hooks/use-auth'
+import { clx } from '#/utils/helper'
 
 export default function AuthLayout() {
-  const [searchParams] = useSearchParams()
-  const redirectPath = searchParams.get('redirect_to') || '/dashboard'
-  const isAuthenticated = false
+  const { user } = useAuth()
 
-  if (isAuthenticated) {
-    return <Navigate to={redirectPath} replace />
-  }
+  const [searchParams] = useSearchParams()
+  const redirectTo = searchParams.get('redirect_to') || '/dashboard'
+
+  // if (user) {
+  //   return <Navigate to={redirectTo} replace />
+  // }
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-gray-50 p-4">
-      <div className="w-full max-w-md">
-        {/* Card Component */}
-        <Card className="p-8">
-          <Suspense fallback={<PageLoader />}>
-            <Outlet />
-          </Suspense>
-        </Card>
+    <div
+      className={clx(
+        'relative flex size-full min-h-screen flex-1 items-center',
+        'dark:primary/25 bg-gradient-to-bl from-primary/10 via-transparent'
+      )}
+    >
+      <div className="absolute top-3 right-3 z-10 flex items-center">
+        <ThemeSwitcher />
       </div>
+      <Suspense fallback={<PageLoader />}>
+        <Outlet />
+      </Suspense>
     </div>
   )
 }
