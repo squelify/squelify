@@ -1,9 +1,12 @@
+import { useSEOMeta } from '#/context/hooks/use-seo-meta'
 import PageWrapper from '#/layouts/page-wrapper'
 
 export default function Page() {
+  const { pageTitle } = useSEOMeta('Query Editor')
+
   return (
     <PageWrapper>
-      <h1>Query Editor</h1>
+      <h1>{pageTitle}</h1>
     </PageWrapper>
   )
 }
