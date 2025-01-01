@@ -4,15 +4,19 @@ import { toast } from 'sonner'
 import { clx } from '#/utils/helper'
 import { Button } from '../button/button'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '../tooltip/tooltip'
+import { type InputVariants, iconButtonStyles, inputStyles } from './input.css'
 
-export interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
+export interface InputProps extends React.InputHTMLAttributes<HTMLInputElement>, InputVariants {
   onCopy?: () => void
   showCopyButton?: boolean
   showExternalCopyButton?: boolean
 }
 
 const Input = React.forwardRef<HTMLInputElement, InputProps>(
-  ({ className, type, showCopyButton, showExternalCopyButton, onCopy, ...props }, ref) => {
+  (
+    { className, type, showCopyButton, showExternalCopyButton, onCopy, value = '', ...props },
+    ref
+  ) => {
     const [showPassword, setShowPassword] = React.useState(false)
 
     const togglePassword = () => {
@@ -20,11 +24,11 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
     }
 
     const handleCopy = () => {
-      if (!props.value) {
+      if (!value) {
         toast.error('Nothing to copy')
         return
       }
-      navigator.clipboard.writeText(props.value.toString())
+      navigator.clipboard.writeText(value.toString())
       toast.success('Copied to clipboard')
       onCopy?.()
     }
@@ -33,15 +37,7 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
       <TooltipProvider>
         <Tooltip>
           <TooltipTrigger asChild>
-            <button
-              type="button"
-              onClick={togglePassword}
-              className={clx(
-                '-translate-y-1/2 absolute top-1/2 right-3',
-                'text-muted-foreground/60 hover:text-muted-foreground',
-                'transition-colors duration-200'
-              )}
-            >
+            <button type="button" onClick={togglePassword} className={iconButtonStyles()}>
               {showPassword ? (
                 <Lucide.EyeOff className="size-4" strokeWidth={2} />
               ) : (
@@ -60,15 +56,7 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
       <TooltipProvider>
         <Tooltip>
           <TooltipTrigger asChild>
-            <button
-              type="button"
-              onClick={handleCopy}
-              className={clx(
-                '-translate-y-1/2 absolute top-1/2 right-3',
-                'text-muted-foreground/60 hover:text-muted-foreground',
-                'transition-colors duration-200'
-              )}
-            >
+            <button type="button" onClick={handleCopy} className={iconButtonStyles()}>
               <Lucide.Copy className="size-4" strokeWidth={2} />
             </button>
           </TooltipTrigger>
@@ -107,16 +95,12 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
             <input
               type={showPassword ? 'text' : type}
               className={clx(
-                'flex h-9 w-full rounded-md border border-input bg-transparent',
-                'px-3 py-1 text-sm shadow-sm transition-colors',
-                'file:border-0 file:bg-transparent file:text-sm',
-                'file:font-medium file:text-foreground',
-                'placeholder:text-muted-foreground/60 focus:ring-0 focus-visible:ring-1',
-                'focus-visible:border-primary focus-visible:outline-none focus-visible:ring-primary/50',
-                'disabled:cursor-not-allowed disabled:opacity-50',
-                type === 'password' && 'pr-10',
+                inputStyles({
+                  hasRightIcon: type === 'password',
+                }),
                 className
               )}
+              value={value}
               ref={ref}
               {...props}
             />
@@ -132,16 +116,12 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
         <input
           type={showPassword ? 'text' : type}
           className={clx(
-            'flex h-9 w-full rounded-md border border-input bg-transparent',
-            'px-3 py-1 text-sm shadow-sm transition-colors',
-            'file:border-0 file:bg-transparent file:text-sm',
-            'file:font-medium file:text-foreground',
-            'placeholder:text-muted-foreground/60 focus:ring-0 focus-visible:ring-1',
-            'focus-visible:border-primary focus-visible:outline-none focus-visible:ring-primary/50',
-            'disabled:cursor-not-allowed disabled:opacity-50',
-            (type === 'password' || showCopyButton) && 'pr-10',
+            inputStyles({
+              hasRightIcon: type === 'password' || showCopyButton,
+            }),
             className
           )}
+          value={value}
           ref={ref}
           {...props}
         />

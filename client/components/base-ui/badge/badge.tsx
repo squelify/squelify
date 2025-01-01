@@ -2,7 +2,7 @@ import { type VariantProps, cva } from 'class-variance-authority'
 import * as React from 'react'
 import { clx } from '#/utils/helper'
 
-const badgeVariants = cva(
+const badgeStyles = cva(
   'inline-flex items-center rounded-md border font-medium text-xs transition-colors',
   {
     variants: {
@@ -40,10 +40,10 @@ const badgeVariants = cva(
 
 export interface BadgeProps
   extends React.HTMLAttributes<HTMLDivElement>,
-    VariantProps<typeof badgeVariants> {}
+    VariantProps<typeof badgeStyles> {}
 
 function Badge({ className, variant, size, rounded, ...props }: BadgeProps) {
-  return <div className={clx(badgeVariants({ variant, size, rounded }), className)} {...props} />
+  return <div className={clx(badgeStyles({ variant, size, rounded }), className)} {...props} />
 }
 
-export { Badge, badgeVariants }
+export { Badge, badgeStyles }

@@ -33,6 +33,7 @@ export default function Page() {
   })
 
   const onSubmit: SubmitHandler<FormType> = async ({ identity, password }) => {
+    console.info('DEBUG:onSubmit', { identity, password })
     // toast.promise(auth.login(identity, password), {
     //   loading: 'Signing in..',
     //   success: (response) => {
