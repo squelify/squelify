@@ -2,7 +2,7 @@ import * as Lucide from 'lucide-react'
 import * as React from 'react'
 import { DayPicker } from 'react-day-picker'
 import { clx } from '#/utils/helper'
-import { buttonVariants } from '../button/button'
+import { buttonStyles } from '../button/button.css'
 
 export type CalendarProps = React.ComponentProps<typeof DayPicker>
 
@@ -18,7 +18,7 @@ function Calendar({ className, classNames, showOutsideDays = true, ...props }: C
         caption_label: 'text-sm font-medium',
         nav: 'space-x-1 flex items-center',
         nav_button: clx(
-          buttonVariants({ variant: 'outline' }),
+          buttonStyles({ variant: 'outline' }),
           'h-7 w-7 bg-transparent p-0 opacity-50 hover:opacity-100'
         ),
         nav_button_previous: 'absolute left-1',
@@ -34,7 +34,7 @@ function Calendar({ className, classNames, showOutsideDays = true, ...props }: C
             : '[&:has([aria-selected])]:rounded-md'
         ),
         day: clx(
-          buttonVariants({ variant: 'ghost' }),
+          buttonStyles({ variant: 'ghost' }),
           'h-8 w-8 p-0 font-normal aria-selected:opacity-100'
         ),
         day_range_start: 'day-range-start',

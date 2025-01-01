@@ -2,7 +2,8 @@ import * as Lucide from 'lucide-react'
 import * as React from 'react'
 import { Link } from '#/components/link'
 import { clx } from '#/utils/helper'
-import { ButtonProps, buttonVariants } from '../button/button'
+import { ButtonProps } from '../button/button'
+import { buttonStyles } from '../button/button.css'
 
 const Pagination = ({ className, ...props }: React.ComponentProps<'nav'>) => (
   <nav
@@ -37,7 +38,7 @@ const PaginationLink = ({ className, isActive, size = 'icon', ...props }: Pagina
     href={props.href || '#'}
     aria-current={isActive ? 'page' : undefined}
     className={clx(
-      buttonVariants({
+      buttonStyles({
         variant: isActive ? 'outline' : 'ghost',
         size,
       }),
