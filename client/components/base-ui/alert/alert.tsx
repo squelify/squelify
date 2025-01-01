@@ -1,31 +1,33 @@
 import * as React from 'react'
-import { clx } from '#/utils/helper'
-import {
-  type AlertVariants,
-  alertDescriptionStyles,
-  alertStyles,
-  alertTitleStyles,
-} from './alert.css'
+import { type AlertVariants, alertStyles } from './alert.css'
 
-const Alert = React.forwardRef<
-  HTMLDivElement,
-  React.HTMLAttributes<HTMLDivElement> & AlertVariants
->(({ className, variant, ...props }, ref) => (
-  <div ref={ref} role="alert" className={clx(alertStyles({ variant }), className)} {...props} />
-))
+interface AlertProps extends React.HTMLAttributes<HTMLDivElement>, AlertVariants {}
+
+const Alert = React.forwardRef<HTMLDivElement, AlertProps>(
+  ({ className, variant, children, ...props }, ref) => {
+    const styles = alertStyles({ variant })
+    return (
+      <div ref={ref} role="alert" className={styles.root({ className })} {...props}>
+        {children}
+      </div>
+    )
+  }
+)
 
 const AlertTitle = React.forwardRef<HTMLParagraphElement, React.HTMLAttributes<HTMLHeadingElement>>(
-  ({ className, ...props }, ref) => (
-    <h5 ref={ref} className={clx(alertTitleStyles(), className)} {...props} />
-  )
+  ({ className, ...props }, ref) => {
+    const styles = alertStyles()
+    return <h5 ref={ref} className={styles.title({ className })} {...props} />
+  }
 )
 
 const AlertDescription = React.forwardRef<
   HTMLParagraphElement,
   React.HTMLAttributes<HTMLParagraphElement>
->(({ className, ...props }, ref) => (
-  <div ref={ref} className={clx(alertDescriptionStyles(), className)} {...props} />
-))
+>(({ className, ...props }, ref) => {
+  const styles = alertStyles()
+  return <div ref={ref} className={styles.description({ className })} {...props} />
+})
 
 Alert.displayName = 'Alert'
 AlertTitle.displayName = 'AlertTitle'

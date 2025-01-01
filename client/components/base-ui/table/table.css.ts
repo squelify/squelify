@@ -1,43 +1,44 @@
 import { type VariantProps, tv } from 'tailwind-variants'
 
 export const tableStyles = tv({
-  base: 'w-full caption-bottom text-sm',
-})
-
-export const tableHeaderStyles = tv({
-  base: '[&_tr]:border-b',
-})
-
-export const tableBodyStyles = tv({
-  base: '[&_tr:last-child]:border-0',
-})
-
-export const tableFooterStyles = tv({
-  base: 'border-t bg-muted/50 font-medium [&>tr]:last:border-b-0',
-})
-
-export const tableRowStyles = tv({
-  base: 'border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted',
-})
-
-export const tableHeadStyles = tv({
-  base: [
-    'h-10 px-2 text-left align-middle font-medium text-muted-foreground',
-    '[&:has([role=checkbox])]:pr-0',
-    '[&>[role=checkbox]]:translate-y-[2px]',
-  ],
-})
-
-export const tableCellStyles = tv({
-  base: [
-    'p-2 align-middle',
-    '[&:has([role=checkbox])]:pr-0',
-    '[&>[role=checkbox]]:translate-y-[2px]',
-  ],
-})
-
-export const tableCaptionStyles = tv({
-  base: 'mt-4 text-muted-foreground text-sm',
+  slots: {
+    root: 'w-full caption-bottom text-sm',
+    header: '[&_tr]:border-b',
+    body: '[&_tr:last-child]:border-0',
+    footer: 'border-t bg-muted/50 font-medium [&>tr]:last:border-b-0',
+    row: 'border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted',
+    head: [
+      'h-10 px-2 text-left align-middle font-medium text-muted-foreground',
+      '[&:has([role=checkbox])]:pr-0',
+      '[&>[role=checkbox]]:translate-y-[2px]',
+    ],
+    cell: [
+      'p-2 align-middle',
+      '[&:has([role=checkbox])]:pr-0',
+      '[&>[role=checkbox]]:translate-y-[2px]',
+    ],
+    caption: 'mt-4 text-sm text-muted-foreground',
+    wrapper: 'relative w-full overflow-auto',
+  },
+  variants: {
+    size: {
+      default: {
+        head: 'h-10 px-2',
+        cell: 'p-2',
+      },
+      sm: {
+        head: 'h-8 px-1',
+        cell: 'p-1',
+      },
+      lg: {
+        head: 'h-12 px-4',
+        cell: 'p-4',
+      },
+    },
+  },
+  defaultVariants: {
+    size: 'default',
+  },
 })
 
 export type TableVariants = VariantProps<typeof tableStyles>

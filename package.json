@@ -93,7 +93,6 @@
         "@trpc/client": "^10.45.2",
         "@trpc/react-query": "^10.45.2",
         "@trpc/server": "^10.45.2",
-        "class-variance-authority": "^0.7.1",
         "cli-table3": "^0.6.5",
         "cmdk": "^1.0.4",
         "codemirror": "^6.0.1",

@@ -1,39 +1,41 @@
 import * as ScrollAreaPrimitive from '@radix-ui/react-scroll-area'
 import * as React from 'react'
-import { clx } from '#/utils/helper'
-import {
-  scrollAreaStyles,
-  scrollAreaViewportStyles,
-  scrollBarStyles,
-  scrollBarThumbStyles,
-} from './scroll-area.css'
+import { scrollAreaStyles } from './scroll-area.css'
+import type { ScrollAreaVariants } from './scroll-area.css'
 
 const ScrollArea = React.forwardRef<
   React.ComponentRef<typeof ScrollAreaPrimitive.Root>,
-  React.ComponentPropsWithoutRef<typeof ScrollAreaPrimitive.Root>
->(({ className, children, ...props }, ref) => (
-  <ScrollAreaPrimitive.Root ref={ref} className={clx(scrollAreaStyles(), className)} {...props}>
-    <ScrollAreaPrimitive.Viewport className={scrollAreaViewportStyles()}>
-      {children}
-    </ScrollAreaPrimitive.Viewport>
-    <ScrollBar />
-    <ScrollAreaPrimitive.Corner />
-  </ScrollAreaPrimitive.Root>
-))
+  React.ComponentPropsWithoutRef<typeof ScrollAreaPrimitive.Root> & ScrollAreaVariants
+>(({ className, children, size, ...props }, ref) => {
+  const styles = scrollAreaStyles({ size })
+  return (
+    <ScrollAreaPrimitive.Root ref={ref} className={styles.root({ className })} {...props}>
+      <ScrollAreaPrimitive.Viewport className={styles.viewport()}>
+        {children}
+      </ScrollAreaPrimitive.Viewport>
+      <ScrollBar />
+      <ScrollAreaPrimitive.Corner className={styles.corner()} />
+    </ScrollAreaPrimitive.Root>
+  )
+})
 
 const ScrollBar = React.forwardRef<
   React.ComponentRef<typeof ScrollAreaPrimitive.ScrollAreaScrollbar>,
-  React.ComponentPropsWithoutRef<typeof ScrollAreaPrimitive.ScrollAreaScrollbar>
->(({ className, orientation = 'vertical', ...props }, ref) => (
-  <ScrollAreaPrimitive.ScrollAreaScrollbar
-    ref={ref}
-    orientation={orientation}
-    className={clx(scrollBarStyles({ orientation }), className)}
-    {...props}
-  >
-    <ScrollAreaPrimitive.ScrollAreaThumb className={scrollBarThumbStyles()} />
-  </ScrollAreaPrimitive.ScrollAreaScrollbar>
-))
+  React.ComponentPropsWithoutRef<typeof ScrollAreaPrimitive.ScrollAreaScrollbar> &
+    ScrollAreaVariants
+>(({ className, orientation = 'vertical', size, ...props }, ref) => {
+  const styles = scrollAreaStyles({ orientation, size })
+  return (
+    <ScrollAreaPrimitive.ScrollAreaScrollbar
+      ref={ref}
+      orientation={orientation}
+      className={styles.scrollbar({ className })}
+      {...props}
+    >
+      <ScrollAreaPrimitive.ScrollAreaThumb className={styles.thumb()} />
+    </ScrollAreaPrimitive.ScrollAreaScrollbar>
+  )
+})
 
 ScrollArea.displayName = ScrollAreaPrimitive.Root.displayName
 ScrollBar.displayName = ScrollAreaPrimitive.ScrollAreaScrollbar.displayName

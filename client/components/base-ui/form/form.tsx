@@ -3,14 +3,9 @@ import { Slot } from '@radix-ui/react-slot'
 import * as React from 'react'
 import { Controller, FormProvider, useFormContext } from 'react-hook-form'
 import type { ControllerProps, FieldPath, FieldValues } from 'react-hook-form'
-import { clx } from '#/utils/helper'
 import { Label } from '../label/label'
-import {
-  formDescriptionStyles,
-  formItemStyles,
-  formLabelStyles,
-  formMessageStyles,
-} from './form.css'
+import { formStyles } from './form.css'
+import type { FormVariants } from './form.css'
 
 const Form = FormProvider
 
@@ -65,13 +60,16 @@ type FormItemContextValue = {
 
 const FormItemContext = React.createContext<FormItemContextValue>({} as FormItemContextValue)
 
-const FormItem = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElement>>(
-  ({ className, ...props }, ref) => {
+interface FormItemProps extends React.HTMLAttributes<HTMLDivElement>, FormVariants {}
+
+const FormItem = React.forwardRef<HTMLDivElement, FormItemProps>(
+  ({ className, size, ...props }, ref) => {
     const id = React.useId()
+    const styles = formStyles({ size })
 
     return (
       <FormItemContext.Provider value={{ id }}>
-        <div ref={ref} className={clx(formItemStyles(), className)} {...props} />
+        <div ref={ref} className={styles.item({ className })} {...props} />
       </FormItemContext.Provider>
     )
   }
@@ -81,23 +79,18 @@ const FormLabel = React.forwardRef<
   React.ComponentRef<typeof LabelPrimitive.Root>,
   React.ComponentPropsWithoutRef<typeof LabelPrimitive.Root>
 >(({ className, ...props }, ref) => {
-  const { error, formItemId } = useFormField()
+  const { error } = useFormField()
+  const styles = formStyles({ error: !!error })
 
-  return (
-    <Label
-      ref={ref}
-      className={clx(formLabelStyles({ error: !!error }), className)}
-      htmlFor={formItemId}
-      {...props}
-    />
-  )
+  return <Label ref={ref} className={styles.label({ className })} {...props} />
 })
 
 const FormControl = React.forwardRef<
   React.ComponentRef<typeof Slot>,
-  React.ComponentPropsWithoutRef<typeof Slot>
->(({ ...props }, ref) => {
+  React.ComponentPropsWithoutRef<typeof Slot> & FormVariants
+>(({ size, ...props }, ref) => {
   const { error, formItemId, formDescriptionId, formMessageId } = useFormField()
+  const styles = formStyles({ error: !!error, size })
 
   return (
     <Slot
@@ -105,6 +98,7 @@ const FormControl = React.forwardRef<
       id={formItemId}
       aria-describedby={!error ? formDescriptionId : `${formDescriptionId} ${formMessageId}`}
       aria-invalid={!!error}
+      className={styles.control()}
       {...props}
     />
   )
@@ -115,14 +109,10 @@ const FormDescription = React.forwardRef<
   React.HTMLAttributes<HTMLParagraphElement>
 >(({ className, ...props }, ref) => {
   const { formDescriptionId } = useFormField()
+  const styles = formStyles()
 
   return (
-    <p
-      ref={ref}
-      id={formDescriptionId}
-      className={clx(formDescriptionStyles(), className)}
-      {...props}
-    />
+    <p ref={ref} id={formDescriptionId} className={styles.description({ className })} {...props} />
   )
 })
 
@@ -131,6 +121,7 @@ const FormMessage = React.forwardRef<
   React.HTMLAttributes<HTMLParagraphElement>
 >(({ className, children, ...props }, ref) => {
   const { error, formMessageId } = useFormField()
+  const styles = formStyles()
   const body = error ? String(error?.message) : children
 
   if (!body) {
@@ -138,7 +129,7 @@ const FormMessage = React.forwardRef<
   }
 
   return (
-    <p ref={ref} id={formMessageId} className={clx(formMessageStyles(), className)} {...props}>
+    <p ref={ref} id={formMessageId} className={styles.message({ className })} {...props}>
       {body}
     </p>
   )

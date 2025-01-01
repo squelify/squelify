@@ -1,19 +1,25 @@
 import * as CheckboxPrimitive from '@radix-ui/react-checkbox'
 import { CheckIcon } from '@radix-ui/react-icons'
 import * as React from 'react'
-import { clx } from '#/utils/helper'
-import { type CheckboxVariants, checkboxIndicatorStyles, checkboxStyles } from './checkbox.css'
+import { checkboxStyles } from './checkbox.css'
+import type { CheckboxVariants } from './checkbox.css'
 
-const Checkbox = React.forwardRef<
-  React.ComponentRef<typeof CheckboxPrimitive.Root>,
-  React.ComponentPropsWithoutRef<typeof CheckboxPrimitive.Root> & CheckboxVariants
->(({ className, ...props }, ref) => (
-  <CheckboxPrimitive.Root ref={ref} className={clx(checkboxStyles(), className)} {...props}>
-    <CheckboxPrimitive.Indicator className={checkboxIndicatorStyles()}>
-      <CheckIcon className="size-4" />
-    </CheckboxPrimitive.Indicator>
-  </CheckboxPrimitive.Root>
-))
+interface CheckboxProps
+  extends React.ComponentPropsWithoutRef<typeof CheckboxPrimitive.Root>,
+    CheckboxVariants {}
+
+const Checkbox = React.forwardRef<React.ComponentRef<typeof CheckboxPrimitive.Root>, CheckboxProps>(
+  ({ className, size, ...props }, ref) => {
+    const styles = checkboxStyles({ size })
+    return (
+      <CheckboxPrimitive.Root ref={ref} className={styles.root({ className })} {...props}>
+        <CheckboxPrimitive.Indicator className={styles.indicator()}>
+          <CheckIcon className={styles.icon()} />
+        </CheckboxPrimitive.Indicator>
+      </CheckboxPrimitive.Root>
+    )
+  }
+)
 
 Checkbox.displayName = CheckboxPrimitive.Root.displayName
 

@@ -1,25 +1,41 @@
 import { type VariantProps, tv } from 'tailwind-variants'
 
 export const scrollAreaStyles = tv({
-  base: 'relative overflow-hidden',
-})
-
-export const scrollAreaViewportStyles = tv({
-  base: 'h-full w-full rounded-[inherit]',
-})
-
-export const scrollBarStyles = tv({
-  base: ['flex touch-none select-none transition-colors'],
+  slots: {
+    root: 'relative overflow-hidden',
+    viewport: 'h-full w-full rounded-[inherit]',
+    scrollbar: ['flex touch-none select-none transition-colors'],
+    thumb: 'relative flex-1 rounded-full bg-border',
+    corner: '',
+  },
   variants: {
     orientation: {
-      vertical: 'h-full w-2.5 border-l border-l-transparent p-[1px]',
-      horizontal: 'h-2.5 flex-col border-t border-t-transparent p-[1px]',
+      vertical: {
+        scrollbar: 'h-full w-2.5 border-l border-l-transparent p-[1px]',
+      },
+      horizontal: {
+        scrollbar: 'h-2.5 flex-col border-t border-t-transparent p-[1px]',
+      },
+    },
+    size: {
+      default: {
+        scrollbar: 'w-2.5',
+        thumb: 'w-1.5',
+      },
+      sm: {
+        scrollbar: 'w-2',
+        thumb: 'w-1',
+      },
+      lg: {
+        scrollbar: 'w-3',
+        thumb: 'w-2',
+      },
     },
   },
-})
-
-export const scrollBarThumbStyles = tv({
-  base: 'relative flex-1 rounded-full bg-border',
+  defaultVariants: {
+    orientation: 'vertical',
+    size: 'default',
+  },
 })
 
 export type ScrollAreaVariants = VariantProps<typeof scrollAreaStyles>

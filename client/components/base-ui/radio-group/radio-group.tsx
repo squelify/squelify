@@ -1,34 +1,26 @@
 import { CheckIcon } from '@radix-ui/react-icons'
 import * as RadioGroupPrimitive from '@radix-ui/react-radio-group'
 import * as React from 'react'
-import { clx } from '#/utils/helper'
-import {
-  radioGroupIndicatorStyles,
-  radioGroupItemStyles,
-  radioGroupStyles,
-} from './radio-group.css'
+import { radioGroupStyles } from './radio-group.css'
+import type { RadioGroupVariants } from './radio-group.css'
 
 const RadioGroup = React.forwardRef<
   React.ComponentRef<typeof RadioGroupPrimitive.Root>,
-  React.ComponentPropsWithoutRef<typeof RadioGroupPrimitive.Root>
->(({ className, ...props }, ref) => {
-  return (
-    <RadioGroupPrimitive.Root className={clx(radioGroupStyles(), className)} {...props} ref={ref} />
-  )
+  React.ComponentPropsWithoutRef<typeof RadioGroupPrimitive.Root> & RadioGroupVariants
+>(({ className, size, ...props }, ref) => {
+  const styles = radioGroupStyles({ size })
+  return <RadioGroupPrimitive.Root className={styles.root({ className })} {...props} ref={ref} />
 })
 
 const RadioGroupItem = React.forwardRef<
   React.ComponentRef<typeof RadioGroupPrimitive.Item>,
-  React.ComponentPropsWithoutRef<typeof RadioGroupPrimitive.Item>
->(({ className, ...props }, ref) => {
+  React.ComponentPropsWithoutRef<typeof RadioGroupPrimitive.Item> & RadioGroupVariants
+>(({ className, size, ...props }, ref) => {
+  const styles = radioGroupStyles({ size })
   return (
-    <RadioGroupPrimitive.Item
-      ref={ref}
-      className={clx(radioGroupItemStyles(), className)}
-      {...props}
-    >
-      <RadioGroupPrimitive.Indicator className={radioGroupIndicatorStyles()}>
-        <CheckIcon className="size-3.5 fill-primary" />
+    <RadioGroupPrimitive.Item ref={ref} className={styles.item({ className })} {...props}>
+      <RadioGroupPrimitive.Indicator className={styles.indicator()}>
+        <CheckIcon className={styles.icon()} />
       </RadioGroupPrimitive.Indicator>
     </RadioGroupPrimitive.Item>
   )

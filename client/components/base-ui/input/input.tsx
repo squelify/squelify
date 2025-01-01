@@ -1,12 +1,14 @@
 import * as Lucide from 'lucide-react'
 import * as React from 'react'
 import { toast } from 'sonner'
-import { clx } from '#/utils/helper'
 import { Button } from '../button/button'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '../tooltip/tooltip'
-import { type InputVariants, iconButtonStyles, inputStyles } from './input.css'
+import { inputStyles } from './input.css'
+import type { InputVariants } from './input.css'
 
-export interface InputProps extends React.InputHTMLAttributes<HTMLInputElement>, InputVariants {
+export interface InputProps
+  extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'size'>,
+    InputVariants {
   onCopy?: () => void
   showCopyButton?: boolean
   showExternalCopyButton?: boolean
@@ -14,10 +16,14 @@ export interface InputProps extends React.InputHTMLAttributes<HTMLInputElement>,
 
 const Input = React.forwardRef<HTMLInputElement, InputProps>(
   (
-    { className, type, showCopyButton, showExternalCopyButton, onCopy, value = '', ...props },
+    { className, type, showCopyButton, showExternalCopyButton, onCopy, value = '', size, ...props },
     ref
   ) => {
     const [showPassword, setShowPassword] = React.useState(false)
+    const styles = inputStyles({
+      size,
+      hasRightIcon: type === 'password' || showCopyButton,
+    })
 
     const togglePassword = () => {
       setShowPassword(!showPassword)
@@ -37,11 +43,11 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
       <TooltipProvider>
         <Tooltip>
           <TooltipTrigger asChild>
-            <button type="button" onClick={togglePassword} className={iconButtonStyles()}>
+            <button type="button" onClick={togglePassword} className={styles.iconButton()}>
               {showPassword ? (
-                <Lucide.EyeOff className="size-4" strokeWidth={2} />
+                <Lucide.EyeOff className={styles.icon()} />
               ) : (
-                <Lucide.Eye className="size-4" strokeWidth={2} />
+                <Lucide.Eye className={styles.icon()} />
               )}
             </button>
           </TooltipTrigger>
@@ -56,8 +62,8 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
       <TooltipProvider>
         <Tooltip>
           <TooltipTrigger asChild>
-            <button type="button" onClick={handleCopy} className={iconButtonStyles()}>
-              <Lucide.Copy className="size-4" strokeWidth={2} />
+            <button type="button" onClick={handleCopy} className={styles.iconButton()}>
+              <Lucide.Copy className={styles.icon()} />
             </button>
           </TooltipTrigger>
           <TooltipContent side="top">
@@ -78,7 +84,7 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
               onClick={handleCopy}
               className="shrink-0"
             >
-              <Lucide.Copy className="size-4" strokeWidth={2} />
+              <Lucide.Copy className={styles.icon()} />
             </Button>
           </TooltipTrigger>
           <TooltipContent side="top">
@@ -90,16 +96,11 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
 
     if (showExternalCopyButton) {
       return (
-        <div className="flex gap-2">
-          <div className="relative flex-1">
+        <div className={styles.container()}>
+          <div className={styles.wrapper()}>
             <input
               type={showPassword ? 'text' : type}
-              className={clx(
-                inputStyles({
-                  hasRightIcon: type === 'password',
-                }),
-                className
-              )}
+              className={styles.input({ className })}
               value={value}
               ref={ref}
               {...props}
@@ -112,15 +113,10 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
     }
 
     return (
-      <div className="relative">
+      <div className={styles.wrapper()}>
         <input
           type={showPassword ? 'text' : type}
-          className={clx(
-            inputStyles({
-              hasRightIcon: type === 'password' || showCopyButton,
-            }),
-            className
-          )}
+          className={styles.input({ className })}
           value={value}
           ref={ref}
           {...props}

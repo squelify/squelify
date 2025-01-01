@@ -1,66 +1,62 @@
 import { DashIcon } from '@radix-ui/react-icons'
 import { OTPInput, OTPInputContext } from 'input-otp'
 import * as React from 'react'
-import { clx } from '#/utils/helper'
-import {
-  inputOTPCaretInnerStyles,
-  inputOTPCaretStyles,
-  inputOTPGroupStyles,
-  inputOTPSlotStyles,
-  inputOTPStyles,
-} from './input-otp.css'
+import { inputOTPStyles } from './input-otp.css'
+import type { InputOTPVariants } from './input-otp.css'
 
-const InputOTP = React.forwardRef<
-  React.ComponentRef<typeof OTPInput>,
-  React.ComponentPropsWithoutRef<typeof OTPInput>
->(({ className, containerClassName, ...props }, ref) => (
-  <OTPInput
-    ref={ref}
-    containerClassName={clx(inputOTPStyles({ container: true }), containerClassName)}
-    className={clx(inputOTPStyles(), className)}
-    {...props}
-  />
-))
+type InputOTPProps = React.ComponentPropsWithoutRef<typeof OTPInput> & InputOTPVariants
 
-const InputOTPGroup = React.forwardRef<
-  React.ComponentRef<'div'>,
-  React.ComponentPropsWithoutRef<'div'>
->(({ className, ...props }, ref) => (
-  <div ref={ref} className={clx(inputOTPGroupStyles(), className)} {...props} />
-))
+const InputOTP = React.forwardRef<React.ComponentRef<typeof OTPInput>, InputOTPProps>(
+  ({ className, containerClassName, size, ...props }, ref) => {
+    const styles = inputOTPStyles({ size })
+    return (
+      <OTPInput
+        ref={ref}
+        containerClassName={styles.container({ className: containerClassName })}
+        className={styles.root({ className })}
+        {...props}
+      />
+    )
+  }
+)
+
+const InputOTPGroup = React.forwardRef<HTMLDivElement, React.ComponentPropsWithoutRef<'div'>>(
+  ({ className, ...props }, ref) => {
+    const styles = inputOTPStyles()
+    return <div ref={ref} className={styles.group({ className })} {...props} />
+  }
+)
 
 const InputOTPSlot = React.forwardRef<
-  React.ComponentRef<'div'>,
-  React.ComponentPropsWithoutRef<'div'> & { index: number }
->(({ index, className, ...props }, ref) => {
+  HTMLDivElement,
+  React.ComponentPropsWithoutRef<'div'> & { index: number } & InputOTPVariants
+>(({ index, className, size, ...props }, ref) => {
   const inputOTPContext = React.useContext(OTPInputContext)
   const { char, hasFakeCaret, isActive } = inputOTPContext.slots[index] || {}
+  const styles = inputOTPStyles({ size })
 
   return (
-    <div
-      ref={ref}
-      className={clx(inputOTPSlotStyles(), className)}
-      data-active={isActive}
-      {...props}
-    >
+    <div ref={ref} className={styles.slot({ className })} data-active={isActive} {...props}>
       {char}
       {hasFakeCaret && (
-        <div className={inputOTPCaretStyles()}>
-          <div className={inputOTPCaretInnerStyles()} />
+        <div className={styles.caret()}>
+          <div className={styles.caretInner()} />
         </div>
       )}
     </div>
   )
 })
 
-const InputOTPSeparator = React.forwardRef<
-  React.ComponentRef<'div'>,
-  React.ComponentPropsWithoutRef<'div'>
->(({ ...props }, ref) => (
-  <div ref={ref} {...props}>
-    <DashIcon />
-  </div>
-))
+const InputOTPSeparator = React.forwardRef<HTMLDivElement, React.ComponentPropsWithoutRef<'div'>>(
+  ({ className, ...props }, ref) => {
+    const styles = inputOTPStyles()
+    return (
+      <div ref={ref} className={styles.separator({ className })} {...props}>
+        <DashIcon />
+      </div>
+    )
+  }
+)
 
 InputOTP.displayName = 'InputOTP'
 InputOTPGroup.displayName = 'InputOTPGroup'

@@ -1,15 +1,27 @@
 import { type VariantProps, tv } from 'tailwind-variants'
 
 export const avatarStyles = tv({
-  base: 'relative flex h-10 w-10 shrink-0 overflow-hidden rounded-full',
-})
-
-export const avatarImageStyles = tv({
-  base: 'aspect-square h-full w-full',
-})
-
-export const avatarFallbackStyles = tv({
-  base: 'flex h-full w-full items-center justify-center rounded-full bg-muted',
+  slots: {
+    root: 'relative flex shrink-0 overflow-hidden rounded-full',
+    image: 'aspect-square h-full w-full',
+    fallback: 'flex h-full w-full items-center justify-center rounded-full bg-muted',
+  },
+  variants: {
+    size: {
+      default: {
+        root: 'size-10',
+      },
+      sm: {
+        root: 'size-8',
+      },
+      lg: {
+        root: 'size-12',
+      },
+    },
+  },
+  defaultVariants: {
+    size: 'default',
+  },
 })
 
 export type AvatarVariants = VariantProps<typeof avatarStyles>

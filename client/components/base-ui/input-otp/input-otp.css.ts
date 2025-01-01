@@ -1,32 +1,38 @@
 import { type VariantProps, tv } from 'tailwind-variants'
 
 export const inputOTPStyles = tv({
-  base: 'disabled:cursor-not-allowed',
+  slots: {
+    root: 'disabled:cursor-not-allowed',
+    container: 'flex items-center gap-2 has-[:disabled]:opacity-50',
+    group: 'flex items-center',
+    slot: [
+      'relative flex items-center justify-center border-y border-r border-input text-sm shadow-sm transition-all',
+      'first:rounded-l-md first:border-l last:rounded-r-md',
+      'data-[active=true]:z-10 data-[active=true]:ring-1 data-[active=true]:ring-ring',
+    ],
+    caret: 'pointer-events-none absolute inset-0 flex items-center justify-center',
+    caretInner: 'h-4 w-px animate-caret-blink bg-foreground duration-1000',
+    separator: 'flex items-center',
+  },
   variants: {
-    container: {
-      true: 'flex items-center gap-2 has-[:disabled]:opacity-50',
+    size: {
+      default: {
+        slot: 'h-9 w-9',
+        caretInner: 'h-4',
+      },
+      sm: {
+        slot: 'h-7 w-7',
+        caretInner: 'h-3',
+      },
+      lg: {
+        slot: 'h-11 w-11',
+        caretInner: 'h-5',
+      },
     },
   },
-})
-
-export const inputOTPGroupStyles = tv({
-  base: 'flex items-center',
-})
-
-export const inputOTPSlotStyles = tv({
-  base: [
-    'relative flex h-9 w-9 items-center justify-center border-input border-y border-r text-sm shadow-sm transition-all',
-    'first:rounded-l-md first:border-l last:rounded-r-md',
-    'data-[active=true]:z-10 data-[active=true]:ring-1 data-[active=true]:ring-ring',
-  ],
-})
-
-export const inputOTPCaretStyles = tv({
-  base: 'pointer-events-none absolute inset-0 flex items-center justify-center',
-})
-
-export const inputOTPCaretInnerStyles = tv({
-  base: 'h-4 w-px animate-caret-blink bg-foreground duration-1000',
+  defaultVariants: {
+    size: 'default',
+  },
 })
 
 export type InputOTPVariants = VariantProps<typeof inputOTPStyles>

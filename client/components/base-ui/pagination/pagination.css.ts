@@ -1,33 +1,51 @@
 import { type VariantProps, tv } from 'tailwind-variants'
 
 export const paginationStyles = tv({
-  base: 'mx-auto flex w-full justify-center',
-})
-
-export const paginationContentStyles = tv({
-  base: 'flex flex-row items-center gap-1',
-})
-
-export const paginationItemStyles = tv({
-  base: '',
-})
-
-export const paginationLinkStyles = tv({
-  base: 'gap-1',
+  slots: {
+    root: 'mx-auto flex w-full justify-center',
+    content: 'flex flex-row items-center gap-1',
+    item: '',
+    link: [
+      'flex items-center gap-1 rounded-md text-sm font-medium transition-colors',
+      'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2',
+      'disabled:pointer-events-none disabled:opacity-50',
+    ],
+    ellipsis: 'flex h-9 w-9 items-center justify-center',
+    icon: 'size-4',
+  },
   variants: {
-    isActive: {
-      true: '',
-      false: '',
+    variant: {
+      outline: {
+        link: 'border border-input bg-background hover:bg-accent hover:text-accent-foreground',
+      },
+      ghost: {
+        link: 'hover:bg-accent hover:text-accent-foreground',
+      },
     },
-    direction: {
-      previous: 'pl-2.5',
-      next: 'pr-2.5',
+    size: {
+      default: {
+        link: 'h-9 px-4',
+        ellipsis: 'h-9 w-9',
+      },
+      sm: {
+        link: 'h-7 px-3',
+        ellipsis: 'h-7 w-7',
+      },
+      lg: {
+        link: 'h-11 px-6',
+        ellipsis: 'h-11 w-11',
+      },
+    },
+    isActive: {
+      true: {
+        link: 'bg-accent text-accent-foreground',
+      },
     },
   },
-})
-
-export const paginationEllipsisStyles = tv({
-  base: 'flex h-9 w-9 items-center justify-center',
+  defaultVariants: {
+    variant: 'outline',
+    size: 'default',
+  },
 })
 
 export type PaginationVariants = VariantProps<typeof paginationStyles>

@@ -2,27 +2,20 @@ import { type DialogProps } from '@radix-ui/react-dialog'
 import { Command as CommandPrimitive } from 'cmdk'
 import { Search } from 'lucide-react'
 import * as React from 'react'
-import { clx } from '#/utils/helper'
 import { Dialog, DialogContent } from '../dialog/dialog'
-import {
-  type CommandVariants,
-  commandEmptyStyles,
-  commandGroupStyles,
-  commandInputStyles,
-  commandInputWrapperStyles,
-  commandItemStyles,
-  commandListStyles,
-  commandSeparatorStyles,
-  commandShortcutStyles,
-  commandStyles,
-} from './command.css'
+import { commandStyles } from './command.css'
+import type { CommandVariants } from './command.css'
 
-const Command = React.forwardRef<
-  React.ComponentRef<typeof CommandPrimitive>,
-  React.ComponentPropsWithoutRef<typeof CommandPrimitive> & CommandVariants
->(({ className, ...props }, ref) => (
-  <CommandPrimitive ref={ref} className={clx(commandStyles(), className)} {...props} />
-))
+interface CommandProps
+  extends React.ComponentPropsWithoutRef<typeof CommandPrimitive>,
+    CommandVariants {}
+
+const Command = React.forwardRef<React.ComponentRef<typeof CommandPrimitive>, CommandProps>(
+  ({ className, size, ...props }, ref) => {
+    const styles = commandStyles({ size })
+    return <CommandPrimitive ref={ref} className={styles.root({ className })} {...props} />
+  }
+)
 
 const CommandDialog = ({ children, ...props }: DialogProps) => {
   return (
@@ -39,52 +32,61 @@ const CommandDialog = ({ children, ...props }: DialogProps) => {
 const CommandInput = React.forwardRef<
   React.ComponentRef<typeof CommandPrimitive.Input>,
   React.ComponentPropsWithoutRef<typeof CommandPrimitive.Input>
->(({ className, ...props }, ref) => (
-  <div className={commandInputWrapperStyles()} cmdk-input-wrapper="">
-    <Search className="mr-2 size-4 shrink-0 opacity-50" />
-    <CommandPrimitive.Input ref={ref} className={clx(commandInputStyles(), className)} {...props} />
-  </div>
-))
+>(({ className, ...props }, ref) => {
+  const styles = commandStyles()
+  return (
+    <div className={styles.inputWrapper()} cmdk-input-wrapper="">
+      <Search className={styles.icon()} />
+      <CommandPrimitive.Input ref={ref} className={styles.input({ className })} {...props} />
+    </div>
+  )
+})
 
 const CommandList = React.forwardRef<
   React.ComponentRef<typeof CommandPrimitive.List>,
   React.ComponentPropsWithoutRef<typeof CommandPrimitive.List>
->(({ className, ...props }, ref) => (
-  <CommandPrimitive.List ref={ref} className={clx(commandListStyles(), className)} {...props} />
-))
+>(({ className, ...props }, ref) => {
+  const styles = commandStyles()
+  return <CommandPrimitive.List ref={ref} className={styles.list({ className })} {...props} />
+})
 
 const CommandEmpty = React.forwardRef<
   React.ComponentRef<typeof CommandPrimitive.Empty>,
   React.ComponentPropsWithoutRef<typeof CommandPrimitive.Empty>
->((props, ref) => <CommandPrimitive.Empty ref={ref} className={commandEmptyStyles()} {...props} />)
+>((props, ref) => {
+  const styles = commandStyles()
+  return <CommandPrimitive.Empty ref={ref} className={styles.empty()} {...props} />
+})
 
 const CommandGroup = React.forwardRef<
   React.ComponentRef<typeof CommandPrimitive.Group>,
   React.ComponentPropsWithoutRef<typeof CommandPrimitive.Group>
->(({ className, ...props }, ref) => (
-  <CommandPrimitive.Group ref={ref} className={clx(commandGroupStyles(), className)} {...props} />
-))
+>(({ className, ...props }, ref) => {
+  const styles = commandStyles()
+  return <CommandPrimitive.Group ref={ref} className={styles.group({ className })} {...props} />
+})
 
 const CommandSeparator = React.forwardRef<
   React.ComponentRef<typeof CommandPrimitive.Separator>,
   React.ComponentPropsWithoutRef<typeof CommandPrimitive.Separator>
->(({ className, ...props }, ref) => (
-  <CommandPrimitive.Separator
-    ref={ref}
-    className={clx(commandSeparatorStyles(), className)}
-    {...props}
-  />
-))
+>(({ className, ...props }, ref) => {
+  const styles = commandStyles()
+  return (
+    <CommandPrimitive.Separator ref={ref} className={styles.separator({ className })} {...props} />
+  )
+})
 
 const CommandItem = React.forwardRef<
   React.ComponentRef<typeof CommandPrimitive.Item>,
   React.ComponentPropsWithoutRef<typeof CommandPrimitive.Item>
->(({ className, ...props }, ref) => (
-  <CommandPrimitive.Item ref={ref} className={clx(commandItemStyles(), className)} {...props} />
-))
+>(({ className, ...props }, ref) => {
+  const styles = commandStyles()
+  return <CommandPrimitive.Item ref={ref} className={styles.item({ className })} {...props} />
+})
 
 const CommandShortcut = ({ className, ...props }: React.HTMLAttributes<HTMLSpanElement>) => {
-  return <span className={clx(commandShortcutStyles(), className)} {...props} />
+  const styles = commandStyles()
+  return <span className={styles.shortcut({ className })} {...props} />
 }
 
 Command.displayName = CommandPrimitive.displayName
