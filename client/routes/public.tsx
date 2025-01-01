@@ -2,7 +2,6 @@ import { lazy } from 'react'
 import { Navigate, type RouteObject } from 'react-router'
 import NotFound from '#/components/errors/404'
 import InternalError from '#/components/errors/500'
-import { ROUTES } from '#/constants/routes'
 
 // Lazy load the components for better performance
 const AuthLayout = lazy(() => import('#/layouts/auth-layout'))
@@ -12,14 +11,14 @@ const SignIn = lazy(() => import('#/pages/auth/signin'))
 const SignUp = lazy(() => import('#/pages/auth/signup'))
 
 export const publicRoutes: RouteObject[] = [
-  { path: ROUTES.HOME, element: <Navigate to={ROUTES.DASHBOARD} replace /> },
+  { path: '/', element: <Navigate to="dashboard" replace /> },
   {
     element: <AuthLayout />,
     children: [
-      { path: ROUTES.LOGIN, element: <SignIn /> },
-      { path: ROUTES.SIGNUP, element: <SignUp /> },
-      { path: ROUTES.FORGOT_PASSWORD, element: <ForgotPassword /> },
-      { path: ROUTES.RESET_PASSWORD, element: <ResetPassword /> },
+      { path: 'login', element: <SignIn /> },
+      { path: 'signup', element: <SignUp /> },
+      { path: 'forgot-password', element: <ForgotPassword /> },
+      { path: 'reset-password', element: <ResetPassword /> },
     ],
   },
 ]

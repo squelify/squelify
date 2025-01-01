@@ -14,7 +14,6 @@ import ThemeProvider from '#/context/providers/theme-provider'
 import TRPCProvider from '#/context/providers/trpc-provider'
 
 import appConfig from '~~/app.config'
-import { adminRoutes } from '#/routes/admin'
 import { protectedRoutes } from '#/routes/protected'
 import { catchAllRoute, publicRoutes } from '#/routes/public'
 
@@ -26,7 +25,7 @@ if (!rootElement) {
 }
 
 const AppRoutes = () => {
-  return useRoutes([...publicRoutes, ...protectedRoutes, ...adminRoutes, catchAllRoute])
+  return useRoutes([...publicRoutes, ...protectedRoutes, catchAllRoute])
 }
 
 // When you use Strict Mode, React renders each component twice to help you find unexpected side effects.

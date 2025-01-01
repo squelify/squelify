@@ -2,7 +2,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { httpBatchLink, loggerLink } from '@trpc/client'
 import { useState } from 'react'
 import superjson from 'superjson'
-import { trpc } from '#/trpc/client'
+import { trpc } from '#/services/trpc-client'
 
 const queryClient = new QueryClient({
   defaultOptions: {
