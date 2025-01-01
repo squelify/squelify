@@ -21,7 +21,7 @@ export default defineNitroConfig({
   sourceMap: isDevelopment,
   appConfigFiles: ['~~/app.config'],
   errorHandler: '~/handler/error.handler',
-  renderer: '~/entry.server.ts',
+  renderer: '~/entry.server',
 
   handlers: [
     { route: '/installer', handler: '~/handler/installer.handler' },
