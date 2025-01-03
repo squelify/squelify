@@ -9,7 +9,7 @@ export const radioGroupStyles = tv({
       'disabled:cursor-not-allowed disabled:opacity-50',
     ],
     indicator: 'flex items-center justify-center',
-    icon: 'size-3.5 fill-primary',
+    icon: 'size-3.5',
   },
   variants: {
     size: {

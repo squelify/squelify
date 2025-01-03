@@ -1,56 +1,64 @@
 import type { Meta, StoryObj } from '@storybook/react'
-import { Badge } from './badge'
+import { Badge, type BadgeProps } from './badge'
 import type { BadgeVariants } from './badge.css'
 
 const variantOptions: NonNullable<BadgeVariants['variant']>[] = [
   'default',
   'secondary',
-  'success',
-  'info',
-  'warning',
-  'destructive',
   'outline',
-  'ghost',
+  'destructive',
+  'success',
+  'warning',
 ]
 
-const sizeOptions: NonNullable<BadgeVariants['size']>[] = ['sm', 'default', 'lg']
-const roundedOptions: NonNullable<BadgeVariants['rounded']>[] = ['default', 'full']
+const sizeOptions: NonNullable<BadgeVariants['size']>[] = ['sm', 'md', 'lg']
 
-const meta: Meta = {
+const meta: Meta<BadgeProps> = {
   title: 'Basic Components/Badge',
   component: Badge,
   parameters: {
+    controls: {
+      exclude: ['asChild'],
+    },
     docs: {
       description: {
         component: `
-Badge component for displaying status, labels, or counts.
+Badge component for displaying short status descriptors.
 
 ## Example Usage
 \`\`\`tsx
 import { Badge } from '#/components/base-ui'
 
+// Basic usage
 <Badge>New</Badge>
+
+// With variant
 <Badge variant="success">Completed</Badge>
-<Badge variant="destructive">Error</Badge>
+
+// With size
+<Badge size="lg">Featured</Badge>
 \`\`\``,
       },
     },
   },
   argTypes: {
+    children: {
+      control: 'text',
+      description: 'Badge content',
+    },
     variant: {
-      control: 'select',
+      control: { type: 'select' },
       options: variantOptions,
-      description: 'Visual style variant',
+      table: {
+        type: { summary: 'BadgeVariants["variant"]' },
+      },
     },
     size: {
-      control: 'inline-radio',
+      control: { type: 'select' },
       options: sizeOptions,
-      description: 'Badge size',
-    },
-    rounded: {
-      control: 'inline-radio',
-      options: roundedOptions,
-      description: 'Border radius style',
+      table: {
+        type: { summary: 'BadgeVariants["size"]' },
+      },
     },
   },
 }
@@ -59,58 +67,36 @@ export default meta
 type Story = StoryObj<typeof meta>
 
 export const Default: Story = {
-  render: () => <Badge>Badge</Badge>,
+  args: {
+    children: 'Badge',
+  },
 }
 
 export const VariantShowcase: Story = {
+  parameters: {
+    controls: { exclude: ['variant'] },
+  },
   render: () => (
-    <div className="flex flex-wrap gap-4">
-      <Badge>Default</Badge>
+    <div className="flex flex-wrap items-center gap-4">
+      <Badge variant="default">Default</Badge>
       <Badge variant="secondary">Secondary</Badge>
-      <Badge variant="success">Success</Badge>
-      <Badge variant="info">Info</Badge>
-      <Badge variant="warning">Warning</Badge>
-      <Badge variant="destructive">Destructive</Badge>
       <Badge variant="outline">Outline</Badge>
-      <Badge variant="ghost">Ghost</Badge>
+      <Badge variant="destructive">Destructive</Badge>
+      <Badge variant="success">Success</Badge>
+      <Badge variant="warning">Warning</Badge>
     </div>
   ),
 }
 
 export const SizeShowcase: Story = {
+  parameters: {
+    controls: { exclude: ['size'] },
+  },
   render: () => (
     <div className="flex items-center gap-4">
       <Badge size="sm">Small</Badge>
-      <Badge size="default">Default</Badge>
+      <Badge size="md">Medium</Badge>
       <Badge size="lg">Large</Badge>
-    </div>
-  ),
-}
-
-export const RoundedShowcase: Story = {
-  render: () => (
-    <div className="flex items-center gap-4">
-      <Badge rounded="default">Default Rounded</Badge>
-      <Badge rounded="full">Fully Rounded</Badge>
-    </div>
-  ),
-}
-
-export const CombinedVariants: Story = {
-  render: () => (
-    <div className="flex flex-wrap gap-4">
-      <Badge variant="success" size="lg" rounded="full">
-        Complete
-      </Badge>
-      <Badge variant="destructive" size="sm">
-        Error
-      </Badge>
-      <Badge variant="outline" size="lg">
-        Draft
-      </Badge>
-      <Badge variant="secondary" rounded="full">
-        Pending
-      </Badge>
     </div>
   ),
 }

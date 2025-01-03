@@ -16,7 +16,7 @@ export const inputStyles = tv({
     iconButton: [
       '-translate-y-1/2 absolute top-1/2 right-3',
       'text-muted-foreground/60 hover:text-muted-foreground',
-      'transition-colors duration-200',
+      'cursor-pointer transition-colors duration-200',
     ],
     icon: 'size-4',
   },

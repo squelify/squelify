@@ -1,5 +1,5 @@
 import * as SheetPrimitive from '@radix-ui/react-dialog'
-import { Cross2Icon } from '@radix-ui/react-icons'
+import * as Lucide from 'lucide-react'
 import * as React from 'react'
 import { sheetStyles } from './sheet.css'
 import type { SheetVariants } from './sheet.css'
@@ -28,7 +28,7 @@ const SheetContent = React.forwardRef<
       <SheetPrimitive.Content ref={ref} className={styles.content({ className })} {...props}>
         {children}
         <SheetPrimitive.Close className={styles.closeButton()}>
-          <Cross2Icon className={styles.closeIcon()} />
+          <Lucide.XIcon className={styles.closeIcon()} strokeWidth={2} />
           <span className="sr-only">Close</span>
         </SheetPrimitive.Close>
       </SheetPrimitive.Content>

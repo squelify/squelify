@@ -1,36 +1,29 @@
 import { type VariantProps, tv } from 'tailwind-variants'
 
 export const badgeStyles = tv({
-  base: 'inline-flex items-center rounded-md border font-medium text-xs transition-colors',
+  base: [
+    'inline-flex items-center rounded-md px-2 py-0.5',
+    'font-medium transition-colors duration-200',
+    'border border-transparent',
+  ],
   variants: {
     variant: {
-      default: 'border-transparent bg-primary/10 text-primary-foreground/80',
-      secondary: 'border-transparent bg-secondary/20 text-secondary-foreground/80',
-      success:
-        'border-transparent bg-emerald-100 text-emerald-700 dark:bg-emerald-500/20 dark:text-emerald-300',
-      info: 'border-transparent bg-sky-100 text-sky-700 dark:bg-sky-500/20 dark:text-sky-300',
-      warning:
-        'border-transparent bg-amber-100 text-amber-700 dark:bg-amber-500/20 dark:text-amber-300',
-      destructive:
-        'border-transparent bg-destructive/10 text-destructive dark:text-destructive-foreground',
-      outline:
-        'border-input bg-background text-foreground/80 hover:bg-accent/50 hover:text-accent-foreground',
-      ghost: 'border-transparent text-muted-foreground hover:bg-muted/50',
+      default: 'bg-primary/10 text-primary hover:bg-primary/20',
+      secondary: 'bg-secondary text-secondary-foreground hover:bg-secondary/80',
+      outline: 'border-current text-foreground',
+      destructive: 'bg-destructive/10 text-destructive hover:bg-destructive/20',
+      success: 'bg-success/10 text-success hover:bg-success/20',
+      warning: 'bg-warning/10 text-warning hover:bg-warning/20',
     },
     size: {
-      sm: 'px-2 py-0.5 text-[10px]',
-      default: 'px-2.5 py-0.5 text-xs',
-      lg: 'px-3 py-1 text-sm',
-    },
-    rounded: {
-      default: 'rounded-md',
-      full: 'rounded-full',
+      sm: 'text-xs',
+      md: 'text-sm',
+      lg: 'text-base',
     },
   },
   defaultVariants: {
     variant: 'default',
-    size: 'default',
-    rounded: 'default',
+    size: 'md',
   },
 })
 

@@ -1,5 +1,5 @@
-import { DashIcon } from '@radix-ui/react-icons'
 import { OTPInput, OTPInputContext } from 'input-otp'
+import * as Lucide from 'lucide-react'
 import * as React from 'react'
 import { inputOTPStyles } from './input-otp.css'
 import type { InputOTPVariants } from './input-otp.css'
@@ -52,7 +52,7 @@ const InputOTPSeparator = React.forwardRef<HTMLDivElement, React.ComponentPropsW
     const styles = inputOTPStyles()
     return (
       <div ref={ref} className={styles.separator({ className })} {...props}>
-        <DashIcon />
+        <Lucide.Minus strokeWidth={1.6} />
       </div>
     )
   }

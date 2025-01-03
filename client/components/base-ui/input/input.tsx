@@ -1,3 +1,5 @@
+import type { Assign } from '@ark-ui/react'
+import { type HTMLArkProps, ark } from '@ark-ui/react/factory'
 import * as Lucide from 'lucide-react'
 import * as React from 'react'
 import { Button } from '../button/button'
@@ -6,9 +8,7 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '../too
 import { inputStyles } from './input.css'
 import type { InputVariants } from './input.css'
 
-export interface InputProps
-  extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'size'>,
-    InputVariants {
+export interface InputProps extends Assign<HTMLArkProps<'input'>, InputVariants> {
   onCopy?: () => void
   showCopyButton?: boolean
   showExternalCopyButton?: boolean
@@ -98,7 +98,7 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
       return (
         <div className={styles.container()}>
           <div className={styles.wrapper()}>
-            <input
+            <ark.input
               type={showPassword ? 'text' : type}
               className={styles.input({ className })}
               value={value}
@@ -114,7 +114,7 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
 
     return (
       <div className={styles.wrapper()}>
-        <input
+        <ark.input
           type={showPassword ? 'text' : type}
           className={styles.input({ className })}
           value={value}

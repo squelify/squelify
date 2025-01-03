@@ -1,5 +1,5 @@
 import * as AccordionPrimitive from '@radix-ui/react-accordion'
-import { ChevronDownIcon } from '@radix-ui/react-icons'
+import * as Lucide from 'lucide-react'
 import * as React from 'react'
 import { accordionStyles } from './accordion.css'
 import type { AccordionVariants } from './accordion.css'
@@ -27,7 +27,7 @@ const AccordionTrigger = React.forwardRef<
     <AccordionPrimitive.Header className="flex">
       <AccordionPrimitive.Trigger ref={ref} className={styles.trigger({ className })} {...props}>
         {children}
-        <ChevronDownIcon className={styles.icon()} />
+        <Lucide.ChevronDown className={styles.icon()} strokeWidth={2} />
       </AccordionPrimitive.Trigger>
     </AccordionPrimitive.Header>
   )

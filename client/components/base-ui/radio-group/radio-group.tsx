@@ -1,5 +1,5 @@
-import { CheckIcon } from '@radix-ui/react-icons'
 import * as RadioGroupPrimitive from '@radix-ui/react-radio-group'
+import * as Lucide from 'lucide-react'
 import * as React from 'react'
 import { radioGroupStyles } from './radio-group.css'
 import type { RadioGroupVariants } from './radio-group.css'
@@ -20,7 +20,7 @@ const RadioGroupItem = React.forwardRef<
   return (
     <RadioGroupPrimitive.Item ref={ref} className={styles.item({ className })} {...props}>
       <RadioGroupPrimitive.Indicator className={styles.indicator()}>
-        <CheckIcon className={styles.icon()} />
+        <Lucide.Check className={styles.icon()} strokeWidth={1.8} />
       </RadioGroupPrimitive.Indicator>
     </RadioGroupPrimitive.Item>
   )

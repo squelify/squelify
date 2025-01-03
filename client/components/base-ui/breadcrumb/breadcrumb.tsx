@@ -1,5 +1,5 @@
-import { ChevronRightIcon, DotsHorizontalIcon } from '@radix-ui/react-icons'
 import { Slot } from '@radix-ui/react-slot'
+import * as Lucide from 'lucide-react'
 import * as React from 'react'
 import { clx } from '#/utils/helper'
 import { breadcrumbStyles } from './breadcrumb.css'
@@ -62,7 +62,7 @@ const BreadcrumbSeparator = ({ children, className, ...props }: React.ComponentP
       className={styles.separator({ className })}
       {...props}
     >
-      {children ?? <ChevronRightIcon className={styles.icon()} />}
+      {children ?? <Lucide.ChevronRight className={styles.icon()} strokeWidth={2} />}
     </span>
   )
 }
@@ -76,7 +76,7 @@ const BreadcrumbEllipsis = ({ className, ...props }: React.ComponentProps<'span'
       className={styles.ellipsis({ className })}
       {...props}
     >
-      <DotsHorizontalIcon className={styles.icon()} />
+      <Lucide.Ellipsis className={styles.icon()} strokeWidth={2} />
       <span className="sr-only">More</span>
     </span>
   )

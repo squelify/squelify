@@ -1,5 +1,5 @@
 import * as DialogPrimitive from '@radix-ui/react-dialog'
-import { Cross2Icon } from '@radix-ui/react-icons'
+import * as Lucide from 'lucide-react'
 import * as React from 'react'
 import { dialogStyles } from './dialog.css'
 import type { DialogVariants } from './dialog.css'
@@ -28,7 +28,7 @@ const DialogContent = React.forwardRef<
       <DialogPrimitive.Content ref={ref} className={styles.content({ className })} {...props}>
         {children}
         <DialogPrimitive.Close className={styles.closeButton()}>
-          <Cross2Icon className={styles.closeIcon()} />
+          <Lucide.XIcon className={styles.closeIcon()} strokeWidth={2} />
           <span className="sr-only">Close</span>
         </DialogPrimitive.Close>
       </DialogPrimitive.Content>
