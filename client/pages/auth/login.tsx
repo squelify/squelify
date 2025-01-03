@@ -3,7 +3,7 @@ import * as Lucide from 'lucide-react'
 import { type SubmitHandler, useForm } from 'react-hook-form'
 import { useNavigate, useSearchParams } from 'react-router'
 import { z } from 'zod'
-import { Button, Card, CardContent, Checkbox, Input } from '#/components/base-ui'
+import { Button, Card, CardContent, Checkbox, Input, toast } from '#/components/base-ui'
 import { Form, FormControl, FormField, FormItem } from '#/components/base-ui'
 import { FormLabel, FormMessage } from '#/components/base-ui'
 import { Link } from '#/components/link'
@@ -21,10 +21,10 @@ type FormType = z.infer<typeof FormSchema>
 
 export default function Page() {
   const { pageTitle } = useSEOMeta('Sign In')
-  const _navigate = useNavigate()
+  const navigate = useNavigate()
   const [searchParams] = useSearchParams()
-  const _redirectTo = searchParams.get('redirect_to') || '/dashboard'
-  const _auth = useAuth()
+  const redirectTo = searchParams.get('redirect_to') || '/dashboard'
+  const auth = useAuth()
 
   const form = useForm<FormType>({
     resolver: zodResolver(FormSchema),
@@ -33,19 +33,19 @@ export default function Page() {
 
   const onSubmit: SubmitHandler<FormType> = async ({ identity, password }) => {
     console.info('DEBUG:onSubmit', { identity, password })
-    // toast.promise(auth.login(identity, password), {
-    //   loading: 'Signing in..',
-    //   success: (response) => {
-    //     if (!response?.data) throw new Error('Invalid response')
-    //     setTimeout(() => navigate(redirectTo), 500)
-    //     return `Sign in successful!`
-    //   },
-    //   error: (err) => {
-    //     logger.error('[LOGIN]', err)
-    //     form.setFocus('identity')
-    //     return `Failed to sign in: ${err.message}`
-    //   },
-    // })
+    toast.promise(auth.login(identity, password), {
+      loading: 'Signing in..',
+      success: (response) => {
+        if (!response?.data) throw new Error('Invalid response')
+        setTimeout(() => navigate(redirectTo), 500)
+        return `Sign in successful!`
+      },
+      error: (err) => {
+        logger.error('[LOGIN]', err)
+        form.setFocus('identity')
+        return `Failed to sign in: ${err.message}`
+      },
+    })
   }
 
   return (

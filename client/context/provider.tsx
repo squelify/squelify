@@ -1,13 +1,20 @@
 import { useStore } from '@nanostores/react'
 import { QueryClientProvider } from '@tanstack/react-query'
+import consola from 'consola'
 import { NuqsAdapter } from 'nuqs/adapters/react'
-import { createContext, useCallback, useEffect, useState } from 'react'
+import { createContext, useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { CookiesProvider, useCookies } from 'react-cookie'
+import { ILoginResponse } from '~/api/auth/login.post'
+import { useApiClient } from '#/context/hooks/use-api-client'
 import { useThemeHandler } from '#/context/hooks/use-theme'
-import { authStore, resetAuthState, updateAuthState } from '#/context/stores/auth.store'
+import { authStore, resetAuthState, saveAuthState } from '#/context/stores/auth.store'
+import { defaultAuthStoreValues } from '#/context/stores/auth.store'
+import type { AuthStore } from '#/context/stores/auth.store'
 import { type Theme, saveUiState, uiStore } from '#/context/stores/ui.store'
+import { AUTH_COOKIE_NAME, COOKIE_OPTIONS } from '#/services/options'
 import { queryClient } from '#/services/query-client'
 import { createTrpcClient, trpc } from '#/services/trpc-client'
-import type { AuthState, LoginCredentials, User } from '#/services/types/auth'
+import type { ApiResponse } from '#/services/types'
 
 type AppProviderProps = {
   children: React.ReactNode
@@ -16,13 +23,13 @@ type AppProviderProps = {
   defaultSeparator?: string
 }
 
-type AppProviderState = {
+export type AppProviderState = {
   theme: Theme
   setTheme: (theme: Theme) => void
   defaultSuffix: string
   defaultSeparator?: string
-  auth: AuthState & {
-    login: (credentials: LoginCredentials) => Promise<void>
+  auth: Pick<AuthStore, 'user'> & {
+    login: (identity: string, password: string) => Promise<ApiResponse<ILoginResponse> | null>
     logout: () => Promise<void>
   }
 }
@@ -33,10 +40,8 @@ const initialState: AppProviderState = {
   defaultSuffix: 'Squelify',
   defaultSeparator: '-',
   auth: {
-    isAuthenticated: false,
-    isLoading: true,
-    user: null,
-    login: async () => {},
+    user: defaultAuthStoreValues.user,
+    login: async () => null,
     logout: async () => {},
   },
 }
@@ -50,62 +55,130 @@ export default function AppProvider({
   defaultSeparator = initialState.defaultSeparator,
   ...props
 }: AppProviderProps) {
+  const [cookies, setCookie, removeCookie] = useCookies([AUTH_COOKIE_NAME])
+  const { current: apiClient } = useRef(useApiClient())
+  const authState = useStore(authStore)
   const uiState = useStore(uiStore)
-  const auth = useStore(authStore)
   const [trpcClient] = useState(() => createTrpcClient())
+
+  // Prevent concurrent login calls
+  const loginLockRef = useRef(false)
 
   useThemeHandler(uiState.theme)
 
-  const login = useCallback(async (credentials: LoginCredentials) => {
-    try {
-      const response = await fetch('/api/auth/login', {
-        method: 'POST',
-        body: JSON.stringify(credentials),
-      })
-      const user = await response.json()
-      updateAuthState({ isAuthenticated: true, isLoading: false, user })
-    } catch (error) {
-      console.error('Login failed:', error)
-      throw error
+  const checkAuthState = useCallback(async () => {
+    const _sessionId = cookies[AUTH_COOKIE_NAME]
+    const now = Math.floor(Date.now() / 1000)
+    const hasValidToken =
+      authState.accessToken && authState.accessTokenExpiry && authState.accessTokenExpiry > now
+
+    if (!hasValidToken) {
+      resetAuthState()
+      removeCookie(AUTH_COOKIE_NAME)
+      return
     }
-  }, [])
+  }, [authState, cookies, removeCookie])
+
+  useEffect(() => {
+    let isMounted = true
+
+    const runCheckAuthState = async () => {
+      if (!isMounted) return
+      await checkAuthState()
+    }
+
+    runCheckAuthState()
+    const interval = setInterval(runCheckAuthState, 5 * 60 * 1000)
+
+    return () => {
+      isMounted = false
+      clearInterval(interval)
+    }
+  }, [checkAuthState])
+
+  const login = useCallback(
+    async (identity: string, password: string) => {
+      if (loginLockRef.current) {
+        throw new Error('Login already in progress')
+      }
+
+      loginLockRef.current = true
+
+      try {
+        const deviceType = 'browser'
+        const loginResult = await apiClient.auth.login({ identity, password, deviceType })
+        if (!loginResult?.data?.accessToken) {
+          throw new Error('Invalid response data')
+        }
+
+        const authData = loginResult.data
+        const now = Math.floor(Date.now() / 1000)
+        const maxAge = authData.sessionExpiry - now
+
+        setCookie(AUTH_COOKIE_NAME, authData.sessionId, { maxAge, ...COOKIE_OPTIONS })
+
+        const initialAuthState: AuthStore = {
+          accessToken: authData.accessToken,
+          refreshToken: authData.refreshToken,
+          accessTokenExpiry: authData.tokenExpiry,
+          refreshTokenExpiry: authData.sessionExpiry,
+          user: null,
+        }
+
+        saveAuthState(initialAuthState)
+
+        const userResult = await apiClient.auth.getCurrentUser()
+        if (userResult?.data?.user) {
+          saveAuthState({ ...initialAuthState, user: userResult.data.user })
+        }
+
+        return loginResult
+      } catch (error) {
+        resetAuthState()
+        removeCookie(AUTH_COOKIE_NAME)
+        throw error
+      } finally {
+        loginLockRef.current = false
+      }
+    },
+    [setCookie, removeCookie]
+  )
 
   const logout = useCallback(async () => {
     try {
-      await fetch('/api/auth/logout')
+      if (cookies[AUTH_COOKIE_NAME]) {
+        await apiClient.auth.signout({
+          sessionId: cookies[AUTH_COOKIE_NAME],
+          allDevices: false,
+        })
+      }
+      removeCookie(AUTH_COOKIE_NAME)
       resetAuthState()
     } catch (error) {
-      console.error('Logout failed:', error)
-      throw error
+      consola.error(error)
     }
-  }, [])
+  }, [cookies, removeCookie])
 
-  useEffect(() => {
-    fetch('/api/auth/me')
-      .then((res) => res.json())
-      .then((user: User) => {
-        authStore.set({ isAuthenticated: true, isLoading: false, user })
-      })
-      .catch(() => {
-        authStore.set({ isAuthenticated: false, isLoading: false, user: null })
-      })
-  }, [])
-
-  const value = {
-    theme: uiState.theme,
-    setTheme: (theme: Theme) => saveUiState({ theme }),
-    defaultSuffix,
-    defaultSeparator,
-    auth: { ...auth, login, logout },
-  }
+  const value = useMemo(
+    () => ({
+      theme: uiState.theme,
+      setTheme: (theme: Theme) => saveUiState({ theme }),
+      defaultSuffix,
+      defaultSeparator,
+      auth: { user: authState.user, login, logout },
+    }),
+    [uiState.theme, defaultSuffix, defaultSeparator, authState.user, login, logout]
+  )
 
   return (
-    <NuqsAdapter>
-      <AppContext.Provider {...props} value={value}>
-        <trpc.Provider client={trpcClient} queryClient={queryClient}>
-          <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
-        </trpc.Provider>
-      </AppContext.Provider>
-    </NuqsAdapter>
+    <CookiesProvider defaultSetOptions={COOKIE_OPTIONS}>
+      <NuqsAdapter>
+        <AppContext.Provider {...props} value={value}>
+          <trpc.Provider client={trpcClient} queryClient={queryClient}>
+            <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
+          </trpc.Provider>
+        </AppContext.Provider>
+      </NuqsAdapter>
+    </CookiesProvider>
   )
 }
