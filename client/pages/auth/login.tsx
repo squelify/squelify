@@ -131,6 +131,7 @@ export default function Page() {
 
                 <Button
                   type="submit"
+                  variant="primary"
                   className="w-full"
                   disabled={form.formState.isLoading || form.formState.isSubmitting}
                 >

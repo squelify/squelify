@@ -2,24 +2,31 @@ import type { Meta, StoryObj } from '@storybook/react'
 import { Avatar, AvatarFallback, AvatarImage } from './avatar'
 import type { AvatarVariants } from './avatar.css'
 
-const sizeOptions: NonNullable<AvatarVariants['size']>[] = ['default', 'sm', 'lg']
+const sizeOptions: NonNullable<AvatarVariants['size']>[] = ['xs', 'sm', 'md', 'lg', 'xl']
 
-const meta: Meta = {
+const meta: Meta<typeof Avatar> = {
   title: 'Basic Components/Avatar',
   component: Avatar,
   parameters: {
     docs: {
       description: {
         component: `
-Avatar component for displaying user profile images with fallback support.
+Avatar component built with Ark UI for user profile images with fallback support.
 
 ## Example Usage
 \`\`\`tsx
 import { Avatar, AvatarImage, AvatarFallback } from '#/components/base-ui'
 
+// Basic usage
 <Avatar>
-  <AvatarImage src="https://example.com/avatar.jpg" alt="User" />
-  <AvatarFallback>JD</AvatarFallback>
+  <AvatarImage src="/path/to/image.jpg" alt="User Name" />
+  <AvatarFallback>UN</AvatarFallback>
+</Avatar>
+
+// With size
+<Avatar size="lg">
+  <AvatarImage src="/path/to/image.jpg" alt="User Name" />
+  <AvatarFallback>UN</AvatarFallback>
 </Avatar>
 \`\`\``,
       },
@@ -27,24 +34,29 @@ import { Avatar, AvatarImage, AvatarFallback } from '#/components/base-ui'
   },
   argTypes: {
     size: {
-      control: 'inline-radio',
+      control: { type: 'select' },
       options: sizeOptions,
-      description: 'Avatar size variant',
-      table: {
-        type: { summary: 'AvatarVariants["size"]' },
-      },
     },
   },
 }
 
 export default meta
-type Story = StoryObj<typeof meta>
+type Story = StoryObj<typeof Avatar>
 
 export const Default: Story = {
-  render: () => (
-    <Avatar>
-      <AvatarImage src="https://avatars.githubusercontent.com/u/921834?v=4" alt="@riipandi" />
-      <AvatarFallback>CN</AvatarFallback>
+  render: (args) => (
+    <Avatar {...args}>
+      <AvatarImage src="https://avatars.githubusercontent.com/u/921834?v=4" alt="John Doe" />
+      <AvatarFallback>JD</AvatarFallback>
+    </Avatar>
+  ),
+}
+
+export const WithFallback: Story = {
+  render: (args) => (
+    <Avatar {...args}>
+      <AvatarImage src="/broken-image.jpg" alt="John Doe" />
+      <AvatarFallback>JD</AvatarFallback>
     </Avatar>
   ),
 }
@@ -52,59 +64,15 @@ export const Default: Story = {
 export const SizeShowcase: Story = {
   render: () => (
     <div className="flex items-center gap-4">
-      <Avatar size="sm">
-        <AvatarImage src="https://avatars.githubusercontent.com/u/921834?v=4" alt="@riipandi" />
-        <AvatarFallback>CN</AvatarFallback>
-      </Avatar>
-
-      <Avatar>
-        <AvatarImage src="https://avatars.githubusercontent.com/u/921834?v=4" alt="@riipandi" />
-        <AvatarFallback>CN</AvatarFallback>
-      </Avatar>
-
-      <Avatar size="lg">
-        <AvatarImage src="https://avatars.githubusercontent.com/u/921834?v=4" alt="@riipandi" />
-        <AvatarFallback>CN</AvatarFallback>
-      </Avatar>
-    </div>
-  ),
-}
-
-export const WithFallback: Story = {
-  render: () => (
-    <div className="flex items-center gap-4">
-      <Avatar>
-        <AvatarImage src="broken-link.jpg" alt="@johndoe" />
-        <AvatarFallback>AR</AvatarFallback>
-      </Avatar>
-
-      <Avatar>
-        <AvatarImage src="broken-link.jpg" alt="@janedoe" />
-        <AvatarFallback>AR</AvatarFallback>
-      </Avatar>
-
-      <Avatar>
-        <AvatarImage src="broken-link.jpg" alt="@robert" />
-        <AvatarFallback>JD</AvatarFallback>
-      </Avatar>
-    </div>
-  ),
-}
-
-export const CustomFallback: Story = {
-  render: () => (
-    <div className="flex items-center gap-4">
-      <Avatar>
-        <AvatarFallback>👤</AvatarFallback>
-      </Avatar>
-
-      <Avatar>
-        <AvatarFallback>🎨</AvatarFallback>
-      </Avatar>
-
-      <Avatar>
-        <AvatarFallback className="bg-primary text-primary-foreground">VIP</AvatarFallback>
-      </Avatar>
+      {sizeOptions.map((size) => (
+        <Avatar key={size} size={size}>
+          <AvatarImage
+            src="https://avatars.githubusercontent.com/u/921834?v=4"
+            alt={`${size} size`}
+          />
+          <AvatarFallback>JD</AvatarFallback>
+        </Avatar>
+      ))}
     </div>
   ),
 }

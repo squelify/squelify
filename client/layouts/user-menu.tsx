@@ -73,7 +73,7 @@ export default function UserMenu({ user, sidebarState, logout }: UserMenuProps) 
         <DropdownMenuLabel className="p-0 font-normal">
           <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
             <Avatar className="size-8 rounded-lg">
-              <AvatarImage src={user.avatarUrl} alt={user.username} />
+              <AvatarImage src={user.avatarUrl} alt={user.displayName} />
               <AvatarFallback className="rounded-lg bg-transparent">
                 <Lucide.CircleUser className="size-8 rounded-lg" strokeWidth={1.6} />
               </AvatarFallback>
