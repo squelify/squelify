@@ -2,7 +2,7 @@
 
 # Arguments with default value (for build).
 ARG PLATFORM=linux/amd64
-ARG NODE_VERSION=20
+ARG NODE_VERSION=22
 
 FROM busybox:1.37-uclibc as busybox
 
@@ -45,7 +45,7 @@ RUN mkdir -p /srv/_data/{migrations,functions} && chmod -R 0775 /srv/_data
 # -----------------------------------------------------------------------------
 # Production image, copy build output files and run the application.
 # -----------------------------------------------------------------------------
-FROM --platform=${PLATFORM} gcr.io/distroless/nodejs20-debian12 AS runner
+FROM --platform=${PLATFORM} gcr.io/distroless/nodejs22-debian12 AS runner
 LABEL org.opencontainers.image.source="https://github.com/squelify/squelify"
 
 # ----- Read application environment variables --------------------------------
