@@ -2,7 +2,6 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import * as Lucide from 'lucide-react'
 import { type SubmitHandler, useForm } from 'react-hook-form'
 import { useNavigate, useSearchParams } from 'react-router'
-import { toast } from 'sonner'
 import { z } from 'zod'
 import { Button, Card, CardContent } from '#/components/base-ui'
 import { Form, FormControl, FormItem, FormMessage } from '#/components/base-ui'
@@ -30,16 +29,16 @@ export default function Page() {
   const { pageTitle } = useSEOMeta('Create Account')
   // const apiClient = useApiClient()
 
-  const navigate = useNavigate()
+  const _navigate = useNavigate()
   const [searchParams] = useSearchParams()
-  const redirectTo = searchParams.get('redirect_to') || '/dashboard'
+  const _redirectTo = searchParams.get('redirect_to') || '/dashboard'
 
   const form = useForm<FormType>({
     resolver: zodResolver(FormSchema),
   })
 
   // TODO: fix signup implementation
-  const onSubmit: SubmitHandler<FormType> = async (data) => {
+  const onSubmit: SubmitHandler<FormType> = async (_data) => {
     // toast.promise(
     //   apiClient.auth.signup({
     //     email: data.email,

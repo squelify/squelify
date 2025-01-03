@@ -1,13 +1,13 @@
 import { Toaster as Sonner } from 'sonner'
+import { toast } from 'sonner'
 import { useTheme } from '#/context/hooks/use-theme'
-import { sonnerStyles } from './sonner.css'
-import type { SonnerVariants } from './sonner.css'
+import { type ToastVariants, toastStyles } from './toast.css'
 
-type ToasterProps = React.ComponentProps<typeof Sonner> & SonnerVariants
+type ToasterProps = React.ComponentProps<typeof Sonner> & ToastVariants
 
-const Toaster = ({ variant, ...props }: ToasterProps) => {
+const Toaster = ({ variant, className, ...props }: ToasterProps) => {
   const { theme = 'system' } = useTheme()
-  const styles = sonnerStyles({ variant })
+  const styles = toastStyles({ variant, className })
 
   return (
     <Sonner
@@ -29,4 +29,4 @@ const Toaster = ({ variant, ...props }: ToasterProps) => {
   )
 }
 
-export { Toaster }
+export { Toaster, toast }

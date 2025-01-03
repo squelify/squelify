@@ -2,7 +2,6 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import * as Lucide from 'lucide-react'
 import { type SubmitHandler, useForm } from 'react-hook-form'
 import { useNavigate, useSearchParams } from 'react-router'
-import { toast } from 'sonner'
 import { z } from 'zod'
 import { Button, Card, CardContent, Checkbox, Input } from '#/components/base-ui'
 import { Form, FormControl, FormField, FormItem } from '#/components/base-ui'
@@ -22,10 +21,10 @@ type FormType = z.infer<typeof FormSchema>
 
 export default function Page() {
   const { pageTitle } = useSEOMeta('Sign In')
-  const navigate = useNavigate()
+  const _navigate = useNavigate()
   const [searchParams] = useSearchParams()
-  const redirectTo = searchParams.get('redirect_to') || '/dashboard'
-  const auth = useAuth()
+  const _redirectTo = searchParams.get('redirect_to') || '/dashboard'
+  const _auth = useAuth()
 
   const form = useForm<FormType>({
     resolver: zodResolver(FormSchema),

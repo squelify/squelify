@@ -1,7 +1,6 @@
 import { zodResolver } from '@hookform/resolvers/zod'
 import { type SubmitHandler, useForm } from 'react-hook-form'
 import { useNavigate } from 'react-router'
-import { toast } from 'sonner'
 import { z } from 'zod'
 import { Button, Card, CardContent, Input } from '#/components/base-ui'
 import { Form, FormControl, FormField, FormItem } from '#/components/base-ui'
@@ -20,13 +19,13 @@ type FormType = z.infer<typeof FormSchema>
 export default function Page() {
   const { pageTitle } = useSEOMeta('Forgot Password')
   // const apiClient = useApiClient()
-  const navigate = useNavigate()
+  const _navigate = useNavigate()
 
   const form = useForm<FormType>({
     resolver: zodResolver(FormSchema),
   })
 
-  const onSubmit: SubmitHandler<FormType> = async (data) => {
+  const onSubmit: SubmitHandler<FormType> = async (_data) => {
     // toast.promise(apiClient.auth.forgotPassword(data.email), {
     //   loading: 'Sending reset instructions..',
     //   success: () => {

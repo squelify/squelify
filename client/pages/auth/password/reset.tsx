@@ -1,9 +1,8 @@
 import { zodResolver } from '@hookform/resolvers/zod'
 import { type SubmitHandler, useForm } from 'react-hook-form'
 import { useNavigate, useSearchParams } from 'react-router'
-import { toast } from 'sonner'
 import { z } from 'zod'
-import { Button, Card, CardContent, Input } from '#/components/base-ui'
+import { Button, Card, CardContent, Input, toast } from '#/components/base-ui'
 import { Form, FormControl, FormField, FormItem } from '#/components/base-ui'
 import { FormLabel, FormMessage } from '#/components/base-ui'
 import { Link } from '#/components/link'
@@ -32,7 +31,7 @@ type FormType = z.infer<typeof FormSchema>
 export default function Page() {
   const { pageTitle } = useSEOMeta('Reset Password')
   // const apiClient = useApiClient()
-  const navigate = useNavigate()
+  const _navigate = useNavigate()
   const [searchParams] = useSearchParams()
   const token = searchParams.get('token')
 
@@ -40,7 +39,7 @@ export default function Page() {
     resolver: zodResolver(FormSchema),
   })
 
-  const onSubmit: SubmitHandler<FormType> = async (data) => {
+  const onSubmit: SubmitHandler<FormType> = async (_data) => {
     if (!token) {
       toast.error('Invalid reset token')
       return

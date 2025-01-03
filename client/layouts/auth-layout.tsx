@@ -1,5 +1,5 @@
 import { Suspense } from 'react'
-import { Navigate, Outlet, useSearchParams } from 'react-router'
+import { Outlet, useSearchParams } from 'react-router'
 import PageLoader from '#/components/loaders/page-loader'
 import { ThemeSwitcher } from '#/components/theme/theme-switcher'
 import { useAuth } from '#/context/hooks/use-auth'
@@ -8,8 +8,10 @@ import { clx } from '#/utils/helper'
 export default function AuthLayout() {
   const { user } = useAuth()
 
+  console.debug('DEBUG:user', user)
+
   const [searchParams] = useSearchParams()
-  const redirectTo = searchParams.get('redirect_to') || '/dashboard'
+  const _redirectTo = searchParams.get('redirect_to') || '/dashboard'
 
   // if (user) {
   //   return <Navigate to={redirectTo} replace />

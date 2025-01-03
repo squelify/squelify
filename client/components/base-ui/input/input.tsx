@@ -1,7 +1,7 @@
 import * as Lucide from 'lucide-react'
 import * as React from 'react'
-import { toast } from 'sonner'
 import { Button } from '../button/button'
+import { toast } from '../toast/toast'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '../tooltip/tooltip'
 import { inputStyles } from './input.css'
 import type { InputVariants } from './input.css'

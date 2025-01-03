@@ -319,8 +319,8 @@ importers:
         specifier: 4.0.0-beta.8
         version: 4.0.0-beta.8(vite@6.0.7(@types/node@22.10.5)(jiti@2.4.1)(lightningcss@1.28.2)(terser@5.31.6)(tsx@4.19.2)(yaml@2.5.0))
       '@types/lodash':
-        specifier: ^4.17.13
-        version: 4.17.13
+        specifier: ^4.17.14
+        version: 4.17.14
       '@types/node':
         specifier: ^22.10.5
         version: 22.10.5
@@ -382,8 +382,8 @@ importers:
         specifier: ^1.0.7
         version: 1.0.7(tailwindcss@4.0.0-beta.8)
       tailwindcss-motion:
-        specifier: ^1.0.0
-        version: 1.0.0(tailwindcss@4.0.0-beta.8)
+        specifier: ^1.0.1
+        version: 1.0.1(tailwindcss@4.0.0-beta.8)
       tsx:
         specifier: ^4.19.2
         version: 4.19.2
@@ -5421,8 +5421,8 @@ packages:
   '@types/keyv@3.1.4':
     resolution: {integrity: sha512-BQ5aZNSCpj7D6K2ksrRCTmKRLEpnPvWDiLPfoGyhZ++8YtiK9d/3DBKPJgry359X/P1PfruyYwvnvwFjuEiEIg==}
 
-  '@types/lodash@4.17.13':
-    resolution: {integrity: sha512-lfx+dftrEZcdBPczf9d0Qv0x+j/rfNCMuC6OcfXmO8gkfeNAY88PgKUbvG56whcN23gc27yenwF6oJZXGFpYxg==}
+  '@types/lodash@4.17.14':
+    resolution: {integrity: sha512-jsxagdikDiDBeIRaPYtArcT8my4tN1og7MtMRquFT3XNA6axxyHDRUemqDz/taRDdOUn0GnGHRCuff4q48sW9A==}
 
   '@types/lodash@4.17.7':
     resolution: {integrity: sha512-8wTvZawATi/lsmNu10/j2hk1KEP0IvjubqPE3cu1Xz7xfXXt5oCq3SNUz4fMIP4XGF9Ky+Ue2tBA3hcS7LSBlA==}
@@ -9996,8 +9996,8 @@ packages:
     peerDependencies:
       tailwindcss: '>=3.0.0 || insiders'
 
-  tailwindcss-motion@1.0.0:
-    resolution: {integrity: sha512-Bc8XJxiSGjup0NHsph4OBGXXFfmbInFUhvVVluKPScQD1R2kDQTZIODqumsI/lONryeTpDdKzwuuw1a99Z38bQ==}
+  tailwindcss-motion@1.0.1:
+    resolution: {integrity: sha512-ZqarvI3XSclT46Dq1wOo9qG9Yx0TIyEtkMfTo8l0JuVKvO1WiSbvAECuTqdYHpC9Ml7abuJIk7u907SBHYprwQ==}
     peerDependencies:
       tailwindcss: '>=3.0.0 || insiders'
 
@@ -15725,7 +15725,7 @@ snapshots:
     dependencies:
       '@types/node': 22.7.2
 
-  '@types/lodash@4.17.13': {}
+  '@types/lodash@4.17.14': {}
 
   '@types/lodash@4.17.7': {}
 
@@ -21262,7 +21262,7 @@ snapshots:
     dependencies:
       tailwindcss: 4.0.0-beta.8
 
-  tailwindcss-motion@1.0.0(tailwindcss@4.0.0-beta.8):
+  tailwindcss-motion@1.0.1(tailwindcss@4.0.0-beta.8):
     dependencies:
       tailwindcss: 4.0.0-beta.8
 

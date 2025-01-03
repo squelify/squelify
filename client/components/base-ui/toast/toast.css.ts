@@ -1,6 +1,6 @@
 import { type VariantProps, tv } from 'tailwind-variants'
 
-export const sonnerStyles = tv({
+export const toastStyles = tv({
   slots: {
     toast: [
       'group toast group-[.toaster]:bg-background group-[.toaster]:text-foreground',
@@ -34,4 +34,4 @@ export const sonnerStyles = tv({
   },
 })
 
-export type SonnerVariants = VariantProps<typeof sonnerStyles>
+export type ToastVariants = VariantProps<typeof toastStyles>
