@@ -47,7 +47,7 @@ import { Button } from '#/components/base-ui'
 <Button isLoading>Processing</Button>
 
 // With loading text
-<Button isLoading loadingText="Saving...">Save Changes</Button>
+<Button isLoading>Save Changes</Button>
 
 // With icon
 <Button>
@@ -122,7 +122,7 @@ export const LoadingWithText: Story = {
 // Showcases with Focused Controls
 export const VariantShowcase: Story = {
   parameters: {
-    controls: { exclude: ['variant', 'children', 'loadingText', 'grouped', 'asChild'] },
+    controls: { exclude: ['variant', 'children', 'asChild'] },
   },
   args: {
     size: 'default',
@@ -168,7 +168,7 @@ export const VariantShowcase: Story = {
 
 export const SizeShowcase: Story = {
   parameters: {
-    controls: { exclude: ['size', 'children', 'loadingText', 'grouped', 'asChild'] },
+    controls: { exclude: ['size', 'children', 'asChild'] },
   },
   args: {
     variant: 'default',
@@ -199,7 +199,7 @@ export const SizeShowcase: Story = {
 
 export const IconShowcase: Story = {
   parameters: {
-    controls: { exclude: ['children', 'loadingText', 'grouped', 'asChild', 'variant'] },
+    controls: { exclude: ['children', 'asChild', 'variant'] },
   },
   args: {
     size: 'default',
@@ -229,7 +229,7 @@ export const IconShowcase: Story = {
 
 export const StateShowcase: Story = {
   parameters: {
-    controls: { exclude: ['children', 'loadingText', 'grouped', 'asChild'] },
+    controls: { exclude: ['children', 'asChild'] },
   },
   args: {
     variant: 'default',
