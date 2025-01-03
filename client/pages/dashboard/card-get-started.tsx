@@ -68,7 +68,7 @@ export default function CardGetStarted() {
             <div className="inline-flex w-full items-center justify-between gap-2">
               {[
                 { label: 'New Content', icon: Lucide.Plus, href: '/content/new' },
-                { label: 'Browse Media', icon: Lucide.FolderOpen, href: '/media' },
+                { label: 'Browse Media', icon: Lucide.FolderOpen, href: '/media-library' },
               ].map((action) => (
                 <Button key={action.label} variant="outline" size="sm" className="w-full" asChild>
                   <Link href={action.href}>

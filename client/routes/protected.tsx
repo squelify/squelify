@@ -54,7 +54,7 @@ export const protectedRoutes: RouteObject[] = [
     element: <AppLayout />,
     children: [
       { path: 'dashboard', element: <Dashboard /> },
-      { path: 'audit-logs', element: <AuditLogs /> },
+      { path: 'audit-log', element: <AuditLogs /> },
       { path: 'webhooks', element: <Webhooks /> },
       { path: 'api-keys', element: <ApiKeys /> },
       { path: 'users', element: <UsersList /> },
