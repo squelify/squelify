@@ -8,8 +8,8 @@ export const drawerStyles = tv({
     handle: 'mx-auto mt-4 h-2 w-[100px] rounded-full bg-muted',
     header: 'grid gap-1.5 p-4 text-center sm:text-left',
     footer: 'mt-auto flex flex-col gap-2 p-4',
-    title: 'text-lg font-semibold leading-none tracking-tight',
-    description: 'text-sm text-muted-foreground',
+    title: 'font-semibold text-lg leading-none tracking-tight',
+    description: 'text-muted-foreground text-sm',
   },
   variants: {
     size: {

@@ -17,7 +17,7 @@ export const tableStyles = tv({
       '[&:has([role=checkbox])]:pr-0',
       '[&>[role=checkbox]]:translate-y-[2px]',
     ],
-    caption: 'mt-4 text-sm text-muted-foreground',
+    caption: 'mt-4 text-muted-foreground text-sm',
     wrapper: 'relative w-full overflow-auto',
   },
   variants: {

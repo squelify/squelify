@@ -6,7 +6,7 @@ export const inputOTPStyles = tv({
     container: 'flex items-center gap-2 has-[:disabled]:opacity-50',
     group: 'flex items-center',
     slot: [
-      'relative flex items-center justify-center border-y border-r border-input text-sm shadow-sm transition-all',
+      'relative flex items-center justify-center border-input border-y border-r text-sm shadow-sm transition-all',
       'first:rounded-l-md first:border-l last:rounded-r-md',
       'data-[active=true]:z-10 data-[active=true]:ring-1 data-[active=true]:ring-ring',
     ],

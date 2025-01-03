@@ -15,14 +15,14 @@ export const carouselStyles = tv({
       horizontal: {
         inner: '-ml-4',
         item: 'pl-4',
-        previous: '-left-12 top-1/2 -translate-y-1/2',
-        next: '-right-12 top-1/2 -translate-y-1/2',
+        previous: '-left-12 -translate-y-1/2 top-1/2',
+        next: '-right-12 -translate-y-1/2 top-1/2',
       },
       vertical: {
         inner: '-mt-4 flex-col',
         item: 'pt-4',
-        previous: '-top-12 left-1/2 -translate-x-1/2 rotate-90',
-        next: '-bottom-12 left-1/2 -translate-x-1/2 rotate-90',
+        previous: '-top-12 -translate-x-1/2 left-1/2 rotate-90',
+        next: '-bottom-12 -translate-x-1/2 left-1/2 rotate-90',
       },
     },
     size: {

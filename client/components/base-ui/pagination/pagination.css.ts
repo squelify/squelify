@@ -6,7 +6,7 @@ export const paginationStyles = tv({
     content: 'flex flex-row items-center gap-1',
     item: '',
     link: [
-      'flex items-center gap-1 rounded-md text-sm font-medium transition-colors',
+      'flex items-center gap-1 rounded-md font-medium text-sm transition-colors',
       'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2',
       'disabled:pointer-events-none disabled:opacity-50',
     ],
