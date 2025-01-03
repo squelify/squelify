@@ -86,7 +86,7 @@ export const WithVideo: Story = {
   render: () => (
     <AspectRatio ratio={16 / 9}>
       <iframe
-        src="https://www.youtube.com/embed/dQw4w9WgXcQ"
+        src="https://yootheme.com/site/images/media/yootheme-pro.mp4"
         title="YouTube video"
         allowFullScreen
         className="h-full w-full"
