@@ -2,11 +2,11 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { type SubmitHandler, useForm } from 'react-hook-form'
 import { useNavigate } from 'react-router'
 import { z } from 'zod'
-import { Button, Card, CardContent, Input } from '#/components/base-ui'
+import { Button, Card, CardContent, Input, toast } from '#/components/base-ui'
 import { Form, FormControl, FormField, FormItem } from '#/components/base-ui'
 import { FormLabel, FormMessage } from '#/components/base-ui'
 import { Link } from '#/components/link'
-// import { useApiClient } from '#/context/hooks/use-api-client'
+import { useApiClient } from '#/context/hooks/use-api-client'
 import { useSEOMeta } from '#/context/hooks/use-seo-meta'
 import logger from '#/utils/logger'
 
@@ -18,26 +18,26 @@ type FormType = z.infer<typeof FormSchema>
 
 export default function Page() {
   const { pageTitle } = useSEOMeta('Forgot Password')
-  // const apiClient = useApiClient()
-  const _navigate = useNavigate()
+  const apiClient = useApiClient()
+  const navigate = useNavigate()
 
   const form = useForm<FormType>({
     resolver: zodResolver(FormSchema),
   })
 
-  const onSubmit: SubmitHandler<FormType> = async (_data) => {
-    // toast.promise(apiClient.auth.forgotPassword(data.email), {
-    //   loading: 'Sending reset instructions..',
-    //   success: () => {
-    //     setTimeout(() => navigate('/login'), 1000)
-    //     return 'Reset instructions sent to your email'
-    //   },
-    //   error: (err) => {
-    //     logger.error('[FORGOT_PASSWORD]', err)
-    //     form.setFocus('email')
-    //     return `Failed to send reset instructions: ${err.message}`
-    //   },
-    // })
+  const onSubmit: SubmitHandler<FormType> = async (data) => {
+    toast.promise(apiClient.auth.forgotPassword(data.email), {
+      loading: 'Sending reset instructions..',
+      success: () => {
+        setTimeout(() => navigate('/login'), 1000)
+        return 'Reset instructions sent to your email'
+      },
+      error: (err) => {
+        logger.error('[FORGOT_PASSWORD]', err)
+        form.setFocus('email')
+        return `Failed to send reset instructions: ${err.message}`
+      },
+    })
   }
 
   return (

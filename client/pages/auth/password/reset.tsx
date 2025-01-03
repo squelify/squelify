@@ -6,7 +6,7 @@ import { Button, Card, CardContent, Input, toast } from '#/components/base-ui'
 import { Form, FormControl, FormField, FormItem } from '#/components/base-ui'
 import { FormLabel, FormMessage } from '#/components/base-ui'
 import { Link } from '#/components/link'
-// import { useApiClient } from '#/context/hooks/use-api-client'
+import { useApiClient } from '#/context/hooks/use-api-client'
 import { useSEOMeta } from '#/context/hooks/use-seo-meta'
 import logger from '#/utils/logger'
 
@@ -30,8 +30,8 @@ type FormType = z.infer<typeof FormSchema>
 
 export default function Page() {
   const { pageTitle } = useSEOMeta('Reset Password')
-  // const apiClient = useApiClient()
-  const _navigate = useNavigate()
+  const apiClient = useApiClient()
+  const navigate = useNavigate()
   const [searchParams] = useSearchParams()
   const token = searchParams.get('token')
 
@@ -39,24 +39,24 @@ export default function Page() {
     resolver: zodResolver(FormSchema),
   })
 
-  const onSubmit: SubmitHandler<FormType> = async (_data) => {
+  const onSubmit: SubmitHandler<FormType> = async (data) => {
     if (!token) {
       toast.error('Invalid reset token')
       return
     }
 
-    // toast.promise(apiClient.auth.resetPassword(token, data.password), {
-    //   loading: 'Resetting password..',
-    //   success: () => {
-    //     setTimeout(() => navigate('/login'), 1000)
-    //     return 'Password reset successful!'
-    //   },
-    //   error: (err) => {
-    //     logger.error('[RESET_PASSWORD]', err)
-    //     form.setFocus('password')
-    //     return `Failed to reset password: ${err.message}`
-    //   },
-    // })
+    toast.promise(apiClient.auth.resetPassword(token, data.password), {
+      loading: 'Resetting password..',
+      success: () => {
+        setTimeout(() => navigate('/login'), 1000)
+        return 'Password reset successful!'
+      },
+      error: (err) => {
+        logger.error('[RESET_PASSWORD]', err)
+        form.setFocus('password')
+        return `Failed to reset password: ${err.message}`
+      },
+    })
   }
 
   return (

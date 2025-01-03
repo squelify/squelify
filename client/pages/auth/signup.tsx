@@ -3,11 +3,11 @@ import * as Lucide from 'lucide-react'
 import { type SubmitHandler, useForm } from 'react-hook-form'
 import { useNavigate, useSearchParams } from 'react-router'
 import { z } from 'zod'
-import { Button, Card, CardContent } from '#/components/base-ui'
+import { Button, Card, CardContent, toast } from '#/components/base-ui'
 import { Form, FormControl, FormItem, FormMessage } from '#/components/base-ui'
 import { FormField, FormLabel, Input } from '#/components/base-ui'
 import { Link } from '#/components/link'
-// import { useApiClient } from '#/context/hooks/use-api-client'
+import { useApiClient } from '#/context/hooks/use-api-client'
 import { useSEOMeta } from '#/context/hooks/use-seo-meta'
 
 const FormSchema = z.object({
@@ -27,39 +27,39 @@ type FormType = z.infer<typeof FormSchema>
 
 export default function Page() {
   const { pageTitle } = useSEOMeta('Create Account')
-  // const apiClient = useApiClient()
+  const apiClient = useApiClient()
 
-  const _navigate = useNavigate()
+  const navigate = useNavigate()
   const [searchParams] = useSearchParams()
-  const _redirectTo = searchParams.get('redirect_to') || '/dashboard'
+  const redirectTo = searchParams.get('redirect_to') || '/dashboard'
 
   const form = useForm<FormType>({
     resolver: zodResolver(FormSchema),
   })
 
   // TODO: fix signup implementation
-  const onSubmit: SubmitHandler<FormType> = async (_data) => {
-    // toast.promise(
-    //   apiClient.auth.signup({
-    //     email: data.email,
-    //     password: data.password,
-    //     firstName: data.firstName,
-    //     lastName: data.lastName,
-    //   }),
-    //   {
-    //     loading: 'Creating account..',
-    //     success: (response) => {
-    //       if (!response?.data?.accessToken) throw new Error('Invalid response')
-    //       setTimeout(() => navigate(redirectTo), 500)
-    //       return `Account created successfully!`
-    //     },
-    //     error: (err) => {
-    //       logger.error('[SIGNUP]', err)
-    //       form.setFocus('email')
-    //       return `Failed to create account: ${err.message}`
-    //     },
-    //   }
-    // )
+  const onSubmit: SubmitHandler<FormType> = async (data) => {
+    toast.promise(
+      apiClient.auth.signup({
+        email: data.email,
+        password: data.password,
+        firstName: data.firstName,
+        lastName: data.lastName,
+      }),
+      {
+        loading: 'Creating account..',
+        success: (response) => {
+          if (!response?.data?.accessToken) throw new Error('Invalid response')
+          setTimeout(() => navigate(redirectTo), 500)
+          return `Account created successfully!`
+        },
+        error: (err) => {
+          logger.error('[SIGNUP]', err)
+          form.setFocus('email')
+          return `Failed to create account: ${err.message}`
+        },
+      }
+    )
   }
 
   return (
