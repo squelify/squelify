@@ -19,6 +19,7 @@
         "noImplicitOverride": true,
         "noUncheckedIndexedAccess": false,
         "resolveJsonModule": true,
+        "rewriteRelativeImportExtensions": true,
         "skipLibCheck": true,
         "sourceMap": true,
         "strict": true,

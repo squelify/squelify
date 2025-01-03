@@ -45,7 +45,7 @@
         "cleanup:dev": "pnpm dlx rimraf .{output,client,build,data,dist,nitro} storybook-static",
         "cleanup:deps": "pnpm dlx rimraf pnpm-lock.yaml node_modules",
         "changelog-full": "git-cliff -o CHANGELOG.md -c cliff-full.toml",
-        "cmd": "tsx -r dotenv/config server/cmd/index.ts",
+        "cmd": "node --import=tsx -r dotenv/config server/cmd/index.ts",
         "typecheck": "tsc -b"
     },
     "dependencies": {
