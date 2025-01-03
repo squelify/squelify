@@ -378,9 +378,6 @@ importers:
       tailwindcss:
         specifier: 4.0.0-beta.8
         version: 4.0.0-beta.8
-      tailwindcss-animate:
-        specifier: ^1.0.7
-        version: 1.0.7(tailwindcss@4.0.0-beta.8)
       tailwindcss-motion:
         specifier: ^1.0.1
         version: 1.0.1(tailwindcss@4.0.0-beta.8)
@@ -21257,10 +21254,6 @@ snapshots:
   tailwindcss-animate@1.0.7(tailwindcss@3.4.13(ts-node@10.9.2(@swc/core@1.7.28(@swc/helpers@0.5.12))(@types/node@22.7.2)(typescript@5.6.2))):
     dependencies:
       tailwindcss: 3.4.13(ts-node@10.9.2(@swc/core@1.7.28(@swc/helpers@0.5.12))(@types/node@22.7.2)(typescript@5.6.2))
-
-  tailwindcss-animate@1.0.7(tailwindcss@4.0.0-beta.8):
-    dependencies:
-      tailwindcss: 4.0.0-beta.8
 
   tailwindcss-motion@1.0.1(tailwindcss@4.0.0-beta.8):
     dependencies:

@@ -4,13 +4,18 @@ export const tooltipStyles = tv({
   slots: {
     content: [
       'z-50 overflow-hidden rounded-lg bg-black px-3 py-1.5 text-white text-xs',
-      'fade-in-0 zoom-in-95 animate-in data-[state=closed]:animate-out',
-      'data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95',
-      'data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2',
-      'data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2',
-      'duration-200 ease-in-out',
+      'motion-opacity-in-0',
+      'data-[state=closed]:motion-opacity-out-0',
+      'data-[side=bottom]:motion-translate-y-in-25',
+      'data-[side=left]:motion-translate-x-in-25',
+      'data-[side=right]:motion-translate-x-in-25',
+      'data-[side=top]:motion-translate-y-in-25',
+      'data-[side=bottom]:data-[state=closed]:motion-translate-y-out-25',
+      'data-[side=left]:data-[state=closed]:motion-translate-x-out-25',
+      'data-[side=right]:data-[state=closed]:motion-translate-x-out-25',
+      'data-[side=top]:data-[state=closed]:motion-translate-y-out-25',
     ],
-    arrow: 'fill-current transition-transform duration-200 ease-in-out',
+    arrow: 'fill-current',
   },
   variants: {
     size: {

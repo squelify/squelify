@@ -1,6 +1,7 @@
 /* Reference: https://tailwindcss.com/docs/v4-beta */
 
 @import "tailwindcss";
+@plugin "tailwindcss-motion";
 @variant dark (&:where(.dark, .dark *));
 
 @theme {
@@ -77,26 +78,8 @@
     --radius-sm: calc(var(--radius) - 4px);
 
     /* Animation */
-    --animate-accordion-down: accordion-down 0.2s ease-out;
-    --animate-accordion-up: accordion-up 0.2s ease-out;
     --animate-caret-blink: caret-blink 1.25s ease-out infinite;
 
-    @keyframes accordion-down {
-        from {
-            height: 0;
-        }
-        to {
-            height: var(--radix-accordion-content-height);
-        }
-    }
-    @keyframes accordion-up {
-        from {
-            height: var(--radix-accordion-content-height);
-        }
-        to {
-            height: 0;
-        }
-    }
     @keyframes caret-blink {
         0%,
         70%,

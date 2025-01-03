@@ -5,8 +5,12 @@ export const accordionStyles = tv({
     item: 'border-b',
     trigger:
       'flex flex-1 items-center justify-between font-medium text-sm transition-all hover:underline [&[data-state=open]>svg]:rotate-180',
-    content:
-      'overflow-hidden text-sm data-[state=closed]:animate-accordion-up data-[state=open]:animate-accordion-down',
+    content: [
+      'overflow-hidden text-sm',
+      'data-[state=closed]:motion-translate-y-out-100 data-[state=open]:motion-translate-y-in-100',
+      'data-[state=closed]:motion-opacity-out-0 data-[state=open]:motion-opacity-in-100',
+      'data-[state=closed]:motion-blur-out-sm data-[state=open]:motion-blur-in-none',
+    ],
     contentInner: '',
     icon: 'size-4 shrink-0 text-muted-foreground transition-transform duration-200',
   },
