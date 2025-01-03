@@ -11,7 +11,7 @@ function Calendar({ className, classNames, showOutsideDays = true, ...props }: C
   return (
     <DayPicker
       showOutsideDays={showOutsideDays}
-      className={clx(calendarStyles(), className)}
+      className={calendarStyles({ className })}
       classNames={{
         months: calendarStyles({ layout: 'months' }),
         month: calendarStyles({ layout: 'month' }),

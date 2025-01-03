@@ -1,6 +1,5 @@
 import * as PopoverPrimitive from '@radix-ui/react-popover'
 import * as React from 'react'
-import { clx } from '#/utils/helper'
 import { popoverContentStyles } from './popover.css'
 
 const Popover = PopoverPrimitive.Root
@@ -16,7 +15,7 @@ const PopoverContent = React.forwardRef<
       ref={ref}
       align={align}
       sideOffset={sideOffset}
-      className={clx(popoverContentStyles(), className)}
+      className={popoverContentStyles({ className })}
       {...props}
     />
   </PopoverPrimitive.Portal>

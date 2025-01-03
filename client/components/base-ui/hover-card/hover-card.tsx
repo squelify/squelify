@@ -1,6 +1,5 @@
 import * as HoverCardPrimitive from '@radix-ui/react-hover-card'
 import * as React from 'react'
-import { clx } from '#/utils/helper'
 import { hoverCardContentStyles } from './hover-card.css'
 
 const HoverCard = HoverCardPrimitive.Root
@@ -14,7 +13,7 @@ const HoverCardContent = React.forwardRef<
     ref={ref}
     align={align}
     sideOffset={sideOffset}
-    className={clx(hoverCardContentStyles(), className)}
+    className={hoverCardContentStyles({ className })}
     {...props}
   />
 ))

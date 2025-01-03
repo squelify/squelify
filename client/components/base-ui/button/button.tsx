@@ -1,12 +1,9 @@
 import { Slot } from '@radix-ui/react-slot'
 import * as React from 'react'
-import { type VariantProps } from 'tailwind-variants'
 import { clx } from '#/utils/helper'
-import { buttonStyles } from './button.css'
+import { type ButtonVariants, buttonStyles } from './button.css'
 
-export interface ButtonProps
-  extends React.ButtonHTMLAttributes<HTMLButtonElement>,
-    VariantProps<typeof buttonStyles> {
+export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement>, ButtonVariants {
   asChild?: boolean
 }
 

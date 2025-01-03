@@ -1,13 +1,12 @@
 import * as CollapsiblePrimitive from '@radix-ui/react-collapsible'
 import * as React from 'react'
-import { clx } from '#/utils/helper'
 import { type CollapsibleVariants, collapsibleStyles } from './collapsible.css'
 
 const Collapsible = React.forwardRef<
   React.ComponentRef<typeof CollapsiblePrimitive.Root>,
   React.ComponentPropsWithoutRef<typeof CollapsiblePrimitive.Root> & CollapsibleVariants
 >(({ className, ...props }, ref) => (
-  <CollapsiblePrimitive.Root ref={ref} className={clx(collapsibleStyles(), className)} {...props} />
+  <CollapsiblePrimitive.Root ref={ref} className={collapsibleStyles({ className })} {...props} />
 ))
 
 const CollapsibleTrigger = CollapsiblePrimitive.CollapsibleTrigger
