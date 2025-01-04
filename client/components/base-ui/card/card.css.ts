@@ -12,7 +12,7 @@ export const cardStyles = tv({
   variants: {
     variant: {
       default: {
-        root: 'border-border bg-background',
+        root: 'border-border bg-card',
       },
       secondary: {
         root: 'border-gray-100 bg-gray-50 dark:border-gray-800 dark:bg-gray-900/50',

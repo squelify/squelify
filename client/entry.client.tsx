@@ -35,7 +35,11 @@ ReactDOM.createRoot(rootElement).render(
           <Suspense fallback={<PageLoader />}>
             <AppRoutes />
           </Suspense>
-          <ReactQueryDevtools initialIsOpen={false} buttonPosition="relative" position="bottom" />
+          <ReactQueryDevtools
+            initialIsOpen={false}
+            buttonPosition="bottom-right"
+            position="right"
+          />
         </AppProvider>
       </BrowserRouter>
     </ErrorBoundary>

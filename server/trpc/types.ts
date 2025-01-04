@@ -1,6 +1,6 @@
 import type { AnyRouter, ProcedureType, TRPCError } from '@trpc/server'
 import type { inferRouterContext, inferRouterError } from '@trpc/server'
-import type { HTTPRequest, ResponseMeta } from '@trpc/server/http'
+import type { ResponseMeta } from '@trpc/server/http'
 import type { TRPCResponse } from '@trpc/server/rpc'
 import type { EventHandler, EventHandlerRequest, EventHandlerResponse, H3Event } from 'h3'
 import type { Kysely } from 'kysely'
@@ -35,7 +35,7 @@ export interface OnErrorPayload<TRouter extends AnyRouter> {
   error: TRPCError
   type: ProcedureType | 'unknown'
   path: string | undefined
-  req: HTTPRequest
+  req: Request
   input: unknown
   ctx: undefined | inferRouterContext<TRouter>
 }

@@ -11,8 +11,8 @@ interface CommandProps
     CommandVariants {}
 
 const Command = React.forwardRef<React.ComponentRef<typeof CommandPrimitive>, CommandProps>(
-  ({ className, size, ...props }, ref) => {
-    const styles = commandStyles({ size })
+  ({ className, ...props }, ref) => {
+    const styles = commandStyles()
     return <CommandPrimitive ref={ref} className={styles.root({ className })} {...props} />
   }
 )
