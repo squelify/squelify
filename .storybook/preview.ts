@@ -1,6 +1,6 @@
 import { addons } from '@storybook/manager-api'
 import type { Preview, StoryContext, StoryFn } from '@storybook/react'
-import DocumentationTemplate from './doc-template.mdx'
+import DocumentationTemplate from './template.mdx'
 import customTheme from './theme'
 import '../client/styles/globals.css'
 
@@ -71,7 +71,6 @@ const preview: Preview = {
     },
   },
   decorators: [withTheme],
-  tags: ['autodocs'],
 }
 
 export default preview

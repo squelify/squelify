@@ -1,0 +1,23 @@
+import { Canvas, Meta, Primary } from '@storybook/blocks';
+import * as Stories from './accordion.stories';
+
+<Meta of={Stories} />
+
+# Accordion
+
+Accordion component for displaying collapsible content sections.
+
+## Example Usage
+
+```tsx
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '#/components/base-ui'
+
+<Accordion type="single" collapsible>
+  <AccordionItem value="item-1">
+    <AccordionTrigger>Section 1</AccordionTrigger>
+    <AccordionContent>Content for section 1</AccordionContent>
+  </AccordionItem>
+</Accordion>
+```
+
+<Primary />

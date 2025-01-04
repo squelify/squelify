@@ -14,22 +14,22 @@
  */
 
 // Basic Components
-export * from './accordion/accordion'
+export * from './accordion/accordion' // @ark-ui/react/accordion
 export * from './alert-dialog/alert-dialog'
 export * from './alert/alert'
 export * from './aspect-ratio/aspect-ratio'
-export * from './avatar/avatar'
+export * from './avatar/avatar' // @ark-ui/react/avatar
 export * from './badge/badge'
 export * from './breadcrumb/breadcrumb'
 export * from './button/button'
 export * from './calendar/calendar'
 export * from './card/card'
-export * from './carousel/carousel'
-export * from './checkbox/checkbox'
-export * from './collapsible/collapsible'
+export * from './carousel/carousel' // @ark-ui/react/carousel
+export * from './checkbox/checkbox' // @ark-ui/react/checkbox
+export * from './collapsible/collapsible' // '@ark-ui/react/collapsible'
 export * from './command/command'
 export * from './context-menu/context-menu'
-export * from './dialog/dialog'
+export * from './dialog/dialog' // @ark-ui/react/dialog
 export * from './drawer/drawer'
 export * from './dropdown-menu/dropdown-menu'
 export * from './form/form'

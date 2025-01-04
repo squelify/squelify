@@ -4,26 +4,6 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from './
 const meta: Meta = {
   title: 'Basic Components/Accordion',
   component: Accordion,
-  parameters: {
-    docs: {
-      description: {
-        component: `
-Accordion component for displaying collapsible content sections.
-
-## Example Usage
-\`\`\`tsx
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '#/components/base-ui'
-
-<Accordion type="single" collapsible>
-  <AccordionItem value="item-1">
-    <AccordionTrigger>Section 1</AccordionTrigger>
-    <AccordionContent>Content for section 1</AccordionContent>
-  </AccordionItem>
-</Accordion>
-\`\`\``,
-      },
-    },
-  },
   argTypes: {
     type: {
       control: 'inline-radio',
