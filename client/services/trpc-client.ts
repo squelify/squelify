@@ -7,7 +7,6 @@ export const trpc = createTRPCReact<AppRouter>()
 
 export const createTrpcClient = () => {
   return trpc.createClient({
-    transformer: superjson,
     links: [
       loggerLink({
         enabled: (opts) =>
@@ -26,6 +25,7 @@ export const createTrpcClient = () => {
             },
           })
         },
+        transformer: superjson,
       }),
     ],
   })

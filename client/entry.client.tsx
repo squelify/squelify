@@ -1,6 +1,7 @@
 import './styles/fontface.css'
 import './styles/globals.css'
 
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
 import React, { Suspense } from 'react'
 import ReactDOM from 'react-dom/client'
 import { ErrorBoundary } from 'react-error-boundary'
@@ -34,6 +35,7 @@ ReactDOM.createRoot(rootElement).render(
           <Suspense fallback={<PageLoader />}>
             <AppRoutes />
           </Suspense>
+          <ReactQueryDevtools initialIsOpen={false} buttonPosition="relative" position="bottom" />
         </AppProvider>
       </BrowserRouter>
     </ErrorBoundary>
