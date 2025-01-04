@@ -8,20 +8,18 @@ import { clx } from '#/utils/helper'
  * Props for the custom Link component extending React Router's LinkProps
  * @property href - The URL the link points to (replaces 'to' prop)
  * @property newTab - Whether to open link in new tab
- * @property underline - Whether to show underline decoration
  * @property disabled - Whether the link is disabled
  */
 interface LinkProps extends Omit<RouterLinkProps, 'to'> {
   href: string
   newTab?: boolean
-  underline?: boolean
   disabled?: boolean
 }
 
 /**
  * Custom Link component that wraps React Router's Link component.
- * Provides consistent HTML-like API and additional features like new tab opening,
- * underline styling, and disabled state.
+ * Provides consistent HTML-like API and additional features like
+ * new tab opening and disabled state.
  *
  * @param props - The properties for the Link component
  * @param ref - The forwarded ref for the anchor element
@@ -29,10 +27,6 @@ interface LinkProps extends Omit<RouterLinkProps, 'to'> {
  *
  * Example usage:
  * ```tsx
- * <Link href="/dashboard" newTab underline>
- *   Go to Dashboard
- * </Link>
- *
  * <Link href="/settings" disabled>
  *   Settings
  * </Link>
@@ -42,7 +36,7 @@ const Link = forwardRef(function Component(
   props: LinkProps & React.RefAttributes<HTMLAnchorElement>,
   ref: React.ForwardedRef<HTMLAnchorElement>
 ) {
-  const { href, className, newTab, underline = false, disabled = false, onClick, ...rest } = props
+  const { href, className, newTab, disabled = false, onClick, ...rest } = props
 
   const handleClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
     if (disabled) {
@@ -57,7 +51,6 @@ const Link = forwardRef(function Component(
       to={href}
       className={clx(
         'text-inherit transition-colors duration-200 dark:text-inherit',
-        underline && 'hover:underline',
         disabled && 'pointer-events-none cursor-not-allowed opacity-50',
         className
       )}

@@ -1,7 +1,7 @@
 import { Suspense } from 'react'
 import { Outlet, useSearchParams } from 'react-router'
 import PageLoader from '#/components/loaders/page-loader'
-import { ThemeSwitcher } from '#/components/theme/theme-switcher'
+import { ThemeSwitcher } from '#/components/theme'
 import { useAuth } from '#/context/hooks/use-auth'
 import { clx } from '#/utils/helper'
 
