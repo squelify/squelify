@@ -1,4 +1,4 @@
-import React from 'react'
+import * as React from 'react'
 import { Input, Label } from '#/components/base-ui'
 
 export function EmailProviderSettings() {
