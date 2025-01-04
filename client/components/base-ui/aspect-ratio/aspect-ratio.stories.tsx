@@ -10,7 +10,7 @@ const meta: Meta = {
         component: `
 AspectRatio component for maintaining consistent width/height ratios for content.
 
-## Example Usage
+## Example
 \`\`\`tsx
 import { AspectRatio } from '#/components/base-ui'
 

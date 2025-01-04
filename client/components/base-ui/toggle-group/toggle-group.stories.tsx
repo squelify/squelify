@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react'
-import { AlignCenter, AlignLeft, AlignRight, Bold, Italic, Underline } from 'lucide-react'
+import * as Lucide from 'lucide-react'
 import type { ToggleVariants } from '../toggle/toggle.css'
 import { ToggleGroup, ToggleGroupItem } from './toggle-group'
 
@@ -15,7 +15,7 @@ const meta: Meta = {
         component: `
 ToggleGroup component for grouping multiple toggles.
 
-## Example Usage
+## Example
 \`\`\`tsx
 import { ToggleGroup, ToggleGroupItem } from '#/components/base-ui'
 
@@ -53,13 +53,13 @@ export const Default: Story = {
   render: () => (
     <ToggleGroup type="single">
       <ToggleGroupItem value="left" aria-label="Left align">
-        <AlignLeft className="size-4" />
+        <Lucide.AlignLeft className="size-4" strokeWidth={2} />
       </ToggleGroupItem>
       <ToggleGroupItem value="center" aria-label="Center align">
-        <AlignCenter className="size-4" />
+        <Lucide.AlignCenter className="size-4" strokeWidth={2} />
       </ToggleGroupItem>
       <ToggleGroupItem value="right" aria-label="Right align">
-        <AlignRight className="size-4" />
+        <Lucide.AlignRight className="size-4" strokeWidth={2} />
       </ToggleGroupItem>
     </ToggleGroup>
   ),
@@ -69,13 +69,13 @@ export const Multiple: Story = {
   render: () => (
     <ToggleGroup type="multiple">
       <ToggleGroupItem value="bold" aria-label="Toggle bold">
-        <Bold className="size-4" />
+        <Lucide.Bold className="size-4" strokeWidth={2} />
       </ToggleGroupItem>
       <ToggleGroupItem value="italic" aria-label="Toggle italic">
-        <Italic className="size-4" />
+        <Lucide.Italic className="size-4" strokeWidth={2} />
       </ToggleGroupItem>
       <ToggleGroupItem value="underline" aria-label="Toggle underline">
-        <Underline className="size-4" />
+        <Lucide.Underline className="size-4" strokeWidth={2} />
       </ToggleGroupItem>
     </ToggleGroup>
   ),
@@ -86,28 +86,28 @@ export const Sizes: Story = {
     <div className="flex flex-col gap-4">
       <ToggleGroup type="single" size="sm">
         <ToggleGroupItem value="left">
-          <AlignLeft className="size-3" />
+          <Lucide.AlignLeft className="size-3" strokeWidth={2} />
         </ToggleGroupItem>
         <ToggleGroupItem value="center">
-          <AlignCenter className="size-3" />
+          <Lucide.AlignCenter className="size-3" strokeWidth={2} />
         </ToggleGroupItem>
       </ToggleGroup>
 
       <ToggleGroup type="single">
         <ToggleGroupItem value="left">
-          <AlignLeft className="size-4" />
+          <Lucide.AlignLeft className="size-4" strokeWidth={2} />
         </ToggleGroupItem>
         <ToggleGroupItem value="center">
-          <AlignCenter className="size-4" />
+          <Lucide.AlignCenter className="size-4" strokeWidth={2} />
         </ToggleGroupItem>
       </ToggleGroup>
 
       <ToggleGroup type="single" size="lg">
         <ToggleGroupItem value="left">
-          <AlignLeft className="size-5" />
+          <Lucide.AlignLeft className="size-5" strokeWidth={2} />
         </ToggleGroupItem>
         <ToggleGroupItem value="center">
-          <AlignCenter className="size-5" />
+          <Lucide.AlignCenter className="size-5" strokeWidth={2} />
         </ToggleGroupItem>
       </ToggleGroup>
     </div>
@@ -119,19 +119,19 @@ export const Variants: Story = {
     <div className="flex flex-col gap-4">
       <ToggleGroup type="single" variant="default">
         <ToggleGroupItem value="left">
-          <AlignLeft className="size-4" />
+          <Lucide.AlignLeft className="size-4" strokeWidth={2} />
         </ToggleGroupItem>
         <ToggleGroupItem value="center">
-          <AlignCenter className="size-4" />
+          <Lucide.AlignCenter className="size-4" strokeWidth={2} />
         </ToggleGroupItem>
       </ToggleGroup>
 
       <ToggleGroup type="single" variant="outline">
         <ToggleGroupItem value="left">
-          <AlignLeft className="size-4" />
+          <Lucide.AlignLeft className="size-4" strokeWidth={2} />
         </ToggleGroupItem>
         <ToggleGroupItem value="center">
-          <AlignCenter className="size-4" />
+          <Lucide.AlignCenter className="size-4" strokeWidth={2} />
         </ToggleGroupItem>
       </ToggleGroup>
     </div>

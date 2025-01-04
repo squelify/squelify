@@ -40,7 +40,7 @@ const preview: Preview = {
     backgrounds: { disable: true },
     layout: 'centered',
     docs: {
-      theme: customTheme.dark,
+      theme: customTheme.light,
       defaultName: 'Documentation',
       page: DocumentationTemplate,
       toc: {

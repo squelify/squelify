@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react'
-import { Settings2 } from 'lucide-react'
+import * as Lucide from 'lucide-react'
 import { Button } from '../button/button'
 import { Input } from '../input/input'
 import { Label } from '../label/label'
@@ -14,7 +14,7 @@ const meta: Meta = {
         component: `
 Popover component displays floating content when a trigger element is clicked.
 
-## Example Usage
+## Example
 \`\`\`tsx
 import { Popover, PopoverTrigger, PopoverContent } from '#/components/base-ui'
 
@@ -64,7 +64,7 @@ export const WithIcon: Story = {
     <Popover>
       <PopoverTrigger asChild>
         <Button variant="outline" size="icon">
-          <Settings2 className="size-4" />
+          <Lucide.Settings2 className="size-4" strokeWidth={2} />
         </Button>
       </PopoverTrigger>
       <PopoverContent className="w-80">

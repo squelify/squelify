@@ -1,13 +1,21 @@
 import { Canvas, Meta, Primary } from '@storybook/blocks';
+import { Anchor, Button } from '#/components/base-ui';
 import * as Stories from './accordion.stories';
 
 <Meta of={Stories} />
 
 # Accordion
 
-Accordion component for displaying collapsible content sections.
+<Button variant='outline' size='xs' asChild>
+  <Anchor href="https://ark-ui.com/react/docs/components/accordion" newTab>Docs</Anchor>
+</Button>
+<Button variant='outline' size='xs' asChild>
+  <Anchor href="https://ark-ui.com/react/docs/components/accordion#api-reference" newTab>API Reference</Anchor>
+</Button>
 
-## Example Usage
+A vertically stacked set of interactive headings that each reveal a section of content.
+
+## Example
 
 ```tsx
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '#/components/base-ui'
@@ -19,5 +27,7 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '#/
   </AccordionItem>
 </Accordion>
 ```
+
+## Preview
 
 <Primary />

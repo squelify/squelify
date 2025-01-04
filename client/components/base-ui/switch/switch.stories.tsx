@@ -14,7 +14,7 @@ const meta: Meta = {
         component: `
 Switch component for toggling between two states.
 
-## Example Usage
+## Example
 \`\`\`tsx
 import { Switch } from '#/components/base-ui'
 

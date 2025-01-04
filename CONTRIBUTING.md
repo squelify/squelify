@@ -61,7 +61,7 @@ The migration generator creates new migration files with standardized naming for
 pnpm squelify make migration <name>
 ```
 
-### Example Usage
+### Example
 
 ```sh
 pnpm squelify make migration create_users_table

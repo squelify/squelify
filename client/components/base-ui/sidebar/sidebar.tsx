@@ -1,5 +1,5 @@
 import { Slot } from '@radix-ui/react-slot'
-import { PanelLeft } from 'lucide-react'
+import * as Lucide from 'lucide-react'
 import * as React from 'react'
 import { type VariantProps, tv } from 'tailwind-variants'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '#/components/base-ui'
@@ -263,7 +263,7 @@ const SidebarTrigger = React.forwardRef<
       }}
       {...props}
     >
-      <PanelLeft />
+      <Lucide.PanelLeft strokeWidth={2} />
       <span className="sr-only">Toggle Sidebar</span>
     </Button>
   )

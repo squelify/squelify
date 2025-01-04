@@ -35,7 +35,7 @@ const meta: Meta = {
         component: `
 Form component built on top of React Hook Form.
 
-## Example Usage
+## Example
 \`\`\`tsx
 import { useForm } from 'react-hook-form'
 import { Form, FormField, FormItem, FormLabel, FormControl, FormMessage } from '#/components/base-ui'

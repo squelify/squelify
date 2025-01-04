@@ -30,7 +30,7 @@ const meta: Meta = {
         component: `
 Pagination component with customizable styles and navigation.
 
-## Example Usage
+## Example
 \`\`\`tsx
 import { Pagination, PaginationContent, PaginationItem, PaginationLink } from '#/components/base-ui'
 

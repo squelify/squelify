@@ -16,7 +16,7 @@ const meta: Meta = {
         component: `
 Separator component for visual separation of content.
 
-## Example Usage
+## Example
 \`\`\`tsx
 import { Separator } from '#/components/base-ui'
 

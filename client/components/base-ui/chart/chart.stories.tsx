@@ -43,7 +43,7 @@ const meta: Meta = {
         component: `
 Chart component built on top of Recharts with theme support.
 
-## Example Usage
+## Example
 \`\`\`tsx
 import { ChartContainer, ChartTooltip, ChartTooltipContent } from '#/components/base-ui'
 import { LineChart, Line } from 'recharts'

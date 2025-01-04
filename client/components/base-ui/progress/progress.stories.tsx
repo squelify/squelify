@@ -14,7 +14,7 @@ const meta: Meta = {
         component: `
 Progress component displays a progress bar with customizable sizes.
 
-## Example Usage
+## Example
 \`\`\`tsx
 import { Progress } from '#/components/base-ui'
 

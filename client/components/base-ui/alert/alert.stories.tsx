@@ -31,7 +31,7 @@ const meta: Meta<AlertProps> = {
         component: `
 Alert component for displaying important messages or notifications.
 
-## Example Usage
+## Example
 \`\`\`tsx
 import { Alert } from '#/components/base-ui'
 

@@ -24,7 +24,7 @@ const meta: Meta = {
         component: `
 Dialog component for displaying modal content.
 
-## Example Usage
+## Example
 \`\`\`tsx
 import { Dialog, DialogTrigger, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '#/components/base-ui'
 

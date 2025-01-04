@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react'
-import { PlusCircle } from 'lucide-react'
+import * as Lucide from 'lucide-react'
 import { Button } from '../button/button'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from './tooltip'
 import type { TooltipVariants } from './tooltip.css'
@@ -15,7 +15,7 @@ const meta: Meta = {
         component: `
 Tooltip component for displaying additional information on hover.
 
-## Example Usage
+## Example
 \`\`\`tsx
 import { Tooltip, TooltipTrigger, TooltipContent, TooltipProvider } from '#/components/base-ui'
 
@@ -58,7 +58,7 @@ export const WithIcon: Story = {
     <Tooltip>
       <TooltipTrigger asChild>
         <Button variant="outline" size="icon">
-          <PlusCircle className="size-4" />
+          <Lucide.PlusCircle className="size-4" strokeWidth={2} />
         </Button>
       </TooltipTrigger>
       <TooltipContent>Add new item</TooltipContent>

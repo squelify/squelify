@@ -25,7 +25,7 @@ const meta: Meta<BadgeProps> = {
         component: `
 Badge component for displaying short status descriptors.
 
-## Example Usage
+## Example
 \`\`\`tsx
 import { Badge } from '#/components/base-ui'
 

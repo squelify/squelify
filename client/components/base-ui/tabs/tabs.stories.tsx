@@ -16,7 +16,7 @@ const meta: Meta = {
         component: `
 Tabs component for switching between different views.
 
-## Example Usage
+## Example
 \`\`\`tsx
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '#/components/base-ui'
 

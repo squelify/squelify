@@ -18,7 +18,7 @@ const meta: Meta<typeof Card> = {
         component: `
 Card component for displaying content in a contained format.
 
-## Example Usage
+## Example
 \`\`\`tsx
 import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from '#/components/base-ui'
 

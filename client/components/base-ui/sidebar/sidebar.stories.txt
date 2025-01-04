@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react'
-import { Bell, ChevronDown, Home, Mail, Settings, Users } from 'lucide-react'
+import * as Lucide from 'lucide-react'
 import {
   Sidebar,
   SidebarContent,
@@ -25,7 +25,7 @@ const meta: Meta = {
         component: `
 Sidebar component for navigation and application structure.
 
-## Example Usage
+## Example
 \`\`\`tsx
 import { Sidebar, SidebarContent, SidebarMenuItem } from '#/components/base-ui'
 
@@ -68,10 +68,10 @@ export const Default: Story = {
       </SidebarHeader>
       <SidebarContent>
         <SidebarMenu>
-          <SidebarMenuItem icon={<Home />}>Home</SidebarMenuItem>
-          <SidebarMenuItem icon={<Users />}>Users</SidebarMenuItem>
-          <SidebarMenuItem icon={<Mail />}>Messages</SidebarMenuItem>
-          <SidebarMenuItem icon={<Settings />}>Settings</SidebarMenuItem>
+          <SidebarMenuItem icon={<Lucide.Home strokeWidth={2} />}>Home</SidebarMenuItem>
+          <SidebarMenuItem icon={<Lucide.Users strokeWidth={2} />}>Users</SidebarMenuItem>
+          <SidebarMenuItem icon={<Lucide.Mail strokeWidth={2} />}>Messages</SidebarMenuItem>
+          <SidebarMenuItem icon={<Lucide.Settings strokeWidth={2} />}>Settings</SidebarMenuItem>
         </SidebarMenu>
       </SidebarContent>
       <SidebarFooter>
@@ -87,14 +87,16 @@ export const WithGroups: Story = {
       <SidebarContent>
         <SidebarGroup label="Main">
           <SidebarMenu>
-            <SidebarMenuItem icon={<Home />}>Dashboard</SidebarMenuItem>
-            <SidebarMenuItem icon={<Users />}>Team</SidebarMenuItem>
+            <SidebarMenuItem icon={<Lucide.Home strokeWidth={2} />}>Dashboard</SidebarMenuItem>
+            <SidebarMenuItem icon={<Lucide.Users strokeWidth={2} />}>Team</SidebarMenuItem>
           </SidebarMenu>
         </SidebarGroup>
         <SidebarGroup label="Settings">
           <SidebarMenu>
-            <SidebarMenuItem icon={<Settings />}>Preferences</SidebarMenuItem>
-            <SidebarMenuItem icon={<Bell />}>Notifications</SidebarMenuItem>
+            <SidebarMenuItem icon={<Lucide.Settings strokeWidth={2} />}>
+              Preferences
+            </SidebarMenuItem>
+            <SidebarMenuItem icon={<Lucide.Bell strokeWidth={2} />}>Notifications</SidebarMenuItem>
           </SidebarMenu>
         </SidebarGroup>
       </SidebarContent>
@@ -107,8 +109,11 @@ export const WithSubmenu: Story = {
     <Sidebar className="h-[500px]">
       <SidebarContent>
         <SidebarMenu>
-          <SidebarMenuItem icon={<Home />}>Home</SidebarMenuItem>
-          <SidebarMenuItem icon={<Settings />} action={<ChevronDown />}>
+          <SidebarMenuItem icon={<Lucide.Home strokeWidth={2} />}>Home</SidebarMenuItem>
+          <SidebarMenuItem
+            icon={<Lucide.Settings strokeWidth={2} />}
+            action={<Lucide.ChevronDown strokeWidth={2} />}
+          >
             Settings
             <SidebarMenuSub>
               <SidebarMenuSubItem>Profile</SidebarMenuSubItem>
@@ -127,9 +132,9 @@ export const Collapsible: Story = {
     <Sidebar className="h-[500px]" collapsible="icon">
       <SidebarContent>
         <SidebarMenu>
-          <SidebarMenuItem icon={<Home />}>Home</SidebarMenuItem>
-          <SidebarMenuItem icon={<Users />}>Users</SidebarMenuItem>
-          <SidebarMenuItem icon={<Settings />}>Settings</SidebarMenuItem>
+          <SidebarMenuItem icon={<Lucide.Home strokeWidth={2} />}>Home</SidebarMenuItem>
+          <SidebarMenuItem icon={<Lucide.Users strokeWidth={2} />}>Users</SidebarMenuItem>
+          <SidebarMenuItem icon={<Lucide.Settings strokeWidth={2} />}>Settings</SidebarMenuItem>
         </SidebarMenu>
       </SidebarContent>
     </Sidebar>

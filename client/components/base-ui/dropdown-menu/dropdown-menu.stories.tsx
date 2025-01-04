@@ -1,15 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react'
-import {
-  Cloud,
-  CreditCard,
-  Github,
-  Keyboard,
-  LifeBuoy,
-  LogOut,
-  Plus,
-  Settings,
-  User,
-} from 'lucide-react'
+import * as Lucide from 'lucide-react'
 import { Button } from '../button/button'
 import {
   DropdownMenu,
@@ -41,7 +31,7 @@ const meta: Meta = {
         component: `
 Dropdown menu component for displaying a list of actions or options.
 
-## Example Usage
+## Example
 \`\`\`tsx
 import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem } from '#/components/base-ui'
 
@@ -78,22 +68,22 @@ export const Default: Story = {
         <DropdownMenuSeparator />
         <DropdownMenuGroup>
           <DropdownMenuItem>
-            <User className="mr-2 size-4" />
+            <Lucide.User className="mr-2 size-4" strokeWidth={2} />
             <span>Profile</span>
             <DropdownMenuShortcut>⇧⌘P</DropdownMenuShortcut>
           </DropdownMenuItem>
           <DropdownMenuItem>
-            <CreditCard className="mr-2 size-4" />
+            <Lucide.CreditCard className="mr-2 size-4" strokeWidth={2} />
             <span>Billing</span>
             <DropdownMenuShortcut>⌘B</DropdownMenuShortcut>
           </DropdownMenuItem>
           <DropdownMenuItem>
-            <Settings className="mr-2 size-4" />
+            <Lucide.Settings className="mr-2 size-4" strokeWidth={2} />
             <span>Settings</span>
             <DropdownMenuShortcut>⌘S</DropdownMenuShortcut>
           </DropdownMenuItem>
           <DropdownMenuItem>
-            <Keyboard className="mr-2 size-4" />
+            <Lucide.Keyboard className="mr-2 size-4" strokeWidth={2} />
             <span>Keyboard shortcuts</span>
             <DropdownMenuShortcut>⌘K</DropdownMenuShortcut>
           </DropdownMenuItem>
@@ -114,22 +104,22 @@ export const WithSubMenu: Story = {
         <DropdownMenuSeparator />
         <DropdownMenuGroup>
           <DropdownMenuItem>
-            <User className="mr-2 size-4" />
+            <Lucide.User className="mr-2 size-4" strokeWidth={2} />
             <span>Profile</span>
           </DropdownMenuItem>
           <DropdownMenuSub>
             <DropdownMenuSubTrigger>
-              <Plus className="mr-2 size-4" />
+              <Lucide.Plus className="mr-2 size-4" strokeWidth={2} />
               <span>More</span>
             </DropdownMenuSubTrigger>
             <DropdownMenuPortal>
               <DropdownMenuSubContent>
                 <DropdownMenuItem>
-                  <Cloud className="mr-2 size-4" />
+                  <Lucide.Cloud className="mr-2 size-4" strokeWidth={2} />
                   <span>Cloud</span>
                 </DropdownMenuItem>
                 <DropdownMenuItem>
-                  <Github className="mr-2 size-4" />
+                  <Lucide.Github className="mr-2 size-4" strokeWidth={2} />
                   <span>Github</span>
                 </DropdownMenuItem>
               </DropdownMenuSubContent>
@@ -137,7 +127,7 @@ export const WithSubMenu: Story = {
           </DropdownMenuSub>
           <DropdownMenuSeparator />
           <DropdownMenuItem>
-            <LogOut className="mr-2 size-4" />
+            <Lucide.LogOut className="mr-2 size-4" strokeWidth={2} />
             <span>Log out</span>
             <DropdownMenuShortcut>⇧⌘Q</DropdownMenuShortcut>
           </DropdownMenuItem>

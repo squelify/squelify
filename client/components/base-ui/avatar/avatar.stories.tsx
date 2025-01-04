@@ -13,7 +13,7 @@ const meta: Meta<typeof Avatar> = {
         component: `
 Avatar component built with Ark UI for user profile images with fallback support.
 
-## Example Usage
+## Example
 \`\`\`tsx
 import { Avatar, AvatarImage, AvatarFallback } from '#/components/base-ui'
 

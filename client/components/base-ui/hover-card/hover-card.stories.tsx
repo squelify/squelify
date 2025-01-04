@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react'
-import { CalendarDays } from 'lucide-react'
+import * as Lucide from 'lucide-react'
 import { Avatar, AvatarFallback, AvatarImage } from '../avatar/avatar'
 import { Button } from '../button/button'
 import { HoverCard, HoverCardContent, HoverCardTrigger } from './hover-card'
@@ -13,7 +13,7 @@ const meta: Meta = {
         component: `
 HoverCard component for displaying floating content when hovering over a trigger element.
 
-## Example Usage
+## Example
 \`\`\`tsx
 import { HoverCard, HoverCardTrigger, HoverCardContent } from '#/components/base-ui'
 
@@ -46,7 +46,7 @@ export const Default: Story = {
             <h4 className="font-semibold text-sm">@nextjs</h4>
             <p className="text-sm">The React Framework – created and maintained by @vercel.</p>
             <div className="flex items-center pt-2">
-              <CalendarDays className="mr-2 size-4 opacity-70" />{' '}
+              <Lucide.CalendarDays className="mr-2 size-4 opacity-70" strokeWidth={2} />{' '}
               <span className="text-muted-foreground text-xs">Joined December 2021</span>
             </div>
           </div>

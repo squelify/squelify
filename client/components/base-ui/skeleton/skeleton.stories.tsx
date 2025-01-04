@@ -10,7 +10,7 @@ const meta: Meta = {
         component: `
 Loading placeholder animation component.
 
-## Example Usage
+## Example
 \`\`\`tsx
 import { Skeleton } from '#/components/base-ui'
 

@@ -13,7 +13,7 @@ const meta: Meta = {
         component: `
 Resizable panel component for creating adjustable layouts.
 
-## Example Usage
+## Example
 \`\`\`tsx
 import { ResizablePanelGroup, ResizablePanel, ResizableHandle } from '#/components/base-ui'
 

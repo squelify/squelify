@@ -26,7 +26,7 @@ const meta: Meta = {
         component: `
 Sheet component for displaying content in a sliding panel.
 
-## Example Usage
+## Example
 \`\`\`tsx
 import { Sheet, SheetTrigger, SheetContent } from '#/components/base-ui'
 

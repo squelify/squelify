@@ -13,7 +13,7 @@ const meta: Meta = {
         component: `
 One-Time Password input component with customizable slots.
 
-## Example Usage
+## Example
 \`\`\`tsx
 import { InputOTP, InputOTPGroup, InputOTPSlot, InputOTPSeparator } from '#/components/base-ui'
 

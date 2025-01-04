@@ -25,7 +25,7 @@ const meta: Meta<TextProps> = {
         component: `
 Text component for displaying content with various styles and sizes.
 
-## Example Usage
+## Example
 \`\`\`tsx
 import { Text } from '#/components/base-ui'
 

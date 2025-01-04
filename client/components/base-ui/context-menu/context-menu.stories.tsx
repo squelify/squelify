@@ -27,7 +27,7 @@ const meta: Meta = {
         component: `
 Context menu component for right-click actions.
 
-## Example Usage
+## Example
 \`\`\`tsx
 import { ContextMenu, ContextMenuTrigger, ContextMenuContent, ContextMenuItem } from '#/components/base-ui'
 

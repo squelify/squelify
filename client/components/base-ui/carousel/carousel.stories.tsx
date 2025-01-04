@@ -26,7 +26,7 @@ const meta: Meta = {
         component: `
 Carousel component for cycling through elements.
 
-## Example Usage
+## Example
 \`\`\`tsx
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '#/components/base-ui'
 

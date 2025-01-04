@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react'
-import { HomeIcon } from 'lucide-react'
+import * as Lucide from 'lucide-react'
 import {
   Breadcrumb,
   BreadcrumbEllipsis,
@@ -22,7 +22,7 @@ const meta: Meta = {
         component: `
 Breadcrumb component for displaying navigation hierarchy.
 
-## Example Usage
+## Example
 \`\`\`tsx
 import {
   Breadcrumb,
@@ -86,7 +86,7 @@ export const WithIcon: Story = {
       <BreadcrumbList>
         <BreadcrumbItem>
           <BreadcrumbLink href="/">
-            <HomeIcon className="size-4" />
+            <Lucide.Home className="size-4" />
           </BreadcrumbLink>
         </BreadcrumbItem>
         <BreadcrumbSeparator />

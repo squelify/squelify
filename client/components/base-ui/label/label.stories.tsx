@@ -13,7 +13,7 @@ const meta: Meta = {
         component: `
 Label component for form controls with accessible markup.
 
-## Example Usage
+## Example
 \`\`\`tsx
 import { Label } from '#/components/base-ui'
 

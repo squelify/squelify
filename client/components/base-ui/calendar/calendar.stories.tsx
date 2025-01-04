@@ -11,7 +11,7 @@ const meta: Meta = {
         component: `
 Calendar component for date selection and display.
 
-## Example Usage
+## Example
 \`\`\`tsx
 import { Calendar } from '#/components/base-ui'
 

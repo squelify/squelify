@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react'
-import { ChevronsUpDown } from 'lucide-react'
+import * as Lucide from 'lucide-react'
 import { Button } from '../button/button'
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from './collapsible'
 
@@ -12,7 +12,7 @@ const meta: Meta = {
         component: `
 Collapsible component for showing and hiding content.
 
-## Example Usage
+## Example
 \`\`\`tsx
 import { Collapsible, CollapsibleTrigger, CollapsibleContent } from '#/components/base-ui'
 
@@ -50,7 +50,7 @@ export const Default: Story = {
         <h4 className="font-semibold text-sm">@peduarte starred 3 repositories</h4>
         <CollapsibleTrigger asChild>
           <Button variant="ghost" size="sm">
-            <ChevronsUpDown className="size-4" />
+            <Lucide.ChevronsUpDown className="size-4" />
             <span className="sr-only">Toggle</span>
           </Button>
         </CollapsibleTrigger>
@@ -71,7 +71,7 @@ export const Controlled: Story = {
         <h4 className="font-semibold text-sm">Controlled Example</h4>
         <CollapsibleTrigger asChild>
           <Button variant="ghost" size="sm">
-            <ChevronsUpDown className="size-4" />
+            <Lucide.ChevronsUpDown className="size-4" />
             <span className="sr-only">Toggle</span>
           </Button>
         </CollapsibleTrigger>
@@ -90,7 +90,7 @@ export const WithCustomTrigger: Story = {
       <CollapsibleTrigger asChild>
         <Button variant="outline" className="w-full justify-between">
           Click to expand
-          <ChevronsUpDown className="size-4" />
+          <Lucide.ChevronsUpDown className="size-4" strokeWidth={2} />
         </Button>
       </CollapsibleTrigger>
       <CollapsibleContent className="space-y-2">

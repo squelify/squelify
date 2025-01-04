@@ -36,7 +36,7 @@ const meta: Meta<ButtonProps> = {
         component: `
 Button component provides clickable elements with various styles and states.
 
-## Example Usage
+## Example
 \`\`\`tsx
 import { Button } from '#/components/base-ui'
 

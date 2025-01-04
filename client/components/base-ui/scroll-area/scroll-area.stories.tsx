@@ -15,7 +15,7 @@ const meta: Meta = {
         component: `
 ScrollArea component with custom scrollbar styling.
 
-## Example Usage
+## Example
 \`\`\`tsx
 import { ScrollArea } from '#/components/base-ui'
 

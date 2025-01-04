@@ -21,7 +21,7 @@ const meta: Meta = {
         component: `
 Select component for choosing a value from a list of options.
 
-## Example Usage
+## Example
 \`\`\`tsx
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from '#/components/base-ui'
 

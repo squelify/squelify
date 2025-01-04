@@ -14,7 +14,7 @@ const meta: Meta = {
         component: `
 Checkbox component with customizable sizes and states.
 
-## Example Usage
+## Example
 \`\`\`tsx
 import { Checkbox } from '#/components/base-ui'
 

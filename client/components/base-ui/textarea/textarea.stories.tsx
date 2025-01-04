@@ -13,7 +13,7 @@ const meta: Meta = {
         component: `
 Textarea component for multi-line text input.
 
-## Example Usage
+## Example
 \`\`\`tsx
 import { Textarea } from '#/components/base-ui'
 

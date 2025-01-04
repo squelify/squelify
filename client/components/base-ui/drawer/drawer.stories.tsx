@@ -26,7 +26,7 @@ const meta: Meta = {
         component: `
 Drawer component for displaying content in a sliding panel.
 
-## Example Usage
+## Example
 \`\`\`tsx
 import { Drawer, DrawerTrigger, DrawerContent } from '#/components/base-ui'
 

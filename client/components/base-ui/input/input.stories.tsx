@@ -13,7 +13,7 @@ const meta: Meta = {
         component: `
 Input component with various styles and features.
 
-## Example Usage
+## Example
 \`\`\`tsx
 import { Input } from '#/components/base-ui'
 

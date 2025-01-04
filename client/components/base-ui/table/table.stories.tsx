@@ -22,7 +22,7 @@ const meta: Meta = {
         component: `
 Table component for displaying data in rows and columns.
 
-## Example Usage
+## Example
 \`\`\`tsx
 import { Table, TableHeader, TableBody, TableRow, TableCell } from '#/components/base-ui'
 

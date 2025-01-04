@@ -24,7 +24,7 @@ const meta: Meta = {
         component: `
 AlertDialog component for displaying important confirmations or alerts that interrupt user workflow.
 
-## Example Usage
+## Example
 \`\`\`tsx
 import {
   AlertDialog,

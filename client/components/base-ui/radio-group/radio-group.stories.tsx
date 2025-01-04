@@ -14,7 +14,7 @@ const meta: Meta = {
         component: `
 RadioGroup component for selecting a single option from a list.
 
-## Example Usage
+## Example
 \`\`\`tsx
 import { RadioGroup, RadioGroupItem } from '#/components/base-ui'
 

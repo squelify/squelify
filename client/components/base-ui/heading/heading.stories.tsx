@@ -25,7 +25,7 @@ const meta: Meta<HeadingProps> = {
         component: `
 Heading component for displaying titles and section headers with various levels and styles.
 
-## Example Usage
+## Example
 \`\`\`tsx
 import { Heading } from '#/components/base-ui'
 

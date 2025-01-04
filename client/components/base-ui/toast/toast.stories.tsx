@@ -14,7 +14,7 @@ const meta: Meta = {
         component: `
 Toast component for displaying temporary notifications.
 
-## Example Usage
+## Example
 \`\`\`tsx
 import { toast, Toaster } from '#/components/base-ui'
 

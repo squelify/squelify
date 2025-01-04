@@ -13,7 +13,7 @@ const meta: Meta = {
         component: `
 Slider component for selecting numeric values.
 
-## Example Usage
+## Example
 \`\`\`tsx
 import { Slider } from '#/components/base-ui'
 
