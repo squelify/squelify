@@ -27,7 +27,7 @@ const isAuthenticated = trpcMiddleware(({ ctx, next }) => {
   }
   return next({
     ctx: {
-      sesssionId: ctx.event.context.auth.sessionId,
+      sesssionId: ctx.event.context.auth?.sessionId,
     },
   })
 })
