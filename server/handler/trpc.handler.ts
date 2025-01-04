@@ -1,4 +1,7 @@
+// FIXME: https://trpc.io/docs/migrate-from-v10-to-v11
+
 import { type AnyRouter, TRPCError } from '@trpc/server'
+import {} from '@trpc/server/adapters/node-http'
 import { resolveHTTPResponse } from '@trpc/server/http'
 import type { H3Event } from 'h3'
 import { getRequestURL, isMethod, readBody, setHeader, setResponseStatus } from 'h3'
@@ -31,7 +34,7 @@ export async function handleTRPC<TRouter extends AnyRouter>(
   // Return the procedure path
   const path = parts[1].split('?')[0]
 
-  const req = {
+  const req: Request = {
     query,
     method: request.method || 'GET',
     headers: request.headers,

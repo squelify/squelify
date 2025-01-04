@@ -27,7 +27,7 @@ export const userRouter = trpcRouter({
     return userRepo(ctx.db).findMany()
   }),
 
-  byId: publicProcedure.input(z.string().uuid()).query(({ ctx, input }) => {
+  byId: publicProcedure.input(z.string()).query(({ ctx, input }) => {
     return userRepo(ctx.db).findById(input)
   }),
 
