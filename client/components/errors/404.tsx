@@ -34,7 +34,11 @@ export default function NotFound() {
             <button type="button" onClick={handleBack} className={errorStyles.primaryButton}>
               Go back
             </button>
-            <Link href="/docs" className={errorStyles.secondaryButton}>
+            <Link
+              href="https://squelify.com/docs?utm_source=squelify&utm_medium=404"
+              className={errorStyles.secondaryButton}
+              newTab
+            >
               View Documentation
             </Link>
           </div>

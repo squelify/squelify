@@ -94,13 +94,13 @@ export default function UserMenu({ user, sidebarState, logout }: UserMenuProps) 
           </DropdownMenuItem>
           <DropdownMenuSeparator />
           <DropdownMenuItem asChild>
-            <Link href="/docs">
+            <Link href="https://squelify.com/docs?utm_source=squelify&utm_medium=profile" newTab>
               <Lucide.ExternalLink strokeWidth={1.8} />
               <span>Documentation</span>
             </Link>
           </DropdownMenuItem>
           <DropdownMenuItem asChild>
-            <Link href="/github">
+            <Link href="https://github.com/squelify/squelify?utm_source=squelify" newTab>
               <Lucide.ExternalLink strokeWidth={1.8} />
               <span>Source Code</span>
             </Link>
