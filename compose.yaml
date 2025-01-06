@@ -11,7 +11,7 @@ services:
       - 8081:8081 # admin HTTP connection
     volumes:
       - libsql_data:/var/lib/sqld/data
-    command: '/bin/sqld --enable-namespaces --enable-http-console'
+    command: '/bin/sqld --enable-namespaces --enable-http-console --max-active-namespaces 2000'
 
   mailcrab:
     image: marlonb/mailcrab:latest
