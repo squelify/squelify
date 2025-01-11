@@ -5,60 +5,45 @@ import type { BadgeVariants } from './badge.css'
 const variantOptions: NonNullable<BadgeVariants['variant']>[] = [
   'default',
   'secondary',
-  'outline',
-  'destructive',
   'success',
+  'info',
   'warning',
+  'destructive',
+  'outline',
+  'ghost',
 ]
 
-const sizeOptions: NonNullable<BadgeVariants['size']>[] = ['sm', 'md', 'lg']
+const sizeOptions: NonNullable<BadgeVariants['size']>[] = ['sm', 'default', 'lg']
+const roundedOptions: NonNullable<BadgeVariants['rounded']>[] = ['default', 'full']
 
 const meta: Meta<BadgeProps> = {
   title: 'Basic Components/Badge',
   component: Badge,
-  parameters: {
-    controls: {
-      exclude: ['asChild'],
-    },
-    docs: {
-      description: {
-        component: `
-Badge component for displaying short status descriptors.
-
-## Example
-\`\`\`tsx
-import { Badge } from '#/components/base-ui'
-
-// Basic usage
-<Badge>New</Badge>
-
-// With variant
-<Badge variant="success">Completed</Badge>
-
-// With size
-<Badge size="lg">Featured</Badge>
-\`\`\``,
-      },
-    },
-  },
   argTypes: {
     children: {
       control: 'text',
-      description: 'Badge content',
+      table: {
+        type: { summary: 'ReactNode | string' },
+      },
     },
     variant: {
-      control: { type: 'select' },
+      control: { type: 'radio' },
       options: variantOptions,
       table: {
+        defaultValue: { summary: 'default' },
         type: { summary: 'BadgeVariants["variant"]' },
       },
     },
     size: {
-      control: { type: 'select' },
+      control: { type: 'inline-radio' },
       options: sizeOptions,
       table: {
         type: { summary: 'BadgeVariants["size"]' },
       },
+    },
+    rounded: {
+      control: { type: 'inline-radio' },
+      options: roundedOptions,
     },
   },
 }
@@ -74,29 +59,65 @@ export const Default: Story = {
 
 export const VariantShowcase: Story = {
   parameters: {
-    controls: { exclude: ['variant'] },
+    controls: { exclude: ['variant', 'children'] },
   },
-  render: () => (
+  render: (args) => (
     <div className="flex flex-wrap items-center gap-4">
-      <Badge variant="default">Default</Badge>
-      <Badge variant="secondary">Secondary</Badge>
-      <Badge variant="outline">Outline</Badge>
-      <Badge variant="destructive">Destructive</Badge>
-      <Badge variant="success">Success</Badge>
-      <Badge variant="warning">Warning</Badge>
+      <Badge {...args}>Default</Badge>
+      <Badge {...args} variant="secondary">
+        Secondary
+      </Badge>
+      <Badge {...args} variant="success">
+        Success
+      </Badge>
+      <Badge {...args} variant="info">
+        Info
+      </Badge>
+      <Badge {...args} variant="warning">
+        Warning
+      </Badge>
+      <Badge {...args} variant="destructive">
+        Destructive
+      </Badge>
+      <Badge {...args} variant="outline">
+        Outline
+      </Badge>
+      <Badge {...args} variant="ghost">
+        Ghost
+      </Badge>
     </div>
   ),
 }
 
 export const SizeShowcase: Story = {
   parameters: {
-    controls: { exclude: ['size'] },
+    controls: { exclude: ['size', 'children'] },
   },
-  render: () => (
-    <div className="flex items-center gap-4">
-      <Badge size="sm">Small</Badge>
-      <Badge size="md">Medium</Badge>
-      <Badge size="lg">Large</Badge>
+  render: (args) => (
+    <div className="flex flex-wrap items-end gap-4">
+      <Badge {...args} size="sm">
+        Small
+      </Badge>
+      <Badge {...args}>Default</Badge>
+      <Badge {...args} size="lg">
+        Large
+      </Badge>
+    </div>
+  ),
+}
+
+export const RoundedShowcase: Story = {
+  parameters: {
+    controls: { exclude: ['rounded', 'children'] },
+  },
+  render: (args) => (
+    <div className="flex flex-wrap items-center gap-4">
+      <Badge {...args} rounded="default">
+        Default Rounded
+      </Badge>
+      <Badge {...args} rounded="full">
+        Full Rounded
+      </Badge>
     </div>
   ),
 }

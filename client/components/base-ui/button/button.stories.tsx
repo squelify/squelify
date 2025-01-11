@@ -6,58 +6,18 @@ import type { ButtonVariants } from './button.css'
 
 const variantOptions: NonNullable<ButtonVariants['variant']>[] = [
   'default',
-  'primary',
-  'secondary',
-  'subtle',
   'destructive',
-  'success',
-  'warning',
   'outline',
+  'secondary',
   'ghost',
   'link',
-  'gradient',
 ]
 
-const sizeOptions: NonNullable<ButtonVariants['size']>[] = [
-  'xs',
-  'sm',
-  'default',
-  'lg',
-  'xl',
-  'icon',
-]
+const sizeOptions: NonNullable<ButtonVariants['size']>[] = ['sm', 'default', 'lg', 'icon']
 
 const meta: Meta<ButtonProps> = {
   title: 'Basic Components/Button',
   component: Button,
-  parameters: {
-    docs: {
-      description: {
-        component: `
-Button component provides clickable elements with various styles and states.
-
-## Example
-\`\`\`tsx
-import { Button } from '#/components/base-ui'
-
-// Basic usage
-<Button>Click me</Button>
-
-// With loading state
-<Button isLoading>Processing</Button>
-
-// With loading text
-<Button isLoading>Save Changes</Button>
-
-// With icon
-<Button>
-  <Search />
-  Search
-</Button>
-\`\`\``,
-      },
-    },
-  },
   argTypes: {
     children: {
       control: 'text',
@@ -105,20 +65,6 @@ export const Default: Story = {
   args: { children: 'Button' },
 }
 
-export const LoadingIndicator: Story = {
-  parameters: {
-    controls: { exclude: ['asChild'] },
-  },
-  args: { children: 'Loading', isLoading: true },
-}
-
-export const LoadingWithText: Story = {
-  parameters: {
-    controls: { exclude: ['asChild'] },
-  },
-  args: { children: 'Save Changes', isLoading: true },
-}
-
 // Showcases with Focused Controls
 export const VariantShowcase: Story = {
   parameters: {
@@ -132,23 +78,11 @@ export const VariantShowcase: Story = {
   render: (args) => (
     <div className="flex flex-wrap items-center gap-4">
       <Button {...args}>Default</Button>
-      <Button {...args} variant="primary">
-        Primary
-      </Button>
       <Button {...args} variant="secondary">
         Secondary
       </Button>
-      <Button {...args} variant="subtle">
-        Subtle
-      </Button>
       <Button {...args} variant="destructive">
         Destructive
-      </Button>
-      <Button {...args} variant="success">
-        Success
-      </Button>
-      <Button {...args} variant="warning">
-        Warning
       </Button>
       <Button {...args} variant="outline">
         Outline
@@ -158,9 +92,6 @@ export const VariantShowcase: Story = {
       </Button>
       <Button {...args} variant="link">
         Link
-      </Button>
-      <Button {...args} variant="gradient">
-        Gradient
       </Button>
     </div>
   ),
@@ -177,18 +108,12 @@ export const SizeShowcase: Story = {
   },
   render: (args) => (
     <div className="flex flex-wrap items-end gap-4">
-      <Button {...args} size="xs">
-        Extra Small
-      </Button>
       <Button {...args} size="sm">
         Small
       </Button>
       <Button {...args}>Default</Button>
       <Button {...args} size="lg">
         Large
-      </Button>
-      <Button {...args} size="xl">
-        Extra Large
       </Button>
       <Button {...args} size="icon">
         <Lucide.Plus />
@@ -212,7 +137,7 @@ export const IconShowcase: Story = {
         <Lucide.Search className="-ml-0.5" />
         Search
       </Button>
-      <Button {...args} variant="success">
+      <Button {...args} variant="secondary">
         <Lucide.Mail className="-ml-0.5" />
         Email
       </Button>
@@ -239,9 +164,6 @@ export const StateShowcase: Story = {
     <div className="flex flex-wrap items-center gap-4">
       <Button {...args} isLoading>
         Loading
-      </Button>
-      <Button {...args} isLoading>
-        Submit
       </Button>
       <Button {...args} disabled>
         Disabled

@@ -3,32 +3,22 @@ import { type VariantProps, tv } from 'tailwind-variants'
 export const radioGroupStyles = tv({
   slots: {
     root: 'grid gap-2',
-    item: [
-      'aspect-square rounded-full border border-primary text-primary shadow',
-      'focus:outline-none focus-visible:ring-1 focus-visible:ring-ring',
-      'disabled:cursor-not-allowed disabled:opacity-50',
-    ],
+    item: 'aspect-square size-4 rounded-full border border-primary text-primary shadow focus:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50',
     indicator: 'flex items-center justify-center',
     icon: 'size-3.5',
   },
   variants: {
-    size: {
-      default: {
-        item: 'size-4',
-        icon: 'size-3.5',
+    orientation: {
+      horizontal: {
+        root: 'flex gap-4',
       },
-      sm: {
-        item: 'size-3',
-        icon: 'size-2.5',
-      },
-      lg: {
-        item: 'size-5',
-        icon: 'size-4.5',
+      vertical: {
+        root: 'grid gap-2',
       },
     },
   },
   defaultVariants: {
-    size: 'default',
+    orientation: 'vertical',
   },
 })
 

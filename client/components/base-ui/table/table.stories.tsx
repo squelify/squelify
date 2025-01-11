@@ -9,46 +9,10 @@ import {
   TableHeader,
   TableRow,
 } from './table'
-import type { TableVariants } from './table.css'
 
-const sizeOptions: NonNullable<TableVariants['size']>[] = ['default', 'sm', 'lg']
-
-const meta: Meta = {
+const meta: Meta<typeof Table> = {
   title: 'Basic Components/Table',
   component: Table,
-  parameters: {
-    docs: {
-      description: {
-        component: `
-Table component for displaying data in rows and columns.
-
-## Example
-\`\`\`tsx
-import { Table, TableHeader, TableBody, TableRow, TableCell } from '#/components/base-ui'
-
-<Table>
-  <TableHeader>
-    <TableRow>
-      <TableHead>Name</TableHead>
-    </TableRow>
-  </TableHeader>
-  <TableBody>
-    <TableRow>
-      <TableCell>Value</TableCell>
-    </TableRow>
-  </TableBody>
-</Table>
-\`\`\``,
-      },
-    },
-  },
-  argTypes: {
-    size: {
-      control: 'inline-radio',
-      options: sizeOptions,
-      description: 'Table size',
-    },
-  },
 }
 
 export default meta
@@ -73,15 +37,39 @@ const invoices = [
     totalAmount: '$350.00',
     paymentMethod: 'Bank Transfer',
   },
+  {
+    invoice: 'INV004',
+    paymentStatus: 'Paid',
+    totalAmount: '$450.00',
+    paymentMethod: 'Credit Card',
+  },
+  {
+    invoice: 'INV005',
+    paymentStatus: 'Paid',
+    totalAmount: '$550.00',
+    paymentMethod: 'PayPal',
+  },
+  {
+    invoice: 'INV006',
+    paymentStatus: 'Pending',
+    totalAmount: '$200.00',
+    paymentMethod: 'Bank Transfer',
+  },
+  {
+    invoice: 'INV007',
+    paymentStatus: 'Unpaid',
+    totalAmount: '$300.00',
+    paymentMethod: 'Credit Card',
+  },
 ]
 
 export const Default: Story = {
   render: () => (
-    <Table>
-      <TableCaption>Recent Invoices</TableCaption>
+    <Table className="w-[600px] border">
+      <TableCaption>A list of your recent invoices.</TableCaption>
       <TableHeader>
         <TableRow>
-          <TableHead>Invoice</TableHead>
+          <TableHead className="w-[100px]">Invoice</TableHead>
           <TableHead>Status</TableHead>
           <TableHead>Method</TableHead>
           <TableHead className="text-right">Amount</TableHead>
@@ -90,93 +78,19 @@ export const Default: Story = {
       <TableBody>
         {invoices.map((invoice) => (
           <TableRow key={invoice.invoice}>
-            <TableCell>{invoice.invoice}</TableCell>
+            <TableCell className="font-medium">{invoice.invoice}</TableCell>
             <TableCell>{invoice.paymentStatus}</TableCell>
             <TableCell>{invoice.paymentMethod}</TableCell>
             <TableCell className="text-right">{invoice.totalAmount}</TableCell>
           </TableRow>
         ))}
       </TableBody>
-    </Table>
-  ),
-}
-
-export const WithFooter: Story = {
-  render: () => (
-    <Table>
-      <TableHeader>
-        <TableRow>
-          <TableHead>Item</TableHead>
-          <TableHead className="text-right">Amount</TableHead>
-        </TableRow>
-      </TableHeader>
-      <TableBody>
-        <TableRow>
-          <TableCell>Product A</TableCell>
-          <TableCell className="text-right">$100.00</TableCell>
-        </TableRow>
-        <TableRow>
-          <TableCell>Product B</TableCell>
-          <TableCell className="text-right">$150.00</TableCell>
-        </TableRow>
-      </TableBody>
       <TableFooter>
         <TableRow>
-          <TableCell>Total</TableCell>
-          <TableCell className="text-right">$250.00</TableCell>
+          <TableCell colSpan={3}>Total</TableCell>
+          <TableCell className="text-right">$2,500.00</TableCell>
         </TableRow>
       </TableFooter>
     </Table>
-  ),
-}
-
-export const Sizes: Story = {
-  render: () => (
-    <div className="flex flex-col gap-8">
-      <Table size="sm">
-        <TableHeader>
-          <TableRow>
-            <TableHead>Small Table</TableHead>
-            <TableHead>Value</TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          <TableRow>
-            <TableCell>Item 1</TableCell>
-            <TableCell>Value 1</TableCell>
-          </TableRow>
-        </TableBody>
-      </Table>
-
-      <Table>
-        <TableHeader>
-          <TableRow>
-            <TableHead>Default Table</TableHead>
-            <TableHead>Value</TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          <TableRow>
-            <TableCell>Item 1</TableCell>
-            <TableCell>Value 1</TableCell>
-          </TableRow>
-        </TableBody>
-      </Table>
-
-      <Table size="lg">
-        <TableHeader>
-          <TableRow>
-            <TableHead>Large Table</TableHead>
-            <TableHead>Value</TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          <TableRow>
-            <TableCell>Item 1</TableCell>
-            <TableCell>Value 1</TableCell>
-          </TableRow>
-        </TableBody>
-      </Table>
-    </div>
   ),
 }

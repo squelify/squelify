@@ -1,52 +1,31 @@
 import type { Meta, StoryObj } from '@storybook/react'
 import { InputOTP, InputOTPGroup, InputOTPSeparator, InputOTPSlot } from './input-otp'
-import type { InputOTPVariants } from './input-otp.css'
+import type { InputOtpVariants } from './input-otp.css'
 
-const sizeOptions: NonNullable<InputOTPVariants['size']>[] = ['default', 'sm', 'lg']
+const sizeOptions: NonNullable<InputOtpVariants['size']>[] = ['sm', 'default', 'lg']
 
-const meta: Meta = {
+const meta = {
   title: 'Basic Components/InputOTP',
   component: InputOTP,
-  parameters: {
-    docs: {
-      description: {
-        component: `
-One-Time Password input component with customizable slots.
-
-## Example
-\`\`\`tsx
-import { InputOTP, InputOTPGroup, InputOTPSlot, InputOTPSeparator } from '#/components/base-ui'
-
-<InputOTP maxLength={6}>
-  <InputOTPGroup>
-    <InputOTPSlot index={0} />
-    <InputOTPSeparator />
-    <InputOTPSlot index={1} />
-  </InputOTPGroup>
-</InputOTP>
-\`\`\``,
+  argTypes: {
+    size: {
+      control: 'radio',
+      options: sizeOptions,
+      table: {
+        defaultValue: { summary: 'default' },
+        type: { summary: 'InputOtpVariants["size"]' },
       },
     },
   },
-  argTypes: {
-    size: {
-      control: 'inline-radio',
-      options: sizeOptions,
-      description: 'Input size variant',
-    },
-    maxLength: {
-      control: 'number',
-      description: 'Maximum number of characters',
-    },
-  },
-}
+} satisfies Meta<typeof InputOTP>
 
 export default meta
 type Story = StoryObj<typeof meta>
 
 export const Default: Story = {
-  render: () => (
-    <InputOTP maxLength={6}>
+  args: {
+    maxLength: 6,
+    children: (
       <InputOTPGroup>
         <InputOTPSlot index={0} />
         <InputOTPSlot index={1} />
@@ -56,80 +35,78 @@ export const Default: Story = {
         <InputOTPSlot index={4} />
         <InputOTPSlot index={5} />
       </InputOTPGroup>
-    </InputOTP>
-  ),
-}
-
-export const WithSeparators: Story = {
-  render: () => (
-    <InputOTP maxLength={4}>
+    ),
+  },
+  render: ({ size, ...args }) => (
+    <InputOTP {...args}>
       <InputOTPGroup>
-        <InputOTPSlot index={0} />
-        <InputOTPSeparator />
-        <InputOTPSlot index={1} />
-        <InputOTPSeparator />
-        <InputOTPSlot index={2} />
-        <InputOTPSeparator />
-        <InputOTPSlot index={3} />
+        <InputOTPSlot index={0} size={size} />
+        <InputOTPSlot index={1} size={size} />
+        <InputOTPSlot index={2} size={size} />
+        <InputOTPSeparator size={size} />
+        <InputOTPSlot index={3} size={size} />
+        <InputOTPSlot index={4} size={size} />
+        <InputOTPSlot index={5} size={size} />
       </InputOTPGroup>
     </InputOTP>
   ),
 }
 
-export const SizeVariants: Story = {
+export const Sizes: Story = {
+  args: {
+    maxLength: 6,
+    children: (
+      <InputOTPGroup>
+        <InputOTPSlot index={0} />
+        <InputOTPSlot index={1} />
+        <InputOTPSlot index={2} />
+        <InputOTPSeparator />
+        <InputOTPSlot index={3} />
+        <InputOTPSlot index={4} />
+        <InputOTPSlot index={5} />
+      </InputOTPGroup>
+    ),
+  },
+  parameters: {
+    controls: { exclude: ['size'] },
+  },
   render: () => (
-    <div className="flex flex-col gap-4">
-      <InputOTP maxLength={4}>
+    <div className="space-y-4">
+      <InputOTP maxLength={6} size="sm">
         <InputOTPGroup>
-          <InputOTPSlot index={0} />
-          <InputOTPSeparator />
-          <InputOTPSlot index={1} />
-          <InputOTPSeparator />
-          <InputOTPSlot index={2} />
-          <InputOTPSeparator />
-          <InputOTPSlot index={3} />
+          <InputOTPSlot index={0} size="sm" />
+          <InputOTPSlot index={1} size="sm" />
+          <InputOTPSlot index={2} size="sm" />
+          <InputOTPSeparator size="sm" />
+          <InputOTPSlot index={3} size="sm" />
+          <InputOTPSlot index={4} size="sm" />
+          <InputOTPSlot index={5} size="sm" />
         </InputOTPGroup>
       </InputOTP>
 
-      <InputOTP maxLength={4}>
+      <InputOTP maxLength={6}>
         <InputOTPGroup>
           <InputOTPSlot index={0} />
-          <InputOTPSeparator />
           <InputOTPSlot index={1} />
-          <InputOTPSeparator />
           <InputOTPSlot index={2} />
           <InputOTPSeparator />
           <InputOTPSlot index={3} />
+          <InputOTPSlot index={4} />
+          <InputOTPSlot index={5} />
         </InputOTPGroup>
       </InputOTP>
 
-      <InputOTP maxLength={4}>
+      <InputOTP maxLength={6} size="lg">
         <InputOTPGroup>
-          <InputOTPSlot index={0} />
-          <InputOTPSeparator />
-          <InputOTPSlot index={1} />
-          <InputOTPSeparator />
-          <InputOTPSlot index={2} />
-          <InputOTPSeparator />
-          <InputOTPSlot index={3} />
+          <InputOTPSlot index={0} size="lg" />
+          <InputOTPSlot index={1} size="lg" />
+          <InputOTPSlot index={2} size="lg" />
+          <InputOTPSeparator size="lg" />
+          <InputOTPSlot index={3} size="lg" />
+          <InputOTPSlot index={4} size="lg" />
+          <InputOTPSlot index={5} size="lg" />
         </InputOTPGroup>
       </InputOTP>
     </div>
-  ),
-}
-
-export const Pattern: Story = {
-  render: () => (
-    <InputOTP maxLength={6} pattern="\d*">
-      <InputOTPGroup>
-        <InputOTPSlot index={0} />
-        <InputOTPSlot index={1} />
-        <InputOTPSlot index={2} />
-        <InputOTPSeparator />
-        <InputOTPSlot index={3} />
-        <InputOTPSlot index={4} />
-        <InputOTPSlot index={5} />
-      </InputOTPGroup>
-    </InputOTP>
   ),
 }

@@ -5,7 +5,6 @@ import { Controller, FormProvider, useFormContext } from 'react-hook-form'
 import type { ControllerProps, FieldPath, FieldValues } from 'react-hook-form'
 import { Label } from '../label/label'
 import { formStyles } from './form.css'
-import type { FormVariants } from './form.css'
 
 const Form = FormProvider
 
@@ -60,12 +59,10 @@ type FormItemContextValue = {
 
 const FormItemContext = React.createContext<FormItemContextValue>({} as FormItemContextValue)
 
-interface FormItemProps extends React.HTMLAttributes<HTMLDivElement>, FormVariants {}
-
-const FormItem = React.forwardRef<HTMLDivElement, FormItemProps>(
-  ({ className, size, ...props }, ref) => {
+const FormItem = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElement>>(
+  ({ className, ...props }, ref) => {
     const id = React.useId()
-    const styles = formStyles({ size })
+    const styles = formStyles()
 
     return (
       <FormItemContext.Provider value={{ id }}>
@@ -87,10 +84,10 @@ const FormLabel = React.forwardRef<
 
 const FormControl = React.forwardRef<
   React.ComponentRef<typeof Slot>,
-  React.ComponentPropsWithoutRef<typeof Slot> & FormVariants
->(({ size, ...props }, ref) => {
+  React.ComponentPropsWithoutRef<typeof Slot>
+>(({ ...props }, ref) => {
   const { error, formItemId, formDescriptionId, formMessageId } = useFormField()
-  const styles = formStyles({ error: !!error, size })
+  const styles = formStyles()
 
   return (
     <Slot

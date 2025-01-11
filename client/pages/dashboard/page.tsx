@@ -8,7 +8,7 @@ import PageWrapper from '#/layouts/page-wrapper'
 import logger from '#/utils/logger'
 // import CardGetStarted from './card-get-started'
 import CardSystemMetrics from './card-metrics'
-import CardQuickAccess from './card-quick-access'
+// import CardQuickAccess from './card-quick-access'
 import CardResources from './card-resources'
 import CardStats from './card-stats'
 
@@ -93,9 +93,15 @@ export default function Page() {
 
   const healthData = healthDataRef.current
 
-  const renderMetric = (value: string | undefined, fallback = '-') => {
-    if (isLoading) return <span className="animate-pulse rounded bg-muted px-3">Loading...</span>
-    return value || fallback
+  const renderMetric = (value: string | number | undefined, fallback = '-') => {
+    if (isLoading) {
+      return (
+        <span className="animate-pulse rounded bg-muted px-3" aria-busy="true">
+          Loading...
+        </span>
+      )
+    }
+    return String(value ?? fallback)
   }
 
   return (
@@ -148,9 +154,7 @@ export default function Page() {
           <Lucide.SquareSlash className="size-5" strokeWidth={2} />
           Quick Access
         </h2>
-        <div className="grid gap-6 md:grid-cols-3">
-          <CardQuickAccess />
-        </div>
+        <div className="grid gap-6 md:grid-cols-3">{/* <CardQuickAccess /> */}</div>
       </div>
     </PageWrapper>
   )

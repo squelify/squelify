@@ -2,19 +2,14 @@ import * as AccordionPrimitive from '@radix-ui/react-accordion'
 import * as Lucide from 'lucide-react'
 import * as React from 'react'
 import { accordionStyles } from './accordion.css'
-import type { AccordionVariants } from './accordion.css'
 
 const Accordion = AccordionPrimitive.Root
 
-interface AccordionItemProps
-  extends React.ComponentPropsWithoutRef<typeof AccordionPrimitive.Item>,
-    AccordionVariants {}
-
 const AccordionItem = React.forwardRef<
   React.ComponentRef<typeof AccordionPrimitive.Item>,
-  AccordionItemProps
->(({ className, size, ...props }, ref) => {
-  const styles = accordionStyles({ size })
+  React.ComponentPropsWithoutRef<typeof AccordionPrimitive.Item>
+>(({ className, ...props }, ref) => {
+  const styles = accordionStyles()
   return <AccordionPrimitive.Item ref={ref} className={styles.item({ className })} {...props} />
 })
 
@@ -24,10 +19,14 @@ const AccordionTrigger = React.forwardRef<
 >(({ className, children, ...props }, ref) => {
   const styles = accordionStyles()
   return (
-    <AccordionPrimitive.Header className="flex">
-      <AccordionPrimitive.Trigger ref={ref} className={styles.trigger({ className })} {...props}>
+    <AccordionPrimitive.Header className={styles.headerWrapper()}>
+      <AccordionPrimitive.Trigger
+        ref={ref}
+        className={styles.headerTrigger({ className })}
+        {...props}
+      >
         {children}
-        <Lucide.ChevronDown className={styles.icon()} strokeWidth={2} />
+        <Lucide.ChevronDown className={styles.headerIcon()} strokeWidth={2} />
       </AccordionPrimitive.Trigger>
     </AccordionPrimitive.Header>
   )
@@ -39,13 +38,12 @@ const AccordionContent = React.forwardRef<
 >(({ className, children, ...props }, ref) => {
   const styles = accordionStyles()
   return (
-    <AccordionPrimitive.Content ref={ref} className={styles.content()} {...props}>
-      <div className={styles.contentInner({ className })}>{children}</div>
+    <AccordionPrimitive.Content ref={ref} className={styles.contentWrapper()} {...props}>
+      <div className={styles.contentChildren({ className })}>{children}</div>
     </AccordionPrimitive.Content>
   )
 })
 
-Accordion.displayName = 'Accordion'
 AccordionItem.displayName = 'AccordionItem'
 AccordionTrigger.displayName = AccordionPrimitive.Trigger.displayName
 AccordionContent.displayName = AccordionPrimitive.Content.displayName

@@ -5,10 +5,12 @@ import { type AspectRatioVariants, aspectRatioStyles } from './aspect-ratio.css'
 const AspectRatio = React.forwardRef<
   React.ComponentRef<typeof AspectRatioPrimitive.Root>,
   React.ComponentPropsWithoutRef<typeof AspectRatioPrimitive.Root> & AspectRatioVariants
->(({ className, ...props }, ref) => (
-  <AspectRatioPrimitive.Root ref={ref} className={aspectRatioStyles({ className })} {...props} />
-))
+>(({ className, ...props }, ref) => {
+  return (
+    <AspectRatioPrimitive.Root ref={ref} className={aspectRatioStyles({ className })} {...props} />
+  )
+})
 
-AspectRatio.displayName = AspectRatioPrimitive.Root.displayName
+AspectRatio.displayName = 'AspectRatio'
 
 export { AspectRatio }

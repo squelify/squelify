@@ -8,6 +8,7 @@ export const separatorStyles = tv({
       vertical: 'h-full w-[1px]',
     },
   },
+  compoundVariants: [],
   defaultVariants: {
     orientation: 'horizontal',
   },

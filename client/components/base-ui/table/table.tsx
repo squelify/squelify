@@ -1,18 +1,16 @@
 import * as React from 'react'
 import { tableStyles } from './table.css'
-import type { TableVariants } from './table.css'
 
-const Table = React.forwardRef<
-  HTMLTableElement,
-  React.HTMLAttributes<HTMLTableElement> & TableVariants
->(({ className, size, ...props }, ref) => {
-  const styles = tableStyles({ size })
-  return (
-    <div className={styles.wrapper()}>
-      <table ref={ref} className={styles.root({ className })} {...props} />
-    </div>
-  )
-})
+const Table = React.forwardRef<HTMLTableElement, React.HTMLAttributes<HTMLTableElement>>(
+  ({ className, ...props }, ref) => {
+    const styles = tableStyles()
+    return (
+      <div className={styles.wrapper()}>
+        <table ref={ref} className={styles.table({ className })} {...props} />
+      </div>
+    )
+  }
+)
 
 const TableHeader = React.forwardRef<
   HTMLTableSectionElement,

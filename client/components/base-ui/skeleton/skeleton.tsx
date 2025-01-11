@@ -1,8 +1,12 @@
 import * as React from 'react'
-import { skeletonStyles } from './skeleton.css'
+import { type SkeletonVariants, skeletonStyles } from './skeleton.css'
 
-function Skeleton({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) {
-  return <div className={skeletonStyles({ className })} {...props} />
-}
+export interface SkeletonProps extends React.ComponentPropsWithoutRef<'div'>, SkeletonVariants {}
+
+const Skeleton = React.forwardRef<HTMLDivElement, SkeletonProps>(({ className, ...props }, ref) => {
+  return <div ref={ref} className={skeletonStyles({ className })} {...props} />
+})
+
+Skeleton.displayName = 'Skeleton'
 
 export { Skeleton }

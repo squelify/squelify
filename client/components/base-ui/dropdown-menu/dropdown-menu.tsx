@@ -1,8 +1,7 @@
 import * as DropdownMenuPrimitive from '@radix-ui/react-dropdown-menu'
 import * as Lucide from 'lucide-react'
 import * as React from 'react'
-import { dropdownMenuStyles } from './dropdown-menu.css'
-import type { DropdownMenuVariants } from './dropdown-menu.css'
+import { DropdownMenuVariants, dropdownMenuStyles } from './dropdown-menu.css'
 
 const DropdownMenu = DropdownMenuPrimitive.Root
 const DropdownMenuTrigger = DropdownMenuPrimitive.Trigger
@@ -11,16 +10,11 @@ const DropdownMenuPortal = DropdownMenuPrimitive.Portal
 const DropdownMenuSub = DropdownMenuPrimitive.Sub
 const DropdownMenuRadioGroup = DropdownMenuPrimitive.RadioGroup
 
-type DropdownMenuSubTriggerProps = React.ComponentPropsWithoutRef<
-  typeof DropdownMenuPrimitive.SubTrigger
-> &
-  DropdownMenuVariants
-
 const DropdownMenuSubTrigger = React.forwardRef<
   React.ComponentRef<typeof DropdownMenuPrimitive.SubTrigger>,
-  DropdownMenuSubTriggerProps
->(({ className, inset, size, children, ...props }, ref) => {
-  const styles = dropdownMenuStyles({ inset, size })
+  React.ComponentPropsWithoutRef<typeof DropdownMenuPrimitive.SubTrigger> & DropdownMenuVariants
+>(({ className, inset, children, ...props }, ref) => {
+  const styles = dropdownMenuStyles({ inset })
   return (
     <DropdownMenuPrimitive.SubTrigger
       ref={ref}
@@ -28,16 +22,16 @@ const DropdownMenuSubTrigger = React.forwardRef<
       {...props}
     >
       {children}
-      <Lucide.ChevronRight className={styles.icon()} strokeWidth={2} />
+      <Lucide.ChevronRight className={styles.triggerIcon()} strokeWidth={2} />
     </DropdownMenuPrimitive.SubTrigger>
   )
 })
 
 const DropdownMenuSubContent = React.forwardRef<
   React.ComponentRef<typeof DropdownMenuPrimitive.SubContent>,
-  React.ComponentPropsWithoutRef<typeof DropdownMenuPrimitive.SubContent> & DropdownMenuVariants
->(({ className, size, ...props }, ref) => {
-  const styles = dropdownMenuStyles({ size })
+  React.ComponentPropsWithoutRef<typeof DropdownMenuPrimitive.SubContent>
+>(({ className, ...props }, ref) => {
+  const styles = dropdownMenuStyles()
   return (
     <DropdownMenuPrimitive.SubContent
       ref={ref}
@@ -49,9 +43,9 @@ const DropdownMenuSubContent = React.forwardRef<
 
 const DropdownMenuContent = React.forwardRef<
   React.ComponentRef<typeof DropdownMenuPrimitive.Content>,
-  React.ComponentPropsWithoutRef<typeof DropdownMenuPrimitive.Content> & DropdownMenuVariants
->(({ className, size, sideOffset = 4, ...props }, ref) => {
-  const styles = dropdownMenuStyles({ size })
+  React.ComponentPropsWithoutRef<typeof DropdownMenuPrimitive.Content>
+>(({ className, sideOffset = 4, ...props }, ref) => {
+  const styles = dropdownMenuStyles()
   return (
     <DropdownMenuPrimitive.Portal>
       <DropdownMenuPrimitive.Content
@@ -84,11 +78,9 @@ const DropdownMenuCheckboxItem = React.forwardRef<
       checked={checked}
       {...props}
     >
-      <span className="absolute left-2 flex size-3.5 items-center justify-center">
-        <DropdownMenuPrimitive.ItemIndicator>
-          <Lucide.Check className={styles.icon()} strokeWidth={2} />
-        </DropdownMenuPrimitive.ItemIndicator>
-      </span>
+      <DropdownMenuPrimitive.ItemIndicator className={styles.checkboxItemIndicator()}>
+        <Lucide.Check className={styles.checkboxItemIcon()} strokeWidth={2} />
+      </DropdownMenuPrimitive.ItemIndicator>
       {children}
     </DropdownMenuPrimitive.CheckboxItem>
   )
@@ -105,11 +97,9 @@ const DropdownMenuRadioItem = React.forwardRef<
       className={styles.radioItem({ className })}
       {...props}
     >
-      <span className="absolute left-2 flex size-3.5 items-center justify-center">
-        <DropdownMenuPrimitive.ItemIndicator>
-          <Lucide.CheckCheck className={styles.icon()} strokeWidth={2} />
-        </DropdownMenuPrimitive.ItemIndicator>
-      </span>
+      <DropdownMenuPrimitive.ItemIndicator className={styles.radioItemIndicator()}>
+        <Lucide.Dot className={styles.radioItemIcon()} strokeWidth={2} />
+      </DropdownMenuPrimitive.ItemIndicator>
       {children}
     </DropdownMenuPrimitive.RadioItem>
   )
@@ -144,6 +134,12 @@ const DropdownMenuShortcut = ({ className, ...props }: React.HTMLAttributes<HTML
   return <span className={styles.shortcut({ className })} {...props} />
 }
 
+DropdownMenu.displayName = 'DropdownMenu'
+DropdownMenuTrigger.displayName = 'DropdownMenuTrigger'
+DropdownMenuGroup.displayName = 'DropdownMenuGroup'
+DropdownMenuPortal.displayName = 'DropdownMenuPortal'
+DropdownMenuSub.displayName = 'DropdownMenuSub'
+DropdownMenuRadioGroup.displayName = 'DropdownMenuRadioGroup'
 DropdownMenuSubTrigger.displayName = DropdownMenuPrimitive.SubTrigger.displayName
 DropdownMenuSubContent.displayName = DropdownMenuPrimitive.SubContent.displayName
 DropdownMenuContent.displayName = DropdownMenuPrimitive.Content.displayName

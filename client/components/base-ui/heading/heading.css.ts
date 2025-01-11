@@ -1,7 +1,7 @@
 import { type VariantProps, tv } from 'tailwind-variants'
 
 export const headingStyles = tv({
-  base: ['font-heading text-foreground', 'transition-colors duration-200', 'tracking-tight'],
+  base: 'font-heading text-foreground tracking-tight transition-colors duration-200',
   variants: {
     level: {
       h1: 'font-extrabold text-4xl lg:text-5xl',

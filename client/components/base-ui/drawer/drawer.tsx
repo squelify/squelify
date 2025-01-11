@@ -1,17 +1,12 @@
 import * as React from 'react'
 import { Drawer as DrawerPrimitive } from 'vaul'
 import { drawerStyles } from './drawer.css'
-import type { DrawerVariants } from './drawer.css'
 
-type DrawerProps = React.ComponentPropsWithoutRef<typeof DrawerPrimitive.Root> &
-  DrawerVariants & {
-    shouldScaleBackground?: boolean
-  }
-
-const Drawer = React.forwardRef<React.ComponentRef<typeof DrawerPrimitive.Root>, DrawerProps>(
-  ({ shouldScaleBackground = true, size, side, ...props }) => {
-    return <DrawerPrimitive.Root shouldScaleBackground={shouldScaleBackground} {...props} />
-  }
+const Drawer = ({
+  shouldScaleBackground = true,
+  ...props
+}: React.ComponentProps<typeof DrawerPrimitive.Root>) => (
+  <DrawerPrimitive.Root shouldScaleBackground={shouldScaleBackground} {...props} />
 )
 
 const DrawerTrigger = DrawerPrimitive.Trigger
@@ -28,9 +23,9 @@ const DrawerOverlay = React.forwardRef<
 
 const DrawerContent = React.forwardRef<
   React.ComponentRef<typeof DrawerPrimitive.Content>,
-  React.ComponentPropsWithoutRef<typeof DrawerPrimitive.Content> & DrawerVariants
->(({ className, children, size, side, ...props }, ref) => {
-  const styles = drawerStyles({ size, side })
+  React.ComponentPropsWithoutRef<typeof DrawerPrimitive.Content>
+>(({ className, children, ...props }, ref) => {
+  const styles = drawerStyles()
   return (
     <DrawerPortal>
       <DrawerOverlay />
@@ -75,6 +70,8 @@ const DrawerDescription = React.forwardRef<
 })
 
 Drawer.displayName = 'Drawer'
+DrawerTrigger.displayName = 'DrawerTrigger'
+DrawerClose.displayName = 'DrawerClose'
 DrawerOverlay.displayName = DrawerPrimitive.Overlay.displayName
 DrawerContent.displayName = 'DrawerContent'
 DrawerHeader.displayName = 'DrawerHeader'

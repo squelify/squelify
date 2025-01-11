@@ -17,20 +17,24 @@ const SheetOverlay = React.forwardRef<
   return <SheetPrimitive.Overlay className={styles.overlay({ className })} {...props} ref={ref} />
 })
 
+interface SheetContentProps
+  extends React.ComponentPropsWithoutRef<typeof SheetPrimitive.Content>,
+    SheetVariants {}
+
 const SheetContent = React.forwardRef<
   React.ComponentRef<typeof SheetPrimitive.Content>,
-  React.ComponentPropsWithoutRef<typeof SheetPrimitive.Content> & SheetVariants
->(({ side = 'right', className, children, size, ...props }, ref) => {
-  const styles = sheetStyles({ side, size })
+  SheetContentProps
+>(({ side = 'right', className, children, ...props }, ref) => {
+  const styles = sheetStyles({ side })
   return (
     <SheetPortal>
       <SheetOverlay />
-      <SheetPrimitive.Content ref={ref} className={styles.content({ className })} {...props}>
-        {children}
-        <SheetPrimitive.Close className={styles.closeButton()}>
-          <Lucide.XIcon className={styles.closeIcon()} strokeWidth={2} />
+      <SheetPrimitive.Content ref={ref} className={styles.base({ className })} {...props}>
+        <SheetPrimitive.Close className={styles.contentCloseWrapper()}>
+          <Lucide.XIcon className={styles.contentCloseIcon()} strokeWidth={2} />
           <span className="sr-only">Close</span>
         </SheetPrimitive.Close>
+        {children}
       </SheetPrimitive.Content>
     </SheetPortal>
   )
@@ -61,8 +65,8 @@ const SheetDescription = React.forwardRef<
   const styles = sheetStyles()
   return (
     <SheetPrimitive.Description
-      ref={ref}
       className={styles.description({ className })}
+      ref={ref}
       {...props}
     />
   )

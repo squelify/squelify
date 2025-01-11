@@ -1,29 +1,40 @@
 import { Canvas, Meta, Primary } from '@storybook/blocks';
-import { Anchor, Button } from '#/components/base-ui';
 import * as Stories from './accordion.stories';
 
 <Meta of={Stories} />
 
 # Accordion
 
-<Button variant='outline' size='xs' asChild>
-  <Anchor href="https://ark-ui.com/react/docs/components/accordion" newTab>Docs</Anchor>
-</Button>
-<Button variant='outline' size='xs' asChild>
-  <Anchor href="https://ark-ui.com/react/docs/components/accordion#api-reference" newTab>API Reference</Anchor>
-</Button>
-
-A vertically stacked set of interactive headings that each reveal a section of content.
+Vertically stacked set of interactive headings that each reveal a section of content.
 
 ## Example
 
 ```tsx
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '#/components/base-ui'
 
+// Single accordion
 <Accordion type="single" collapsible>
   <AccordionItem value="item-1">
-    <AccordionTrigger>Section 1</AccordionTrigger>
-    <AccordionContent>Content for section 1</AccordionContent>
+    <AccordionTrigger>Section Title</AccordionTrigger>
+    <AccordionContent>
+      Section content goes here
+    </AccordionContent>
+  </AccordionItem>
+</Accordion>
+
+// Multiple accordion
+<Accordion type="multiple">
+  <AccordionItem value="item-1">
+    <AccordionTrigger>First Section</AccordionTrigger>
+    <AccordionContent>
+      First content
+    </AccordionContent>
+  </AccordionItem>
+  <AccordionItem value="item-2">
+    <AccordionTrigger>Second Section</AccordionTrigger>
+    <AccordionContent>
+      Second content
+    </AccordionContent>
   </AccordionItem>
 </Accordion>
 ```

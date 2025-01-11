@@ -1,17 +1,14 @@
 import * as Lucide from 'lucide-react'
 import * as React from 'react'
 import { Link } from '#/components/link'
+import { ButtonProps } from '../button/button'
+import { buttonStyles } from '../button/button.css'
 import { paginationStyles } from './pagination.css'
-import type { PaginationVariants } from './pagination.css'
 
-const Pagination = React.forwardRef<HTMLElement, React.ComponentProps<'nav'> & PaginationVariants>(
-  ({ className, variant, size, ...props }, ref) => {
-    const styles = paginationStyles({ variant, size })
-    return (
-      <nav ref={ref} aria-label="pagination" className={styles.root({ className })} {...props} />
-    )
-  }
-)
+const Pagination = ({ className, ...props }: React.ComponentProps<'nav'>) => {
+  const styles = paginationStyles()
+  return <nav aria-label="pagination" className={styles.base({ className })} {...props} />
+}
 
 const PaginationContent = React.forwardRef<HTMLUListElement, React.ComponentProps<'ul'>>(
   ({ className, ...props }, ref) => {
@@ -29,16 +26,16 @@ const PaginationItem = React.forwardRef<HTMLLIElement, React.ComponentProps<'li'
 
 type PaginationLinkProps = {
   isActive?: boolean
-  variant?: PaginationVariants['variant']
-  size?: PaginationVariants['size']
-} & React.ComponentProps<typeof Link>
+} & Pick<ButtonProps, 'size'> &
+  React.ComponentProps<'a'>
 
-const PaginationLink = ({ className, isActive, size, variant, ...props }: PaginationLinkProps) => {
-  const styles = paginationStyles({ variant, size, isActive })
+const PaginationLink = ({ className, isActive, size = 'icon', ...props }: PaginationLinkProps) => {
+  const styles = buttonStyles({ variant: isActive ? 'outline' : 'ghost', size })
   return (
     <Link
+      href={props.href || '#'}
       aria-current={isActive ? 'page' : undefined}
-      className={styles.link({ className })}
+      className={styles.base({ className })}
       {...props}
     />
   )
@@ -51,12 +48,12 @@ const PaginationPrevious = ({
   const styles = paginationStyles()
   return (
     <PaginationLink
+      className={styles.previous({ className })}
       aria-label="Go to previous page"
       size="default"
-      className={styles.link({ className })}
       {...props}
     >
-      <Lucide.ChevronLeft className={styles.icon()} />
+      <Lucide.ChevronLeft className={styles.previousIcon()} />
       <span>Previous</span>
     </PaginationLink>
   )
@@ -66,13 +63,13 @@ const PaginationNext = ({ className, ...props }: React.ComponentProps<typeof Pag
   const styles = paginationStyles()
   return (
     <PaginationLink
+      className={styles.next({ className })}
       aria-label="Go to next page"
       size="default"
-      className={styles.link({ className })}
       {...props}
     >
       <span>Next</span>
-      <Lucide.ChevronRight className={styles.icon()} />
+      <Lucide.ChevronRight className={styles.nextIcon()} />
     </PaginationLink>
   )
 }
@@ -81,7 +78,7 @@ const PaginationEllipsis = ({ className, ...props }: React.ComponentProps<'span'
   const styles = paginationStyles()
   return (
     <span aria-hidden className={styles.ellipsis({ className })} {...props}>
-      <Lucide.MoreHorizontal className={styles.icon()} />
+      <Lucide.MoreHorizontal className={styles.ellipsisIcon()} />
       <span className="sr-only">More pages</span>
     </span>
   )

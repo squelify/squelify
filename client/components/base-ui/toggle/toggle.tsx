@@ -1,7 +1,7 @@
 import * as TogglePrimitive from '@radix-ui/react-toggle'
 import * as React from 'react'
-import { clx } from '#/utils/helper'
-import { type ToggleVariants, toggleStyles } from './toggle.css'
+import type { ToggleVariants } from './toggle.css'
+import { toggleStyles } from './toggle.css'
 
 const Toggle = React.forwardRef<
   React.ComponentRef<typeof TogglePrimitive.Root>,
@@ -9,7 +9,7 @@ const Toggle = React.forwardRef<
 >(({ className, variant, size, ...props }, ref) => (
   <TogglePrimitive.Root
     ref={ref}
-    className={clx(toggleStyles({ variant, size }), className)}
+    className={toggleStyles({ variant, size, className })}
     {...props}
   />
 ))

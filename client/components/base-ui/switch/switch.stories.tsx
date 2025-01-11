@@ -1,42 +1,22 @@
 import type { Meta, StoryObj } from '@storybook/react'
 import { Label } from '../label/label'
 import { Switch } from './switch'
-import type { SwitchVariants } from './switch.css'
 
-const sizeOptions: NonNullable<SwitchVariants['size']>[] = ['default', 'sm', 'lg']
-
-const meta: Meta = {
+const meta: Meta<typeof Switch> = {
   title: 'Basic Components/Switch',
   component: Switch,
-  parameters: {
-    docs: {
-      description: {
-        component: `
-Switch component for toggling between two states.
-
-## Example
-\`\`\`tsx
-import { Switch } from '#/components/base-ui'
-
-<Switch />
-<Switch defaultChecked />
-\`\`\``,
-      },
-    },
-  },
   argTypes: {
-    size: {
-      control: 'inline-radio',
-      options: sizeOptions,
-      description: 'Switch size',
-    },
-    defaultChecked: {
+    checked: {
       control: 'boolean',
-      description: 'Default checked state',
+      description: 'The controlled checked state of the switch',
     },
     disabled: {
       control: 'boolean',
-      description: 'Disabled state',
+      description: 'When true, prevents the user from interacting with the switch',
+    },
+    defaultChecked: {
+      control: 'boolean',
+      description: 'The default checked state when initially rendered',
     },
   },
 }
@@ -48,40 +28,23 @@ export const Default: Story = {
   render: () => <Switch />,
 }
 
-export const WithLabel: Story = {
-  render: () => (
-    <div className="flex items-center gap-2">
-      <Switch id="airplane-mode" />
-      <Label htmlFor="airplane-mode">Airplane Mode</Label>
-    </div>
-  ),
-}
-
-export const Sizes: Story = {
+export const SwitchShowcase: Story = {
   render: () => (
     <div className="flex flex-col gap-4">
       <div className="flex items-center gap-2">
-        <Switch size="sm" id="small" />
-        <Label htmlFor="small">Small</Label>
+        <Switch id="airplane-mode" />
+        <Label htmlFor="airplane-mode">Airplane Mode</Label>
       </div>
-      <div className="flex items-center gap-2">
-        <Switch id="default" />
-        <Label htmlFor="default">Default</Label>
-      </div>
-      <div className="flex items-center gap-2">
-        <Switch size="lg" id="large" />
-        <Label htmlFor="large">Large</Label>
-      </div>
-    </div>
-  ),
-}
 
-export const States: Story = {
-  render: () => (
-    <div className="flex items-center gap-4">
-      <Switch defaultChecked />
-      <Switch disabled />
-      <Switch disabled defaultChecked />
+      <div className="flex items-center gap-2">
+        <Switch id="disabled" disabled />
+        <Label htmlFor="disabled">Disabled</Label>
+      </div>
+
+      <div className="flex items-center gap-2">
+        <Switch id="default-checked" defaultChecked />
+        <Label htmlFor="default-checked">Default Checked</Label>
+      </div>
     </div>
   ),
 }

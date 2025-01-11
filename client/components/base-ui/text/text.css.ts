@@ -1,7 +1,7 @@
 import { type VariantProps, tv } from 'tailwind-variants'
 
 export const textStyles = tv({
-  base: ['text-foreground', 'transition-colors duration-200'],
+  base: 'transition-colors duration-200 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring',
   variants: {
     size: {
       xs: 'text-xs',
@@ -24,15 +24,27 @@ export const textStyles = tv({
       right: 'text-right',
     },
     variant: {
-      default: 'text-foreground',
-      muted: 'text-muted-foreground',
-      primary: 'text-primary',
-      secondary: 'text-secondary-foreground',
-      destructive: 'text-destructive',
-      success: 'text-success',
-      warning: 'text-warning',
+      default: 'text-foreground hover:text-foreground/90',
+      muted: 'text-muted-foreground hover:text-muted-foreground/90',
+      primary: 'text-primary hover:text-primary/90',
+      secondary: 'text-secondary-foreground hover:text-secondary-foreground/90',
+      destructive: 'text-destructive hover:text-destructive/90',
+      success: 'text-success hover:text-success/90',
+      warning: 'text-warning hover:text-warning/90',
     },
   },
+  compoundVariants: [
+    {
+      size: ['lg', 'xl', '2xl'],
+      weight: ['semibold', 'bold'],
+      className: 'leading-normal tracking-tight',
+    },
+    {
+      size: ['xs', 'sm'],
+      weight: ['light', 'normal'],
+      className: 'leading-tight tracking-wide',
+    },
+  ],
   defaultVariants: {
     size: 'md',
     weight: 'normal',

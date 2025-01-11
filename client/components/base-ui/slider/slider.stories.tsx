@@ -1,48 +1,25 @@
 import type { Meta, StoryObj } from '@storybook/react'
 import { Slider } from './slider'
-import type { SliderVariants } from './slider.css'
 
-const sizeOptions: NonNullable<SliderVariants['size']>[] = ['default', 'sm', 'lg']
-
-const meta: Meta = {
+const meta: Meta<typeof Slider> = {
   title: 'Basic Components/Slider',
   component: Slider,
-  parameters: {
-    docs: {
-      description: {
-        component: `
-Slider component for selecting numeric values.
-
-## Example
-\`\`\`tsx
-import { Slider } from '#/components/base-ui'
-
-<Slider defaultValue={[50]} max={100} step={1} />
-\`\`\``,
-      },
-    },
-  },
   argTypes: {
     defaultValue: {
       control: 'object',
-      description: 'Default slider value(s)',
-    },
-    min: {
-      control: 'number',
-      description: 'Minimum value',
+      description: 'The default value of the slider',
     },
     max: {
       control: 'number',
-      description: 'Maximum value',
+      description: 'The maximum value for the slider',
     },
     step: {
       control: 'number',
-      description: 'Step increment',
+      description: 'The stepping interval',
     },
-    size: {
-      control: 'inline-radio',
-      options: sizeOptions,
-      description: 'Slider size',
+    disabled: {
+      control: 'boolean',
+      description: 'When true, prevents the user from interacting with the slider',
     },
   },
 }
@@ -52,42 +29,34 @@ type Story = StoryObj<typeof meta>
 
 export const Default: Story = {
   render: () => (
-    <div className="w-[60%]">
-      <Slider defaultValue={[50]} max={100} step={1} />
+    <div className="w-full min-w-[600px] p-6">
+      <Slider defaultValue={[50]} max={100} step={1} className="w-[60%]" />
     </div>
   ),
 }
 
-export const Range: Story = {
+export const SliderShowcase: Story = {
   render: () => (
-    <div className="w-[60%]">
-      <Slider defaultValue={[25, 75]} max={100} step={1} />
-    </div>
-  ),
-}
+    <div className="flex w-full min-w-[600px] flex-col gap-8">
+      <div className="space-y-4">
+        <h4 className="font-medium text-sm">Default Slider</h4>
+        <Slider defaultValue={[50]} max={100} step={1} />
+      </div>
 
-export const Sizes: Story = {
-  render: () => (
-    <div className="flex w-[60%] flex-col gap-8">
-      <Slider defaultValue={[25]} max={100} step={1} size="sm" />
-      <Slider defaultValue={[50]} max={100} step={1} size="default" />
-      <Slider defaultValue={[75]} max={100} step={1} size="lg" />
-    </div>
-  ),
-}
+      <div className="space-y-4">
+        <h4 className="font-medium text-sm">Range Slider</h4>
+        <Slider defaultValue={[25, 75]} max={100} step={1} />
+      </div>
 
-export const Steps: Story = {
-  render: () => (
-    <div className="w-[60%]">
-      <Slider defaultValue={[50]} max={100} step={10} />
-    </div>
-  ),
-}
+      <div className="space-y-4">
+        <h4 className="font-medium text-sm">Disabled Slider</h4>
+        <Slider defaultValue={[40]} max={100} step={1} disabled />
+      </div>
 
-export const Disabled: Story = {
-  render: () => (
-    <div className="w-[60%]">
-      <Slider defaultValue={[50]} max={100} step={1} disabled />
+      <div className="space-y-4">
+        <h4 className="font-medium text-sm">Step Slider</h4>
+        <Slider defaultValue={[20]} max={100} step={20} />
+      </div>
     </div>
   ),
 }

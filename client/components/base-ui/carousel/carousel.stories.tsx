@@ -1,83 +1,33 @@
 import type { Meta, StoryObj } from '@storybook/react'
 import { Card, CardContent } from '../card/card'
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from './carousel'
-import type { CarouselVariants } from './carousel.css'
 
-const orientationOptions: NonNullable<CarouselVariants['orientation']>[] = [
-  'horizontal',
-  'vertical',
-]
-const sizeOptions: NonNullable<CarouselVariants['size']>[] = ['default', 'sm', 'lg']
-
-const CAROUSEL_ITEMS = [
-  { id: 'slide-1', content: '1' },
-  { id: 'slide-2', content: '2' },
-  { id: 'slide-3', content: '3' },
-  { id: 'slide-4', content: '4' },
-  { id: 'slide-5', content: '5' },
-]
-
-const meta: Meta = {
+const meta: Meta<typeof Carousel> = {
   title: 'Basic Components/Carousel',
   component: Carousel,
-  parameters: {
-    docs: {
-      description: {
-        component: `
-Carousel component for cycling through elements.
-
-## Example
-\`\`\`tsx
-import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '#/components/base-ui'
-
-<Carousel>
-  <CarouselContent>
-    <CarouselItem>Item 1</CarouselItem>
-    <CarouselItem>Item 2</CarouselItem>
-  </CarouselContent>
-  <CarouselPrevious />
-  <CarouselNext />
-</Carousel>
-\`\`\``,
-      },
-    },
-  },
-  argTypes: {
-    orientation: {
-      control: 'inline-radio',
-      options: orientationOptions,
-      description: 'Carousel orientation',
-      table: {
-        type: { summary: 'CarouselVariants["orientation"]' },
-      },
-    },
-    size: {
-      control: 'inline-radio',
-      options: sizeOptions,
-      description: 'Navigation buttons size',
-      table: {
-        type: { summary: 'CarouselVariants["size"]' },
-      },
-    },
-    opts: {
-      control: 'object',
-      description: 'Embla Carousel options',
-    },
-  },
 }
 
 export default meta
 type Story = StoryObj<typeof meta>
 
+const slides = [
+  { id: 'slide-1', number: 1 },
+  { id: 'slide-2', number: 2 },
+  { id: 'slide-3', number: 3 },
+  { id: 'slide-4', number: 4 },
+  { id: 'slide-5', number: 5 },
+  { id: 'slide-5', number: 5 },
+]
+
 export const Default: Story = {
   render: () => (
     <Carousel className="w-full max-w-xs">
       <CarouselContent>
-        {CAROUSEL_ITEMS.map((item) => (
-          <CarouselItem key={item.id}>
+        {slides.map((slide) => (
+          <CarouselItem key={slide.id}>
             <Card>
               <CardContent className="flex aspect-square items-center justify-center p-6">
-                <span className="font-semibold text-4xl">{item.content}</span>
+                <span className="font-semibold text-4xl">{slide.number}</span>
               </CardContent>
             </Card>
           </CarouselItem>
@@ -91,15 +41,17 @@ export const Default: Story = {
 
 export const Vertical: Story = {
   render: () => (
-    <Carousel orientation="vertical" className="w-full max-w-xs">
-      <CarouselContent>
-        {CAROUSEL_ITEMS.map((item) => (
-          <CarouselItem key={item.id}>
-            <Card>
-              <CardContent className="flex aspect-square items-center justify-center p-6">
-                <span className="font-semibold text-4xl">{item.content}</span>
-              </CardContent>
-            </Card>
+    <Carousel opts={{ align: 'start' }} orientation="vertical" className="w-full max-w-xs">
+      <CarouselContent className="-mt-1 h-[200px]">
+        {slides.map((slide) => (
+          <CarouselItem key={slide.id} className="pt-1 md:basis-1/2">
+            <div className="p-1">
+              <Card>
+                <CardContent className="flex items-center justify-center p-6">
+                  <span className="font-semibold text-3xl">{slide.number}</span>
+                </CardContent>
+              </Card>
+            </div>
           </CarouselItem>
         ))}
       </CarouselContent>
@@ -109,45 +61,19 @@ export const Vertical: Story = {
   ),
 }
 
-export const SizeShowcase: Story = {
+export const Spacing: Story = {
   render: () => (
-    <div className="flex flex-col gap-8">
-      {['sm', 'default', 'lg'].map((size) => (
-        <Carousel
-          key={`carousel-${size}`}
-          size={size as CarouselVariants['size']}
-          className="w-full max-w-xs"
-        >
-          <CarouselContent>
-            {CAROUSEL_ITEMS.slice(0, 3).map((item) => (
-              <CarouselItem key={`${size}-${item.id}`}>
-                <Card>
-                  <CardContent className="flex aspect-square items-center justify-center p-6">
-                    <span className="font-semibold text-4xl">{item.content}</span>
-                  </CardContent>
-                </Card>
-              </CarouselItem>
-            ))}
-          </CarouselContent>
-          <CarouselPrevious />
-          <CarouselNext />
-        </Carousel>
-      ))}
-    </div>
-  ),
-}
-
-export const WithCustomOptions: Story = {
-  render: () => (
-    <Carousel opts={{ align: 'start' }} className="w-full max-w-xs">
-      <CarouselContent>
-        {CAROUSEL_ITEMS.map((item) => (
-          <CarouselItem key={item.id} className="basis-1/2">
-            <Card>
-              <CardContent className="flex aspect-square items-center justify-center p-6">
-                <span className="font-semibold text-4xl">{item.content}</span>
-              </CardContent>
-            </Card>
+    <Carousel className="w-full max-w-sm">
+      <CarouselContent className="-ml-1">
+        {slides.map((slide) => (
+          <CarouselItem key={slide.id} className="pl-1 md:basis-1/2 lg:basis-1/3">
+            <div className="p-1">
+              <Card>
+                <CardContent className="flex aspect-square items-center justify-center p-6">
+                  <span className="font-semibold text-2xl">{slide.number}</span>
+                </CardContent>
+              </Card>
+            </div>
           </CarouselItem>
         ))}
       </CarouselContent>

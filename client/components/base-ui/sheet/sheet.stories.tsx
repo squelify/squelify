@@ -12,45 +12,14 @@ import {
   SheetTitle,
   SheetTrigger,
 } from './sheet'
-import type { SheetVariants } from './sheet.css'
 
-const sizeOptions: NonNullable<SheetVariants['size']>[] = ['default', 'sm', 'lg', 'xl', 'full']
-const sideOptions: NonNullable<SheetVariants['side']>[] = ['top', 'right', 'bottom', 'left']
-
-const meta: Meta = {
+const meta = {
   title: 'Basic Components/Sheet',
   component: Sheet,
   parameters: {
-    docs: {
-      description: {
-        component: `
-Sheet component for displaying content in a sliding panel.
-
-## Example
-\`\`\`tsx
-import { Sheet, SheetTrigger, SheetContent } from '#/components/base-ui'
-
-<Sheet>
-  <SheetTrigger>Open</SheetTrigger>
-  <SheetContent>Content</SheetContent>
-</Sheet>
-\`\`\``,
-      },
-    },
+    layout: 'centered',
   },
-  argTypes: {
-    size: {
-      control: 'inline-radio',
-      options: sizeOptions,
-      description: 'Sheet size variant',
-    },
-    side: {
-      control: 'inline-radio',
-      options: sideOptions,
-      description: 'Sheet position',
-    },
-  },
-}
+} satisfies Meta<typeof Sheet>
 
 export default meta
 type Story = StoryObj<typeof meta>
@@ -59,7 +28,7 @@ export const Default: Story = {
   render: () => (
     <Sheet>
       <SheetTrigger asChild>
-        <Button variant="outline">Open Sheet</Button>
+        <Button variant="outline">Open</Button>
       </SheetTrigger>
       <SheetContent>
         <SheetHeader>
@@ -73,13 +42,13 @@ export const Default: Story = {
             <Label htmlFor="name" className="text-right">
               Name
             </Label>
-            <Input id="name" value="Pedro Duarte" className="col-span-3" />
+            <Input id="name" defaultValue="Pedro Duarte" className="col-span-3 w-auto" />
           </div>
           <div className="grid grid-cols-4 items-center gap-4">
             <Label htmlFor="username" className="text-right">
               Username
             </Label>
-            <Input id="username" value="@peduarte" className="col-span-3" />
+            <Input id="username" defaultValue="@peduarte" className="col-span-3 w-auto" />
           </div>
         </div>
         <SheetFooter>
@@ -95,36 +64,23 @@ export const Default: Story = {
 export const Sides: Story = {
   render: () => (
     <div className="grid grid-cols-2 gap-4">
-      {sideOptions.map((side) => (
+      {['top', 'right', 'bottom', 'left'].map((side) => (
         <Sheet key={side}>
           <SheetTrigger asChild>
             <Button variant="outline">Open {side}</Button>
           </SheetTrigger>
-          <SheetContent side={side}>
+          <SheetContent side={side as 'top' | 'right' | 'bottom' | 'left'}>
             <SheetHeader>
-              <SheetTitle>{side} Sheet</SheetTitle>
-              <SheetDescription>This sheet slides in from the {side}.</SheetDescription>
+              <SheetTitle>Edit profile</SheetTitle>
+              <SheetDescription>
+                Make changes to your profile here. Click save when you're done.
+              </SheetDescription>
             </SheetHeader>
-          </SheetContent>
-        </Sheet>
-      ))}
-    </div>
-  ),
-}
-
-export const Sizes: Story = {
-  render: () => (
-    <div className="flex gap-4">
-      {sizeOptions.map((size) => (
-        <Sheet key={size}>
-          <SheetTrigger asChild>
-            <Button variant="outline">{size}</Button>
-          </SheetTrigger>
-          <SheetContent size={size}>
-            <SheetHeader>
-              <SheetTitle>{size} Sheet</SheetTitle>
-              <SheetDescription>This is a {size} sized sheet.</SheetDescription>
-            </SheetHeader>
+            <SheetFooter>
+              <SheetClose asChild>
+                <Button type="submit">Save changes</Button>
+              </SheetClose>
+            </SheetFooter>
           </SheetContent>
         </Sheet>
       ))}

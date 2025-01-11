@@ -1,40 +1,32 @@
-import type { Assign } from '@ark-ui/react'
-import { type HTMLArkProps, ark } from '@ark-ui/react/factory'
 import * as Lucide from 'lucide-react'
 import * as React from 'react'
+import { toast } from 'sonner'
 import { Button } from '../button/button'
-import { toast } from '../toast/toast'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '../tooltip/tooltip'
 import { inputStyles } from './input.css'
-import type { InputVariants } from './input.css'
 
-export interface InputProps extends Assign<HTMLArkProps<'input'>, InputVariants> {
+export interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   onCopy?: () => void
   showCopyButton?: boolean
   showExternalCopyButton?: boolean
 }
 
 const Input = React.forwardRef<HTMLInputElement, InputProps>(
-  (
-    { className, type, showCopyButton, showExternalCopyButton, onCopy, value = '', size, ...props },
-    ref
-  ) => {
+  ({ className, type, showCopyButton, showExternalCopyButton, onCopy, ...props }, ref) => {
     const [showPassword, setShowPassword] = React.useState(false)
     const styles = inputStyles({
-      size,
-      hasRightIcon: type === 'password' || showCopyButton,
+      hasPasswordToggle: type === 'password',
+      hasCopyButton: showCopyButton && !type,
     })
 
-    const togglePassword = () => {
-      setShowPassword(!showPassword)
-    }
+    const togglePassword = () => setShowPassword(!showPassword)
 
     const handleCopy = () => {
-      if (!value) {
+      if (!props.value) {
         toast.error('Nothing to copy')
         return
       }
-      navigator.clipboard.writeText(value.toString())
+      navigator.clipboard.writeText(props.value.toString())
       toast.success('Copied to clipboard')
       onCopy?.()
     }
@@ -43,11 +35,11 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
       <TooltipProvider>
         <Tooltip>
           <TooltipTrigger asChild>
-            <button type="button" onClick={togglePassword} className={styles.iconButton()}>
+            <button type="button" onClick={togglePassword} className={styles.toggleButton()}>
               {showPassword ? (
-                <Lucide.EyeOff className={styles.icon()} />
+                <Lucide.EyeOff className="size-4" strokeWidth={2} />
               ) : (
-                <Lucide.Eye className={styles.icon()} />
+                <Lucide.Eye className="size-4" strokeWidth={2} />
               )}
             </button>
           </TooltipTrigger>
@@ -62,8 +54,8 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
       <TooltipProvider>
         <Tooltip>
           <TooltipTrigger asChild>
-            <button type="button" onClick={handleCopy} className={styles.iconButton()}>
-              <Lucide.Copy className={styles.icon()} />
+            <button type="button" onClick={handleCopy} className={styles.copyButton()}>
+              <Lucide.Copy className="size-4" strokeWidth={2} />
             </button>
           </TooltipTrigger>
           <TooltipContent side="top">
@@ -84,7 +76,7 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
               onClick={handleCopy}
               className="shrink-0"
             >
-              <Lucide.Copy className={styles.icon()} />
+              <Lucide.Copy className="size-4" strokeWidth={2} />
             </Button>
           </TooltipTrigger>
           <TooltipContent side="top">
@@ -96,12 +88,11 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
 
     if (showExternalCopyButton) {
       return (
-        <div className={styles.container()}>
+        <div className={styles.wrapperWithCopy()}>
           <div className={styles.wrapper()}>
-            <ark.input
+            <input
               type={showPassword ? 'text' : type}
               className={styles.input({ className })}
-              value={value}
               ref={ref}
               {...props}
             />
@@ -114,10 +105,9 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
 
     return (
       <div className={styles.wrapper()}>
-        <ark.input
+        <input
           type={showPassword ? 'text' : type}
           className={styles.input({ className })}
-          value={value}
           ref={ref}
           {...props}
         />

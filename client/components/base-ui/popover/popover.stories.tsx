@@ -1,31 +1,12 @@
 import type { Meta, StoryObj } from '@storybook/react'
-import * as Lucide from 'lucide-react'
 import { Button } from '../button/button'
 import { Input } from '../input/input'
 import { Label } from '../label/label'
 import { Popover, PopoverContent, PopoverTrigger } from './popover'
 
-const meta: Meta = {
+const meta: Meta<typeof Popover> = {
   title: 'Basic Components/Popover',
   component: Popover,
-  parameters: {
-    docs: {
-      description: {
-        component: `
-Popover component displays floating content when a trigger element is clicked.
-
-## Example
-\`\`\`tsx
-import { Popover, PopoverTrigger, PopoverContent } from '#/components/base-ui'
-
-<Popover>
-  <PopoverTrigger>Open</PopoverTrigger>
-  <PopoverContent>Popover content</PopoverContent>
-</Popover>
-\`\`\``,
-      },
-    },
-  },
 }
 
 export default meta
@@ -49,43 +30,20 @@ export const Default: Story = {
               <Input id="width" defaultValue="100%" className="col-span-2 h-8" />
             </div>
             <div className="grid grid-cols-3 items-center gap-4">
+              <Label htmlFor="maxWidth">Max. width</Label>
+              <Input id="maxWidth" defaultValue="300px" className="col-span-2 h-8" />
+            </div>
+            <div className="grid grid-cols-3 items-center gap-4">
               <Label htmlFor="height">Height</Label>
               <Input id="height" defaultValue="25px" className="col-span-2 h-8" />
+            </div>
+            <div className="grid grid-cols-3 items-center gap-4">
+              <Label htmlFor="maxHeight">Max. height</Label>
+              <Input id="maxHeight" defaultValue="none" className="col-span-2 h-8" />
             </div>
           </div>
         </div>
       </PopoverContent>
-    </Popover>
-  ),
-}
-
-export const WithIcon: Story = {
-  render: () => (
-    <Popover>
-      <PopoverTrigger asChild>
-        <Button variant="outline" size="icon">
-          <Lucide.Settings2 className="size-4" strokeWidth={2} />
-        </Button>
-      </PopoverTrigger>
-      <PopoverContent className="w-80">
-        <div className="grid gap-4">
-          <div className="space-y-2">
-            <h4 className="font-medium leading-none">Settings</h4>
-            <p className="text-muted-foreground text-sm">Manage your application settings.</p>
-          </div>
-        </div>
-      </PopoverContent>
-    </Popover>
-  ),
-}
-
-export const SimpleContent: Story = {
-  render: () => (
-    <Popover>
-      <PopoverTrigger asChild>
-        <Button variant="outline">Show Info</Button>
-      </PopoverTrigger>
-      <PopoverContent>Simple popover content with basic text.</PopoverContent>
     </Popover>
   ),
 }

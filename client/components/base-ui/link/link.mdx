@@ -1,0 +1,38 @@
+import { Canvas, Meta, Primary } from '@storybook/blocks';
+import * as Stories from './link.stories';
+
+<Meta of={Stories} />
+
+# Link
+
+Link component provides navigation elements with various styles and behaviors.
+
+## Example
+
+```tsx
+import * as Lucide from 'lucide-react'
+import { Link } from '#/components/base-ui'
+
+// Basic usage
+<Link href="/dashboard">Go to Dashboard</Link>
+
+// Open in new tab
+<Link href="https://example.com" newTab>
+  External Link
+</Link>
+
+// With icon
+<Link href="/settings">
+  <Lucide.Settings className="mr-2 size-4" />
+  Settings
+</Link>
+
+// Custom styling
+<Link href="/about" className="text-primary hover:underline">
+  About Us
+</Link>
+```
+
+## Preview
+
+<Primary />

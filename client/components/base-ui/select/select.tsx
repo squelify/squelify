@@ -2,7 +2,6 @@ import * as SelectPrimitive from '@radix-ui/react-select'
 import * as Lucide from 'lucide-react'
 import * as React from 'react'
 import { selectStyles } from './select.css'
-import type { SelectVariants } from './select.css'
 
 const Select = SelectPrimitive.Root
 const SelectGroup = SelectPrimitive.Group
@@ -10,14 +9,14 @@ const SelectValue = SelectPrimitive.Value
 
 const SelectTrigger = React.forwardRef<
   React.ComponentRef<typeof SelectPrimitive.Trigger>,
-  React.ComponentPropsWithoutRef<typeof SelectPrimitive.Trigger> & SelectVariants
->(({ className, children, size, ...props }, ref) => {
-  const styles = selectStyles({ size })
+  React.ComponentPropsWithoutRef<typeof SelectPrimitive.Trigger>
+>(({ className, children, ...props }, ref) => {
+  const styles = selectStyles()
   return (
     <SelectPrimitive.Trigger ref={ref} className={styles.trigger({ className })} {...props}>
       {children}
       <SelectPrimitive.Icon asChild>
-        <Lucide.ChevronsUpDown className="size-4 opacity-50" strokeWidth={2} />
+        <Lucide.ChevronsUpDown className={styles.icon()} strokeWidth={2} />
       </SelectPrimitive.Icon>
     </SelectPrimitive.Trigger>
   )
@@ -57,9 +56,9 @@ const SelectScrollDownButton = React.forwardRef<
 
 const SelectContent = React.forwardRef<
   React.ComponentRef<typeof SelectPrimitive.Content>,
-  React.ComponentPropsWithoutRef<typeof SelectPrimitive.Content> & SelectVariants
->(({ className, children, position = 'item-aligned', size, ...props }, ref) => {
-  const styles = selectStyles({ size })
+  React.ComponentPropsWithoutRef<typeof SelectPrimitive.Content>
+>(({ className, children, position = 'popper', ...props }, ref) => {
+  const styles = selectStyles()
   return (
     <SelectPrimitive.Portal>
       <SelectPrimitive.Content
@@ -69,7 +68,9 @@ const SelectContent = React.forwardRef<
         {...props}
       >
         <SelectScrollUpButton />
-        <SelectPrimitive.Viewport className={styles.viewport()}>
+        <SelectPrimitive.Viewport
+          className={position === 'popper' ? styles.viewportPopper() : styles.viewport()}
+        >
           {children}
         </SelectPrimitive.Viewport>
         <SelectScrollDownButton />
@@ -93,11 +94,9 @@ const SelectItem = React.forwardRef<
   const styles = selectStyles()
   return (
     <SelectPrimitive.Item ref={ref} className={styles.item({ className })} {...props}>
-      <span className={styles.indicator()}>
-        <SelectPrimitive.ItemIndicator>
-          <Lucide.CheckIcon className="size-4" strokeWidth={2} />
-        </SelectPrimitive.ItemIndicator>
-      </span>
+      <SelectPrimitive.ItemIndicator className={styles.itemIndicator()}>
+        <Lucide.Check className={styles.itemIndicatorIcon()} strokeWidth={2} />
+      </SelectPrimitive.ItemIndicator>
       <SelectPrimitive.ItemText>{children}</SelectPrimitive.ItemText>
     </SelectPrimitive.Item>
   )
@@ -113,13 +112,16 @@ const SelectSeparator = React.forwardRef<
   )
 })
 
+Select.displayName = SelectPrimitive.Root.displayName
+SelectGroup.displayName = SelectPrimitive.Group.displayName
+SelectValue.displayName = SelectPrimitive.Value.displayName
 SelectTrigger.displayName = SelectPrimitive.Trigger.displayName
-SelectScrollUpButton.displayName = SelectPrimitive.ScrollUpButton.displayName
-SelectScrollDownButton.displayName = SelectPrimitive.ScrollDownButton.displayName
 SelectContent.displayName = SelectPrimitive.Content.displayName
 SelectLabel.displayName = SelectPrimitive.Label.displayName
 SelectItem.displayName = SelectPrimitive.Item.displayName
 SelectSeparator.displayName = SelectPrimitive.Separator.displayName
+SelectScrollUpButton.displayName = SelectPrimitive.ScrollUpButton.displayName
+SelectScrollDownButton.displayName = SelectPrimitive.ScrollDownButton.displayName
 
 export {
   Select,

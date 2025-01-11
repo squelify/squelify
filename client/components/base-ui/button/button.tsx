@@ -1,53 +1,34 @@
-import type { Assign } from '@ark-ui/react'
-import { type HTMLArkProps, ark } from '@ark-ui/react/factory'
+import { Slot } from '@radix-ui/react-slot'
 import * as Lucide from 'lucide-react'
 import * as React from 'react'
 import { type ButtonVariants, buttonStyles } from './button.css'
 
-export interface ButtonProps extends Assign<HTMLArkProps<'button'>, ButtonVariants> {
+export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement>, ButtonVariants {
   asChild?: boolean
   isLoading?: boolean
-  loadingText?: React.ReactNode
 }
 
-export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
-  (
-    {
-      variant,
-      size,
-      className,
-      isLoading,
-      loadingText,
-      disabled,
-      children,
-      asChild = false,
-      ...props
-    },
-    ref
-  ) => {
+const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
+  ({ variant, size, className, isLoading, disabled, children, asChild = false, ...props }, ref) => {
+    const Comp = asChild ? Slot : 'button'
     const isDisabled = disabled || isLoading
+    const styles = buttonStyles({ variant, size, isLoading })
 
     return (
-      <ark.button
+      <Comp
         ref={ref}
-        className={buttonStyles({ variant, size, isLoading, className })}
+        className={styles.base({ className })}
+        data-loading={isLoading}
         disabled={isDisabled}
-        asChild={asChild}
         {...props}
       >
-        {isLoading && !loadingText ? (
-          <>
-            <Lucide.Loader2 strokeWidth={2} />
-            <span className="opacity-0">{children}</span>
-          </>
-        ) : loadingText ? (
-          loadingText
-        ) : (
-          children
-        )}
-      </ark.button>
+        {isLoading && <Lucide.Loader2 strokeWidth={2} />}
+        {children}
+      </Comp>
     )
   }
 )
 
 Button.displayName = 'Button'
+
+export { Button }

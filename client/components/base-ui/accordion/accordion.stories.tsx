@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react'
+import { fn } from '@storybook/test'
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from './accordion'
 
 const meta: Meta = {
@@ -6,23 +7,26 @@ const meta: Meta = {
   component: Accordion,
   argTypes: {
     type: {
-      control: 'inline-radio',
+      control: 'radio',
       options: ['single', 'multiple'],
-      description: 'Accordion behavior type',
+      description: 'Determines whether one or multiple items can be opened at the same time',
+      defaultValue: 'single',
     },
     collapsible: {
       control: 'boolean',
-      description: 'Allow all items to be closed',
+      description: 'When type is "single", allows closing content when clicking trigger',
+      defaultValue: true,
     },
   },
+  args: { onValueChange: fn() },
 }
 
 export default meta
 type Story = StoryObj<typeof meta>
 
 export const Default: Story = {
-  render: () => (
-    <Accordion type="single" collapsible className="w-full">
+  render: (args) => (
+    <Accordion type="single" collapsible className="w-full min-w-[600px]" {...args}>
       <AccordionItem value="item-1">
         <AccordionTrigger>Is it accessible?</AccordionTrigger>
         <AccordionContent>Yes. It adheres to the WAI-ARIA design pattern.</AccordionContent>
@@ -30,7 +34,7 @@ export const Default: Story = {
       <AccordionItem value="item-2">
         <AccordionTrigger>Is it styled?</AccordionTrigger>
         <AccordionContent>
-          Yes. It comes with default styles that matches your theme.
+          Yes. It comes with default styles that matches the other components' aesthetic.
         </AccordionContent>
       </AccordionItem>
       <AccordionItem value="item-3">
@@ -43,20 +47,16 @@ export const Default: Story = {
   ),
 }
 
-export const MultipleItems: Story = {
-  render: () => (
-    <Accordion type="multiple" className="w-full">
+export const Multiple: Story = {
+  render: (args) => (
+    <Accordion type="multiple" className="w-full min-w-[600px]" {...args}>
       <AccordionItem value="item-1">
         <AccordionTrigger>First Section</AccordionTrigger>
-        <AccordionContent>Multiple sections can be opened at once.</AccordionContent>
+        <AccordionContent>You can open multiple sections at once.</AccordionContent>
       </AccordionItem>
       <AccordionItem value="item-2">
         <AccordionTrigger>Second Section</AccordionTrigger>
-        <AccordionContent>Try opening multiple sections at the same time.</AccordionContent>
-      </AccordionItem>
-      <AccordionItem value="item-3">
-        <AccordionTrigger>Third Section</AccordionTrigger>
-        <AccordionContent>This is an example of multiple type accordion.</AccordionContent>
+        <AccordionContent>Try clicking multiple headers.</AccordionContent>
       </AccordionItem>
     </Accordion>
   ),

@@ -11,37 +11,6 @@ export const drawerStyles = tv({
     title: 'font-semibold text-lg leading-none tracking-tight',
     description: 'text-muted-foreground text-sm',
   },
-  variants: {
-    size: {
-      default: {
-        content: 'h-[400px]',
-      },
-      sm: {
-        content: 'h-[300px]',
-      },
-      lg: {
-        content: 'h-[500px]',
-      },
-    },
-    side: {
-      bottom: {
-        content: 'inset-x-0 bottom-0 mt-24 rounded-t-[10px]',
-      },
-      top: {
-        content: 'inset-x-0 top-0 mb-24 rounded-b-[10px]',
-      },
-      left: {
-        content: 'inset-y-0 left-0 h-full w-3/4 rounded-r-[10px]',
-      },
-      right: {
-        content: 'inset-y-0 right-0 h-full w-3/4 rounded-l-[10px]',
-      },
-    },
-  },
-  defaultVariants: {
-    size: 'default',
-    side: 'bottom',
-  },
 })
 
 export type DrawerVariants = VariantProps<typeof drawerStyles>

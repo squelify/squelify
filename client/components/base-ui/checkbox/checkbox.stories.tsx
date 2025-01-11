@@ -1,46 +1,18 @@
 import type { Meta, StoryObj } from '@storybook/react'
 import { Label } from '../label/label'
 import { Checkbox } from './checkbox'
-import type { CheckboxVariants } from './checkbox.css'
 
-const sizeOptions: NonNullable<CheckboxVariants['size']>[] = ['default', 'sm', 'lg']
-
-const meta: Meta = {
+const meta: Meta<typeof Checkbox> = {
   title: 'Basic Components/Checkbox',
   component: Checkbox,
-  parameters: {
-    docs: {
-      description: {
-        component: `
-Checkbox component with customizable sizes and states.
-
-## Example
-\`\`\`tsx
-import { Checkbox } from '#/components/base-ui'
-
-<Checkbox />
-<Checkbox defaultChecked />
-<Checkbox disabled />
-\`\`\``,
-      },
-    },
-  },
   argTypes: {
-    size: {
-      control: 'inline-radio',
-      options: sizeOptions,
-      description: 'Checkbox size variant',
-      table: {
-        type: { summary: 'CheckboxVariants["size"]' },
-      },
+    checked: {
+      control: 'boolean',
+      description: 'The controlled checked state of the checkbox',
     },
     disabled: {
       control: 'boolean',
-      description: 'Disable checkbox',
-    },
-    defaultChecked: {
-      control: 'boolean',
-      description: 'Initial checked state',
+      description: 'When true, prevents the user from interacting with the checkbox',
     },
   },
 }
@@ -49,10 +21,6 @@ export default meta
 type Story = StoryObj<typeof meta>
 
 export const Default: Story = {
-  render: () => <Checkbox />,
-}
-
-export const WithLabel: Story = {
   render: () => (
     <div className="flex items-center space-x-2">
       <Checkbox id="terms" />
@@ -61,31 +29,24 @@ export const WithLabel: Story = {
   ),
 }
 
-export const SizeShowcase: Story = {
+export const CheckboxShowcase: Story = {
   render: () => (
-    <div className="flex items-center gap-4">
-      <Checkbox size="sm" />
-      <Checkbox size="default" />
-      <Checkbox size="lg" />
-    </div>
-  ),
-}
-
-export const States: Story = {
-  render: () => (
-    <div className="flex items-center gap-4">
+    <div className="flex flex-col gap-4">
       <div className="flex items-center space-x-2">
         <Checkbox id="default" />
-        <Label htmlFor="default">Default</Label>
+        <Label htmlFor="default">Default Checkbox</Label>
       </div>
+
       <div className="flex items-center space-x-2">
         <Checkbox id="checked" defaultChecked />
-        <Label htmlFor="checked">Checked</Label>
+        <Label htmlFor="checked">Checked Checkbox</Label>
       </div>
+
       <div className="flex items-center space-x-2">
         <Checkbox id="disabled" disabled />
-        <Label htmlFor="disabled">Disabled</Label>
+        <Label htmlFor="disabled">Disabled Checkbox</Label>
       </div>
+
       <div className="flex items-center space-x-2">
         <Checkbox id="disabled-checked" disabled defaultChecked />
         <Label htmlFor="disabled-checked">Disabled Checked</Label>

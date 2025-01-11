@@ -14,40 +14,10 @@ import {
   ContextMenuSubTrigger,
   ContextMenuTrigger,
 } from './context-menu'
-import type { ContextMenuVariants } from './context-menu.css'
 
-const sizeOptions: NonNullable<ContextMenuVariants['size']>[] = ['default', 'sm', 'lg']
-
-const meta: Meta = {
+const meta: Meta<typeof ContextMenu> = {
   title: 'Basic Components/ContextMenu',
   component: ContextMenu,
-  parameters: {
-    docs: {
-      description: {
-        component: `
-Context menu component for right-click actions.
-
-## Example
-\`\`\`tsx
-import { ContextMenu, ContextMenuTrigger, ContextMenuContent, ContextMenuItem } from '#/components/base-ui'
-
-<ContextMenu>
-  <ContextMenuTrigger>Right click here</ContextMenuTrigger>
-  <ContextMenuContent>
-    <ContextMenuItem>Action</ContextMenuItem>
-  </ContextMenuContent>
-</ContextMenu>
-\`\`\``,
-      },
-    },
-  },
-  argTypes: {
-    size: {
-      control: 'inline-radio',
-      options: sizeOptions,
-      description: 'Menu size variant',
-    },
-  },
 }
 
 export default meta
@@ -59,43 +29,26 @@ export const Default: Story = {
       <ContextMenuTrigger className="flex h-[150px] w-[300px] items-center justify-center rounded-md border border-dashed text-sm">
         Right click here
       </ContextMenuTrigger>
-      <ContextMenuContent>
-        <ContextMenuItem>
+      <ContextMenuContent className="w-64">
+        <ContextMenuItem inset>
           Back
           <ContextMenuShortcut>⌘[</ContextMenuShortcut>
         </ContextMenuItem>
-        <ContextMenuItem>
+        <ContextMenuItem inset disabled>
           Forward
           <ContextMenuShortcut>⌘]</ContextMenuShortcut>
         </ContextMenuItem>
-        <ContextMenuItem>
+        <ContextMenuItem inset>
           Reload
           <ContextMenuShortcut>⌘R</ContextMenuShortcut>
         </ContextMenuItem>
-        <ContextMenuSeparator />
-        <ContextMenuItem>
-          Save As...
-          <ContextMenuShortcut>⌘S</ContextMenuShortcut>
-        </ContextMenuItem>
-        <ContextMenuItem>Print</ContextMenuItem>
-      </ContextMenuContent>
-    </ContextMenu>
-  ),
-}
-
-export const WithSubMenu: Story = {
-  render: () => (
-    <ContextMenu>
-      <ContextMenuTrigger className="flex h-[150px] w-[300px] items-center justify-center rounded-md border border-dashed text-sm">
-        Right click here
-      </ContextMenuTrigger>
-      <ContextMenuContent>
-        <ContextMenuItem>Back</ContextMenuItem>
-        <ContextMenuItem>Forward</ContextMenuItem>
         <ContextMenuSub>
-          <ContextMenuSubTrigger>More Tools</ContextMenuSubTrigger>
-          <ContextMenuSubContent>
-            <ContextMenuItem>Save Page As...</ContextMenuItem>
+          <ContextMenuSubTrigger inset>More Tools</ContextMenuSubTrigger>
+          <ContextMenuSubContent className="w-48">
+            <ContextMenuItem>
+              Save Page As...
+              <ContextMenuShortcut>⇧⌘S</ContextMenuShortcut>
+            </ContextMenuItem>
             <ContextMenuItem>Create Shortcut...</ContextMenuItem>
             <ContextMenuItem>Name Window...</ContextMenuItem>
             <ContextMenuSeparator />
@@ -103,36 +56,11 @@ export const WithSubMenu: Story = {
           </ContextMenuSubContent>
         </ContextMenuSub>
         <ContextMenuSeparator />
-        <ContextMenuItem>Print...</ContextMenuItem>
-      </ContextMenuContent>
-    </ContextMenu>
-  ),
-}
-
-export const WithCheckboxes: Story = {
-  render: () => (
-    <ContextMenu>
-      <ContextMenuTrigger className="flex h-[150px] w-[300px] items-center justify-center rounded-md border border-dashed text-sm">
-        Right click here
-      </ContextMenuTrigger>
-      <ContextMenuContent>
-        <ContextMenuCheckboxItem checked>Show Toolbar</ContextMenuCheckboxItem>
-        <ContextMenuCheckboxItem>Show Bookmarks</ContextMenuCheckboxItem>
-        <ContextMenuCheckboxItem>Show Status Bar</ContextMenuCheckboxItem>
-      </ContextMenuContent>
-    </ContextMenu>
-  ),
-}
-
-export const WithRadioGroup: Story = {
-  render: () => (
-    <ContextMenu>
-      <ContextMenuTrigger className="flex h-[150px] w-[300px] items-center justify-center rounded-md border border-dashed text-sm">
-        Right click here
-      </ContextMenuTrigger>
-      <ContextMenuContent>
+        <ContextMenuCheckboxItem checked>Show Bookmarks Bar</ContextMenuCheckboxItem>
+        <ContextMenuCheckboxItem>Show Full URLs</ContextMenuCheckboxItem>
+        <ContextMenuSeparator />
         <ContextMenuRadioGroup value="pedro">
-          <ContextMenuLabel>People</ContextMenuLabel>
+          <ContextMenuLabel inset>People</ContextMenuLabel>
           <ContextMenuSeparator />
           <ContextMenuRadioItem value="pedro">Pedro Duarte</ContextMenuRadioItem>
           <ContextMenuRadioItem value="colm">Colm Tuite</ContextMenuRadioItem>

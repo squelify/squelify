@@ -2,41 +2,17 @@ import type { Meta, StoryObj } from '@storybook/react'
 import * as Lucide from 'lucide-react'
 import { Button } from '../button/button'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from './tooltip'
-import type { TooltipVariants } from './tooltip.css'
-
-const sizeOptions: NonNullable<TooltipVariants['size']>[] = ['default', 'sm', 'lg']
 
 const meta: Meta = {
   title: 'Basic Components/Tooltip',
   component: Tooltip,
-  parameters: {
-    docs: {
-      description: {
-        component: `
-Tooltip component for displaying additional information on hover.
-
-## Example
-\`\`\`tsx
-import { Tooltip, TooltipTrigger, TooltipContent, TooltipProvider } from '#/components/base-ui'
-
-<TooltipProvider>
-  <Tooltip>
-    <TooltipTrigger>Hover me</TooltipTrigger>
-    <TooltipContent>Tooltip content</TooltipContent>
-  </Tooltip>
-</TooltipProvider>
-\`\`\``,
-      },
-    },
-  },
-  argTypes: {
-    size: {
-      control: 'inline-radio',
-      options: sizeOptions,
-      description: 'Tooltip size',
-    },
-  },
-  decorators: [(Story) => <TooltipProvider>{Story()}</TooltipProvider>],
+  decorators: [
+    (Story) => (
+      <TooltipProvider>
+        <Story />
+      </TooltipProvider>
+    ),
+  ],
 }
 
 export default meta
@@ -46,48 +22,87 @@ export const Default: Story = {
   render: () => (
     <Tooltip>
       <TooltipTrigger asChild>
-        <Button variant="outline">Hover me</Button>
-      </TooltipTrigger>
-      <TooltipContent>Add to library</TooltipContent>
-    </Tooltip>
-  ),
-}
-
-export const WithIcon: Story = {
-  render: () => (
-    <Tooltip>
-      <TooltipTrigger asChild>
         <Button variant="outline" size="icon">
-          <Lucide.PlusCircle className="size-4" strokeWidth={2} />
+          <Lucide.Plus className="size-4" />
         </Button>
       </TooltipTrigger>
-      <TooltipContent>Add new item</TooltipContent>
+      <TooltipContent>
+        <p>Add to library</p>
+      </TooltipContent>
     </Tooltip>
   ),
 }
 
-export const Sizes: Story = {
+export const TooltipShowcase: Story = {
   render: () => (
-    <div className="flex gap-4">
+    <div className="flex items-center gap-8">
       <Tooltip>
         <TooltipTrigger asChild>
-          <Button variant="outline">Small</Button>
+          <Button variant="outline">Hover me</Button>
         </TooltipTrigger>
-        <TooltipContent size="sm">Small tooltip</TooltipContent>
+        <TooltipContent>
+          <p>Basic tooltip</p>
+        </TooltipContent>
       </Tooltip>
 
       <Tooltip>
         <TooltipTrigger asChild>
-          <Button variant="outline">Default</Button>
+          <Button variant="outline" size="icon">
+            <Lucide.Settings className="size-4" />
+          </Button>
         </TooltipTrigger>
-        <TooltipContent>Default tooltip</TooltipContent>
+        <TooltipContent>Settings</TooltipContent>
       </Tooltip>
 
       <Tooltip>
         <TooltipTrigger asChild>
-          <Button variant="outline">Large</Button>
+          <Button variant="outline" size="icon">
+            <Lucide.Bell className="size-4" />
+          </Button>
         </TooltipTrigger>
-        <TooltipContent size="lg">Large tooltip with more content</TooltipContent>
+        <TooltipContent>Notifications</TooltipContent>
+      </Tooltip>
+    </div>
+  ),
+}
+
+export const PositionShowcase: Story = {
+  render: () => (
+    <div className="flex h-[200px] items-center justify-center gap-8">
+      <Tooltip>
+        <TooltipTrigger asChild>
+          <Button variant="outline">Top</Button>
+        </TooltipTrigger>
+        <TooltipContent side="top">
+          <p>Top tooltip</p>
+        </TooltipContent>
+      </Tooltip>
+
+      <Tooltip>
+        <TooltipTrigger asChild>
+          <Button variant="outline">Right</Button>
+        </TooltipTrigger>
+        <TooltipContent side="right">
+          <p>Right tooltip</p>
+        </TooltipContent>
+      </Tooltip>
+
+      <Tooltip>
+        <TooltipTrigger asChild>
+          <Button variant="outline">Bottom</Button>
+        </TooltipTrigger>
+        <TooltipContent side="bottom">
+          <p>Bottom tooltip</p>
+        </TooltipContent>
+      </Tooltip>
+
+      <Tooltip>
+        <TooltipTrigger asChild>
+          <Button variant="outline">Left</Button>
+        </TooltipTrigger>
+        <TooltipContent side="left">
+          <p>Left tooltip</p>
+        </TooltipContent>
       </Tooltip>
     </div>
   ),

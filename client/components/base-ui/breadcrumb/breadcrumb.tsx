@@ -1,19 +1,14 @@
 import { Slot } from '@radix-ui/react-slot'
 import * as Lucide from 'lucide-react'
 import * as React from 'react'
-import { clx } from '#/utils/helper'
 import { breadcrumbStyles } from './breadcrumb.css'
-import type { BreadcrumbVariants } from './breadcrumb.css'
 
-interface BreadcrumbProps extends React.ComponentPropsWithoutRef<'nav'>, BreadcrumbVariants {
-  separator?: React.ReactNode
-}
-
-const Breadcrumb = React.forwardRef<HTMLElement, BreadcrumbProps>(
-  ({ size, className, ...props }, ref) => {
-    return <nav ref={ref} aria-label="breadcrumb" className={clx(className)} {...props} />
+const Breadcrumb = React.forwardRef<
+  HTMLElement,
+  React.ComponentPropsWithoutRef<'nav'> & {
+    separator?: React.ReactNode
   }
-)
+>(({ ...props }, ref) => <nav ref={ref} aria-label="breadcrumb" {...props} />)
 
 const BreadcrumbList = React.forwardRef<HTMLOListElement, React.ComponentPropsWithoutRef<'ol'>>(
   ({ className, ...props }, ref) => {
@@ -31,10 +26,12 @@ const BreadcrumbItem = React.forwardRef<HTMLLIElement, React.ComponentPropsWitho
 
 const BreadcrumbLink = React.forwardRef<
   HTMLAnchorElement,
-  React.ComponentPropsWithoutRef<'a'> & { asChild?: boolean }
+  React.ComponentPropsWithoutRef<'a'> & {
+    asChild?: boolean
+  }
 >(({ asChild, className, ...props }, ref) => {
-  const styles = breadcrumbStyles()
   const Comp = asChild ? Slot : 'a'
+  const styles = breadcrumbStyles()
   return <Comp ref={ref} className={styles.link({ className })} {...props} />
 })
 
@@ -44,8 +41,8 @@ const BreadcrumbPage = React.forwardRef<HTMLSpanElement, React.ComponentPropsWit
     return (
       <span
         ref={ref}
-        aria-current="page"
         aria-disabled="true"
+        aria-current="page"
         className={styles.page({ className })}
         {...props}
       />
@@ -62,7 +59,7 @@ const BreadcrumbSeparator = ({ children, className, ...props }: React.ComponentP
       className={styles.separator({ className })}
       {...props}
     >
-      {children ?? <Lucide.ChevronRight className={styles.icon()} strokeWidth={2} />}
+      {children ?? <Lucide.ChevronRight strokeWidth={2} />}
     </span>
   )
 }
@@ -76,7 +73,7 @@ const BreadcrumbEllipsis = ({ className, ...props }: React.ComponentProps<'span'
       className={styles.ellipsis({ className })}
       {...props}
     >
-      <Lucide.Ellipsis className={styles.icon()} strokeWidth={2} />
+      <Lucide.Ellipsis className={styles.ellipsisIcon()} strokeWidth={2} />
       <span className="sr-only">More</span>
     </span>
   )
@@ -88,7 +85,7 @@ BreadcrumbItem.displayName = 'BreadcrumbItem'
 BreadcrumbLink.displayName = 'BreadcrumbLink'
 BreadcrumbPage.displayName = 'BreadcrumbPage'
 BreadcrumbSeparator.displayName = 'BreadcrumbSeparator'
-BreadcrumbEllipsis.displayName = 'BreadcrumbElipssis'
+BreadcrumbEllipsis.displayName = 'BreadcrumbEllipsis'
 
 export {
   Breadcrumb,

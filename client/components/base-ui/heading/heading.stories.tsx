@@ -20,29 +20,6 @@ const meta: Meta<HeadingProps> = {
     controls: {
       exclude: ['asChild'],
     },
-    docs: {
-      description: {
-        component: `
-Heading component for displaying titles and section headers with various levels and styles.
-
-## Example
-\`\`\`tsx
-import { Heading } from '#/components/base-ui'
-
-// Basic usage
-<Heading>Section Title</Heading>
-
-// With specific level
-<Heading level="h1">Page Title</Heading>
-
-// With custom weight
-<Heading weight="bold">Bold Heading</Heading>
-
-// With alignment
-<Heading align="center">Centered Heading</Heading>
-\`\`\``,
-      },
-    },
   },
   argTypes: {
     children: {
@@ -53,21 +30,21 @@ import { Heading } from '#/components/base-ui'
       },
     },
     level: {
-      control: { type: 'radio' },
+      control: { type: 'select' },
       options: levelOptions,
       table: {
         type: { summary: 'HeadingVariants["level"]' },
       },
     },
     weight: {
-      control: { type: 'radio' },
+      control: { type: 'select' },
       options: weightOptions,
       table: {
         type: { summary: 'HeadingVariants["weight"]' },
       },
     },
     align: {
-      control: { type: 'inline-radio' },
+      control: { type: 'radio' },
       options: alignOptions,
       table: {
         type: { summary: 'HeadingVariants["align"]' },

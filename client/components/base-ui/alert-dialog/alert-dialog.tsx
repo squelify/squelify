@@ -2,15 +2,10 @@ import * as AlertDialogPrimitive from '@radix-ui/react-alert-dialog'
 import * as React from 'react'
 import { buttonStyles } from '../button/button.css'
 import { alertDialogStyles } from './alert-dialog.css'
-import type { AlertDialogVariants } from './alert-dialog.css'
 
 const AlertDialog = AlertDialogPrimitive.Root
 const AlertDialogTrigger = AlertDialogPrimitive.Trigger
 const AlertDialogPortal = AlertDialogPrimitive.Portal
-
-interface AlertDialogContentProps
-  extends React.ComponentPropsWithoutRef<typeof AlertDialogPrimitive.Content>,
-    AlertDialogVariants {}
 
 const AlertDialogOverlay = React.forwardRef<
   React.ComponentRef<typeof AlertDialogPrimitive.Overlay>,
@@ -24,9 +19,9 @@ const AlertDialogOverlay = React.forwardRef<
 
 const AlertDialogContent = React.forwardRef<
   React.ComponentRef<typeof AlertDialogPrimitive.Content>,
-  AlertDialogContentProps
->(({ className, size, ...props }, ref) => {
-  const styles = alertDialogStyles({ size })
+  React.ComponentPropsWithoutRef<typeof AlertDialogPrimitive.Content>
+>(({ className, ...props }, ref) => {
+  const styles = alertDialogStyles()
   return (
     <AlertDialogPortal>
       <AlertDialogOverlay />
@@ -75,30 +70,16 @@ const AlertDialogAction = React.forwardRef<
   React.ComponentRef<typeof AlertDialogPrimitive.Action>,
   React.ComponentPropsWithoutRef<typeof AlertDialogPrimitive.Action>
 >(({ className, ...props }, ref) => {
-  const styles = alertDialogStyles()
-  return (
-    <AlertDialogPrimitive.Action
-      ref={ref}
-      className={styles.action({ className: buttonStyles({ className }) })}
-      {...props}
-    />
-  )
+  const styles = buttonStyles({ variant: 'default', size: 'default' })
+  return <AlertDialogPrimitive.Action ref={ref} className={styles.base({ className })} {...props} />
 })
 
 const AlertDialogCancel = React.forwardRef<
   React.ComponentRef<typeof AlertDialogPrimitive.Cancel>,
   React.ComponentPropsWithoutRef<typeof AlertDialogPrimitive.Cancel>
 >(({ className, ...props }, ref) => {
-  const styles = alertDialogStyles()
-  return (
-    <AlertDialogPrimitive.Cancel
-      ref={ref}
-      className={styles.cancel({
-        className: buttonStyles({ variant: 'outline', className }),
-      })}
-      {...props}
-    />
-  )
+  const styles = buttonStyles({ variant: 'ghost', size: 'default' })
+  return <AlertDialogPrimitive.Cancel ref={ref} className={styles.base({ className })} {...props} />
 })
 
 AlertDialogOverlay.displayName = AlertDialogPrimitive.Overlay.displayName

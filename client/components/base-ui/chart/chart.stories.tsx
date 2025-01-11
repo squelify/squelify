@@ -1,132 +1,266 @@
 import type { Meta, StoryObj } from '@storybook/react'
-import { Area, AreaChart, Bar, BarChart, Line, LineChart, Pie, PieChart } from 'recharts'
-import { ChartContainer, ChartLegendContent, ChartTooltip, ChartTooltipContent } from './chart'
+import { Area, AreaChart, Bar, BarChart } from 'recharts'
+import { CartesianGrid, Line, LineChart, XAxis, YAxis } from 'recharts'
+import { ChartContainer, ChartTooltip, ChartTooltipContent } from './chart'
 
-const DATA = [
-  { id: 'jan', name: 'Jan', value: 100, sales: 80, revenue: 120 },
-  { id: 'feb', name: 'Feb', value: 200, sales: 150, revenue: 180 },
-  { id: 'mar', name: 'Mar', value: 150, sales: 120, revenue: 140 },
-  { id: 'apr', name: 'Apr', value: 300, sales: 250, revenue: 280 },
-  { id: 'may', name: 'May', value: 250, sales: 220, revenue: 260 },
-]
-
-const CHART_CONFIG = {
-  value: {
-    label: 'Value',
-    theme: {
-      light: '#0ea5e9',
-      dark: '#38bdf8',
-    },
-  },
-  sales: {
-    label: 'Sales',
-    theme: {
-      light: '#8b5cf6',
-      dark: '#a78bfa',
-    },
-  },
-  revenue: {
-    label: 'Revenue',
-    theme: {
-      light: '#10b981',
-      dark: '#34d399',
-    },
-  },
-}
-
-const meta: Meta = {
+const meta: Meta<typeof ChartContainer> = {
   title: 'Basic Components/Chart',
   component: ChartContainer,
-  parameters: {
-    docs: {
-      description: {
-        component: `
-Chart component built on top of Recharts with theme support.
-
-## Example
-\`\`\`tsx
-import { ChartContainer, ChartTooltip, ChartTooltipContent } from '#/components/base-ui'
-import { LineChart, Line } from 'recharts'
-
-<ChartContainer config={chartConfig}>
-  <LineChart data={data}>
-    <Line dataKey="value" />
-    <ChartTooltip content={<ChartTooltipContent />} />
-  </LineChart>
-</ChartContainer>
-\`\`\``,
-      },
-    },
-  },
 }
 
 export default meta
 type Story = StoryObj<typeof meta>
 
-export const LineChartExample: Story = {
-  render: () => (
-    <ChartContainer config={CHART_CONFIG}>
-      <LineChart data={DATA}>
-        <Line type="monotone" dataKey="value" />
-        <Line type="monotone" dataKey="sales" />
-        <ChartTooltip content={<ChartTooltipContent />} />
-      </LineChart>
-    </ChartContainer>
-  ),
+const data = [
+  {
+    name: 'Jan',
+    total: 167,
+    revenue: 234,
+    profit: 389,
+    sales: 430,
+    growth: 120,
+  },
+  {
+    name: 'Feb',
+    total: 245,
+    revenue: 278,
+    profit: 420,
+    sales: 380,
+    growth: 180,
+  },
+  {
+    name: 'Mar',
+    total: 321,
+    revenue: 189,
+    profit: 490,
+    sales: 480,
+    growth: 230,
+  },
+  {
+    name: 'Apr',
+    total: 356,
+    revenue: 239,
+    profit: 520,
+    sales: 520,
+    growth: 280,
+  },
+  {
+    name: 'May',
+    total: 270,
+    revenue: 349,
+    profit: 450,
+    sales: 600,
+    growth: 320,
+  },
+  {
+    name: 'Jun',
+    total: 429,
+    revenue: 319,
+    profit: 580,
+    sales: 650,
+    growth: 340,
+  },
+]
+
+const chartConfig = {
+  total: {
+    theme: {
+      light: 'var(--chart-1)',
+      dark: 'var(--chart-1)',
+    },
+    label: 'Total',
+  },
+  revenue: {
+    theme: {
+      light: 'var(--chart-2)',
+      dark: 'var(--chart-2)',
+    },
+    label: 'Revenue',
+  },
+  profit: {
+    theme: {
+      light: 'var(--chart-3)',
+      dark: 'var(--chart-3)',
+    },
+    label: 'Profit',
+  },
+  sales: {
+    theme: {
+      light: 'var(--chart-4)',
+      dark: 'var(--chart-4)',
+    },
+    label: 'Sales',
+  },
+  growth: {
+    theme: {
+      light: 'var(--chart-5)',
+      dark: 'var(--chart-5)',
+    },
+    label: 'Growth',
+  },
 }
 
-export const AreaChartExample: Story = {
+export const LineChartExample: Story = {
   render: () => (
-    <ChartContainer config={CHART_CONFIG}>
-      <AreaChart data={DATA}>
-        <Area type="monotone" dataKey="value" stackId="1" />
-        <Area type="monotone" dataKey="sales" stackId="1" />
-        <ChartTooltip content={<ChartTooltipContent />} />
-      </AreaChart>
-    </ChartContainer>
+    <div className="h-[400px] w-[800px]">
+      <ChartContainer config={chartConfig}>
+        <LineChart data={data}>
+          <CartesianGrid strokeDasharray="3 3" className="stroke-border" />
+          <XAxis dataKey="name" stroke="#888888" fontSize={12} tickLine={false} axisLine={false} />
+          <YAxis
+            stroke="#888888"
+            fontSize={12}
+            tickLine={false}
+            axisLine={false}
+            tickFormatter={(value) => `$${value}`}
+          />
+          <ChartTooltip
+            content={({ active, payload }) => {
+              if (!active || !payload) return null
+              return (
+                <ChartTooltipContent>
+                  {payload.map((item) => (
+                    <div key={item.dataKey} className="flex items-center justify-between gap-2">
+                      <span className="text-muted-foreground">{item.name}</span>
+                      <span className="font-bold">${item.value}</span>
+                    </div>
+                  ))}
+                </ChartTooltipContent>
+              )
+            }}
+          />
+          <Line
+            type="monotone"
+            dataKey="total"
+            strokeWidth={2}
+            activeDot={{
+              r: 6,
+              style: { fill: 'var(--color-total)', opacity: 0.8 },
+            }}
+            style={{
+              stroke: 'var(--color-total)',
+              opacity: 0.8,
+            }}
+          />
+          <Line
+            type="monotone"
+            dataKey="revenue"
+            strokeWidth={2}
+            activeDot={{
+              r: 6,
+              style: { fill: 'var(--color-revenue)', opacity: 0.8 },
+            }}
+            style={{
+              stroke: 'var(--color-revenue)',
+              opacity: 0.8,
+            }}
+          />
+        </LineChart>
+      </ChartContainer>
+    </div>
   ),
 }
 
 export const BarChartExample: Story = {
   render: () => (
-    <ChartContainer config={CHART_CONFIG}>
-      <BarChart data={DATA}>
-        <Bar dataKey="value" />
-        <Bar dataKey="sales" />
-        <ChartTooltip content={<ChartTooltipContent />} />
-      </BarChart>
-    </ChartContainer>
+    <div className="h-[400px] w-[800px]">
+      <ChartContainer config={chartConfig}>
+        <BarChart data={data}>
+          <CartesianGrid strokeDasharray="3 3" className="stroke-border" />
+          <XAxis dataKey="name" stroke="#888888" fontSize={12} tickLine={false} axisLine={false} />
+          <YAxis
+            stroke="#888888"
+            fontSize={12}
+            tickLine={false}
+            axisLine={false}
+            tickFormatter={(value) => `$${value}`}
+          />
+          <ChartTooltip
+            content={({ active, payload }) => {
+              if (!active || !payload) return null
+              return (
+                <ChartTooltipContent>
+                  {payload.map((item) => (
+                    <div key={item.dataKey} className="flex items-center justify-between gap-2">
+                      <span className="text-muted-foreground">{item.name}</span>
+                      <span className="font-bold">${item.value}</span>
+                    </div>
+                  ))}
+                </ChartTooltipContent>
+              )
+            }}
+          />
+          <Bar
+            dataKey="total"
+            style={{
+              fill: 'var(--color-total)',
+              opacity: 0.8,
+            }}
+          />
+          <Bar
+            dataKey="revenue"
+            style={{
+              fill: 'var(--color-revenue)',
+              opacity: 0.8,
+            }}
+          />
+        </BarChart>
+      </ChartContainer>
+    </div>
   ),
 }
 
-const PIE_DATA = [
-  { id: 'a', name: 'Group A', value: 400 },
-  { id: 'b', name: 'Group B', value: 300 },
-  { id: 'c', name: 'Group C', value: 300 },
-  { id: 'd', name: 'Group D', value: 200 },
-]
-
-export const PieChartExample: Story = {
+export const AreaChartExample: Story = {
   render: () => (
-    <ChartContainer config={CHART_CONFIG}>
-      <PieChart>
-        <Pie data={PIE_DATA} dataKey="value" nameKey="name" />
-        <ChartTooltip content={<ChartTooltipContent />} />
-      </PieChart>
-    </ChartContainer>
-  ),
-}
-
-export const WithLegend: Story = {
-  render: () => (
-    <ChartContainer config={CHART_CONFIG}>
-      <LineChart data={DATA}>
-        <Line type="monotone" dataKey="value" />
-        <Line type="monotone" dataKey="sales" />
-        <Line type="monotone" dataKey="revenue" />
-        <ChartTooltip content={<ChartTooltipContent />} />
-        <ChartLegendContent />
-      </LineChart>
-    </ChartContainer>
+    <div className="h-[400px] w-[800px]">
+      <ChartContainer config={chartConfig}>
+        <AreaChart data={data}>
+          <CartesianGrid strokeDasharray="3 3" className="stroke-border" />
+          <XAxis dataKey="name" stroke="#888888" fontSize={12} tickLine={false} axisLine={false} />
+          <YAxis
+            stroke="#888888"
+            fontSize={12}
+            tickLine={false}
+            axisLine={false}
+            tickFormatter={(value) => `$${value}`}
+          />
+          <ChartTooltip
+            content={({ active, payload }) => {
+              if (!active || !payload) return null
+              return (
+                <ChartTooltipContent>
+                  {payload.map((item) => (
+                    <div key={item.dataKey} className="flex items-center justify-between gap-2">
+                      <span className="text-muted-foreground">{item.name}</span>
+                      <span className="font-bold">${item.value}</span>
+                    </div>
+                  ))}
+                </ChartTooltipContent>
+              )
+            }}
+          />
+          <Area
+            type="monotone"
+            dataKey="total"
+            style={{
+              fill: 'var(--color-total)',
+              opacity: 0.2,
+              stroke: 'var(--color-total)',
+              strokeWidth: 2,
+            }}
+          />
+          <Area
+            type="monotone"
+            dataKey="revenue"
+            style={{
+              fill: 'var(--color-revenue)',
+              opacity: 0.2,
+              stroke: 'var(--color-revenue)',
+              strokeWidth: 2,
+            }}
+          />
+        </AreaChart>
+      </ChartContainer>
+    </div>
   ),
 }

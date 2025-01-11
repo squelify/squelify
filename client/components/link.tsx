@@ -1,66 +1,41 @@
+import * as Lucide from 'lucide-react'
 import * as React from 'react'
-import { forwardRef } from 'react'
 import { Link as RouterLink } from 'react-router'
 import type { LinkProps as RouterLinkProps } from 'react-router'
-import { clx } from '#/utils/helper'
+import { type LinkVariants, linkStyles } from './base-ui/link/link.css'
 
-/**
- * Props for the custom Link component extending React Router's LinkProps
- * @property href - The URL the link points to (replaces 'to' prop)
- * @property newTab - Whether to open link in new tab
- * @property disabled - Whether the link is disabled
- */
-interface LinkProps extends Omit<RouterLinkProps, 'to'> {
+export interface LinkProps extends Omit<RouterLinkProps, 'to'>, LinkVariants {
   href: string
   newTab?: boolean
-  disabled?: boolean
 }
 
-/**
- * Custom Link component that wraps React Router's Link component.
- * Provides consistent HTML-like API and additional features like
- * new tab opening and disabled state.
- *
- * @param props - The properties for the Link component
- * @param ref - The forwarded ref for the anchor element
- * @returns A React element that renders an enhanced link
- *
- * Example usage:
- * ```tsx
- * <Link href="/settings" disabled>
- *   Settings
- * </Link>
- * ```
- */
-const Link = forwardRef(function Component(
-  props: LinkProps & React.RefAttributes<HTMLAnchorElement>,
-  ref: React.ForwardedRef<HTMLAnchorElement>
+const Link = React.forwardRef<HTMLAnchorElement, LinkProps>(function Component(
+  { href, className, newTab, variant, size, children, ...rest },
+  ref
 ) {
-  const { href, className, newTab, disabled = false, onClick, ...rest } = props
-
-  const handleClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
-    if (disabled) {
-      e.preventDefault()
-      return
-    }
-    onClick?.(e)
-  }
+  const styles = linkStyles({ variant, size, newTab })
 
   return (
     <RouterLink
       to={href}
-      className={clx(
-        'text-inherit transition-colors duration-200 dark:text-inherit',
-        disabled && 'pointer-events-none cursor-not-allowed opacity-50',
-        className
-      )}
-      rel={newTab ? 'noopener noreferrer' : undefined}
+      className={styles.base({ className })}
       target={newTab ? '_blank' : undefined}
-      onClick={handleClick}
+      rel={newTab ? 'noopener noreferrer' : undefined}
+      aria-label={newTab ? `${children} (opens in new tab)` : undefined}
       ref={ref}
       {...rest}
-    />
+    >
+      {children}
+      {newTab && (
+        <>
+          <Lucide.ExternalLink className={styles.icon()} aria-hidden="true" />
+          <span className="sr-only">(opens in new tab)</span>
+        </>
+      )}
+    </RouterLink>
   )
 })
+
+Link.displayName = 'Link'
 
 export { Link }

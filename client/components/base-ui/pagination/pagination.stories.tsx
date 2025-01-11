@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react'
-import { BrowserRouter } from 'react-router'
+import { MemoryRouter } from 'react-router'
 import {
   Pagination,
   PaginationContent,
@@ -9,54 +9,17 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from './pagination'
-import type { PaginationVariants } from './pagination.css'
 
-const variantOptions: NonNullable<PaginationVariants['variant']>[] = ['outline', 'ghost']
-const sizeOptions: NonNullable<PaginationVariants['size']>[] = ['default', 'sm', 'lg']
-
-const meta: Meta = {
+const meta: Meta<typeof Pagination> = {
   title: 'Basic Components/Pagination',
   component: Pagination,
   decorators: [
     (Story) => (
-      <BrowserRouter>
+      <MemoryRouter>
         <Story />
-      </BrowserRouter>
+      </MemoryRouter>
     ),
   ],
-  parameters: {
-    docs: {
-      description: {
-        component: `
-Pagination component with customizable styles and navigation.
-
-## Example
-\`\`\`tsx
-import { Pagination, PaginationContent, PaginationItem, PaginationLink } from '#/components/base-ui'
-
-<Pagination>
-  <PaginationContent>
-    <PaginationItem>
-      <PaginationLink href="#">1</PaginationLink>
-    </PaginationItem>
-  </PaginationContent>
-</Pagination>
-\`\`\``,
-      },
-    },
-  },
-  argTypes: {
-    variant: {
-      control: 'inline-radio',
-      options: variantOptions,
-      description: 'Visual style variant',
-    },
-    size: {
-      control: 'inline-radio',
-      options: sizeOptions,
-      description: 'Size variant',
-    },
-  },
 }
 
 export default meta
@@ -88,87 +51,5 @@ export const Default: Story = {
         </PaginationItem>
       </PaginationContent>
     </Pagination>
-  ),
-}
-
-export const Variants: Story = {
-  render: () => (
-    <div className="flex flex-col gap-4">
-      <Pagination variant="outline">
-        <PaginationContent>
-          <PaginationItem>
-            <PaginationPrevious href="#" />
-          </PaginationItem>
-          <PaginationItem>
-            <PaginationLink href="#">1</PaginationLink>
-          </PaginationItem>
-          <PaginationItem>
-            <PaginationNext href="#" />
-          </PaginationItem>
-        </PaginationContent>
-      </Pagination>
-
-      <Pagination variant="ghost">
-        <PaginationContent>
-          <PaginationItem>
-            <PaginationPrevious href="#" />
-          </PaginationItem>
-          <PaginationItem>
-            <PaginationLink href="#">1</PaginationLink>
-          </PaginationItem>
-          <PaginationItem>
-            <PaginationNext href="#" />
-          </PaginationItem>
-        </PaginationContent>
-      </Pagination>
-    </div>
-  ),
-}
-
-export const Sizes: Story = {
-  render: () => (
-    <div className="flex flex-col gap-4">
-      <Pagination size="sm">
-        <PaginationContent>
-          <PaginationItem>
-            <PaginationPrevious href="#" />
-          </PaginationItem>
-          <PaginationItem>
-            <PaginationLink href="#">1</PaginationLink>
-          </PaginationItem>
-          <PaginationItem>
-            <PaginationNext href="#" />
-          </PaginationItem>
-        </PaginationContent>
-      </Pagination>
-
-      <Pagination>
-        <PaginationContent>
-          <PaginationItem>
-            <PaginationPrevious href="#" />
-          </PaginationItem>
-          <PaginationItem>
-            <PaginationLink href="#">1</PaginationLink>
-          </PaginationItem>
-          <PaginationItem>
-            <PaginationNext href="#" />
-          </PaginationItem>
-        </PaginationContent>
-      </Pagination>
-
-      <Pagination size="lg">
-        <PaginationContent>
-          <PaginationItem>
-            <PaginationPrevious href="#" />
-          </PaginationItem>
-          <PaginationItem>
-            <PaginationLink href="#">1</PaginationLink>
-          </PaginationItem>
-          <PaginationItem>
-            <PaginationNext href="#" />
-          </PaginationItem>
-        </PaginationContent>
-      </Pagination>
-    </div>
   ),
 }

@@ -1,179 +1,106 @@
+import { zodResolver } from '@hookform/resolvers/zod'
 import type { Meta, StoryObj } from '@storybook/react'
-import { Button } from '#/components/base-ui'
-import { Card, CardContent, CardDescription } from '#/components/base-ui'
-import { CardFooter, CardHeader, CardTitle } from '#/components/base-ui'
-import type { CardVariants } from './card.css'
+import * as Lucide from 'lucide-react'
+import { useForm } from 'react-hook-form'
+import { z } from 'zod'
+import { Button } from '../button/button'
+import {
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from '../form/form'
+import { Input } from '../input/input'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../select/select'
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from './card'
 
-const variantOptions: NonNullable<CardVariants['variant']>[] = ['default', 'secondary']
+const FormSchema = z.object({
+  projectName: z.string({
+    required_error: 'Project name is required.',
+  }),
+  framework: z.string({
+    required_error: 'Please select a framework.',
+  }),
+})
 
 const meta: Meta<typeof Card> = {
   title: 'Basic Components/Card',
   component: Card,
-  parameters: {
-    controls: {
-      exclude: ['asChild'],
-    },
-    docs: {
-      description: {
-        component: `
-Card component for displaying content in a contained format.
-
-## Example
-\`\`\`tsx
-import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from '#/components/base-ui'
-
-<Card variant="default">
-  <CardHeader>
-    <CardTitle>Card Title</CardTitle>
-    <CardDescription>Card Description</CardDescription>
-  </CardHeader>
-  <CardContent>
-    Content goes here
-  </CardContent>
-  <CardFooter>
-    <Button>Action</Button>
-  </CardFooter>
-</Card>
-\`\`\``,
-      },
-    },
-  },
-  argTypes: {
-    variant: {
-      control: { type: 'select' },
-      options: variantOptions,
-      description: 'Card style variant',
-      table: {
-        type: { summary: 'CardVariants["variant"]' },
-        defaultValue: { summary: 'default' },
-      },
-    },
-    compact: {
-      control: 'boolean',
-      description: 'Use compact padding',
-      table: {
-        type: { summary: 'boolean' },
-      },
-    },
-    className: {
-      control: 'text',
-      description: 'Additional CSS classes',
-    },
-    asChild: {
-      control: 'boolean',
-      description: 'Render as child element',
-      table: {
-        type: { summary: 'boolean' },
-      },
-    },
-  },
 }
 
 export default meta
-type Story = StoryObj<typeof Card>
+type Story = StoryObj<typeof meta>
 
-// Individual Stories for Controls
 export const Default: Story = {
-  parameters: {
-    controls: { exclude: ['asChild'] },
-  },
-  args: {
-    variant: 'default',
-    compact: false,
-    className: 'w-[350px]',
-  },
-  render: (args) => (
-    <Card {...args}>
-      <CardHeader>
-        <CardTitle>Account Settings</CardTitle>
-        <CardDescription>Manage your account preferences</CardDescription>
-      </CardHeader>
-      <CardContent>
-        <p>Update your account settings here. Changes will be reflected immediately.</p>
-      </CardContent>
-      <CardFooter>
-        <Button variant="subtle">Cancel</Button>
-        <Button>Save Changes</Button>
-      </CardFooter>
-    </Card>
-  ),
-}
+  render: () => {
+    const form = useForm<z.infer<typeof FormSchema>>({
+      resolver: zodResolver(FormSchema),
+    })
 
-// Showcases with Focused Controls
-export const VariantShowcase: Story = {
-  parameters: {
-    controls: { exclude: ['variant', 'className', 'asChild'] },
-  },
-  args: {
-    compact: false,
-  },
-  render: (args) => (
-    <div className="flex flex-col gap-4">
-      <Card className="w-[350px]" {...args}>
-        <CardHeader>
-          <CardTitle>Default Variant</CardTitle>
-          <CardDescription>Standard card layout</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <p>Content for default variant</p>
-        </CardContent>
-        <CardFooter>
-          <Button variant="subtle">Cancel</Button>
-          <Button>Action</Button>
-        </CardFooter>
-      </Card>
+    function onSubmit(data: z.infer<typeof FormSchema>) {
+      console.info(data)
+    }
 
-      <Card className="w-[350px]" variant="secondary" {...args}>
+    return (
+      <Card className="w-sm">
         <CardHeader>
-          <CardTitle>Secondary Variant</CardTitle>
-          <CardDescription>Alternative card style</CardDescription>
+          <CardTitle>Create project</CardTitle>
+          <CardDescription>Deploy your new project in one-click.</CardDescription>
         </CardHeader>
-        <CardContent>
-          <p>Content for secondary variant</p>
-        </CardContent>
-        <CardFooter>
-          <Button variant="subtle">Cancel</Button>
-          <Button variant="primary">Action</Button>
-        </CardFooter>
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+            <CardContent className="space-y-4">
+              <FormField
+                control={form.control}
+                name="projectName"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Project Name</FormLabel>
+                    <FormControl>
+                      <Input placeholder="Enter project name" {...field} />
+                    </FormControl>
+                    <FormDescription>This is your project's display name.</FormDescription>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="framework"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Framework</FormLabel>
+                    <Select onValueChange={field.onChange} defaultValue={field.value}>
+                      <FormControl>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Select a framework" />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        <SelectItem value="next">Next.js</SelectItem>
+                        <SelectItem value="sveltekit">SvelteKit</SelectItem>
+                        <SelectItem value="astro">Astro</SelectItem>
+                        <SelectItem value="nuxt">Nuxt.js</SelectItem>
+                      </SelectContent>
+                    </Select>
+                    <FormDescription>Select your preferred framework.</FormDescription>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </CardContent>
+            <CardFooter className="flex justify-between">
+              <Button type="button" variant="outline">
+                Cancel
+              </Button>
+              <Button type="submit">Deploy</Button>
+            </CardFooter>
+          </form>
+        </Form>
       </Card>
-    </div>
-  ),
-}
-
-export const CompactShowcase: Story = {
-  parameters: {
-    controls: { exclude: ['compact', 'className', 'asChild'] },
+    )
   },
-  args: {
-    variant: 'default',
-  },
-  render: (args) => (
-    <div className="flex flex-col gap-4">
-      <Card className="w-[350px]" {...args}>
-        <CardHeader>
-          <CardTitle>Regular Padding</CardTitle>
-          <CardDescription>Default spacing</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <p>Standard content area</p>
-        </CardContent>
-        <CardFooter>
-          <Button>Action</Button>
-        </CardFooter>
-      </Card>
-
-      <Card className="w-[350px]" compact {...args}>
-        <CardHeader>
-          <CardTitle>Compact Layout</CardTitle>
-          <CardDescription>With reduced padding</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <p>Compact content area</p>
-        </CardContent>
-        <CardFooter>
-          <Button size="sm">Action</Button>
-        </CardFooter>
-      </Card>
-    </div>
-  ),
 }

@@ -10,7 +10,6 @@ const weightOptions: NonNullable<TextVariants['weight']>[] = [
   'semibold',
   'bold',
 ]
-
 const alignOptions: NonNullable<TextVariants['align']>[] = ['left', 'center', 'right']
 
 const meta: Meta<TextProps> = {
@@ -19,29 +18,6 @@ const meta: Meta<TextProps> = {
   parameters: {
     controls: {
       exclude: ['asChild'],
-    },
-    docs: {
-      description: {
-        component: `
-Text component for displaying content with various styles and sizes.
-
-## Example
-\`\`\`tsx
-import { Text } from '#/components/base-ui'
-
-// Basic usage
-<Text>Regular text content</Text>
-
-// With different size
-<Text size="lg">Larger text</Text>
-
-// With custom weight
-<Text weight="bold">Bold text</Text>
-
-// With alignment
-<Text align="center">Centered text</Text>
-\`\`\``,
-      },
     },
   },
   argTypes: {
@@ -53,7 +29,7 @@ import { Text } from '#/components/base-ui'
       },
     },
     size: {
-      control: { type: 'inline-radio' },
+      control: { type: 'radio' },
       options: sizeOptions,
       table: {
         type: { summary: 'TextVariants["size"]' },
@@ -67,7 +43,7 @@ import { Text } from '#/components/base-ui'
       },
     },
     align: {
-      control: { type: 'inline-radio' },
+      control: { type: 'radio' },
       options: alignOptions,
       table: {
         type: { summary: 'TextVariants["align"]' },

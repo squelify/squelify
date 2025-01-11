@@ -8,42 +8,10 @@ import {
   SelectTrigger,
   SelectValue,
 } from './select'
-import type { SelectVariants } from './select.css'
 
-const sizeOptions: NonNullable<SelectVariants['size']>[] = ['default', 'sm', 'lg']
-
-const meta: Meta = {
+const meta: Meta<typeof Select> = {
   title: 'Basic Components/Select',
   component: Select,
-  parameters: {
-    docs: {
-      description: {
-        component: `
-Select component for choosing a value from a list of options.
-
-## Example
-\`\`\`tsx
-import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from '#/components/base-ui'
-
-<Select>
-  <SelectTrigger>
-    <SelectValue placeholder="Select option" />
-  </SelectTrigger>
-  <SelectContent>
-    <SelectItem value="option1">Option 1</SelectItem>
-  </SelectContent>
-</Select>
-\`\`\``,
-      },
-    },
-  },
-  argTypes: {
-    size: {
-      control: 'inline-radio',
-      options: sizeOptions,
-      description: 'Select size variant',
-    },
-  },
 }
 
 export default meta
@@ -68,40 +36,7 @@ export const Default: Story = {
   ),
 }
 
-export const Sizes: Story = {
-  render: () => (
-    <div className="flex items-end gap-4">
-      <Select>
-        <SelectTrigger className="w-[180px]" size="sm">
-          <SelectValue placeholder="Small" />
-        </SelectTrigger>
-        <SelectContent>
-          <SelectItem value="sm">Small Select</SelectItem>
-        </SelectContent>
-      </Select>
-
-      <Select>
-        <SelectTrigger className="w-[180px]">
-          <SelectValue placeholder="Default" />
-        </SelectTrigger>
-        <SelectContent>
-          <SelectItem value="default">Default Select</SelectItem>
-        </SelectContent>
-      </Select>
-
-      <Select>
-        <SelectTrigger className="w-[180px]" size="lg">
-          <SelectValue placeholder="Large" />
-        </SelectTrigger>
-        <SelectContent>
-          <SelectItem value="lg">Large Select</SelectItem>
-        </SelectContent>
-      </Select>
-    </div>
-  ),
-}
-
-export const Grouped: Story = {
+export const Scrollable: Story = {
   render: () => (
     <Select>
       <SelectTrigger className="w-[280px]">
@@ -112,31 +47,44 @@ export const Grouped: Story = {
           <SelectLabel>North America</SelectLabel>
           <SelectItem value="est">Eastern Standard Time (EST)</SelectItem>
           <SelectItem value="cst">Central Standard Time (CST)</SelectItem>
+          <SelectItem value="mst">Mountain Standard Time (MST)</SelectItem>
           <SelectItem value="pst">Pacific Standard Time (PST)</SelectItem>
+          <SelectItem value="akst">Alaska Standard Time (AKST)</SelectItem>
+          <SelectItem value="hst">Hawaii Standard Time (HST)</SelectItem>
         </SelectGroup>
         <SelectGroup>
-          <SelectLabel>Europe</SelectLabel>
+          <SelectLabel>Europe & Africa</SelectLabel>
           <SelectItem value="gmt">Greenwich Mean Time (GMT)</SelectItem>
           <SelectItem value="cet">Central European Time (CET)</SelectItem>
+          <SelectItem value="eet">Eastern European Time (EET)</SelectItem>
+          <SelectItem value="west">Western European Summer Time (WEST)</SelectItem>
+          <SelectItem value="cat">Central Africa Time (CAT)</SelectItem>
+          <SelectItem value="eat">East Africa Time (EAT)</SelectItem>
         </SelectGroup>
         <SelectGroup>
           <SelectLabel>Asia</SelectLabel>
-          <SelectItem value="jst">Japan Standard Time (JST)</SelectItem>
+          <SelectItem value="msk">Moscow Time (MSK)</SelectItem>
+          <SelectItem value="ist">India Standard Time (IST)</SelectItem>
           <SelectItem value="cst_china">China Standard Time (CST)</SelectItem>
+          <SelectItem value="jst">Japan Standard Time (JST)</SelectItem>
+          <SelectItem value="kst">Korea Standard Time (KST)</SelectItem>
+          <SelectItem value="ist_indonesia">Indonesia Central Standard Time (WITA)</SelectItem>
         </SelectGroup>
-      </SelectContent>
-    </Select>
-  ),
-}
-
-export const Disabled: Story = {
-  render: () => (
-    <Select disabled>
-      <SelectTrigger className="w-[180px]">
-        <SelectValue placeholder="Disabled" />
-      </SelectTrigger>
-      <SelectContent>
-        <SelectItem value="disabled">Disabled Option</SelectItem>
+        <SelectGroup>
+          <SelectLabel>Australia & Pacific</SelectLabel>
+          <SelectItem value="awst">Australian Western Standard Time (AWST)</SelectItem>
+          <SelectItem value="acst">Australian Central Standard Time (ACST)</SelectItem>
+          <SelectItem value="aest">Australian Eastern Standard Time (AEST)</SelectItem>
+          <SelectItem value="nzst">New Zealand Standard Time (NZST)</SelectItem>
+          <SelectItem value="fjt">Fiji Time (FJT)</SelectItem>
+        </SelectGroup>
+        <SelectGroup>
+          <SelectLabel>South America</SelectLabel>
+          <SelectItem value="art">Argentina Time (ART)</SelectItem>
+          <SelectItem value="bot">Bolivia Time (BOT)</SelectItem>
+          <SelectItem value="brt">Brasilia Time (BRT)</SelectItem>
+          <SelectItem value="clt">Chile Standard Time (CLT)</SelectItem>
+        </SelectGroup>
       </SelectContent>
     </Select>
   ),

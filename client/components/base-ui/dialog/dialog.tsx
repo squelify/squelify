@@ -2,7 +2,6 @@ import * as DialogPrimitive from '@radix-ui/react-dialog'
 import * as Lucide from 'lucide-react'
 import * as React from 'react'
 import { dialogStyles } from './dialog.css'
-import type { DialogVariants } from './dialog.css'
 
 const Dialog = DialogPrimitive.Root
 const DialogTrigger = DialogPrimitive.Trigger
@@ -19,15 +18,15 @@ const DialogOverlay = React.forwardRef<
 
 const DialogContent = React.forwardRef<
   React.ComponentRef<typeof DialogPrimitive.Content>,
-  React.ComponentPropsWithoutRef<typeof DialogPrimitive.Content> & DialogVariants
->(({ className, size, children, ...props }, ref) => {
-  const styles = dialogStyles({ size })
+  React.ComponentPropsWithoutRef<typeof DialogPrimitive.Content>
+>(({ className, children, ...props }, ref) => {
+  const styles = dialogStyles()
   return (
     <DialogPortal>
       <DialogOverlay />
       <DialogPrimitive.Content ref={ref} className={styles.content({ className })} {...props}>
         {children}
-        <DialogPrimitive.Close className={styles.closeButton()}>
+        <DialogPrimitive.Close className={styles.close()}>
           <Lucide.XIcon className={styles.closeIcon()} strokeWidth={2} />
           <span className="sr-only">Close</span>
         </DialogPrimitive.Close>
@@ -68,6 +67,10 @@ const DialogDescription = React.forwardRef<
   )
 })
 
+Dialog.displayName = 'Dialog'
+DialogTrigger.displayName = 'DialogTrigger'
+DialogPortal.displayName = 'DialogPortal'
+DialogClose.displayName = 'DialogClose'
 DialogOverlay.displayName = DialogPrimitive.Overlay.displayName
 DialogContent.displayName = DialogPrimitive.Content.displayName
 DialogHeader.displayName = 'DialogHeader'

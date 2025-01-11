@@ -2,19 +2,19 @@ import { type VariantProps, tv } from 'tailwind-variants'
 
 export const progressStyles = tv({
   slots: {
-    root: 'relative w-full overflow-hidden rounded-full bg-primary/20',
-    indicator: 'h-full w-full flex-1 bg-primary transition-all',
+    base: 'relative h-2 w-full overflow-hidden rounded-full bg-primary/20',
+    indicator: 'size-full flex-1 bg-primary transition-all',
   },
   variants: {
     size: {
       default: {
-        root: 'h-2',
+        base: 'h-2',
       },
       sm: {
-        root: 'h-1',
+        base: 'h-1',
       },
       lg: {
-        root: 'h-3',
+        base: 'h-3',
       },
     },
   },
