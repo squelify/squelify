@@ -5,7 +5,7 @@
 @variant dark (&:where(.dark, .dark *));
 
 /* @ref: https://tailwindcss.com/docs/v4-beta#configuring-source-detection */
-@source "../../server/resources";
+@source "../../server/views";
 
 @theme {
     /* Brand Colors */

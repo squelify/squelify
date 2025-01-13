@@ -1,7 +1,7 @@
 import { renderToStaticMarkup } from 'react-dom/server'
-import BaseLayout from '~/resources/layouts/base-layout'
-import InstallerPage from '~/resources/views/installer'
 import { generateCSRFToken } from '~/utils/string'
+import InstallerPage from '~/views/installer'
+import BaseLayout from '~/views/layout'
 import { useStorage } from '#imports'
 
 type Manifest = Record<string, { css: string[]; file: string; isEntry: boolean }>
