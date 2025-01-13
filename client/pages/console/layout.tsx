@@ -1,12 +1,13 @@
 import type { LucideIcon } from 'lucide-react'
 import * as Lucide from 'lucide-react'
+import { Suspense } from 'react'
 import { ErrorBoundary } from 'react-error-boundary'
 import { Outlet, useLocation } from 'react-router'
-import { ResizablePanel, ResizablePanelGroup } from '#/components/base-ui/resizable'
-import { ResizableHandle } from '#/components/base-ui/resizable'
-import { Tabs, TabsList, TabsTrigger } from '#/components/base-ui/tabs'
+import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from '#/components/base-ui'
+import { Tabs, TabsList, TabsTrigger } from '#/components/base-ui'
+import BoundaryError from '#/components/errors/boundary'
 import { Link } from '#/components/link'
-import ErrorBoundaryFallback from '#/pages/error/boundary-fallback'
+import PageLoader from '#/components/loaders/page-loader'
 import { clx } from '#/utils/helper'
 
 import TabQuery from './tab-query'
@@ -29,7 +30,7 @@ export default function SQLConsoleLayout() {
   const activeSection = location.pathname.split('/')[2] || 'table'
 
   return (
-    <ErrorBoundary FallbackComponent={ErrorBoundaryFallback}>
+    <ErrorBoundary FallbackComponent={BoundaryError}>
       <ResizablePanelGroup
         direction="horizontal"
         autoSaveId="sql-console"
@@ -58,7 +59,9 @@ export default function SQLConsoleLayout() {
           </Tabs>
         </ResizablePanel>
         <ResizableHandle withHandle />
-        <Outlet />
+        <Suspense fallback={<PageLoader />}>
+          <Outlet />
+        </Suspense>
       </ResizablePanelGroup>
     </ErrorBoundary>
   )

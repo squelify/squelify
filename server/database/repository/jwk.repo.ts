@@ -3,11 +3,12 @@ import { type Kysely } from 'kysely'
 import { typeid } from 'typeid-js'
 import type { Database } from '~/database/db.schema'
 import type { JWK, JWKAlgorithm, JWKInsert } from '~/database/schemas/jwk'
+import { TOKEN_DURATION } from '~/utils/jwt'
 
 export async function getActiveJWK(db: Kysely<Database>): Promise<Partial<JWK> | null> {
   const now = Math.floor(Date.now() / 1000)
 
-  return await db
+  const result = await db
     .selectFrom('sq_jwks')
     .where('isActive', '=', 1)
     .where('expiresAt', '>', now)
@@ -15,6 +16,8 @@ export async function getActiveJWK(db: Kysely<Database>): Promise<Partial<JWK> |
     .orderBy('createdAt', 'desc')
     .limit(1)
     .executeTakeFirst()
+
+  return result ?? null
 }
 
 export async function getJWKByKeyId(
@@ -23,13 +26,15 @@ export async function getJWKByKeyId(
 ): Promise<Partial<JWK> | null> {
   const now = Math.floor(Date.now() / 1000)
 
-  return await db
+  const result = await db
     .selectFrom('sq_jwks')
     .where('keyId', '=', keyId)
     .where('isActive', '=', 1)
     .where('expiresAt', '>', now)
     .select(['id', 'keyId', 'publicKey', 'privateKey', 'algorithm', 'expiresAt'])
     .executeTakeFirst()
+
+  return result ?? null
 }
 
 export async function rotateJWK(db: Kysely<Database>): Promise<JWK> {

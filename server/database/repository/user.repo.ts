@@ -18,13 +18,12 @@ export default function createUserRepository(db: Kysely<Database>) {
           ? await query.select(cols).executeTakeFirst()
           : await query.selectAll().executeTakeFirst()
 
-        return result || null
+        return result || undefined
       } catch (error) {
         logger.error('[app]', `Error finding user with id ${id}:`, error)
         throw new Error(`Failed to find user with id ${id}`)
       }
     },
-
     findByEmail: async (email: string): Promise<Partial<User> | undefined> => {
       try {
         const result = await db
@@ -36,13 +35,12 @@ export default function createUserRepository(db: Kysely<Database>) {
           .select(['users.id', 'users.firstName', 'users.lastName', 'emails.email'])
           .executeTakeFirst()
 
-        return result || null
+        return result || undefined
       } catch (error) {
         logger.error('[app]', `Error finding user with email ${email}:`, error)
         throw new Error(`Failed to find user with email ${email}`)
       }
     },
-
     findActive: async (username: string) => {
       return db
         .selectFrom('sq_users')
@@ -54,7 +52,11 @@ export default function createUserRepository(db: Kysely<Database>) {
     },
 
     create: async (data: UserInsert): Promise<User> => {
-      return await db.insertInto('sq_users').values(data).returningAll().executeTakeFirst()
+      const result = await db.insertInto('sq_users').values(data).returningAll().executeTakeFirst()
+      if (!result) {
+        throw new Error('Failed to create user')
+      }
+      return result
     },
   }
 }

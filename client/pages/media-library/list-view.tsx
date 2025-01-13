@@ -1,12 +1,10 @@
 import * as Lucide from 'lucide-react'
-import { Button } from '#/components/base-ui/button'
-import { Dialog, DialogContent, DialogTrigger } from '#/components/base-ui/dialog'
-import { DialogHeader, DialogTitle } from '#/components/base-ui/dialog'
-import { Input } from '#/components/base-ui/input'
-import { Popover, PopoverContent, PopoverTrigger } from '#/components/base-ui/popover'
-import { Skeleton } from '#/components/base-ui/skeleton'
-import { Table, TableBody, TableCell, TableRow } from '#/components/base-ui/table'
-import { TableHead, TableHeader } from '#/components/base-ui/table'
+import { Button, Input, Skeleton } from '#/components/base-ui'
+import { Dialog, DialogContent, DialogTrigger } from '#/components/base-ui'
+import { DialogHeader, DialogTitle } from '#/components/base-ui'
+import { Popover, PopoverContent, PopoverTrigger } from '#/components/base-ui'
+import { Table, TableBody, TableCell, TableRow } from '#/components/base-ui'
+import { TableHead, TableHeader } from '#/components/base-ui'
 import { type MediaItem } from './dummy'
 
 interface ListViewProps {
@@ -24,18 +22,20 @@ export const ListViewSkeleton = () => (
         <TableHead>Type</TableHead>
         <TableHead>Size</TableHead>
         <TableHead>Modified</TableHead>
-        <TableHead className="w-[120px]">Actions</TableHead>
+        <TableHead className="w-[80px] text-center">Actions</TableHead>
       </TableRow>
     </TableHeader>
     <TableBody>
       {Array.from({ length: 5 }).map((val) => (
         <TableRow key={`skeleton-${val}`}>
           <TableCell className="pl-3">
-            <Input type="checkbox" className="size-4" />
+            <Skeleton className="size-4" />
           </TableCell>
           <TableCell>
             <div className="flex items-center gap-2">
-              <Skeleton className="size-10 rounded-lg" />
+              <div className="relative">
+                <Skeleton className="size-10 rounded-lg" />
+              </div>
               <Skeleton className="h-4 w-[150px]" />
             </div>
           </TableCell>
@@ -49,8 +49,7 @@ export const ListViewSkeleton = () => (
             <Skeleton className="h-4 w-[100px]" />
           </TableCell>
           <TableCell>
-            <div className="flex items-center gap-1">
-              <Skeleton className="size-8 rounded-md" />
+            <div className="flex items-center justify-center">
               <Skeleton className="size-8 rounded-md" />
             </div>
           </TableCell>
@@ -85,102 +84,128 @@ export default function ListView({ items }: ListViewProps) {
           <TableHead>Type</TableHead>
           <TableHead>Size</TableHead>
           <TableHead>Modified</TableHead>
-          <TableHead className="w-[120px] text-center">Actions</TableHead>
+          <TableHead className="w-[80px] text-center">Actions</TableHead>
         </TableRow>
       </TableHeader>
       <TableBody>
         {items.map((item) => (
-          <TableRow key={item.id}>
-            <TableCell className="pl-3">
-              <Input type="checkbox" className="size-4" />
-            </TableCell>
-            <TableCell>
-              <div className="flex items-center gap-2">
-                <img
-                  src={item.url}
-                  alt={item.name}
-                  className="size-10 rounded-lg border object-cover"
-                />
-                <span>{item.name}</span>
-              </div>
-            </TableCell>
-            <TableCell>{item.type}</TableCell>
-            <TableCell>{formatFileSize(item.size)}</TableCell>
-            <TableCell>{item.modified}</TableCell>
-            <TableCell>
-              <div className="flex items-center justify-center gap-1">
-                <Dialog>
-                  <DialogTrigger asChild>
-                    <Button variant="ghost" size="icon" className="hover:bg-muted">
-                      <Lucide.Eye className="size-4" />
-                    </Button>
-                  </DialogTrigger>
-                  <DialogContent>
-                    <DialogHeader>
-                      <DialogTitle>Preview</DialogTitle>
-                    </DialogHeader>
-                    <div className="space-y-4">
+          <Dialog key={item.id}>
+            <TableRow className="group">
+              <TableCell className="pl-3">
+                <Input type="checkbox" className="size-4" onClick={(e) => e.stopPropagation()} />
+              </TableCell>
+              <TableCell>
+                <DialogTrigger asChild>
+                  <div className="flex cursor-pointer items-center gap-2">
+                    <div className="relative">
                       <img
                         src={item.url}
                         alt={item.name}
-                        className="aspect-square w-full rounded-lg object-cover"
+                        className="size-10 rounded-lg border object-cover"
                       />
-                      <div className="space-y-2">
-                        <div className="flex justify-between">
-                          <span className="text-muted-foreground">Name:</span>
-                          <span>{item.name}</span>
-                        </div>
-                        <div className="flex justify-between">
-                          <span className="text-muted-foreground">Size:</span>
-                          <span>{formatFileSize(item.size)}</span>
-                        </div>
-                        <div className="flex justify-between">
-                          <span className="text-muted-foreground">Type:</span>
-                          <span>{item.type}</span>
-                        </div>
-                        <div className="flex justify-between">
-                          <span className="text-muted-foreground">Modified:</span>
-                          <span>{item.modified}</span>
-                        </div>
+                      <div className="absolute inset-0 flex items-center justify-center rounded-lg bg-black/40 opacity-0 transition-all duration-200 group-hover:opacity-100">
+                        <Lucide.Eye className="size-4 scale-50 text-white opacity-0 transition-all duration-200 group-hover:scale-100 group-hover:opacity-100" />
                       </div>
                     </div>
-                  </DialogContent>
-                </Dialog>
-
-                <Popover>
-                  <PopoverTrigger asChild>
-                    <Button variant="ghost" size="icon" className="hover:bg-muted">
-                      <Lucide.MoreHorizontal className="size-4" />
-                    </Button>
-                  </PopoverTrigger>
-                  <PopoverContent align="end" className="w-44 p-2">
-                    <div className="space-y-1">
-                      <Button variant="ghost" size="sm" className="w-full justify-start">
-                        <Lucide.PenSquare className="mr-1 size-4" />
-                        Rename
-                      </Button>
-                      <Button variant="ghost" size="sm" className="w-full justify-start">
-                        <Lucide.Copy className="mr-1 size-4" />
-                        Copy Link
-                      </Button>
-                      <Button variant="ghost" size="sm" className="w-full justify-start">
-                        <Lucide.Download className="mr-1 size-4" />
-                        Download
-                      </Button>
+                    <span>{item.name}</span>
+                  </div>
+                </DialogTrigger>
+              </TableCell>
+              <TableCell>{item.type}</TableCell>
+              <TableCell>{formatFileSize(item.size)}</TableCell>
+              <TableCell>{item.modified}</TableCell>
+              <TableCell>
+                <div className="flex items-center justify-center">
+                  <Popover>
+                    <PopoverTrigger asChild>
                       <Button
                         variant="ghost"
-                        size="sm"
-                        className="w-full justify-start text-destructive"
+                        size="icon"
+                        className="hover:bg-muted"
+                        onClick={(e) => e.stopPropagation()}
                       >
-                        <Lucide.Trash2 className="mr-1 size-4" />
-                        Delete
+                        <Lucide.MoreHorizontal className="size-4" />
                       </Button>
-                    </div>
-                  </PopoverContent>
-                </Popover>
+                    </PopoverTrigger>
+                    <PopoverContent align="end" className="w-44 p-2">
+                      <div className="space-y-1">
+                        <Button variant="ghost" size="sm" className="w-full justify-start">
+                          <Lucide.PenSquare className="mr-1 size-4" />
+                          Rename
+                        </Button>
+                        <Button variant="ghost" size="sm" className="w-full justify-start">
+                          <Lucide.Copy className="mr-1 size-4" />
+                          Copy Link
+                        </Button>
+                        <Button variant="ghost" size="sm" className="w-full justify-start">
+                          <Lucide.Download className="mr-1 size-4" />
+                          Download
+                        </Button>
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          className="w-full justify-start text-destructive"
+                        >
+                          <Lucide.Trash2 className="mr-1 size-4" />
+                          Delete
+                        </Button>
+                      </div>
+                    </PopoverContent>
+                  </Popover>
+                </div>
+              </TableCell>
+            </TableRow>
+            <DialogContent autoFocus={false}>
+              <DialogHeader>
+                <DialogTitle>Preview</DialogTitle>
+              </DialogHeader>
+              <div className="space-y-4">
+                <img
+                  src={item.url}
+                  alt={item.name}
+                  className="aspect-square w-full rounded-lg object-cover"
+                />
+                <div className="space-y-2">
+                  <div className="flex justify-between">
+                    <span className="text-muted-foreground">Name:</span>
+                    <span>{item.name}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-muted-foreground">Size:</span>
+                    <span>{formatFileSize(item.size)}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-muted-foreground">Type:</span>
+                    <span>{item.type}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-muted-foreground">Modified:</span>
+                    <span>{item.modified}</span>
+                  </div>
+                </div>
+
+                {/* Action Buttons */}
+                <div className="flex border-t pt-4">
+                  <div className="flex gap-2">
+                    <Button variant="secondary" size="sm">
+                      <Lucide.Download className="mr-1 size-4" />
+                      Download
+                    </Button>
+                    <Button variant="secondary" size="sm">
+                      <Lucide.Copy className="mr-1 size-4" />
+                      Copy Link
+                    </Button>
+                  </div>
+                  <div className="ml-auto">
+                    <Button variant="destructive" size="sm">
+                      <Lucide.Trash2 className="mr-1 size-4" />
+                      Delete
+                    </Button>
+                  </div>
+                </div>
               </div>
-            </TableCell>
-          </TableRow>
+            </DialogContent>
+          </Dialog>
         ))}
       </TableBody>
     </Table>

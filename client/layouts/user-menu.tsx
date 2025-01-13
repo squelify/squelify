@@ -1,14 +1,13 @@
 import * as Lucide from 'lucide-react'
 import { useState } from 'react'
-import { Avatar, AvatarFallback, AvatarImage } from '#/components/base-ui/avatar'
-import { DropdownMenuItem, DropdownMenuLabel } from '#/components/base-ui/dropdown-menu'
-import { DropdownMenuContent, DropdownMenuGroup } from '#/components/base-ui/dropdown-menu'
-import { DropdownMenuSeparator } from '#/components/base-ui/dropdown-menu'
-import { DropdownMenu, DropdownMenuTrigger } from '#/components/base-ui/dropdown-menu'
-import { SidebarMenuButton, useSidebar } from '#/components/base-ui/sidebar'
+import { Avatar, AvatarFallback, AvatarImage } from '#/components/base-ui'
+import { DropdownMenuItem, DropdownMenuLabel } from '#/components/base-ui'
+import { DropdownMenuContent, DropdownMenuGroup } from '#/components/base-ui'
+import { DropdownMenu, DropdownMenuSeparator, DropdownMenuTrigger } from '#/components/base-ui'
+import { SidebarMenuButton, useSidebar } from '#/components/base-ui'
 import { Link } from '#/components/link'
+import { useTheme } from '#/context/hooks/use-theme'
 import { Theme } from '#/context/stores/ui.store'
-import { useTheme } from '#/providers/theme-provider'
 import type { UserInfo } from '#/services/types'
 import { clx } from '#/utils/helper'
 
@@ -74,7 +73,7 @@ export default function UserMenu({ user, sidebarState, logout }: UserMenuProps) 
         <DropdownMenuLabel className="p-0 font-normal">
           <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
             <Avatar className="size-8 rounded-lg">
-              <AvatarImage src={user.avatarUrl} alt={user.username} />
+              <AvatarImage src={user.avatarUrl} alt={user.displayName} />
               <AvatarFallback className="rounded-lg bg-transparent">
                 <Lucide.CircleUser className="size-8 rounded-lg" strokeWidth={1.6} />
               </AvatarFallback>
@@ -95,13 +94,13 @@ export default function UserMenu({ user, sidebarState, logout }: UserMenuProps) 
           </DropdownMenuItem>
           <DropdownMenuSeparator />
           <DropdownMenuItem asChild>
-            <Link href="/docs">
+            <Link href="https://squelify.com/docs?utm_source=squelify&utm_medium=profile" newTab>
               <Lucide.ExternalLink strokeWidth={1.8} />
               <span>Documentation</span>
             </Link>
           </DropdownMenuItem>
           <DropdownMenuItem asChild>
-            <Link href="/github">
+            <Link href="https://github.com/squelify/squelify?utm_source=squelify" newTab>
               <Lucide.ExternalLink strokeWidth={1.8} />
               <span>Source Code</span>
             </Link>
@@ -115,7 +114,7 @@ export default function UserMenu({ user, sidebarState, logout }: UserMenuProps) 
               <DropdownMenuTrigger asChild>
                 <button
                   type="button"
-                  className="flex w-full items-center rounded-sm px-2 py-1.5 text-sm outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground"
+                  className="flex w-full items-center rounded-xs px-2 py-1.5 text-sm outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground"
                 >
                   {getIcon(selectedTheme)}
                   <span className="ml-2 capitalize">{selectedTheme} Theme</span>

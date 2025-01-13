@@ -1,41 +1,41 @@
-import type React from 'react'
-import { forwardRef } from 'react'
-import { type LinkProps, Link as RouterLink } from 'react-router'
-import { clx } from '#/utils/helper'
+import * as Lucide from 'lucide-react'
+import * as React from 'react'
+import { Link as RouterLink } from 'react-router'
+import type { LinkProps as RouterLinkProps } from 'react-router'
+import { type LinkVariants, linkStyles } from './base-ui/link/link.css'
 
-interface CustomLinkProps extends Omit<LinkProps, 'to'> {
+export interface LinkProps extends Omit<RouterLinkProps, 'to'>, LinkVariants {
   href: string
   newTab?: boolean
 }
 
-/**
- * Custom Link component that wraps React Router's Link component.
- * This component replaces the `to` prop with `href` for consistency with HTML anchor elements.
- *
- * @param props - The properties for the Link component.
- * @param ref - The forwarded ref for the anchor element.
- * @returns A React element that renders a link.
- *
- * Example usage:
- * ```tsx
- * <Link href="/path" className="custom-class">Link Text</Link>
- * ```
- */
-const Link = forwardRef(function Component(
-  props: CustomLinkProps & React.ComponentPropsWithoutRef<'a'>,
-  ref: React.ForwardedRef<HTMLAnchorElement>
+const Link = React.forwardRef<HTMLAnchorElement, LinkProps>(function Component(
+  { href, className, newTab, variant, size, children, ...rest },
+  ref
 ) {
-  const { href, className, newTab, ...rest } = props
+  const styles = linkStyles({ variant, size, newTab })
+
   return (
     <RouterLink
       to={href}
-      className={clx('text-inherit dark:text-inherit', className)}
+      className={styles.base({ className })}
+      target={newTab ? '_blank' : undefined}
       rel={newTab ? 'noopener noreferrer' : undefined}
-      target={newTab ? '_blank' : '_self'}
+      aria-label={newTab ? `${children} (opens in new tab)` : undefined}
       ref={ref}
       {...rest}
-    />
+    >
+      {children}
+      {newTab && (
+        <>
+          <Lucide.ExternalLink className={styles.icon()} aria-hidden="true" />
+          <span className="sr-only">(opens in new tab)</span>
+        </>
+      )}
+    </RouterLink>
   )
 })
+
+Link.displayName = 'Link'
 
 export { Link }

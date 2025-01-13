@@ -1,3 +1,5 @@
+import { handleCors } from 'h3'
+
 // Domain configurations
 const DOMAINS = {
   LOCAL: ['localhost', '127.0.0.1'],

@@ -1,0 +1,117 @@
+import consola from 'consola'
+import * as Lucide from 'lucide-react'
+import { useRef } from 'react'
+import { Avatar, AvatarFallback, AvatarImage } from '#/components/base-ui'
+import { Card, CardContent, CardHeader } from '#/components/base-ui'
+import { CardDescription, CardTitle } from '#/components/base-ui'
+import { Select, SelectItem, SelectValue } from '#/components/base-ui'
+import { SelectContent, SelectTrigger } from '#/components/base-ui'
+import { Button, Input, Label, TabsContent } from '#/components/base-ui'
+import { useSEOMeta } from '#/context/hooks/use-seo-meta'
+
+export default function Page() {
+  useSEOMeta('Profile')
+  const fileInputRef = useRef<HTMLInputElement>(null)
+
+  const handleFileSelect = () => {
+    fileInputRef.current?.click()
+  }
+
+  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0]
+    if (file) {
+      // Handle file upload logic here
+      consola.log('Selected file:', file)
+    }
+  }
+
+  return (
+    <TabsContent value="general">
+      <Card>
+        <CardHeader className="space-y-1">
+          <CardTitle>Profile Information</CardTitle>
+          <CardDescription>Update your profile information and preferences</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <div className="flex flex-col gap-6">
+            <div className="mx-auto mb-6">
+              <div className="group relative">
+                <Avatar className="size-32">
+                  <AvatarImage
+                    src="https://avatars.githubusercontent.com/u/921834?v=4"
+                    alt="Profile photo"
+                  />
+                  <AvatarFallback>AR</AvatarFallback>
+                </Avatar>
+                <div className="absolute inset-0 flex items-center justify-center rounded-full bg-black/60 opacity-0 transition-opacity group-hover:opacity-100">
+                  <Button
+                    size="sm"
+                    variant="ghost"
+                    className="text-white hover:bg-transparent hover:text-white"
+                    onClick={handleFileSelect}
+                  >
+                    <Lucide.Upload className="mr-2 size-4" />
+                    Change
+                  </Button>
+                </div>
+                <input
+                  ref={fileInputRef}
+                  type="file"
+                  accept="image/*"
+                  className="hidden"
+                  onChange={handleFileChange}
+                />
+              </div>
+            </div>
+
+            <div className="grid gap-4">
+              <div className="grid gap-4 sm:grid-cols-2">
+                <div className="grid gap-2">
+                  <Label htmlFor="firstName">First Name</Label>
+                  <Input id="firstName" placeholder="Enter first name" />
+                </div>
+                <div className="grid gap-2">
+                  <Label htmlFor="lastName">Last Name</Label>
+                  <Input id="lastName" placeholder="Enter last name" />
+                </div>
+              </div>
+              <div className="grid gap-2">
+                <Label htmlFor="email">Email</Label>
+                <Input id="email" type="email" placeholder="Enter your email" />
+              </div>
+              <div className="grid gap-2">
+                <Label htmlFor="timezone">Timezone</Label>
+                <Select>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select timezone" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="utc+7">Western Indonesia Time (UTC+7)</SelectItem>
+                    <SelectItem value="utc+8">Singapore Time (UTC+8)</SelectItem>
+                    <SelectItem value="utc+0">UTC</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              <div className="grid gap-2">
+                <Label htmlFor="language">Language</Label>
+                <Select>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select language" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="en">English</SelectItem>
+                    <SelectItem value="id">Bahasa Indonesia</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+
+            <div className="flex justify-end">
+              <Button>Save Changes</Button>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+    </TabsContent>
+  )
+}

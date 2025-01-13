@@ -1,5 +1,5 @@
 import { Heading, Hr, Link, Preview, Section, Text } from 'jsx-email'
-import appConfig from '~/app.config'
+import appConfig from '~~/app.config'
 import EmailMarketingTemplate from '../layouts/marketing-layout'
 
 export interface OnboardingEmailProps {

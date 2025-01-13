@@ -59,6 +59,9 @@ export default async function seed(db: Kysely<Database>): Promise<void> {
       userId: userId,
       hash: hashedPassword,
       algorithm: DEFAULT_PASSWORD_ALGORITHM,
+      previousHashes: '',
+      resetRequired: 0,
+      failedAttempts: 0,
       createdAt: now,
     }
 

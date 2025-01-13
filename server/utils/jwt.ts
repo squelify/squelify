@@ -74,15 +74,22 @@ export async function generateAccessToken(
       .setProtectedHeader(headerParams)
       .sign(privateKey)
   } catch (error) {
-    logger.error('[jwt]', 'Token generation failed', {
-      error: error.message,
-      keyId: key.keyId,
-      algorithm: key.algorithm,
-    })
+    if (error instanceof Error) {
+      logger.error('[jwt]', 'Token generation failed', {
+        error: error.message,
+        keyId: key.keyId,
+        algorithm: key.algorithm,
+      })
+    } else {
+      logger.error('[jwt]', 'Token generation failed', {
+        error: String(error),
+        keyId: key.keyId,
+        algorithm: key.algorithm,
+      })
+    }
     throw new JWTGenerationError('Token generation failed')
   }
 }
-
 export class JWTGenerationError extends Error {
   constructor(message: string, options?: ErrorOptions) {
     super(message, options)

@@ -9,6 +9,8 @@ interface SPAClientOptions {
   title?: string
 }
 
+type Manifest = Record<string, { css: string[]; file: string; isEntry: boolean }>
+
 export async function handleSPAClient(event: H3Event, options: SPAClientOptions) {
   const { entryName, title } = options
   const appConfig = event.context.appConfig
@@ -63,9 +65,10 @@ export async function handleSPAClient(event: H3Event, options: SPAClientOptions)
     return /* html */ `<!DOCTYPE html>
 <html lang="en">
   <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="csrf-token" content="${csrfToken}">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="csrf-token" content="${csrfToken}" />
+    <link rel="manifest" href="/site.webmanifest" />
     <title>${pageTitle}</title>
   </head>
   <body>
@@ -80,8 +83,6 @@ export async function handleSPAClient(event: H3Event, options: SPAClientOptions)
   </body>
 </html>`
   }
-
-  type Manifest = Record<string, { css: string[]; file: string; isEntry: boolean }>
 
   const manifest = await useStorage('assets:vite').getItem<Manifest>(`manifest.json`)
 
@@ -99,17 +100,18 @@ export async function handleSPAClient(event: H3Event, options: SPAClientOptions)
     return `Missing ${entryName} entry chunk`
   }
 
+  const scriptLinks = `<script type="module" src="/${entryChunk.file}"></script>`
   const cssLinks = entryChunk.css
     .map((link) => `<link rel="stylesheet" href="/${link}" />`)
     .join('\n')
-  const scriptLinks = `<script type="module" src="/${entryChunk.file}"></script>`
 
   return /* html */ `<!DOCTYPE html>
 <html lang="en">
   <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="csrf-token" content="${csrfToken}">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="csrf-token" content="${csrfToken}" />
+    <link rel="manifest" href="/site.webmanifest" />
     <title>${pageTitle}</title>
     ${cssLinks}
   </head>

@@ -6,7 +6,7 @@ This way we can guide you through the process and give feedback.
 
 ## 🏁 Quick Start
 
-You will need `Node.js >=20.11.1`, `pnpm >=9.12.0` and `Docker >= 20.10` installed on your machine.
+You will need `Node.js >=22.12.10`, `pnpm >=9.15.0` and `Docker >= 27.0` installed on your machine.
 
 ### Up and Running
 
@@ -61,7 +61,7 @@ The migration generator creates new migration files with standardized naming for
 pnpm squelify make migration <name>
 ```
 
-### Example Usage
+### Example
 
 ```sh
 pnpm squelify make migration create_users_table

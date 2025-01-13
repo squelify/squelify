@@ -3,16 +3,12 @@ import { copycat } from '@snaplet/copycat'
 import consola from 'consola'
 import * as Lucide from 'lucide-react'
 import { useCallback, useRef, useState } from 'react'
-import { Button } from '#/components/base-ui/button'
-import { DropdownMenu, DropdownMenuContent } from '#/components/base-ui/dropdown-menu'
-import { DropdownMenuShortcut } from '#/components/base-ui/dropdown-menu'
-import { DropdownMenuItem, DropdownMenuTrigger } from '#/components/base-ui/dropdown-menu'
-import { Input } from '#/components/base-ui/input'
-import { ResizablePanel, ResizablePanelGroup } from '#/components/base-ui/resizable'
-import { ResizableHandle } from '#/components/base-ui/resizable'
-import { ScrollArea } from '#/components/base-ui/scroll-area'
-import { Separator } from '#/components/base-ui/separator'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '#/components/base-ui/tabs'
+import { DropdownMenu, DropdownMenuContent } from '#/components/base-ui'
+import { DropdownMenuShortcut } from '#/components/base-ui'
+import { DropdownMenuItem, DropdownMenuTrigger } from '#/components/base-ui'
+import { Button, Input, ScrollArea, Separator } from '#/components/base-ui'
+import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from '#/components/base-ui'
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '#/components/base-ui'
 import CodeEditor, { type EditorContextData, EditorRef } from '#/components/code-editor'
 import DataGrid from '#/components/datagrid'
 import { useSEOMeta } from '#/context/hooks/use-seo-meta'
@@ -113,14 +109,14 @@ export default function Page() {
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="start" className="w-52 p-1">
                       <DropdownMenuItem
-                        className="cursor-pointer rounded-sm px-3 py-1.5 text-muted-foreground text-xs hover:bg-primary/20 hover:text-foreground focus:bg-primary/30"
+                        className="cursor-pointer rounded-xs px-3 py-1.5 text-muted-foreground text-xs hover:bg-primary/20 hover:text-foreground focus:bg-primary/30"
                         onClick={() => editorRef.current?.execute()}
                       >
                         <span>Run Current Statement</span>
                         <DropdownMenuShortcut>⌘↵</DropdownMenuShortcut>
                       </DropdownMenuItem>
                       <DropdownMenuItem
-                        className="cursor-pointer rounded-sm px-3 py-1.5 text-muted-foreground text-xs hover:bg-primary/20 hover:text-foreground focus:bg-primary/30"
+                        className="cursor-pointer rounded-xs px-3 py-1.5 text-muted-foreground text-xs hover:bg-primary/20 hover:text-foreground focus:bg-primary/30"
                         onClick={() => editorRef.current?.executeAll()}
                       >
                         <span>Run All Statement</span>
@@ -221,7 +217,7 @@ export default function Page() {
             </TabsContent>
             <TabsContent value="messages" className="h-[calc(100%-36px)]">
               <ScrollArea className="size-full border-t bg-sidebar/80 p-3">
-                <div className="rounded bg-background/60 p-3 font-mono text-sm">
+                <div className="rounded-sm bg-background/60 p-3 font-mono text-sm">
                   Query executed successfully
                 </div>
               </ScrollArea>

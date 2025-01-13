@@ -1,6 +1,5 @@
 import * as Lucide from 'lucide-react'
-import { Button } from '#/components/base-ui/button'
-import { Card, CardContent, CardHeader, CardTitle } from '#/components/base-ui/card'
+import { Button, Card, CardContent, CardHeader, CardTitle } from '#/components/base-ui'
 import { Link } from '#/components/link'
 
 const shortcuts = [
@@ -18,8 +17,8 @@ const shortcuts = [
     description: 'Upload and organize files',
     icon: Lucide.Image,
     actions: [
-      { label: 'Upload Files', icon: Lucide.Upload, href: '/content/media' },
-      { label: 'Browse Files', icon: Lucide.FolderOpen, href: '/content/media' },
+      { label: 'Upload Files', icon: Lucide.Upload, href: '/content/media-library' },
+      { label: 'Browse Files', icon: Lucide.FolderOpen, href: '/content/media-library' },
     ],
   },
   {

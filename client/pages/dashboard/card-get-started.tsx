@@ -1,7 +1,7 @@
 import * as Lucide from 'lucide-react'
-import { Button } from '#/components/base-ui/button'
-import { Card, CardHeader, CardTitle } from '#/components/base-ui/card'
-import { CardContent, CardDescription } from '#/components/base-ui/card'
+import { Button } from '#/components/base-ui'
+import { Card, CardHeader, CardTitle } from '#/components/base-ui'
+import { CardContent, CardDescription } from '#/components/base-ui'
 import { Link } from '#/components/link'
 
 export default function CardGetStarted() {
@@ -68,7 +68,7 @@ export default function CardGetStarted() {
             <div className="inline-flex w-full items-center justify-between gap-2">
               {[
                 { label: 'New Content', icon: Lucide.Plus, href: '/content/new' },
-                { label: 'Browse Media', icon: Lucide.FolderOpen, href: '/media' },
+                { label: 'Browse Media', icon: Lucide.FolderOpen, href: '/media-library' },
               ].map((action) => (
                 <Button key={action.label} variant="outline" size="sm" className="w-full" asChild>
                   <Link href={action.href}>

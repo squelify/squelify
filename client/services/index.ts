@@ -15,4 +15,4 @@
 
 export type { ApiClientOptions, ApiResponse } from './types'
 
-export { default as ApiClient } from './client'
+export { default as ApiClient } from './api-client'

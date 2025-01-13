@@ -68,7 +68,7 @@ export default defineEventHandler(async (event) => {
     } else {
       // External API integration using API key
       try {
-        const isValidKey = await validateApiKey(db, apiKey)
+        const isValidKey = await validateApiKey(db, apiKey || '')
         logger.debug('[csrf]', JSON.stringify({ apiKey, isValidKey }))
       } catch (error) {
         await auditLog(event, {

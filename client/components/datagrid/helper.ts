@@ -1,6 +1,6 @@
 import type { GridColumn, Theme } from '@glideapps/glide-data-grid'
 import { useMemo } from 'react'
-import { useTheme } from '#/providers/theme-provider'
+import { useTheme } from '#/context/hooks/use-theme'
 import { darkTheme, lightTheme } from './styles'
 
 // Helper function to calculate text width (can be memoized if needed)
@@ -22,15 +22,19 @@ export const calculateColumnWidths = <T extends Record<string, any>>(
 
   // Initialize with header widths
   for (const col of columns) {
-    widths[col.id] = Math.max(measureTextWidth(col.title, options.padding), options.minWidth)
+    if (typeof col.id === 'string') {
+      widths[col.id] = Math.max(measureTextWidth(col.title, options.padding), options.minWidth)
+    }
   }
 
   // Measure content widths
   for (const row of data) {
     for (const col of columns) {
-      const content = row[col.id]?.toString() || ''
-      const contentWidth = measureTextWidth(content, options.padding)
-      widths[col.id] = Math.max(widths[col.id], contentWidth)
+      if (typeof col.id === 'string') {
+        const content = row[col.id]?.toString() || ''
+        const contentWidth = measureTextWidth(content, options.padding)
+        widths[col.id] = Math.max(widths[col.id] || 0, contentWidth)
+      }
     }
   }
 

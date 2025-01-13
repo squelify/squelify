@@ -1,45 +1,38 @@
+/**
+ * Configures the Nitro server for the application.
+ * @see https://nitro.unjs.io/config
+ */
+
 import 'dotenv/config'
 import consola from 'consola'
 import { makeDirectory } from 'make-dir'
 import { defineNitroConfig } from 'nitropack/config'
 import { resolve } from 'pathe'
-import { isCI, isDevelopment, isProduction, isTest } from 'std-env'
-import { build as buildVite } from 'vite'
+import { isDevelopment, isProduction } from 'std-env'
+import { build as vite } from 'vite'
 import pkg from './package.json' assert { type: 'json' }
 
-/**
- * Configures the Nitro server for the application.
- * @see https://nitro.unjs.io/config
- */
 export default defineNitroConfig({
-  srcDir: 'server',
+  compatibilityDate: '2024-12-29',
   preset: 'node-server',
   serveStatic: 'node',
+  srcDir: 'server',
   minify: isProduction,
   sourceMap: isDevelopment,
-  compatibilityDate: '2024-11-24',
-  appConfigFiles: ['~/app.config'],
-  errorHandler: '~/handler/error.handler',
+  appConfigFiles: ['~~/app.config'],
 
-  routeRules: {
-    '/docs': {
-      redirect: 'https://squelify.com/docs?utm_source=squelify&utm_medium=profile',
-      prerender: false,
-    },
-    '/github': {
-      redirect: 'https://github.com/squelify/squelify',
-      prerender: false,
-    },
-  },
+  renderer: '~/entry.server',
+  errorHandler: '~/handler/error.handler',
+  handlers: [
+    { route: '/robots.txt', handler: '~/handler/robots.handler' },
+    { route: '/site.webmanifest', handler: '~/handler/manifest.handler' },
+    { route: '/installer', handler: '~/handler/installer-get.handler', method: 'get' },
+    { route: '/installer', handler: '~/handler/installer-post.handler', method: 'post' },
+  ],
 
   publicAssets: [{ dir: resolve('public') }],
+  serverAssets: [{ baseName: 'vite', dir: resolve('.output/client/.vite') }],
   compressPublicAssets: { gzip: isProduction, brotli: isProduction },
-
-  serverAssets: [
-    // Frontend application assets
-    { baseName: 'vite', dir: resolve('.output/client/.vite') },
-    { baseName: 'views', dir: resolve('server/views') },
-  ],
 
   output: {
     dir: resolve('.output'),
@@ -51,21 +44,9 @@ export default defineNitroConfig({
     'rollup:before': async (_nitro, _config) => {
       consola.info('Creating data directory...')
       await makeDirectory(resolve('_data'), { mode: 0o755 })
-
       consola.info('Building frontend application...')
-      await buildVite().then(() => consola.success('Frontend application built!'))
+      await vite().then(() => consola.success('Frontend application built!'))
     },
-    compiled: (_nitro) => {
-      // Do something with the compiled Nitro instance.
-      // You can upload the compiled assets to a CDN or do something else with them.
-      if ((!isCI || !isTest) && isProduction) {
-        consola.info('Do something after the app has been compiled')
-      }
-    },
-  },
-
-  experimental: {
-    openAPI: isDevelopment,
   },
 
   openAPI: {
@@ -87,9 +68,7 @@ export default defineNitroConfig({
   },
 
   devServer: { watch: ['server', 'client', '_data/functions', '_data/public_html'] },
-  esbuild: { options: { jsx: 'automatic' } },
-
-  // TODO: modify rollupConfig instead of Vite to use React frontend
-  // This is a temporary workaround, with a better solution coming in the future!
   typescript: { strict: true, generateTsConfig: false },
+  esbuild: { options: { jsx: 'automatic' } },
+  experimental: { openAPI: isDevelopment },
 })

@@ -30,7 +30,7 @@ export const CodeEditor = forwardRef<EditorRef, CodeEditorProps>(function CodeEd
   ref
 ) {
   const editorRef = useRef<HTMLDivElement>(null)
-  const editorViewRef = useRef<EditorView>()
+  const editorViewRef = useRef<EditorView>(null)
 
   const languageSupport = createLanguageSupport(language, contextData)
 
@@ -177,11 +177,13 @@ export const CodeEditor = forwardRef<EditorRef, CodeEditorProps>(function CodeEd
           : 'light'
         : theme
 
+    const gutterExtension = onExecute ? createRunBlockGutter(onExecute) : []
+
     const view = new EditorView({
       doc: value,
       extensions: [
         createCoreExtensions(),
-        createRunBlockGutter(onExecute),
+        gutterExtension,
         ...languageSupport.extensions,
         autocompletion({
           override: [languageSupport.createCompletions(contextData)],
@@ -189,7 +191,7 @@ export const CodeEditor = forwardRef<EditorRef, CodeEditorProps>(function CodeEd
           maxRenderedOptions: 100,
         }),
         EditorView.editable.of(!readOnly && !isExecuting),
-        placeholder(placeholderText),
+        placeholder(String(placeholderText)),
         getEditorTheme(theme),
         ...(languageSupport.theme[effectiveTheme] || []),
         EditorView.updateListener.of((update) => {

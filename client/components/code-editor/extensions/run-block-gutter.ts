@@ -5,7 +5,7 @@ class RunBlockMarker extends GutterMarker {
     super()
   }
 
-  toDOM() {
+  override toDOM() {
     const marker = document.createElement('button')
     marker.className = 'cm-run-block-button group'
     marker.title = 'Run this block (Ctrl/Cmd + Enter)'

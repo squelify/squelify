@@ -1,11 +1,12 @@
 import * as Lucide from 'lucide-react'
 import { useSEOMeta } from '#/context/hooks/use-seo-meta'
+import PageWrapper from '#/layouts/page-wrapper'
 
 export default function Page() {
   const { pageTitle } = useSEOMeta('Collections')
 
   return (
-    <div className="mx-auto flex size-full items-center justify-center">
+    <PageWrapper className="mx-auto flex size-full items-center justify-center">
       <div className="flex max-w-xl flex-col items-center p-4 text-center">
         <div className="mb-8">
           <Lucide.Construction className="size-24 text-muted-foreground hover:text-primary" />
@@ -19,6 +20,6 @@ export default function Page() {
           </p>
         </div>
       </div>
-    </div>
+    </PageWrapper>
   )
 }

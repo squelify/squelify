@@ -316,5 +316,8 @@ const getAppTheme = (): EditorTheme => {
 export const getEditorTheme = (theme: EditorTheme = 'auto') => {
   const effectiveTheme = theme === 'auto' ? getAppTheme() : theme
   const fallbackTheme = getSystemTheme()
-  return createEditorTheme(editorColors[effectiveTheme] || editorColors[fallbackTheme])
+  return createEditorTheme(
+    editorColors[effectiveTheme as keyof typeof editorColors] ||
+      editorColors[fallbackTheme as keyof typeof editorColors]
+  )
 }

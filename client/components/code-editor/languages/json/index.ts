@@ -30,14 +30,28 @@ export const jsonLanguage: LanguageDefinition = {
         errors: [],
       }
     } catch (e) {
+      if (e instanceof Error) {
+        return {
+          isValid: false,
+          errors: [
+            {
+              message: e.message,
+              position: {
+                line: Number.parseInt(e.message.match(/line (\d+)/)?.[1] || '1'),
+                column: Number.parseInt(e.message.match(/column (\d+)/)?.[1] || '1'),
+              },
+            },
+          ],
+        }
+      }
       return {
         isValid: false,
         errors: [
           {
-            message: e.message,
+            message: 'An unknown error occurred',
             position: {
-              line: Number.parseInt(e.message.match(/line (\d+)/)?.[1] || '1'),
-              column: Number.parseInt(e.message.match(/column (\d+)/)?.[1] || '1'),
+              line: 1,
+              column: 1,
             },
           },
         ],

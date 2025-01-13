@@ -1,16 +1,17 @@
 // TODO: move to `nitro.config.ts`
 
+import tailwindcss from '@tailwindcss/vite'
 import react from '@vitejs/plugin-react'
 import consola from 'consola'
 import { resolve } from 'pathe'
 import { isProduction, isTest } from 'std-env'
 import { type Logger as ViteLogger, defineConfig } from 'vite'
 import tsconfigPaths from 'vite-tsconfig-paths'
-import pkg from './package.json' assert { type: 'json' }
+import pkg from './package.json'
 
 export default defineConfig({
   clearScreen: true,
-  plugins: [react(), tsconfigPaths()],
+  plugins: [react(), tailwindcss(), tsconfigPaths()],
   appType: 'spa',
   envPrefix: 'SQUELIFY_',
   define: { 'import.meta.env.SQUELIFY_VERSION': `"${pkg.version}"` },
@@ -36,7 +37,7 @@ export default defineConfig({
     chunkSizeWarningLimit: 1024 * 8,
     reportCompressedSize: false,
     rollupOptions: {
-      input: resolve('client/main.tsx'),
+      input: resolve('client/entry.client.tsx'),
       // external: ['@glideapps/glide-data-grid'],
     },
     outDir: resolve('.output/client'),

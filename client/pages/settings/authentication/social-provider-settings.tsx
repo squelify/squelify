@@ -1,6 +1,5 @@
-import React from 'react'
-import { Input } from '#/components/base-ui/input'
-import { Label } from '#/components/base-ui/label'
+import * as React from 'react'
+import { Input, Label } from '#/components/base-ui'
 
 interface SocialProviderSettingsProps {
   providerId: string

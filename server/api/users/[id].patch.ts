@@ -22,9 +22,9 @@ const UpdateUserSchema = UserSchema.pick({
 
 export default defineEventHandler(async (event) => {
   const db = event.context.db
-  const userId = event.context.params.id
-  const currentUserId = event.context.auth.payload.sub
-  const userEmail = event.context.auth.payload.email
+  const userId = event.context.params?.id
+  const currentUserId = event.context.auth?.payload.sub
+  const userEmail = event.context.auth?.payload.email
   const now = Math.floor(Date.now() / 1000)
 
   try {

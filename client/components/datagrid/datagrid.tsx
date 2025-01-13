@@ -69,7 +69,7 @@ export function DataGrid<T extends Record<string, any>>({
     const minWidth = 80 // Minimum width in pixels
     setColumnSizes((prev) => ({
       ...prev,
-      [column.id]: Math.max(newSize, minWidth),
+      [column.id as string]: Math.max(newSize, minWidth),
     }))
   }, [])
 
@@ -96,10 +96,10 @@ export function DataGrid<T extends Record<string, any>>({
     setSearchState((prev) => ({ ...prev, value }))
   }, [])
 
-  const handleSearchResults = useCallback((results: Item[], navIndex: number) => {
+  const handleSearchResults = useCallback((results: readonly Item[], navIndex: number) => {
     setSearchState((prev) => ({
       ...prev,
-      results,
+      results: [...results],
       selectedIndex: navIndex,
     }))
   }, [])
@@ -127,7 +127,10 @@ export function DataGrid<T extends Record<string, any>>({
       className={clx('gdg-style', className)}
       getCellContent={getCellContent}
       onColumnResize={handleColumnResize}
-      columns={columns.map((col) => ({ ...col, width: columnSizes[col.id] }))}
+      columns={columns.map((col) => ({
+        ...col,
+        width: columnSizes[col.id as keyof typeof columnSizes] ?? (col as any).width,
+      }))}
       rows={data.length}
       height="100%"
       width="100%"

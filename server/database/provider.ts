@@ -54,6 +54,10 @@ export default class SquelifyMigrator implements MigrationProvider {
     // TODO: improve this to automatically detect migrations from storage
     const importedMigrations: DatabaseMigration[] = [
       {
+        name: '202303000_create_superusers_table',
+        migration: await import('./migrations/202303000_create_superusers_table'),
+      },
+      {
         name: '202303001_create_users_table',
         migration: await import('./migrations/202303001_create_users_table'),
       },

@@ -4,7 +4,7 @@ import pkg from '~~/package.json' assert { type: 'json' }
 
 const main = defineCommand({
   meta: {
-    name: pkg.name,
+    name: 'cmd',
     version: pkg.version,
     description: `${pkg.name} Command Line Interface`,
   },
@@ -16,9 +16,15 @@ const main = defineCommand({
     },
   },
   subCommands: {
-    make: () => import('./make').then((r) => r.default),
-    migrate: () => import('./migrate').then((r) => r.default),
-    routes: () => import('./print-routes').then((r) => r.default),
+    'db:migrate': () => import('./commands/migrate').then((r) => r.default),
+    'db:reset': () => import('./commands/db-reset').then((r) => r.default),
+    'db:seed': () => import('./commands/db-seed').then((r) => r.default),
+    'db:status': () => import('./commands/db-status').then((r) => r.default),
+    'db:export': () => import('./commands/db-export').then((r) => r.default),
+    'make:app-key': () => import('./commands/make-app-key').then((r) => r.default),
+    'make:migration': () => import('./commands/make-migration').then((r) => r.default),
+    'make:seeder': () => import('./commands/make-seeder').then((r) => r.default),
+    routes: () => import('./commands/print-routes').then((r) => r.default),
   },
   async run({ args, cmd }) {
     // Show help page if --help flag is used or no subcommand provided

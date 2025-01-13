@@ -1,5 +1,8 @@
+// FIXME: https://trpc.io/docs/migrate-from-v10-to-v11
+
 import { type AnyRouter, TRPCError } from '@trpc/server'
-import { resolveHTTPResponse } from '@trpc/server/http'
+import {} from '@trpc/server/adapters/node-http'
+import { resolveResponse } from '@trpc/server/http'
 import type { H3Event } from 'h3'
 import { getRequestURL, isMethod, readBody, setHeader, setResponseStatus } from 'h3'
 import type { CreateContextFn, OnErrorFn, ResponseMetaFn } from '~/trpc/types'
@@ -22,28 +25,26 @@ export async function handleTRPC<TRouter extends AnyRouter>(
   // Get everything after /trpc/
   const parts = event.path.split('/trpc/')
   if (parts.length !== 2) {
-    throw new TRPCError({
-      code: 'BAD_REQUEST',
-      message: 'Invalid tRPC path',
-    })
+    throw new TRPCError({ code: 'BAD_REQUEST', message: 'Invalid tRPC path' })
   }
 
   // Return the procedure path
+  const router = opts.router
   const path = parts[1].split('?')[0]
-
-  const req = {
+  const req: Request = {
     query,
     method: request.method || 'GET',
-    headers: request.headers,
+    headers: new Headers(request.headers as Record<string, string>),
     body: isMethod(event, 'GET') ? null : await readBody(event),
   }
 
-  const { status, headers, body } = await resolveHTTPResponse({
-    router: opts.router,
+  const { status, headers, body } = await resolveResponse({
+    router,
     req,
     path,
+    error: null,
     createContext: async () => opts.createContext?.(event),
-    responseMeta: opts.responseMeta,
+    // responseMeta: opts.responseMeta,
     onError: (errorOpts) => {
       opts.onError?.({ ...errorOpts, req })
     },
@@ -52,10 +53,9 @@ export async function handleTRPC<TRouter extends AnyRouter>(
   setResponseStatus(event, status)
 
   if (headers) {
-    for (const key of Object.keys(headers)) {
-      const headerValue = headers[key]
-      if (headerValue) {
-        setHeader(event, key, headerValue)
+    for (const [key, value] of headers.entries()) {
+      if (value) {
+        setHeader(event, key, value)
       }
     }
   }

@@ -4,7 +4,6 @@ import { Toaster, toast } from 'sonner'
 import { env } from 'std-env'
 import { HealthCheckResponse } from '~/api/healthz.get'
 import { useApiClient } from '#/context/hooks/use-api-client'
-import ThemeProvider from '#/providers/theme-provider'
 import type { ApiResponse } from '#/services'
 import { clx } from '#/utils/helper'
 import logger from '#/utils/logger'
@@ -109,10 +108,8 @@ export default function RootLayout({ children, className }: RootLayoutProps) {
 
   return (
     <React.Fragment>
-      <ThemeProvider defaultTheme="dark">
-        <div className={clx(className)}>{children}</div>
-        <Toaster richColors theme="system" />
-      </ThemeProvider>
+      <div className={clx(className)}>{children}</div>
+      <Toaster richColors theme="system" />
     </React.Fragment>
   )
 }

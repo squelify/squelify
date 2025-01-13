@@ -2,10 +2,10 @@ import type { LucideIcon } from 'lucide-react'
 
 export interface StatsCardProps {
   title: string
-  value: string | number
+  value: string | number | React.ReactElement
   trend: {
     label: string
-    value: string
+    value: string | React.ReactElement
   }
   icon: LucideIcon
   className?: string

@@ -1,5 +1,12 @@
-import type { ColumnType, Generated } from 'kysely'
+/**
+ * For Kysely's type-safety and autocompletion to work, it needs to know
+ * your database structure. This requires a TypeScript Database interface,
+ * that contains table names as keys and table schema interfaces as values.
+ *
+ * @see: https://www.kysely.dev/docs/recipes/schemas
+ */
 
+import type { ColumnType } from 'kysely'
 import type { IAccount } from './schemas/account'
 import type { IApiKey } from './schemas/api_key'
 import type { IAuditLog } from './schemas/audit_log'
@@ -15,6 +22,7 @@ import type { IRateLimit } from './schemas/rate_limit'
 import type { IRole } from './schemas/role'
 import type { IRolePermission } from './schemas/role_permission'
 import type { ISession } from './schemas/session'
+import type { ISuperuser } from './schemas/superuser'
 import type { ITwoFactor } from './schemas/two_factor'
 import type { IUser } from './schemas/user'
 import type { IUserBan } from './schemas/user_ban'
@@ -57,6 +65,7 @@ export interface Database extends AppMigrationSchema {
   sq_role_permissions: IRolePermission
   sq_roles: IRole
   sq_sessions: ISession
+  sq_superusers: ISuperuser
   sq_two_factors: ITwoFactor
   sq_user_bans: IUserBan
   sq_user_metadata: IUserMetadata

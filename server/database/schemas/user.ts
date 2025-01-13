@@ -13,7 +13,7 @@ export const UserSchema = z.object({
     .max(50, 'Username maksimal 50 karakter')
     .regex(/^[a-z0-9_]+$/, 'Username hanya boleh mengandung huruf kecil, angka, dan underscore')
     .nullable(),
-  avatarUrl: z.string().url('URL avatar tidak valid').nullable(),
+  avatarUrl: z.string().url('URL avatar tidak valid').optional(),
   isActive: z.number().min(0).max(1).default(1),
   createdAt: z.custom<ColumnType<number>>().optional(),
   updatedAt: z.custom<ColumnType<number | null>>().nullable(),

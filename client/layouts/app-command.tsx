@@ -1,15 +1,13 @@
 import * as Lucide from 'lucide-react'
-import { useEffect, useState } from 'react'
-import React from 'react'
-import { CommandDialog, CommandSeparator, CommandShortcut } from '#/components/base-ui/command'
-import { CommandEmpty, CommandGroup, CommandInput } from '#/components/base-ui/command'
-import { CommandItem, CommandList } from '#/components/base-ui/command'
-import { Button } from '../components/base-ui/button'
+import * as React from 'react'
+import { CommandDialog, CommandSeparator, CommandShortcut } from '#/components/base-ui'
+import { CommandEmpty, CommandGroup, CommandInput } from '#/components/base-ui'
+import { Button, CommandItem, CommandList } from '#/components/base-ui'
 
 export default function AppCommand({ logout }: { logout: () => void }) {
-  const [open, setOpen] = useState(false)
+  const [open, setOpen] = React.useState(false)
 
-  useEffect(() => {
+  React.useEffect(() => {
     const down = (e: KeyboardEvent) => {
       if (e.key === 'k' && (e.metaKey || e.ctrlKey)) {
         e.preventDefault()
@@ -29,7 +27,7 @@ export default function AppCommand({ logout }: { logout: () => void }) {
         variant="secondary"
       >
         <span>Open command</span>
-        <kbd className="pointer-events-none inline-flex h-5 select-none items-center gap-1 rounded border bg-muted px-1.5 font-medium font-mono text-[10px] text-muted-foreground opacity-100">
+        <kbd className="pointer-events-none inline-flex h-5 select-none items-center gap-1 rounded-sm border bg-muted px-1.5 font-medium font-mono text-[10px] text-muted-foreground opacity-100">
           <span className="text-xs">⌘</span>K
         </kbd>
       </Button>

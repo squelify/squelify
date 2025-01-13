@@ -1,12 +1,9 @@
-import { Button } from '#/components/base-ui/button'
-import { Card, CardContent, CardFooter, CardHeader } from '#/components/base-ui/card'
-import { CardDescription, CardTitle } from '#/components/base-ui/card'
-import { Label } from '#/components/base-ui/label'
-import { Select, SelectTrigger, SelectValue } from '#/components/base-ui/select'
-import { SelectContent, SelectItem } from '#/components/base-ui/select'
-import { Separator } from '#/components/base-ui/separator'
-import { Switch } from '#/components/base-ui/switch'
-import { TabsContent } from '#/components/base-ui/tabs'
+import { Button, Label, Separator, Switch } from '#/components/base-ui'
+import { Card, CardContent, CardFooter, CardHeader } from '#/components/base-ui'
+import { CardDescription, CardTitle } from '#/components/base-ui'
+import { Select, SelectTrigger, SelectValue } from '#/components/base-ui'
+import { SelectContent, SelectItem } from '#/components/base-ui'
+import { TabsContent } from '#/components/base-ui'
 import { useSEOMeta } from '#/context/hooks/use-seo-meta'
 
 export default function Page() {

@@ -4,6 +4,7 @@ import * as jose from 'jose'
 import { JWTClaimValidationFailed, JWTExpired, JWTInvalid } from 'jose/errors'
 import { ZodError, z } from 'zod'
 import { getJWKByKeyId } from '~/database/repository/jwk.repo'
+import { toISOString } from '~/utils/datetime'
 import type { JWTPayload } from '~/utils/jwt'
 
 const HeadersSchema = z.object({
@@ -98,8 +99,8 @@ export default defineEventHandler(async (event) => {
       return
     }
 
-    const sessionId = getCookie(event, 'auth_session')
-    const bearerToken = getRequestHeader(event, 'Authorization')?.replace('Bearer ', '')
+    const sessionId = getCookie(event, 'auth_session') || ''
+    const bearerToken = getRequestHeader(event, 'Authorization')?.replace('Bearer ', '') || ''
 
     if (!bearerToken) {
       return createErrorResponse(event, 'Bearer token is required', 401)
@@ -130,7 +131,7 @@ export default defineEventHandler(async (event) => {
     const { userAgentHash } = getClientInfo(event)
 
     // Import public key for verification
-    const publicKey = await jose.importSPKI(jwk.publicKey, jwk.algorithm)
+    const publicKey = await jose.importSPKI(String(jwk.publicKey), String(jwk.algorithm))
 
     // Verify token and decode payload
     const { payload } = await jose.jwtVerify<JWTPayload>(bearerToken, publicKey, {
@@ -152,13 +153,15 @@ export default defineEventHandler(async (event) => {
       return createErrorResponse(event, 'Session is invalid or has expired', 401)
     }
 
+    const sessionExp = toISOString(session.expiresAt) || ''
+
     event.context.auth = {
       sessionId,
       bearerToken,
       payload,
       session: {
         id: session.id,
-        exp: toISOString(session.expiresAt),
+        exp: sessionExp,
       },
     }
   } catch (error) {

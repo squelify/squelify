@@ -1,11 +1,19 @@
 import type { AnyRouter, ProcedureType, TRPCError } from '@trpc/server'
 import type { inferRouterContext, inferRouterError } from '@trpc/server'
-import type { HTTPRequest, ResponseMeta } from '@trpc/server/http'
+import type { ResponseMeta } from '@trpc/server/http'
 import type { TRPCResponse } from '@trpc/server/rpc'
-import type { EventHandlerRequest, EventHandlerResponse } from 'h3'
-import type { EventHandler, H3Event } from 'h3'
+import type { EventHandler, EventHandlerRequest, EventHandlerResponse, H3Event } from 'h3'
+import type { Kysely } from 'kysely'
+import type { Database } from '~/database/db.schema'
+import type { AppConfig } from '~~/app.config'
 
 type MaybePromise<T> = T | Promise<T>
+
+export interface ContextTRPC {
+  event: H3Event
+  db: Kysely<Database>
+  appConfig: AppConfig
+}
 
 export type CreateContextFn<TRouter extends AnyRouter> = (
   event: H3Event
@@ -27,7 +35,7 @@ export interface OnErrorPayload<TRouter extends AnyRouter> {
   error: TRPCError
   type: ProcedureType | 'unknown'
   path: string | undefined
-  req: HTTPRequest
+  req: Request
   input: unknown
   ctx: undefined | inferRouterContext<TRouter>
 }

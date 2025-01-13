@@ -34,18 +34,17 @@ export function generateRandomStr(config: RandomStringOptions = {}): string {
 
   let result = ''
   for (let i = 0; i < size; i++) {
-    result += allowedChars[bytes[i] % allowedChars.length]
+    const byte = bytes[i] ?? 0
+    result += allowedChars[byte % allowedChars.length] ?? allowedChars[0]
   }
 
   return config.prefix ? `${config.prefix}${result}` : result
 }
 
 export function generateUsername(email: string, suffix?: string): string {
-  const baseUsername = email
-    .split('@')[0]
-    .toLowerCase()
-    .replace(/[^a-z0-9]/g, '')
-
+  const emailParts = email.split('@')
+  const firstPart = emailParts[0] ?? ''
+  const baseUsername = firstPart.toLowerCase().replace(/[^a-z0-9]/g, '')
   return suffix ? `${baseUsername}_${suffix}` : baseUsername
 }
 

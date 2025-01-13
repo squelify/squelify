@@ -1,5 +1,5 @@
 import { z } from 'zod'
-import type ApiClient from '../client'
+import type ApiClient from '../api-client'
 import type { ApiResponse } from '../types'
 
 import { ILoginResponse, LoginRequestSchema } from '~/api/auth/login.post'

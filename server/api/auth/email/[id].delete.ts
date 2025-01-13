@@ -7,7 +7,7 @@ export interface IDeleteEmailResponse {
 }
 
 export default defineEventHandler(async (event) => {
-  const payload = event.context.auth.payload
+  const payload = event.context.auth?.payload
   const db = event.context.db
   const now = Math.floor(Date.now() / 1000)
 
@@ -23,7 +23,7 @@ export default defineEventHandler(async (event) => {
       await auditLog(event, {
         action: 'delete',
         entity: 'email',
-        entityId: event.context.params.id,
+        entityId: event.context.params?.id,
         userId: payload.sub,
         metadata: {
           success: false,
@@ -37,7 +37,7 @@ export default defineEventHandler(async (event) => {
 
     const email = await db
       .selectFrom('sq_emails')
-      .where('id', '=', event.context.params.id)
+      .where('id', '=', event.context.params?.id)
       .where('userId', '=', payload.sub)
       .select(['id', 'email', 'isPrimary', 'verifiedAt'])
       .executeTakeFirst()
@@ -46,7 +46,7 @@ export default defineEventHandler(async (event) => {
       await auditLog(event, {
         action: 'delete',
         entity: 'email',
-        entityId: event.context.params.id,
+        entityId: event.context.params?.id,
         userId: payload.sub,
         metadata: {
           success: false,
@@ -85,7 +85,7 @@ export default defineEventHandler(async (event) => {
 
       await trx
         .deleteFrom('sq_emails')
-        .where('id', '=', event.context.params.id)
+        .where('id', '=', event.context.params?.id)
         .where('userId', '=', payload.sub)
         .execute()
     })

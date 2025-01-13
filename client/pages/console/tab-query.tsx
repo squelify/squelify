@@ -1,12 +1,10 @@
 import * as Lucide from 'lucide-react'
 import { useMemo, useRef, useState } from 'react'
-import { Accordion, AccordionTrigger } from '#/components/base-ui/accordion'
-import { AccordionContent, AccordionItem } from '#/components/base-ui/accordion'
-import { Button } from '#/components/base-ui/button'
-import { Input } from '#/components/base-ui/input'
-import { TabsContent } from '#/components/base-ui/tabs'
-import { TooltipContent, TooltipProvider } from '#/components/base-ui/tooltip'
-import { Tooltip, TooltipTrigger } from '#/components/base-ui/tooltip'
+import { Accordion, AccordionTrigger } from '#/components/base-ui'
+import { AccordionContent, AccordionItem } from '#/components/base-ui'
+import { Button, Input, TabsContent } from '#/components/base-ui'
+import { TooltipContent, TooltipProvider } from '#/components/base-ui'
+import { Tooltip, TooltipTrigger } from '#/components/base-ui'
 import { clx } from '#/utils/helper'
 
 export default function TabQuery() {
@@ -127,7 +125,7 @@ export default function TabQuery() {
                 <div
                   key={item.id}
                   className={clx(
-                    'group flex select-none items-center justify-between rounded px-2.5 py-1.5 text-sm',
+                    'group flex select-none items-center justify-between rounded-sm px-2.5 py-1.5 text-sm',
                     'text-muted-foreground hover:bg-background hover:text-foreground'
                   )}
                 >
@@ -153,7 +151,7 @@ export default function TabQuery() {
               {filteredQueryHistory.map((item) => (
                 <div
                   key={item.id}
-                  className="group select-none rounded px-2.5 py-1.5 hover:bg-background"
+                  className="group select-none rounded-sm px-2.5 py-1.5 hover:bg-background"
                 >
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2">

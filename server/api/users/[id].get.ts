@@ -23,7 +23,7 @@ export interface IGetUserResponse {
 export default defineCachedEventHandler(
   async (event) => {
     const db = event.context.db
-    const userId = event.context.params.id
+    const userId = event.context.params?.id
 
     try {
       // Get user data, ban status and metadata in parallel

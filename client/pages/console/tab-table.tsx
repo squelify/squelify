@@ -1,18 +1,15 @@
 import * as Lucide from 'lucide-react'
 import { useQueryState } from 'nuqs'
 import { useMemo, useRef, useState } from 'react'
-import { Button } from '#/components/base-ui/button'
-import { DropdownMenu, DropdownMenuContent } from '#/components/base-ui/dropdown-menu'
-import { DropdownMenuGroup, DropdownMenuPortal } from '#/components/base-ui/dropdown-menu'
-import { DropdownMenuSub, DropdownMenuSubContent } from '#/components/base-ui/dropdown-menu'
-import { DropdownMenuItem, DropdownMenuSeparator } from '#/components/base-ui/dropdown-menu'
-import { DropdownMenuSubTrigger, DropdownMenuTrigger } from '#/components/base-ui/dropdown-menu'
-import { Input } from '#/components/base-ui/input'
-import { Select, SelectTrigger, SelectValue } from '#/components/base-ui/select'
-import { SelectContent, SelectItem } from '#/components/base-ui/select'
-import { TabsContent } from '#/components/base-ui/tabs'
-import { TooltipContent, TooltipProvider } from '#/components/base-ui/tooltip'
-import { Tooltip, TooltipTrigger } from '#/components/base-ui/tooltip'
+import { Button, Input, TabsContent } from '#/components/base-ui'
+import { Select, SelectTrigger, SelectValue } from '#/components/base-ui'
+import { SelectContent, SelectItem } from '#/components/base-ui'
+import { DropdownMenu, DropdownMenuContent } from '#/components/base-ui'
+import { DropdownMenuGroup, DropdownMenuPortal } from '#/components/base-ui'
+import { DropdownMenuSub, DropdownMenuSubContent } from '#/components/base-ui'
+import { DropdownMenuItem, DropdownMenuSeparator } from '#/components/base-ui'
+import { DropdownMenuSubTrigger, DropdownMenuTrigger } from '#/components/base-ui'
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '#/components/base-ui'
 import { clx } from '#/utils/helper'
 
 const MenuItemTable = () => {
@@ -27,16 +24,16 @@ const MenuItemTable = () => {
         <DropdownMenuGroup>
           <DropdownMenuItem className="flex gap-2 px-2 py-1.5 text-xs">
             <Lucide.FilePenLine className="size-4" strokeWidth={1.8} />
-            <spanm>Edit Table</spanm>
+            <span>Edit Table</span>
           </DropdownMenuItem>
           <DropdownMenuItem className="flex gap-2 px-2 py-1.5 text-xs">
             <Lucide.Copy className="size-4" strokeWidth={1.8} />
-            <spanm>Duplicate Table</spanm>
+            <span>Duplicate Table</span>
           </DropdownMenuItem>
           <DropdownMenuSub>
             <DropdownMenuSubTrigger className="flex gap-2 px-2 py-1.5 text-xs">
               <Lucide.Download className="size-4" strokeWidth={1.8} />
-              <spanm>Export Data</spanm>
+              <span>Export Data</span>
             </DropdownMenuSubTrigger>
             <DropdownMenuPortal>
               <DropdownMenuSubContent>
@@ -49,7 +46,7 @@ const MenuItemTable = () => {
         <DropdownMenuSeparator />
         <DropdownMenuItem className="flex gap-2 px-2 py-1.5 text-xs">
           <Lucide.Trash className="size-4" strokeWidth={1.8} />
-          <spanm>Delete Table</spanm>
+          <span>Delete Table</span>
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>

@@ -1,8 +1,7 @@
-import type { AppConfig } from '~/app.config'
+import type { AppConfig } from '~~/app.config'
 
 export default defineEventHandler((event) => {
   const appConfig = useAppConfig(event) as AppConfig
-
   event.context.appConfig = appConfig
 })
 

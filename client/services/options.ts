@@ -1,3 +1,4 @@
+import type { CookieSetOptions } from 'universal-cookie'
 import { LOG_LEVEL } from '#/utils/logger'
 import type { ApiClientOptions } from './types'
 
@@ -15,3 +16,12 @@ export const DEFAULT_OPTIONS: Omit<Required<ApiClientOptions>, 'headers'> = {
   baseURL: '/api',
   logLevel: LOG_LEVEL,
 }
+
+export const COOKIE_OPTIONS: Omit<CookieSetOptions, 'maxAge'> = {
+  path: '/',
+  sameSite: 'lax',
+  secure: window.location.protocol === 'https:',
+  domain: window.location.hostname,
+}
+
+export const AUTH_COOKIE_NAME = 'auth_session'

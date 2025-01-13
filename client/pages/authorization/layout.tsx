@@ -1,9 +1,8 @@
 import { ErrorBoundary } from 'react-error-boundary'
 import { Outlet, useLocation } from 'react-router'
-import { Separator } from '#/components/base-ui/separator'
-import { Tabs, TabsList, TabsTrigger } from '#/components/base-ui/tabs'
+import { Separator, Tabs, TabsList, TabsTrigger } from '#/components/base-ui'
+import BoundaryError from '#/components/errors/boundary'
 import { Link } from '#/components/link'
-import ErrorBoundaryFallback from '#/pages/error/boundary-fallback'
 
 export default function AuthorizationLayout() {
   const location = useLocation()
@@ -12,7 +11,7 @@ export default function AuthorizationLayout() {
   const activeSection = location.pathname.split('/authorization/')[1] || 'roles'
 
   return (
-    <ErrorBoundary FallbackComponent={ErrorBoundaryFallback}>
+    <ErrorBoundary FallbackComponent={BoundaryError}>
       <div className="container mx-auto w-full space-y-4 p-4 md:space-y-6 md:p-6 lg:p-8">
         <header className="space-y-0.5">
           <h1 className="font-semibold text-2xl tracking-tight">Authorization</h1>

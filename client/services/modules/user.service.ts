@@ -1,5 +1,5 @@
 import { z } from 'zod'
-import type ApiClient from '../client'
+import type ApiClient from '../api-client'
 import type { ApiResponse } from '../types'
 
 import { IListUsersResponse, QueryParamSchema } from '~/api/users/index.get'

@@ -9,9 +9,9 @@ export interface IDeleteUserResponse {
 
 export default defineEventHandler(async (event) => {
   const db = event.context.db
-  const userId = event.context.params.id
-  const adminId = event.context.auth.payload.sub
-  const adminEmail = event.context.auth.payload.email
+  const userId = event.context.params?.id
+  const adminId = event.context.auth?.payload.sub
+  const adminEmail = event.context.auth?.payload.email
   const hardDelete = event.context.query.hard === 'true'
 
   try {

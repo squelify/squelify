@@ -13,7 +13,7 @@ export function validateCommandOptions(args: ParsedArgs, cmd: CommandDef): boole
   const providedOptions = Object.keys(args).filter((key) => key !== '_' && key !== 'help')
 
   // Get valid options from command definition, exclude help
-  const validOptionsList = Object.keys(cmd.args).filter((opt) => opt !== 'help')
+  const validOptionsList = Object.keys(cmd.args ?? {}).filter((opt) => opt !== 'help')
 
   // Find invalid options by comparing with valid list
   const invalidOptions = providedOptions.filter((opt) => !validOptionsList.includes(opt))

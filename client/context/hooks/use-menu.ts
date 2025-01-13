@@ -29,7 +29,7 @@ export function useMenu() {
       label: 'Content',
       items: [
         { title: 'Collections', url: '/content/collections', icon: Lucide.Database },
-        { title: 'Media Library', url: '/content/media', icon: Lucide.Image },
+        { title: 'Media Library', url: '/content/media-library', icon: Lucide.Image },
       ],
     },
     {

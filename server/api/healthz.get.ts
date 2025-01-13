@@ -70,8 +70,8 @@ function formatUptime(seconds: number): string {
 export default defineEventHandler(async (event): Promise<HealthCheckResponse> => {
   const startTime = performance.now()
   let dbStatus: 'up' | 'down' = 'down'
-  let libsqlVersion: string
-  let databaseSize: string
+  let libsqlVersion = 'N/A'
+  let databaseSize = 'N/A'
 
   try {
     // Check database connection with version and size info
@@ -101,13 +101,13 @@ export default defineEventHandler(async (event): Promise<HealthCheckResponse> =>
   }
 
   const dbLatency = performance.now() - startTime
-  const memoryUsage = process.memoryUsage()
+  const memoryUsage = process.memoryUsage?.() || { heapUsed: 0, heapTotal: 0, external: 0 }
 
   const flyRegion = env.FLY_REGION
   const flyMachineId = env.FLY_MACHINE_ID
   const flyRequestId = event.headers.get('Fly-Request-Id')
   const serviceId = `${flyRegion}::${flyMachineId}::${flyRequestId}`
-  const host = event.headers.get('X-Forwarded-Host') ?? event.headers.get('host')
+  const host = event.headers.get('X-Forwarded-Host') ?? event.headers.get('host') ?? 'unknown'
   const { clientIpAddress, clientIdentifier } = getClientInfo(event)
 
   const isHostedOnFly = flyRegion && flyMachineId
@@ -118,7 +118,7 @@ export default defineEventHandler(async (event): Promise<HealthCheckResponse> =>
     environment: nodeENV,
     timestamp: new Date().toISOString(),
     serviceId: isHostedOnFly ? serviceId : host,
-    uptime: formatUptime(process.uptime()),
+    uptime: formatUptime(process.uptime?.() || 0),
     clientInfo: {
       ipAddress: clientIpAddress,
       identifier: clientIdentifier.replace(/[\[\]]/g, ''),
@@ -128,7 +128,7 @@ export default defineEventHandler(async (event): Promise<HealthCheckResponse> =>
       mode: env.DATABASE_MODE === 'local' ? 'local' : 'remote',
       version: libsqlVersion,
       size: databaseSize,
-      latency: `${formatNumber(Math.round(dbLatency))}ms`,
+      latency: dbStatus === 'up' ? `${formatNumber(Math.round(dbLatency))}ms` : 'N/A',
     },
     resources: {
       heapUsed: `${formatBytes(memoryUsage.heapUsed)}`,
@@ -138,7 +138,6 @@ export default defineEventHandler(async (event): Promise<HealthCheckResponse> =>
     },
   }
 })
-
 defineRouteMeta({
   openAPI: {
     summary: 'Health Check',

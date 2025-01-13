@@ -1,9 +1,7 @@
 import { useState } from 'react'
-import { Button } from '#/components/base-ui/button'
-import { Dialog, DialogContent, DialogDescription } from '#/components/base-ui/dialog'
-import { DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '#/components/base-ui/dialog'
-import { Input } from '#/components/base-ui/input'
-import { Label } from '#/components/base-ui/label'
+import { Button, Input, Label } from '#/components/base-ui'
+import { Dialog, DialogContent, DialogDescription } from '#/components/base-ui'
+import { DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '#/components/base-ui'
 
 export default function SendTestEmailDialog() {
   const [isOpen, setIsOpen] = useState(false)

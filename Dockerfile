@@ -2,7 +2,7 @@
 
 # Arguments with default value (for build).
 ARG PLATFORM=linux/amd64
-ARG NODE_VERSION=20
+ARG NODE_VERSION=22
 
 FROM busybox:1.37-uclibc as busybox
 
@@ -36,8 +36,7 @@ RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install \
 FROM base AS builder
 
 # Copy output files and config file from the installer stage.
-COPY --from=installer /srv/.config/ecosystem.json /srv/ecosystem.json
-COPY --from=installer /srv/server/views /srv/server/views
+COPY --from=installer /srv/ecosystem.json /srv/ecosystem.json
 COPY --from=installer /srv/.output /srv
 
 # Create the data directory and set permissions.
@@ -46,7 +45,7 @@ RUN mkdir -p /srv/_data/{migrations,functions} && chmod -R 0775 /srv/_data
 # -----------------------------------------------------------------------------
 # Production image, copy build output files and run the application.
 # -----------------------------------------------------------------------------
-FROM --platform=${PLATFORM} gcr.io/distroless/nodejs20-debian12 AS runner
+FROM --platform=${PLATFORM} gcr.io/distroless/nodejs22-debian12 AS runner
 LABEL org.opencontainers.image.source="https://github.com/squelify/squelify"
 
 # ----- Read application environment variables --------------------------------
@@ -58,33 +57,33 @@ ARG DATABASE_MODE DATABASE_URL DATABASE_TOKEN DATABASE_AUTO_MIGRATE \
     S3_ACCESS_KEY_ID S3_SECRET_ACCESS_KEY S3_BUCKET_NAME S3_CDN_URL S3_ENDPOINT_URL \
     SMTP_FROM_EMAIL SMTP_FROM_NAME SMTP_HOST SMTP_PORT SMTP_USERNAME SMTP_PASSWORD SMTP_SECURE
 
-ENV DATABASE_MODE \
-    DATABASE_URL \
-    DATABASE_TOKEN \
-    DATABASE_AUTO_MIGRATE \
-    SQUELIFY_BASE_URL \
-    SQUELIFY_DOMAIN \
-    SQUELIFY_JWT_SECRET_KEY \
-    SQUELIFY_LOG_LEVEL \
-    SQUELIFY_AUDIT_LOG_ENABLE \
-    SQUELIFY_RATE_LIMIT_ENABLE \
-    GITHUB_CLIENT_ID \
-    GITHUB_CLIENT_SECRET \
-    GOOGLE_CLIENT_ID \
-    GOOGLE_CLIENT_SECRET \
-    S3_ACCOUNT_ID \
-    S3_ACCESS_KEY_ID \
-    S3_SECRET_ACCESS_KEY \
-    S3_BUCKET_NAME \
-    S3_CDN_URL \
-    S3_ENDPOINT_URL \
-    SMTP_FROM_EMAIL \
-    SMTP_FROM_NAME \
-    SMTP_HOST \
-    SMTP_PORT \
-    SMTP_USERNAME \
-    SMTP_PASSWORD \
-    SMTP_SECURE
+ENV DATABASE_MODE=$DATABASE_MODE \
+    DATABASE_URL=$DATABASE_URL \
+    DATABASE_TOKEN=$DATABASE_TOKEN \
+    DATABASE_AUTO_MIGRATE=$DATABASE_AUTO_MIGRATE \
+    SQUELIFY_BASE_URL=$SQUELIFY_BASE_URL \
+    SQUELIFY_DOMAIN=$SQUELIFY_DOMAIN \
+    SQUELIFY_JWT_SECRET_KEY=$SQUELIFY_JWT_SECRET_KEY \
+    SQUELIFY_AUDIT_LOG_ENABLE=$SQUELIFY_AUDIT_LOG_ENABLE \
+    SQUELIFY_LOG_LEVEL=$SQUELIFY_LOG_LEVEL \
+    SQUELIFY_RATE_LIMIT_ENABLE=$SQUELIFY_RATE_LIMIT_ENABLE \
+    GITHUB_CLIENT_ID=$GITHUB_CLIENT_ID \
+    GITHUB_CLIENT_SECRET=$GITHUB_CLIENT_SECRET \
+    GOOGLE_CLIENT_ID=$GOOGLE_CLIENT_ID \
+    GOOGLE_CLIENT_SECRET=$GOOGLE_CLIENT_SECRET \
+    S3_ACCOUNT_ID=$S3_ACCOUNT_ID \
+    S3_ACCESS_KEY_ID=$S3_ACCESS_KEY_ID \
+    S3_SECRET_ACCESS_KEY=$S3_SECRET_ACCESS_KEY \
+    S3_BUCKET_NAME=$S3_BUCKET_NAME \
+    S3_CDN_URL=$S3_CDN_URL \
+    S3_ENDPOINT_URL=$S3_ENDPOINT_URL \
+    SMTP_FROM_EMAIL=$SMTP_FROM_EMAIL \
+    SMTP_FROM_NAME=$SMTP_FROM_NAME \
+    SMTP_HOST=$SMTP_HOST \
+    SMTP_PORT=$SMTP_PORT \
+    SMTP_USERNAME=$SMTP_USERNAME \
+    SMTP_PASSWORD=$SMTP_PASSWORD \
+    SMTP_SECURE=$SMTP_SECURE
 
 # ----- Read application environment variables --------------------------------
 

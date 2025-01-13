@@ -2,14 +2,10 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import * as Lucide from 'lucide-react'
 import { type SubmitHandler, useForm } from 'react-hook-form'
 import { useNavigate, useSearchParams } from 'react-router'
-import { toast } from 'sonner'
 import { z } from 'zod'
-import { Button } from '#/components/base-ui/button'
-import { Card, CardContent } from '#/components/base-ui/card'
-import { Checkbox } from '#/components/base-ui/checkbox'
-import { Form, FormControl, FormField, FormItem } from '#/components/base-ui/form'
-import { FormLabel, FormMessage } from '#/components/base-ui/form'
-import { Input } from '#/components/base-ui/input'
+import { Button, Card, CardContent, Checkbox, Input, toast } from '#/components/base-ui'
+import { Form, FormControl, FormField, FormItem } from '#/components/base-ui'
+import { FormLabel, FormMessage } from '#/components/base-ui'
 import { Link } from '#/components/link'
 import { useAuth } from '#/context/hooks/use-auth'
 import { useSEOMeta } from '#/context/hooks/use-seo-meta'
@@ -36,6 +32,7 @@ export default function Page() {
   })
 
   const onSubmit: SubmitHandler<FormType> = async ({ identity, password }) => {
+    console.info('DEBUG:onSubmit', { identity, password })
     toast.promise(auth.login(identity, password), {
       loading: 'Signing in..',
       success: (response) => {

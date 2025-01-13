@@ -1,7 +1,6 @@
 import * as Lucide from 'lucide-react'
 import type { LucideIcon } from 'lucide-react'
-import { Card, CardContent, CardHeader, CardTitle } from '#/components/base-ui/card'
-import { Progress } from '#/components/base-ui/progress'
+import { Card, CardContent, CardHeader, CardTitle, Progress } from '#/components/base-ui'
 
 interface ResourceUsage {
   label: string

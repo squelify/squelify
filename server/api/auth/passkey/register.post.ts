@@ -50,7 +50,7 @@ const RegisterPasskeySchema = z
   .strict()
 
 export default defineEventHandler(async (event) => {
-  const payload = event.context.auth.payload
+  const payload = event.context.auth?.payload
   const appConfig = event.context.appConfig
   const db = event.context.db
 

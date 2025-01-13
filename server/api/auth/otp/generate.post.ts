@@ -16,7 +16,7 @@ const GenerateOTPSchema = z
   .strict()
 
 export default defineEventHandler(async (event) => {
-  const payload = event.context.auth.payload
+  const payload = event.context.auth?.payload
   const db = event.context.db
 
   try {

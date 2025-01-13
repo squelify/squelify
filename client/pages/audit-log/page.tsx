@@ -1,34 +1,15 @@
 import * as Lucide from 'lucide-react'
 import { useState } from 'react'
-import { Button } from '#/components/base-ui/button'
-import { DropdownMenu, DropdownMenuItem } from '#/components/base-ui/dropdown-menu'
-import {
-  DropdownMenuContent,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-} from '#/components/base-ui/dropdown-menu'
-import { DropdownMenuCheckboxItem, DropdownMenuTrigger } from '#/components/base-ui/dropdown-menu'
-import { Input } from '#/components/base-ui/input'
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '#/components/base-ui/select'
-import { Skeleton } from '#/components/base-ui/skeleton'
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from '#/components/base-ui/table'
+import { Button, Input, Skeleton } from '#/components/base-ui'
+import { DropdownMenu, DropdownMenuItem } from '#/components/base-ui'
+import { DropdownMenuCheckboxItem, DropdownMenuTrigger } from '#/components/base-ui'
+import { DropdownMenuContent, DropdownMenuLabel, DropdownMenuSeparator } from '#/components/base-ui'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '#/components/base-ui'
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '#/components/base-ui'
 import { useSEOMeta } from '#/context/hooks/use-seo-meta'
+import PageWrapper from '#/layouts/page-wrapper'
 import { clx } from '#/utils/helper'
 
-// Kolom yang dapat ditampilkan/disembunyikan
 const visibleColumns = [
   { id: 'timestamp', title: 'Timestamp' },
   { id: 'action', title: 'Action' },
@@ -49,7 +30,7 @@ export default function Page() {
   }
 
   return (
-    <div className="container mx-auto w-full space-y-4 p-4 md:space-y-6 md:p-6 lg:p-8">
+    <PageWrapper className="container mx-auto w-full space-y-4 p-4 md:space-y-6 md:p-6 lg:p-8">
       {/* Header Section */}
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div className="space-y-1">
@@ -186,6 +167,6 @@ export default function Page() {
           </div>
         </div>
       </div>
-    </div>
+    </PageWrapper>
   )
 }

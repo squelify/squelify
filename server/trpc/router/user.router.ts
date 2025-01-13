@@ -1,27 +1,39 @@
 import { z } from 'zod'
 import userRepo from '~/database/repository/user.repo'
-import { UserSchema } from '~/database/schemas/user'
-import { publicProcedure, router } from '../trpc'
+import { type UserInsert, UserSchema } from '~/database/schemas/user'
+import { publicProcedure, trpcRouter } from '~/trpc/context'
+import type { ContextTRPC } from '~/trpc/types'
 
-export const userRouter = router({
+// Input schema derived from UserSchema
+const CreateUserSchema = UserSchema.pick({
+  firstName: true,
+  lastName: true,
+  username: true,
+  avatarUrl: true,
+  isActive: true,
+})
+  .partial({
+    lastName: true,
+    username: true,
+    avatarUrl: true,
+    isActive: true,
+  })
+  .strict()
+
+type CreateUserInput = z.infer<typeof CreateUserSchema>
+
+export const userRouter = trpcRouter({
   list: publicProcedure.query(({ ctx }) => {
     return userRepo(ctx.db).findMany()
   }),
 
-  byId: publicProcedure.input(z.string().uuid()).query(({ ctx, input }) => {
+  byId: publicProcedure.input(z.string()).query(({ ctx, input }) => {
     return userRepo(ctx.db).findById(input)
   }),
 
   create: publicProcedure
-    .input(
-      z.object({
-        firstName: UserSchema.shape.firstName,
-        lastName: UserSchema.shape.lastName,
-        username: UserSchema.shape.username,
-        avatarUrl: UserSchema.shape.avatarUrl,
-      })
-    )
-    .mutation(({ ctx, input }) => {
-      return userRepo(ctx.db).create(input)
+    .input(CreateUserSchema)
+    .mutation(async ({ ctx, input }: { ctx: ContextTRPC; input: CreateUserInput }) => {
+      return userRepo(ctx.db).create(input as UserInsert)
     }),
 })

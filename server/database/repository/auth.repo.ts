@@ -3,7 +3,7 @@ import { typeid } from 'typeid-js'
 import type { Database } from '~/database/db.schema'
 import { DEFAULT_PASSWORD_ALGORITHM, PASSWORD_POLICIES } from '~/database/schemas/password'
 import { DURATION } from '~/utils/datetime'
-import { verifyPassword } from '~/utils/security'
+import { hashPassword, verifyPassword } from '~/utils/security'
 
 interface CreateSessionOptions {
   ipAddress: string

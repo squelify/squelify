@@ -1,13 +1,13 @@
 import { Container, Hr, Html, Link, Preview, Section, Text } from 'jsx-email'
 import { Body, ColorScheme, Head, Tailwind } from 'jsx-email'
-import React from 'react'
+import * as React from 'react'
 import { isProduction } from 'std-env'
-import appConfig from '~/app.config'
+import appConfig from '~~/app.config'
 import AppLogo from './app-logo'
 
 interface EmailMarketingTemplateProps {
   children: React.ReactNode
-  preview?: JSX.Element | string
+  preview?: React.JSX.Element | string
 }
 
 export default function EmailMarketingTemplate({ children, preview }: EmailMarketingTemplateProps) {

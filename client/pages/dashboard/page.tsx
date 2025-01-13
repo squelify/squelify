@@ -4,10 +4,11 @@ import { toast } from 'sonner'
 import { HealthCheckResponse } from '~/api/healthz.get'
 import { useApiClient } from '#/context/hooks/use-api-client'
 import { useSEOMeta } from '#/context/hooks/use-seo-meta'
+import PageWrapper from '#/layouts/page-wrapper'
 import logger from '#/utils/logger'
-import CardGetStarted from './card-get-started'
+// import CardGetStarted from './card-get-started'
 import CardSystemMetrics from './card-metrics'
-import CardQuickAccess from './card-quick-access'
+// import CardQuickAccess from './card-quick-access'
 import CardResources from './card-resources'
 import CardStats from './card-stats'
 
@@ -92,13 +93,19 @@ export default function Page() {
 
   const healthData = healthDataRef.current
 
-  const renderMetric = (value: string | undefined, fallback = '-') => {
-    if (isLoading) return <span className="animate-pulse rounded bg-muted px-3">Loading...</span>
-    return value || fallback
+  const renderMetric = (value: string | number | undefined, fallback = '-') => {
+    if (isLoading) {
+      return (
+        <span className="animate-pulse rounded-sm bg-muted px-3" aria-busy="true">
+          Loading...
+        </span>
+      )
+    }
+    return String(value ?? fallback)
   }
 
   return (
-    <div className="container mx-auto mb-8 flex w-full flex-col space-y-4 p-6 md:space-y-8 md:p-6 lg:p-8">
+    <PageWrapper className="container mx-auto mb-8 flex w-full flex-col space-y-4 p-6 md:space-y-8 md:p-6 lg:p-8">
       <div className="grid gap-6">
         {/* Stats Overview */}
         <div className="grid gap-6 md:grid-cols-4">
@@ -147,10 +154,8 @@ export default function Page() {
           <Lucide.SquareSlash className="size-5" strokeWidth={2} />
           Quick Access
         </h2>
-        <div className="grid gap-6 md:grid-cols-3">
-          <CardQuickAccess />
-        </div>
+        <div className="grid gap-6 md:grid-cols-3">{/* <CardQuickAccess /> */}</div>
       </div>
-    </div>
+    </PageWrapper>
   )
 }

@@ -1,13 +1,10 @@
 import * as Lucide from 'lucide-react'
 import type { User } from '~/database/schemas/user'
-import { Button } from '#/components/base-ui/button'
-import { DropdownMenu, DropdownMenuItem } from '#/components/base-ui/dropdown-menu'
-import { DropdownMenuContent, DropdownMenuTrigger } from '#/components/base-ui/dropdown-menu'
-import { DropdownMenuSeparator } from '#/components/base-ui/dropdown-menu'
-import { Input } from '#/components/base-ui/input'
-import { Skeleton } from '#/components/base-ui/skeleton'
-import { Table, TableBody, TableCell, TableRow } from '#/components/base-ui/table'
-import { TableHead, TableHeader } from '#/components/base-ui/table'
+import { Button, Input, Skeleton } from '#/components/base-ui'
+import { DropdownMenu, DropdownMenuItem, DropdownMenuSeparator } from '#/components/base-ui'
+import { DropdownMenuContent, DropdownMenuTrigger } from '#/components/base-ui'
+import { Table, TableBody, TableCell, TableRow } from '#/components/base-ui'
+import { TableHead, TableHeader } from '#/components/base-ui'
 import { clx } from '#/utils/helper'
 
 interface UserTableProps {

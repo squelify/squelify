@@ -73,7 +73,7 @@ export function createJSONCompletions(contextData: JSONContextData = {}) {
       if (schema.enum) {
         options = [
           ...options,
-          ...schema.enum.map((value) => ({
+          ...schema.enum.map((value: unknown) => ({
             label: JSON.stringify(value),
             type: 'value' as CompletionType,
             info: `Enum value: ${value}`,

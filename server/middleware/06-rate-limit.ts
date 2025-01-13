@@ -73,7 +73,7 @@ export default defineEventHandler(async (event) => {
   try {
     // Check IP-based rate limit
     const ipLimitInfo = await getRateLimitInfo(db, clientIpAddress, 'ip')
-    if (ipLimitInfo.isLimited) {
+    if (ipLimitInfo.isLimited && ipLimitInfo.resetAt !== null) {
       const waitMinutes = Math.ceil((ipLimitInfo.resetAt - Math.floor(Date.now() / 1000)) / 60)
       setResponseStatus(event, 429)
       return createErrorResponse(
@@ -90,7 +90,7 @@ export default defineEventHandler(async (event) => {
 
       if (email) {
         const emailLimitInfo = await getRateLimitInfo(db, email, 'email')
-        if (emailLimitInfo.isLimited) {
+        if (emailLimitInfo.isLimited && emailLimitInfo.resetAt !== null) {
           const waitMinutes = Math.ceil(
             (emailLimitInfo.resetAt - Math.floor(Date.now() / 1000)) / 60
           )
@@ -107,7 +107,7 @@ export default defineEventHandler(async (event) => {
     // For authenticated routes, use user ID and email from auth context
     else if (userId && userEmail) {
       const userLimitInfo = await getRateLimitInfo(db, userId, 'user')
-      if (userLimitInfo.isLimited) {
+      if (userLimitInfo.isLimited && userLimitInfo.resetAt !== null) {
         const waitMinutes = Math.ceil((userLimitInfo.resetAt - Math.floor(Date.now() / 1000)) / 60)
         setResponseStatus(event, 429)
         return createErrorResponse(

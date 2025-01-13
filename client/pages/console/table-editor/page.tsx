@@ -4,9 +4,7 @@ import consola from 'consola'
 import * as Lucide from 'lucide-react'
 import { useQueryState } from 'nuqs'
 import { useCallback } from 'react'
-import { Button } from '#/components/base-ui/button'
-import { Input } from '#/components/base-ui/input'
-import { ResizablePanel, ResizablePanelGroup } from '#/components/base-ui/resizable'
+import { Button, ResizablePanel, ResizablePanelGroup } from '#/components/base-ui'
 import DataGrid from '#/components/datagrid'
 import { useSEOMeta } from '#/context/hooks/use-seo-meta'
 
@@ -65,7 +63,6 @@ const EmptyState = () => {
 
 export default function Page() {
   useSEOMeta('Table Editor')
-
   // Get collectionId from query params
   const [collectionId, _setCollectionId] = useQueryState('collectionId')
 

@@ -1,14 +1,8 @@
 import * as Lucide from 'lucide-react'
 import { Line, LineChart, XAxis, YAxis } from 'recharts'
-import { Card, CardContent, CardHeader, CardTitle } from '#/components/base-ui/card'
-import { ChartContainer, ChartTooltip } from '#/components/base-ui/chart'
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '#/components/base-ui/select'
+import { Card, CardContent, CardHeader, CardTitle } from '#/components/base-ui'
+import { ChartContainer, ChartTooltip } from '#/components/base-ui'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '#/components/base-ui'
 import type { ResourceMetric } from './types'
 
 const resourceData: ResourceMetric[] = [

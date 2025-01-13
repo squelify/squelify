@@ -40,7 +40,7 @@ export const CreateOrgSchema = OrganizationSchema.pick({
 })
 
 export default defineEventHandler(async (event) => {
-  const payload = event.context.auth.payload
+  const payload = event.context.auth?.payload
   const db = event.context.db
   const now = Math.floor(Date.now() / 1000)
 

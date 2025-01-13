@@ -2,13 +2,10 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import * as Lucide from 'lucide-react'
 import { type SubmitHandler, useForm } from 'react-hook-form'
 import { useNavigate, useSearchParams } from 'react-router'
-import { toast } from 'sonner'
 import { z } from 'zod'
-import { Button } from '#/components/base-ui/button'
-import { Card, CardContent } from '#/components/base-ui/card'
-import { Form, FormControl, FormItem, FormMessage } from '#/components/base-ui/form'
-import { FormField, FormLabel } from '#/components/base-ui/form'
-import { Input } from '#/components/base-ui/input'
+import { Button, Card, CardContent, toast } from '#/components/base-ui'
+import { Form, FormControl, FormItem, FormMessage } from '#/components/base-ui'
+import { FormField, FormLabel, Input } from '#/components/base-ui'
 import { Link } from '#/components/link'
 import { useApiClient } from '#/context/hooks/use-api-client'
 import { useSEOMeta } from '#/context/hooks/use-seo-meta'
@@ -53,7 +50,6 @@ export default function Page() {
         loading: 'Creating account..',
         success: (response) => {
           if (!response?.data?.accessToken) throw new Error('Invalid response')
-
           setTimeout(() => navigate(redirectTo), 500)
           return `Account created successfully!`
         },

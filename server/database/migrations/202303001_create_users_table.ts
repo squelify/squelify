@@ -1,4 +1,5 @@
 import { type Kysely, sql } from 'kysely'
+import { createTriggerUpdatedAt, dropTriggerUpdatedAt } from '~/database/db.helper'
 import { UNIX_TIMESTAMP } from '~/database/db.helper'
 import type { Database } from '~/database/db.schema'
 
@@ -21,20 +22,8 @@ export const up = async (db: Kysely<Database>): Promise<void> => {
     .ifNotExists()
     .execute()
 
-  /**
-   * Trigger to automatically update timestamp when record is modified
-   * This ensures data consistency and audit trail
-   */
-  await sql`
-    CREATE TRIGGER IF NOT EXISTS sq_trg_users_timestamp
-    AFTER UPDATE ON sq_users
-    FOR EACH ROW
-    BEGIN
-      UPDATE sq_users
-      SET updated_at = strftime('%s', 'now')
-      WHERE id = NEW.id;
-    END;
-  `.execute(db)
+  // Create auto-update trigger
+  await createTriggerUpdatedAt('sq_users', true).execute(db)
 
   /**
    * Single column indexes for frequent lookup operations
@@ -102,6 +91,6 @@ export const down = async (db: Kysely<Database>): Promise<void> => {
   await db.schema.dropIndex('sq_idx_users_created_at').ifExists().execute()
   await db.schema.dropIndex('sq_idx_users_is_active').ifExists().execute()
   await db.schema.dropIndex('sq_idx_users_username').ifExists().execute()
-  await sql`DROP TRIGGER IF EXISTS sq_trg_users_timestamp;`.execute(db)
+  await dropTriggerUpdatedAt('sq_users', true).execute(db)
   await db.schema.dropTable('sq_users').ifExists().execute()
 }
