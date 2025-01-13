@@ -1,23 +1,6 @@
 import { env } from 'std-env'
 
-export interface AppConfig {
-  baseURL: string
-  domain: string
-  adminPath: string
-  title: string
-  description: string
-  imageUrl: string
-  twitterUsername: string
-  authorEmail: string
-  address: string
-  socials: {
-    github: string
-    twitter: string
-    linkedin: string
-  }
-}
-
-export default {
+const appConfig = {
   baseURL: env.SQUELIFY_BASE_URL || 'http://localhost:3278',
   domain: 'localhost:3278',
   adminPath: '/admin',
@@ -28,8 +11,11 @@ export default {
   authorEmail: 'hi@squelify.com',
   address: 'The Internet',
   socials: {
-    github: 'https://github.com/riipandi',
-    twitter: 'https://twitter.com/riipandi',
-    linkedin: 'https://www.linkedin.com/in/aris-ripandi/',
+    github: 'https://github.com/squelify',
+    twitter: 'https://x.com/squelify',
   },
-} satisfies AppConfig
+}
+
+export type AppConfig = typeof appConfig
+
+export default appConfig
