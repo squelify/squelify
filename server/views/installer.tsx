@@ -115,26 +115,7 @@ export default function Installer() {
               </div>
             </div>
 
-            <div className={styles.divider()}>
-              <h2 className={styles.sectionTitle()}>Application Settings</h2>
-              <div>
-                <label htmlFor="appName" className={styles.inputLabel()}>
-                  Application Name
-                </label>
-                <input
-                  type="text"
-                  id="appName"
-                  name="appName"
-                  required
-                  minLength={4}
-                  maxLength={50}
-                  placeholder="My Awesome App"
-                  pattern="[A-Za-z0-9\s\-_]+"
-                  title="Application name can only contain letters, numbers, spaces, hyphens and underscores"
-                  className={styles.input()}
-                />
-              </div>
-            </div>
+            <div className={styles.divider()} />
 
             <div className={styles.checkboxContainer()}>
               <div className={styles.checkboxWrapper()}>
@@ -146,7 +127,7 @@ export default function Installer() {
                 />
               </div>
               <div className={styles.checkboxLabel()}>
-                <label htmlFor="newsletter" className={styles.inputLabel({ className: 'mt-1' })}>
+                <label htmlFor="newsletter" className={styles.inputLabel({ className: 'mt-0.5' })}>
                   Keep me updated about new features &amp; upcoming improvements.{' '}
                   <br className="hidden sm:inline-block" />
                   By doing this you accept the{' '}
