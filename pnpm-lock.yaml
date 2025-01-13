@@ -375,9 +375,6 @@ importers:
       tailwindcss-animate:
         specifier: ^1.0.7
         version: 1.0.7(tailwindcss@4.0.0-beta.8)
-      tailwindcss-motion:
-        specifier: ^1.0.1
-        version: 1.0.1(tailwindcss@4.0.0-beta.8)
       tsx:
         specifier: ^4.19.2
         version: 4.19.2
@@ -9991,11 +9988,6 @@ packages:
 
   tailwindcss-animate@1.0.7:
     resolution: {integrity: sha512-bl6mpH3T7I3UFxuvDEXLxy/VuFxBk5bbzplh7tXI68mwMokNYd1t9qPBHlnyTwfa4JGC4zP516I1hYYtQ/vspA==}
-    peerDependencies:
-      tailwindcss: '>=3.0.0 || insiders'
-
-  tailwindcss-motion@1.0.1:
-    resolution: {integrity: sha512-ZqarvI3XSclT46Dq1wOo9qG9Yx0TIyEtkMfTo8l0JuVKvO1WiSbvAECuTqdYHpC9Ml7abuJIk7u907SBHYprwQ==}
     peerDependencies:
       tailwindcss: '>=3.0.0 || insiders'
 
@@ -21260,10 +21252,6 @@ snapshots:
       tailwindcss: 3.4.13(ts-node@10.9.2(@swc/core@1.7.28(@swc/helpers@0.5.12))(@types/node@22.7.2)(typescript@5.6.2))
 
   tailwindcss-animate@1.0.7(tailwindcss@4.0.0-beta.8):
-    dependencies:
-      tailwindcss: 4.0.0-beta.8
-
-  tailwindcss-motion@1.0.1(tailwindcss@4.0.0-beta.8):
     dependencies:
       tailwindcss: 4.0.0-beta.8
 

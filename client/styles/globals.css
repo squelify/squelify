@@ -2,7 +2,6 @@
 
 @import "tailwindcss";
 @plugin "tailwindcss-animate";
-/* @plugin "tailwindcss-motion"; */
 @variant dark (&:where(.dark, .dark *));
 
 /* @ref: https://tailwindcss.com/docs/v4-beta#configuring-source-detection */
@@ -82,8 +81,8 @@
     --radius-sm: calc(var(--radius) - 4px);
 
     /* Typography */
-    --font-sans: Avenir, Montserrat, Corbel, "URW Gothic", Ubuntu, Calibri, "DejaVu Sans",
-        source-sans-pro, sans-serif;
+    --font-sans: "Inter Variable", Roboto, "Helvetica Neue", "Arial Nova", "Nimbus Sans", Arial,
+        sans-serif;
     --font-mono: "JetBrains Mono Variable", ui-monospace, "Cascadia Code", "Source Code Pro", Menlo,
         Consolas, "DejaVu Sans Mono", monospace;
 

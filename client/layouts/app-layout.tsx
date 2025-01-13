@@ -16,13 +16,6 @@ import PageLoader from '#/components/loaders/page-loader'
 import RootLayout from './root-layout'
 import PrimarySidebar from './sidebar-primary'
 
-// Style constants
-const LAYOUT_STYLES = {
-  root: 'size-full min-h-screen',
-  header: clx('fixed top-0 z-10 flex h-14 w-full items-center gap-2 border-b bg-sidebar px-4'),
-  main: clx('h-full flex-1 overflow-y-auto bg-background pt-14'),
-} as const
-
 type OutletContext = Pick<AppProviderState['auth'], 'user' | 'logout'>
 
 export default function AppLayout() {
@@ -39,11 +32,15 @@ export default function AppLayout() {
 
   return (
     <ErrorBoundary FallbackComponent={BoundaryError}>
-      <RootLayout className={LAYOUT_STYLES.root}>
+      <RootLayout className="size-full min-h-screen">
         <SidebarProvider>
           <PrimarySidebar user={user} logout={logout} />
           <SidebarInset>
-            <header className={LAYOUT_STYLES.header}>
+            <header
+              className={clx(
+                'fixed top-0 z-10 flex h-14 w-full items-center gap-2 border-b bg-sidebar px-4'
+              )}
+            >
               <Breadcrumb key={pathname}>
                 <BreadcrumbList>
                   {pathname === '/dashboard' && (
@@ -60,7 +57,7 @@ export default function AppLayout() {
                 </BreadcrumbList>
               </Breadcrumb>
             </header>
-            <main className={LAYOUT_STYLES.main}>
+            <main className={clx('h-full flex-1 overflow-y-auto bg-background pt-14')}>
               <Suspense fallback={<PageLoader />}>
                 <Outlet context={{ user, logout } satisfies OutletContext} />
               </Suspense>
