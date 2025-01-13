@@ -1,8 +1,8 @@
 import { ErrorBoundary } from 'react-error-boundary'
 import { Outlet, useLocation } from 'react-router'
 import { Separator, Tabs, TabsList, TabsTrigger } from '#/components/base-ui'
+import { Link } from '#/components/base-ui'
 import BoundaryError from '#/components/errors/boundary'
-import { Link } from '#/components/link'
 
 export default function AuthorizationLayout() {
   const location = useLocation()

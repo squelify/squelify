@@ -14,6 +14,16 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
     const isDisabled = disabled || isLoading
     const styles = buttonStyles({ variant, size, isLoading })
 
+    // Wrap children in fragment when loading to ensure single child
+    const content = isLoading ? (
+      <>
+        <Lucide.Loader2 strokeWidth={2} />
+        {children}
+      </>
+    ) : (
+      children
+    )
+
     return (
       <Comp
         ref={ref}
@@ -22,8 +32,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
         disabled={isDisabled}
         {...props}
       >
-        {isLoading && <Lucide.Loader2 strokeWidth={2} />}
-        {children}
+        {content}
       </Comp>
     )
   }

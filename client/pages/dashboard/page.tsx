@@ -1,14 +1,14 @@
 import * as Lucide from 'lucide-react'
 import { useEffect, useRef, useState } from 'react'
-import { toast } from 'sonner'
 import { HealthCheckResponse } from '~/api/healthz.get'
+import { toast } from '#/components/base-ui'
 import { useApiClient } from '#/context/hooks/use-api-client'
 import { useSEOMeta } from '#/context/hooks/use-seo-meta'
 import PageWrapper from '#/layouts/page-wrapper'
 import logger from '#/utils/logger'
 // import CardGetStarted from './card-get-started'
 import CardSystemMetrics from './card-metrics'
-// import CardQuickAccess from './card-quick-access'
+import CardQuickAccess from './card-quick-access'
 import CardResources from './card-resources'
 import CardStats from './card-stats'
 
@@ -154,7 +154,9 @@ export default function Page() {
           <Lucide.SquareSlash className="size-5" strokeWidth={2} />
           Quick Access
         </h2>
-        <div className="grid gap-6 md:grid-cols-3">{/* <CardQuickAccess /> */}</div>
+        <div className="grid gap-6 md:grid-cols-3">
+          <CardQuickAccess />
+        </div>
       </div>
     </PageWrapper>
   )

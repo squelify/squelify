@@ -13,8 +13,8 @@ import { clx } from '#/utils/helper'
 
 import BoundaryError from '#/components/errors/boundary'
 import PageLoader from '#/components/loaders/page-loader'
+import AppSidebar from './app-sidebar'
 import RootLayout from './root-layout'
-import PrimarySidebar from './sidebar-primary'
 
 type OutletContext = Pick<AppProviderState['auth'], 'user' | 'logout'>
 
@@ -34,7 +34,7 @@ export default function AppLayout() {
     <ErrorBoundary FallbackComponent={BoundaryError}>
       <RootLayout className="size-full min-h-screen">
         <SidebarProvider>
-          <PrimarySidebar user={user} logout={logout} />
+          <AppSidebar user={user} logout={logout} />
           <SidebarInset>
             <header
               className={clx(

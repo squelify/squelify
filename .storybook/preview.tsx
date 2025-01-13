@@ -1,6 +1,8 @@
 import { withThemeByClassName } from '@storybook/addon-themes'
 import type { Preview, ReactRenderer } from '@storybook/react'
 import { themes } from '@storybook/theming'
+import * as React from 'react'
+import { MemoryRouter } from 'react-router'
 import '../client/styles/globals.css'
 import '../client/styles/tokens.css'
 
@@ -69,7 +71,11 @@ const preview: Preview = {
       themes: { light: 'light', dark: 'dark' },
       defaultTheme: 'light',
     }),
-    (Story) => Story(),
+    (Story) => (
+      <MemoryRouter>
+        <Story />
+      </MemoryRouter>
+    ),
   ],
 }
 

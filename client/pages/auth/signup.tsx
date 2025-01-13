@@ -6,7 +6,7 @@ import { z } from 'zod'
 import { Button, Card, CardContent, toast } from '#/components/base-ui'
 import { Form, FormControl, FormItem, FormMessage } from '#/components/base-ui'
 import { FormField, FormLabel, Input } from '#/components/base-ui'
-import { Link } from '#/components/link'
+import { Link } from '#/components/base-ui'
 import { useApiClient } from '#/context/hooks/use-api-client'
 import { useSEOMeta } from '#/context/hooks/use-seo-meta'
 

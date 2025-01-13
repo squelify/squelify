@@ -23,6 +23,12 @@ export default function BaseLayout({ children, csrfToken, title, cssLinks }: Bas
         <title>{title}</title>
       </head>
       <body>{children}</body>
+      <script
+        src="https://unpkg.com/htmx.org@2.0.4"
+        integrity="sha384-HGfztofotfshcF7+8n44JQL2oJmowVChPTg48S+jvZoztPfvwD79OC/LTtG6dMp+"
+        crossOrigin="anonymous"
+        defer
+      />
     </html>
   )
 }
