@@ -93,25 +93,29 @@ export default defineNitroErrorHandler(async (error, event) => {
 
   const html = renderToStaticMarkup(
     <BaseLayout title={appConfig.title} cssLinks={entryChunk.css} csrfToken={csrfToken}>
-      <div className="error-layout">
-        <main className="error-main">
-          <div className="error-content">
-            <div className="error-header">
-              <h1 className="error-code">{error.statusCode}</h1>
-              <h2 className="error-title">Something went wrong!</h2>
-              <p className="error-message">
+      <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-white to-gray-100 p-4 dark:from-gray-950 dark:to-gray-900">
+        <main className="mx-auto w-full max-w-5xl rounded-xl border-border bg-card px-10 py-12 shadow-sm">
+          <div className="space-y-6">
+            <div className="space-y-4 text-center">
+              <h1 className="bg-gradient-to-r from-brand-500 to-indigo-600 bg-clip-text font-black text-8xl text-transparent">
+                {error.statusCode}
+              </h1>
+              <h2 className="font-bold text-3xl text-foreground">Something went wrong!</h2>
+              <p className="mx-auto max-w-xl text-lg text-muted-foreground">
                 {error.message ||
                   'The page you are looking for might have been removed or is temporarily unavailable.'}
               </p>
             </div>
 
             {process.dev ? (
-              <div className="error-stack">
-                <div className="error-stack-container">
-                  <div className="error-stack-content">
-                    <div className="error-type">
-                      <span className="error-type-label">Error Type:</span>
-                      <span className="error-type-value">{error.name}</span>
+              <div className="space-y-6">
+                <div className="max-h-max overflow-auto rounded-lg border-rose-200 bg-rose-50 p-6 text-left dark:border-rose-900 dark:bg-rose-900/30">
+                  <div className="font-mono text-sm leading-relaxed">
+                    <div className="mb-2">
+                      <span className="font-semibold text-rose-800 dark:text-rose-300">
+                        Error Type:
+                      </span>
+                      <span className="text-rose-700 dark:text-rose-400">{error.name}</span>
                     </div>
                     <div
                       className="space-y-1"
@@ -119,9 +123,13 @@ export default defineNitroErrorHandler(async (error, event) => {
                       dangerouslySetInnerHTML={{ __html: formatErrorStack(error.stack) }}
                     />
                     {error.cause ? (
-                      <div className="error-cause">
-                        <span className="error-cause-label">Cause:</span>
-                        <pre className="error-cause-value">{formatCause(error.cause)}</pre>
+                      <div className="mt-4 border-rose-200 border-t pt-4 dark:border-rose-800">
+                        <span className="font-semibold text-rose-800 dark:text-rose-300">
+                          Cause:
+                        </span>
+                        <pre className="mt-2 whitespace-pre-wrap text-rose-700 dark:text-rose-400">
+                          {formatCause(error.cause)}
+                        </pre>
                       </div>
                     ) : null}
                   </div>
@@ -129,13 +137,16 @@ export default defineNitroErrorHandler(async (error, event) => {
               </div>
             ) : null}
 
-            <div className="error-actions">
-              <a href={appConfig.baseURL} className="error-action-primary">
+            <div className="mx-auto grid max-w-sm grid-cols-2 gap-4">
+              <a
+                href={appConfig.baseURL}
+                className="inline-flex w-full items-center justify-center rounded-md bg-primary px-5 py-2.5 font-medium text-primary-foreground text-sm shadow transition-all duration-200 hover:shadow-md hover:brightness-90"
+              >
                 Return Home
               </a>
               <button
                 type="button"
-                className="error-action-secondary"
+                className="inline-flex w-full items-center justify-center rounded-md border border-border bg-muted px-5 py-2.5 font-medium text-muted-foreground text-sm shadow transition-all duration-200 hover:bg-accent hover:shadow-md"
                 onClick={() => window.location.reload()}
               >
                 Try Again
