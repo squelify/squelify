@@ -97,7 +97,7 @@ export default function Installer() {
                     placeholder="Enter your secure password"
                     pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{8,}$"
                     title="Password must contain at least 8 characters, including uppercase, lowercase, number and special character"
-                    className={styles.input()}
+                    className={styles.input({ className: 'pr-10' })}
                   />
                   <button
                     type="button"
