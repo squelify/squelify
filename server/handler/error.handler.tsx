@@ -94,7 +94,7 @@ export default defineNitroErrorHandler(async (error, event) => {
   const html = renderToStaticMarkup(
     <BaseLayout title={appConfig.title} cssLinks={entryChunk.css} csrfToken={csrfToken}>
       <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-white to-gray-100 p-4 dark:from-gray-950 dark:to-gray-900">
-        <main className="mx-auto w-full max-w-5xl rounded-xl border-border bg-card px-10 py-12 shadow-sm">
+        <main className="mx-auto w-full max-w-4xl rounded-xl border-border bg-card px-10 py-12 shadow-sm">
           <div className="space-y-6">
             <div className="space-y-4 text-center">
               <h1 className="bg-gradient-to-r from-brand-500 to-indigo-600 bg-clip-text font-black text-8xl text-transparent">
@@ -140,13 +140,13 @@ export default defineNitroErrorHandler(async (error, event) => {
             <div className="mx-auto grid max-w-sm grid-cols-2 gap-4">
               <a
                 href={appConfig.baseURL}
-                className="inline-flex w-full items-center justify-center rounded-md bg-primary px-5 py-2.5 font-medium text-primary-foreground text-sm shadow transition-all duration-200 hover:shadow-md hover:brightness-90"
+                className="inline-flex w-full items-center justify-center rounded-md bg-primary px-5 py-2.5 font-medium text-primary-foreground text-sm shadow-sm transition-all duration-200 hover:shadow-md hover:brightness-90"
               >
                 Return Home
               </a>
               <button
                 type="button"
-                className="inline-flex w-full items-center justify-center rounded-md border border-border bg-muted px-5 py-2.5 font-medium text-muted-foreground text-sm shadow transition-all duration-200 hover:bg-accent hover:shadow-md"
+                className="inline-flex w-full items-center justify-center rounded-md border border-border bg-muted px-5 py-2.5 font-medium text-muted-foreground text-sm shadow-sm transition-all duration-200 hover:bg-accent hover:shadow-md"
                 onClick={() => window.location.reload()}
               >
                 Try Again

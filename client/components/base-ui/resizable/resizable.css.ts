@@ -13,7 +13,7 @@ export const resizableStyles = tv({
       'data-[panel-group-direction=vertical]:after:left-0 data-[panel-group-direction=vertical]:after:h-1 data-[panel-group-direction=vertical]:after:w-full data-[panel-group-direction=vertical]:after:translate-x-0',
     handleRotate: '[&[data-panel-group-direction=vertical]>div]:rotate-90',
     handleButton:
-      'z-10 flex h-4 w-3 items-center justify-center rounded-sm border bg-border opacity-0 transition-opacity group-hover:opacity-100',
+      'z-10 flex h-4 w-3 items-center justify-center rounded-xs border bg-border opacity-0 transition-opacity group-hover:opacity-100',
     handleIcon: 'size-2.5',
   },
 })

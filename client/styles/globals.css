@@ -1,7 +1,8 @@
 /* Reference: https://tailwindcss.com/docs/v4-beta */
 
 @import "tailwindcss";
-@plugin "tailwindcss-motion";
+@plugin "tailwindcss-animate";
+/* @plugin "tailwindcss-motion"; */
 @variant dark (&:where(.dark, .dark *));
 
 /* @ref: https://tailwindcss.com/docs/v4-beta#configuring-source-detection */
@@ -79,6 +80,12 @@
     --radius-lg: var(--radius);
     --radius-md: calc(var(--radius) - 2px);
     --radius-sm: calc(var(--radius) - 4px);
+
+    /* Typography */
+    --font-sans: Avenir, Montserrat, Corbel, "URW Gothic", Ubuntu, Calibri, "DejaVu Sans",
+        source-sans-pro, sans-serif;
+    --font-mono: "JetBrains Mono Variable", ui-monospace, "Cascadia Code", "Source Code Pro", Menlo,
+        Consolas, "DejaVu Sans Mono", monospace;
 
     /* Animation */
     --animate-caret-blink: caret-blink 1.25s ease-out infinite;

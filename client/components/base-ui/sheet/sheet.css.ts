@@ -6,7 +6,7 @@ export const sheetStyles = tv({
     overlay:
       'data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 fixed inset-0 z-50 bg-black/80 data-[state=closed]:animate-out data-[state=open]:animate-in',
     contentCloseWrapper:
-      'absolute top-4 right-4 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-secondary',
+      'absolute top-4 right-4 rounded-xs opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-secondary',
     contentCloseIcon: 'size-4',
     header: 'flex flex-col space-y-2 text-center sm:text-left',
     footer: 'flex flex-col-reverse sm:flex-row sm:justify-end sm:space-x-2',

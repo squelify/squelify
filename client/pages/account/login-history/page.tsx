@@ -85,7 +85,7 @@ export default function Page() {
                   className="group relative rounded-lg border p-4 transition-colors hover:bg-muted/50"
                 >
                   <div className="flex items-center gap-4">
-                    <div className="flex-shrink-0">{getStatusIcon(item.status)}</div>
+                    <div className="shrink-0">{getStatusIcon(item.status)}</div>
 
                     <div className="flex-1 space-y-1">
                       <div className="flex items-center gap-2">

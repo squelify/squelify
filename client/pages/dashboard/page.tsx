@@ -96,7 +96,7 @@ export default function Page() {
   const renderMetric = (value: string | number | undefined, fallback = '-') => {
     if (isLoading) {
       return (
-        <span className="animate-pulse rounded bg-muted px-3" aria-busy="true">
+        <span className="animate-pulse rounded-sm bg-muted px-3" aria-busy="true">
           Loading...
         </span>
       )

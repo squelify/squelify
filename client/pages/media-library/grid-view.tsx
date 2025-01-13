@@ -68,7 +68,7 @@ export default function GridView({ items }: GridViewProps) {
                 <div className="absolute top-2 left-2 z-10 opacity-0 transition-opacity group-hover:opacity-100">
                   <Input
                     type="checkbox"
-                    className="size-4 rounded-sm border-white bg-black/20"
+                    className="size-4 rounded-xs border-white bg-black/20"
                     onClick={(e) => e.stopPropagation()}
                   />
                 </div>

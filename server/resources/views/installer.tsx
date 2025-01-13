@@ -8,13 +8,13 @@ export default function Page() {
       <div className="mx-auto max-w-xl px-4 py-12">
         <div className="mb-8 text-center">
           <img src="/favicon.svg" className="mx-auto mb-4 size-20" alt="Squelify" />
-          <h1 className="font-bold text-2xl text-background">Welcome to Squelify</h1>
+          <h1 className="font-bold text-2xl text-foreground">Welcome to Squelify</h1>
           <p className="mt-2 text-muted-foreground">Let's set up your administrator account</p>
           {errorMessage && (
             <div className="-mb-4 mt-6">
               <div className="rounded-[0.3rem] bg-error p-4 text-error-foreground">
                 <div className="flex">
-                  <div className="flex-shrink-0">
+                  <div className="shrink-0">
                     <Lucide.BadgeInfo className="size-5 text-error" />
                   </div>
                   <div className="ml-3">

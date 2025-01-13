@@ -55,7 +55,7 @@ export function TwoFactorSetup() {
                 {setupStep === 'qr' ? (
                   <div className="grid gap-6">
                     <div className="mx-auto rounded-lg bg-white p-4">
-                      <div className="size-48 rounded bg-muted" />
+                      <div className="size-48 rounded-sm bg-muted" />
                     </div>
 
                     <div className="grid gap-2">
@@ -132,7 +132,7 @@ export function TwoFactorSetup() {
 
       <div className="rounded-md bg-muted/50 p-4">
         <div className="flex gap-2 text-sm">
-          <Lucide.Info className="mt-0.5 size-4 flex-shrink-0 text-muted-foreground" />
+          <Lucide.Info className="mt-0.5 size-4 shrink-0 text-muted-foreground" />
           <p className="text-muted-foreground">
             Two-factor authentication adds an extra layer of security to your account. You'll need
             to enter both your password and a verification code when signing in.

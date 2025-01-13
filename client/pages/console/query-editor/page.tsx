@@ -109,14 +109,14 @@ export default function Page() {
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="start" className="w-52 p-1">
                       <DropdownMenuItem
-                        className="cursor-pointer rounded-sm px-3 py-1.5 text-muted-foreground text-xs hover:bg-primary/20 hover:text-foreground focus:bg-primary/30"
+                        className="cursor-pointer rounded-xs px-3 py-1.5 text-muted-foreground text-xs hover:bg-primary/20 hover:text-foreground focus:bg-primary/30"
                         onClick={() => editorRef.current?.execute()}
                       >
                         <span>Run Current Statement</span>
                         <DropdownMenuShortcut>⌘↵</DropdownMenuShortcut>
                       </DropdownMenuItem>
                       <DropdownMenuItem
-                        className="cursor-pointer rounded-sm px-3 py-1.5 text-muted-foreground text-xs hover:bg-primary/20 hover:text-foreground focus:bg-primary/30"
+                        className="cursor-pointer rounded-xs px-3 py-1.5 text-muted-foreground text-xs hover:bg-primary/20 hover:text-foreground focus:bg-primary/30"
                         onClick={() => editorRef.current?.executeAll()}
                       >
                         <span>Run All Statement</span>
@@ -217,7 +217,7 @@ export default function Page() {
             </TabsContent>
             <TabsContent value="messages" className="h-[calc(100%-36px)]">
               <ScrollArea className="size-full border-t bg-sidebar/80 p-3">
-                <div className="rounded bg-background/60 p-3 font-mono text-sm">
+                <div className="rounded-sm bg-background/60 p-3 font-mono text-sm">
                   Query executed successfully
                 </div>
               </ScrollArea>
