@@ -1,5 +1,3 @@
-// TODO: move to `nitro.config.ts`
-
 import tailwindcss from '@tailwindcss/vite'
 import react from '@vitejs/plugin-react'
 import consola from 'consola'
@@ -7,11 +5,27 @@ import { resolve } from 'pathe'
 import { isProduction, isTest } from 'std-env'
 import { type Logger as ViteLogger, defineConfig } from 'vite'
 import tsconfigPaths from 'vite-tsconfig-paths'
-import pkg from './package.json'
+import pkg from './package.json' assert { type: 'json' }
 
 export default defineConfig({
   clearScreen: true,
-  plugins: [react(), tailwindcss(), tsconfigPaths()],
+  plugins: [
+    react(),
+    tailwindcss(),
+    tsconfigPaths(),
+    {
+      // Removes pure annotations warning on build from `@glideapps/glide-data-grid`
+      // @ref: https://github.com/dotnet/aspnetcore/issues/55286#issuecomment-2557288741
+      name: 'remove-pure-annotations',
+      enforce: 'pre',
+      transform(code, id) {
+        if (id.includes('node_modules/@glideapps/glide-data-grid')) {
+          return code.replace(/\/\*#__PURE__\*\//g, '')
+        }
+        return null
+      },
+    },
+  ],
   appType: 'spa',
   envPrefix: 'SQUELIFY_',
   define: { 'import.meta.env.SQUELIFY_VERSION': `"${pkg.version}"` },
@@ -38,7 +52,6 @@ export default defineConfig({
     reportCompressedSize: false,
     rollupOptions: {
       input: resolve('client/entry.client.tsx'),
-      // external: ['@glideapps/glide-data-grid'],
     },
     outDir: resolve('.output/client'),
   },
