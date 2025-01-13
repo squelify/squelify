@@ -186,7 +186,7 @@ export default defineCommand({
 
       // Add timestamp to filename
       const filename = args.output.replace('.sql', `-${getTimestamp()}.sql`)
-      const exportPath = `_data/dump/${filename}`
+      const exportPath = `_data/backup/${filename}`
       const outputPath = resolve(process.cwd(), exportPath)
       writeFileSync(outputPath, schema, 'utf-8')
 

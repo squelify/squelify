@@ -6,7 +6,7 @@ export const linkStyles = tv({
       'inline-flex items-center gap-1 rounded-xs transition-colors duration-200 disabled:pointer-events-none disabled:opacity-50',
       'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2',
     ],
-    icon: ['size-3.5', 'shrink-0', 'transition-opacity'],
+    icon: 'size-3.5 shrink-0 transition-opacity',
   },
   variants: {
     variant: {
