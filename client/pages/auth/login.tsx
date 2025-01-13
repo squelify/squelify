@@ -159,7 +159,7 @@ export default function Page() {
 
         <p className="text-center text-muted-foreground text-sm">
           Don't have an account?{' '}
-          <Link href="/signup" className="underline underline-offset-4 hover:text-primary">
+          <Link href="/signup" className="underline underline-offset-4" size="sm">
             Sign up
           </Link>
         </p>

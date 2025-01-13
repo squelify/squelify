@@ -65,7 +65,7 @@ export default function UserMenu({ user, sidebarState, logout }: UserMenuProps) 
         </SidebarMenuButton>
       </DropdownMenuTrigger>
       <DropdownMenuContent
-        className="w-[--radix-dropdown-menu-trigger-width] min-w-56 rounded-lg px-1"
+        className="w-(--radix-dropdown-menu-trigger-width) min-w-56 rounded-lg px-1"
         side={sidebarState === 'expanded' && isMobile ? 'top' : 'right'}
         align="end"
         sideOffset={4}
