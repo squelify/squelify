@@ -1,6 +1,6 @@
 import * as Lucide from 'lucide-react'
 import * as React from 'react'
-import { Link } from '#/components/link'
+import { Link } from '#/components/base-ui'
 import { ButtonProps } from '../button/button'
 import { buttonStyles } from '../button/button.css'
 import { paginationStyles } from './pagination.css'

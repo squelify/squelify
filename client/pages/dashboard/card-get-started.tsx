@@ -2,7 +2,7 @@ import * as Lucide from 'lucide-react'
 import { Button } from '#/components/base-ui'
 import { Card, CardHeader, CardTitle } from '#/components/base-ui'
 import { CardContent, CardDescription } from '#/components/base-ui'
-import { Link } from '#/components/link'
+import { Link } from '#/components/base-ui'
 
 export default function CardGetStarted() {
   return (
@@ -37,7 +37,7 @@ export default function CardGetStarted() {
                 { label: 'Manage Users', icon: Lucide.Users2, href: '/settings/api/keys/new' },
                 { label: 'Roles & Permissions', icon: Lucide.Shield, href: '/settings/api' },
               ].map((action) => (
-                <Button key={action.label} variant="outline" size="sm" className="w-full" asChild>
+                <Button asChild key={action.label} variant="outline" size="sm" className="w-full">
                   <Link href={action.href}>
                     <action.icon className="-ml-1 mr-1 size-4" />
                     {action.label}
@@ -70,7 +70,7 @@ export default function CardGetStarted() {
                 { label: 'New Content', icon: Lucide.Plus, href: '/content/new' },
                 { label: 'Browse Media', icon: Lucide.FolderOpen, href: '/media-library' },
               ].map((action) => (
-                <Button key={action.label} variant="outline" size="sm" className="w-full" asChild>
+                <Button asChild key={action.label} variant="outline" size="sm" className="w-full">
                   <Link href={action.href}>
                     <action.icon className="-ml-1 mr-1 size-4" />
                     {action.label}
@@ -103,7 +103,7 @@ export default function CardGetStarted() {
                 { label: 'API Keys', icon: Lucide.Key, href: '/settings/api/keys/new' },
                 { label: 'Webhooks', icon: Lucide.Webhook, href: '/settings/api' },
               ].map((action) => (
-                <Button key={action.label} variant="outline" size="sm" className="w-full" asChild>
+                <Button asChild key={action.label} variant="outline" size="sm" className="w-full">
                   <Link href={action.href}>
                     <action.icon className="-ml-1 mr-1 size-4" />
                     {action.label}

@@ -13,13 +13,6 @@ import {
 const meta: Meta<typeof Pagination> = {
   title: 'Basic Components/Pagination',
   component: Pagination,
-  decorators: [
-    (Story) => (
-      <MemoryRouter>
-        <Story />
-      </MemoryRouter>
-    ),
-  ],
 }
 
 export default meta

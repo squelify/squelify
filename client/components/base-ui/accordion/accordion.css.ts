@@ -2,7 +2,7 @@ import { type VariantProps, tv } from 'tailwind-variants'
 
 export const accordionStyles = tv({
   slots: {
-    item: 'border-b',
+    item: 'border border-b-0 px-4 first:rounded-t-md last:rounded-b-md last:border-b',
     headerWrapper: 'flex',
     headerTrigger:
       'flex flex-1 cursor-pointer items-center justify-between py-4 font-medium text-sm transition-all hover:underline [&[data-state=open]>svg]:rotate-180',

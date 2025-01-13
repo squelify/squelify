@@ -6,7 +6,7 @@ import { SidebarGroup, SidebarGroupContent, SidebarGroupLabel } from '#/componen
 import { SidebarMenu, SidebarMenuButton, SidebarMenuItem } from '#/components/base-ui'
 import { Sidebar, SidebarContent, useSidebar } from '#/components/base-ui'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '#/components/base-ui'
-import { Link } from '#/components/link'
+import { Link } from '#/components/base-ui'
 import { MenuItem, useMenu } from '#/context/hooks/use-menu'
 import type { UserInfo } from '#/services/types'
 import { clx } from '#/utils/helper'

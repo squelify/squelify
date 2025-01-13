@@ -1,5 +1,5 @@
 import { useNavigate } from 'react-router'
-import { Link } from '#/components/link'
+import { Link } from '#/components/base-ui'
 import { errorStyles } from './error.css'
 
 export default function NotFound() {

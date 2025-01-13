@@ -1,6 +1,6 @@
 import * as Lucide from 'lucide-react'
 import { Button, Card, CardContent, CardHeader, CardTitle } from '#/components/base-ui'
-import { Link } from '#/components/link'
+import { Link } from '#/components/base-ui'
 
 const shortcuts = [
   {
@@ -45,9 +45,15 @@ export default function CardQuickAccess() {
           </CardHeader>
           <CardContent>
             <p className="mb-4 text-muted-foreground text-sm">{shortcut.description}</p>
-            <div className="flex gap-4">
+            <div className="grid grid-cols-2 gap-4 sm:grid-cols-1 lg:grid-cols-2">
               {shortcut.actions.map((action) => (
-                <Button key={action.label} variant="outline" size="sm" className="flex-1" asChild>
+                <Button
+                  asChild
+                  key={action.label}
+                  variant="outline"
+                  size="default"
+                  className="flex-1"
+                >
                   <Link href={action.href}>
                     <action.icon className="-ml-1 mr-1 size-4" />
                     {action.label}
