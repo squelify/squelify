@@ -1,7 +1,7 @@
 import * as Lucide from 'lucide-react'
 import { useEffect, useRef, useState } from 'react'
-import { toast } from 'sonner'
 import { HealthCheckResponse } from '~/api/healthz.get'
+import { toast } from '#/components/base-ui'
 import { useApiClient } from '#/context/hooks/use-api-client'
 import { useSEOMeta } from '#/context/hooks/use-seo-meta'
 import PageWrapper from '#/layouts/page-wrapper'

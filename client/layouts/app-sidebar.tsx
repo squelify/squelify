@@ -13,7 +13,7 @@ import { clx } from '#/utils/helper'
 import AppCommand from './app-command'
 import UserMenu from './user-menu'
 
-interface PrimarySidebarProps {
+interface AppSidebarProps {
   user: UserInfo
   logout: () => void
 }
@@ -48,7 +48,7 @@ const ExpandedMenuItem = ({ item, isActive }: MenuItemProps) => (
   </SidebarMenuButton>
 )
 
-export default function PrimarySidebar({ user, logout }: PrimarySidebarProps) {
+export default function AppSidebar({ user, logout }: AppSidebarProps) {
   const { state: sidebarState, toggleSidebar } = useSidebar()
   const { pathname } = useLocation()
   const { menuGroups } = useMenu()
