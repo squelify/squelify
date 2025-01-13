@@ -35,7 +35,7 @@ export default function CardSystemMetrics({ className }: { className?: string })
       <CardHeader className="flex flex-row items-center justify-between pb-2">
         <CardTitle className="font-medium text-base">System Resources</CardTitle>
         <Select defaultValue="24h">
-          <SelectTrigger className="h-8 w-[120px]">
+          <SelectTrigger className="h-8 w-[140px]">
             <SelectValue placeholder="Select range" />
           </SelectTrigger>
           <SelectContent>
@@ -46,7 +46,7 @@ export default function CardSystemMetrics({ className }: { className?: string })
         </Select>
       </CardHeader>
       <CardContent className="pt-4 pr-8 pl-0">
-        <ChartContainer className="h-[340px]" config={resourceConfig}>
+        <ChartContainer className="h-[340px] w-full" config={resourceConfig}>
           <LineChart data={resourceData}>
             <XAxis dataKey="time" />
             <YAxis />
