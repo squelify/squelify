@@ -10,16 +10,17 @@ import { defineNitroConfig } from 'nitropack/config'
 import { resolve } from 'pathe'
 import { isDevelopment, isProduction } from 'std-env'
 import { build as vite } from 'vite'
+import appConfig from './app.config'
 import pkg from './package.json' assert { type: 'json' }
 
 export default defineNitroConfig({
-  compatibilityDate: '2024-12-29',
+  compatibilityDate: '2025-01-14',
   preset: 'node-server',
   serveStatic: 'node',
   srcDir: 'server',
   minify: isProduction,
   sourceMap: isDevelopment,
-  appConfigFiles: ['~~/app.config'],
+  appConfig: appConfig,
 
   renderer: '~/entry.server',
   errorHandler: '~/handler/error.handler',
@@ -41,11 +42,14 @@ export default defineNitroConfig({
   },
 
   hooks: {
-    'rollup:before': async (_nitro, _config) => {
+    'rollup:before': async (nitro, _config) => {
       consola.info('Creating data directory...')
       await makeDirectory(resolve('_data'), { mode: 0o755 })
-      consola.info('Building frontend application...')
-      await vite().then(() => consola.success('Frontend application built!'))
+
+      if (!nitro.options.dev) {
+        consola.info('Building frontend application...')
+        await vite().then(() => consola.success('Frontend application built!'))
+      }
     },
   },
 
@@ -53,8 +57,8 @@ export default defineNitroConfig({
     production: 'prerender',
     route: '/api-specs.json',
     meta: {
-      title: 'Squelify API',
-      description: 'Squelify API documentation',
+      title: `${appConfig.title} API`,
+      description: `${appConfig.title} API documentation`,
       version: pkg.version,
     },
     ui: {

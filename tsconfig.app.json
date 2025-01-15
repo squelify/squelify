@@ -15,6 +15,7 @@
         "module": "ESNext",
         "moduleDetection": "force",
         "moduleResolution": "Bundler",
+        "noEmit": true,
         "noImplicitAny": true,
         "noImplicitOverride": true,
         "noUncheckedIndexedAccess": false,
@@ -37,5 +38,11 @@
         }
     },
     "include": ["./client/**/*", "./server/**/*", "./.nitro/types/nitro.d.ts", "./**/*"],
-    "exclude": ["vite.config.ts", "storybook-static"]
+    "exclude": [
+        "vite.config.ts",
+        "vitest.config.ts",
+        "vitest.workspace.ts",
+        "storybook-static",
+        "tests-results"
+    ]
 }

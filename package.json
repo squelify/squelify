@@ -35,6 +35,10 @@
         "kraft:run": "pnpm --silent run kraftx --rootfs .unikraft/build/initramfs-x86_64.cpio --plat qemu -M 256Mi",
         "kraft:deploy": "kraft cl deploy --no-check-updates --metro sin0 -p 443:3278 . -M 256Mi -n $npm_package_name",
         "kraftx": "kraft run --rm -p 3278:3278 -n $npm_package_name -v $(pwd)/_data:/srv/_data",
+        "test:report": "pnpm dlx serve tests-results -l 8000 -s -n -C",
+        "test:coverage": "vitest run --coverage",
+        "test:ui": "vitest --ui",
+        "test": "vitest --run",
         "check": "biome check . --write",
         "format": "biome format . --write",
         "lint": "biome lint . --write",
@@ -46,7 +50,7 @@
         "cleanup:deps": "pnpm dlx rimraf pnpm-lock.yaml node_modules",
         "changelog-full": "git-cliff -o CHANGELOG.md -c cliff-full.toml",
         "cmd": "node --import=tsx -r dotenv/config server/cmd/index.ts",
-        "typecheck": "tsc -b"
+        "typecheck": "tsc"
     },
     "dependencies": {
         "@codemirror/autocomplete": "^6.18.4",
@@ -152,6 +156,8 @@
         "@storybook/theming": "^8.4.7",
         "@tailwindcss/vite": "4.0.0-beta.8",
         "@tanstack/react-query-devtools": "^5.64.1",
+        "@testing-library/jest-dom": "^6.6.3",
+        "@testing-library/react": "^16.1.0",
         "@types/lodash": "^4.17.14",
         "@types/node": "^22.10.6",
         "@types/nodemailer": "^6.4.17",
@@ -159,11 +165,14 @@
         "@types/react-dom": "19.0.3",
         "@types/ua-parser-js": "^0.7.39",
         "@vitejs/plugin-react": "^4.3.4",
+        "@vitest/coverage-istanbul": "^2.1.8",
+        "@vitest/ui": "^2.1.8",
         "chalk": "^5.4.1",
         "citty": "^0.1.6",
         "clsx": "^2.1.1",
         "dotenv": "^16.4.7",
         "git-cliff": "^2.7.0",
+        "happy-dom": "^16.6.0",
         "lefthook": "^1.10.4",
         "nitropack": "^2.10.4",
         "npm-check-updates": "^17.1.13",
@@ -176,7 +185,8 @@
         "tsx": "^4.19.2",
         "typescript": "^5.7.3",
         "vite": "^6.0.7",
-        "vite-tsconfig-paths": "^5.1.4"
+        "vite-tsconfig-paths": "^5.1.4",
+        "vitest": "^2.1.8"
     },
     "packageManager": "pnpm@9.15.3"
 }

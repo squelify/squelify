@@ -9,6 +9,7 @@
         "moduleResolution": "bundler",
         "noFallthroughCasesInSwitch": true,
         "noUncheckedSideEffectImports": true,
+        "allowSyntheticDefaultImports": true,
         "noUnusedLocals": true,
         "noUnusedParameters": true,
         "skipLibCheck": true,
@@ -16,6 +17,6 @@
         "target": "ES2022",
         "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.node.tsbuildinfo"
     },
-    "include": ["vite.config.ts"],
-    "exclude": ["storybook-static"]
+    "include": ["vite.config.ts", "vitest.config.ts", "vitest.workspace.ts"],
+    "exclude": ["node_modules", "storybook-static", "tests-results"]
 }

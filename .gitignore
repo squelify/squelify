@@ -41,9 +41,13 @@ dist/
 .build
 .wrangler
 
-# Vite config
+# Vite & Vitest config
 vite.config.*
 !vite.config.ts
+vitest.config.*
+!vitest.config.ts
+vitest.workspace.*
+!vitest.workspace.ts
 
 # envars
 .env.*
