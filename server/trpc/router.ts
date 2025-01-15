@@ -1,7 +1,9 @@
-import { trpcRouter } from './context'
+import { authRouter } from './router/auth.router'
 import { userRouter } from './router/user.router'
+import { trpcRouter } from './trpc'
 
 const appRouter = trpcRouter({
+  auth: authRouter,
   user: userRouter,
 })
 

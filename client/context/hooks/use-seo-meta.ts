@@ -1,5 +1,5 @@
 import { useCallback, useContext, useEffect, useMemo, useState } from 'react'
-import { AppContext } from '#/context/provider'
+import { AppContext } from '#/context/providers/app-provider'
 
 const useSEOMetaContext = () => {
   const context = useContext(AppContext)

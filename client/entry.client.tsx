@@ -9,11 +9,12 @@ import { ErrorBoundary } from 'react-error-boundary'
 import { BrowserRouter, useRoutes } from 'react-router'
 import BoundaryError from '#/components/errors/boundary'
 import PageLoader from '#/components/loaders/page-loader'
-import AppProvider from '#/context/provider'
+import AppProvider from '#/context/providers/app-provider'
 
 import appConfig from '~~/app.config'
 import { protectedRoutes } from '#/routes/protected'
 import { catchAllRoute, publicRoutes } from '#/routes/public'
+import TRPCProvider from './context/providers/trpc-provider'
 
 // The root element for the app.
 const rootElement = document.getElementById('root')
@@ -32,16 +33,18 @@ ReactDOM.createRoot(rootElement).render(
   <React.StrictMode>
     <ErrorBoundary fallback={<BoundaryError />}>
       <BrowserRouter basename={appConfig.adminPath}>
-        <AppProvider defaultTheme="system">
-          <Suspense fallback={<PageLoader />}>
-            <AppRoutes />
-          </Suspense>
-          <ReactQueryDevtools
-            initialIsOpen={false}
-            buttonPosition="bottom-right"
-            position="right"
-          />
-        </AppProvider>
+        <TRPCProvider>
+          <AppProvider defaultTheme="system">
+            <Suspense fallback={<PageLoader />}>
+              <AppRoutes />
+            </Suspense>
+            <ReactQueryDevtools
+              initialIsOpen={false}
+              buttonPosition="bottom-right"
+              position="right"
+            />
+          </AppProvider>
+        </TRPCProvider>
       </BrowserRouter>
     </ErrorBoundary>
   </React.StrictMode>

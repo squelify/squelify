@@ -1,32 +1,14 @@
-import { httpBatchLink, loggerLink } from '@trpc/client'
+import { QueryClient } from '@tanstack/react-query'
 import { createTRPCReact } from '@trpc/react-query'
-import superjson from 'superjson'
-import type { AppRouter } from '~/trpc/router'
+import { AppRouter } from '~/trpc/router'
+
+export const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      staleTime: 5 * 1000,
+      refetchOnWindowFocus: false,
+    },
+  },
+})
 
 export const trpc = createTRPCReact<AppRouter>()
-
-export const createTrpcClient = () => {
-  return trpc.createClient({
-    links: [
-      loggerLink({
-        enabled: (opts) =>
-          process.env.NODE_ENV === 'development' ||
-          (opts.direction === 'down' && opts.result instanceof Error),
-      }),
-      httpBatchLink({
-        url: '/trpc',
-        fetch(url, options) {
-          return fetch(url, {
-            ...options,
-            credentials: 'include',
-            headers: {
-              ...options?.headers,
-              'Content-Type': 'application/json',
-            },
-          })
-        },
-        transformer: superjson,
-      }),
-    ],
-  })
-}

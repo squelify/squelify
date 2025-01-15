@@ -1,5 +1,5 @@
 import { useContext, useEffect } from 'react'
-import { AppContext } from '#/context/provider'
+import { AppContext } from '#/context/providers/app-provider'
 import { type Theme } from '#/context/stores/ui.store'
 
 export const useTheme = () => {

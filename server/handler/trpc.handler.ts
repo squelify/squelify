@@ -1,64 +1,55 @@
-// FIXME: https://trpc.io/docs/migrate-from-v10-to-v11
+import { type AnyTRPCRouter, TRPCError, type inferRouterContext } from '@trpc/server'
+import { HTTPBaseHandlerOptions, TRPCRequestInfo, resolveResponse } from '@trpc/server/http'
+import { ResolveHTTPRequestOptionsContextFn } from '@trpc/server/http'
+import type { H3Event, NodeIncomingMessage } from 'h3'
+import { readBody, toWebRequest } from 'h3'
 
-import { type AnyRouter, TRPCError } from '@trpc/server'
-import {} from '@trpc/server/adapters/node-http'
-import { resolveResponse } from '@trpc/server/http'
-import type { H3Event } from 'h3'
-import { getRequestURL, isMethod, readBody, setHeader, setResponseStatus } from 'h3'
-import type { CreateContextFn, OnErrorFn, ResponseMetaFn } from '~/trpc/types'
+type MaybePromise<T> = T | Promise<T>
 
-interface TRPCEventHandlerOpts<TRouter extends AnyRouter> {
-  router: TRouter
+export type CreateContextFn<TRouter extends AnyTRPCRouter> = (
+  event: H3Event,
+  innerOptions: { info: TRPCRequestInfo }
+) => MaybePromise<inferRouterContext<TRouter>>
+
+type H3HandlerOptions<TRouter extends AnyTRPCRouter> = HTTPBaseHandlerOptions<
+  TRouter,
+  NodeIncomingMessage
+> & {
   createContext?: CreateContextFn<TRouter>
-  responseMeta?: ResponseMetaFn<TRouter>
-  onError?: OnErrorFn<TRouter>
 }
 
-export async function handleTRPC<TRouter extends AnyRouter>(
+export async function handleTRPC<TRouter extends AnyTRPCRouter>(
   event: H3Event,
-  opts: TRPCEventHandlerOpts<TRouter>
+  opts: H3HandlerOptions<TRouter>
 ) {
-  const { req: request } = event.node
-  const url = getRequestURL(event)
-  const query = url.searchParams
+  const createContext: ResolveHTTPRequestOptionsContextFn<TRouter> = async (innerOpts) => {
+    return await opts.createContext?.(event, innerOpts)
+  }
+
+  const { req } = event.node
 
   // Get everything after /trpc/
   const parts = event.path.split('/trpc/')
+
   if (parts.length !== 2) {
     throw new TRPCError({ code: 'BAD_REQUEST', message: 'Invalid tRPC path' })
   }
 
-  // Return the procedure path
-  const router = opts.router
-  const path = parts[1].split('?')[0]
-  const req: Request = {
-    query,
-    method: request.method || 'GET',
-    headers: new Headers(request.headers as Record<string, string>),
-    body: isMethod(event, 'GET') ? null : await readBody(event),
+  // monkey-patch body to the IncomingMessage
+  if (event.method === 'POST') {
+    ;(req as any).body = await readBody(event)
   }
 
-  const { status, headers, body } = await resolveResponse({
-    router,
-    req,
-    path,
+  const httpResponse = await resolveResponse({
+    ...opts,
+    req: toWebRequest(event),
     error: null,
-    createContext: async () => opts.createContext?.(event),
-    // responseMeta: opts.responseMeta,
-    onError: (errorOpts) => {
-      opts.onError?.({ ...errorOpts, req })
+    createContext,
+    path: parts[1].split('?')[0],
+    onError(o) {
+      opts.onError?.({ ...o, req })
     },
   })
 
-  setResponseStatus(event, status)
-
-  if (headers) {
-    for (const [key, value] of headers.entries()) {
-      if (value) {
-        setHeader(event, key, value)
-      }
-    }
-  }
-
-  return body
+  return httpResponse
 }

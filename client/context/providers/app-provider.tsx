@@ -1,8 +1,7 @@
 import { useStore } from '@nanostores/react'
-import { QueryClientProvider } from '@tanstack/react-query'
 import consola from 'consola'
 import { NuqsAdapter } from 'nuqs/adapters/react'
-import { createContext, useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { createContext, useCallback, useEffect, useMemo, useRef } from 'react'
 import { CookiesProvider, useCookies } from 'react-cookie'
 import { ILoginResponse } from '~/api/auth/login.post'
 import { useApiClient } from '#/context/hooks/use-api-client'
@@ -12,8 +11,6 @@ import { defaultAuthStoreValues } from '#/context/stores/auth.store'
 import type { AuthStore } from '#/context/stores/auth.store'
 import { type Theme, saveUiState, uiStore } from '#/context/stores/ui.store'
 import { AUTH_COOKIE_NAME, COOKIE_OPTIONS } from '#/services/options'
-import { queryClient } from '#/services/query-client'
-import { createTrpcClient, trpc } from '#/services/trpc-client'
 import type { ApiResponse } from '#/services/types'
 
 type AppProviderProps = {
@@ -59,7 +56,6 @@ export default function AppProvider({
   const { current: apiClient } = useRef(useApiClient())
   const authState = useStore(authStore)
   const uiState = useStore(uiStore)
-  const [trpcClient] = useState(() => createTrpcClient())
 
   // Prevent concurrent login calls
   const loginLockRef = useRef(false)
@@ -174,9 +170,7 @@ export default function AppProvider({
     <CookiesProvider defaultSetOptions={COOKIE_OPTIONS}>
       <NuqsAdapter>
         <AppContext.Provider {...props} value={value}>
-          <trpc.Provider client={trpcClient} queryClient={queryClient}>
-            <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
-          </trpc.Provider>
+          {children}
         </AppContext.Provider>
       </NuqsAdapter>
     </CookiesProvider>

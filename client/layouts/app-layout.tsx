@@ -7,7 +7,7 @@ import { BreadcrumbSeparator } from '#/components/base-ui'
 import { SidebarInset, SidebarProvider } from '#/components/base-ui'
 import { useAuth } from '#/context/hooks/use-auth'
 import { useMenu } from '#/context/hooks/use-menu'
-import type { AppProviderState } from '#/context/provider'
+import type { AppProviderState } from '#/context/providers/app-provider'
 import { getBreadcrumbItems } from '#/utils/breadcrumb'
 import { clx } from '#/utils/helper'
 
