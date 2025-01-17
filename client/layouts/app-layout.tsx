@@ -12,7 +12,7 @@ import { getBreadcrumbItems } from '#/utils/breadcrumb'
 import { clx } from '#/utils/helper'
 
 import BoundaryError from '#/components/errors/boundary'
-import PageLoader from '#/components/loaders/page-loader'
+import AppLoader from '#/components/loaders/app-loader'
 import AppSidebar from './app-sidebar'
 import RootLayout from './root-layout'
 
@@ -58,7 +58,7 @@ export default function AppLayout() {
               </Breadcrumb>
             </header>
             <main className={clx('h-full flex-1 overflow-y-auto bg-background pt-14')}>
-              <Suspense fallback={<PageLoader />}>
+              <Suspense fallback={<AppLoader />}>
                 <Outlet context={{ user, logout } satisfies OutletContext} />
               </Suspense>
             </main>

@@ -1,6 +1,6 @@
 import { Suspense } from 'react'
 import { Outlet, useSearchParams } from 'react-router'
-import PageLoader from '#/components/loaders/page-loader'
+import AppLoader from '#/components/loaders/page-loader'
 import { ThemeSwitcher } from '#/components/theme'
 import { useAuth } from '#/context/hooks/use-auth'
 import { clx } from '#/utils/helper'
@@ -27,7 +27,7 @@ export default function AuthLayout() {
       <div className="absolute top-3 right-3 z-10 flex items-center">
         <ThemeSwitcher />
       </div>
-      <Suspense fallback={<PageLoader />}>
+      <Suspense fallback={<AppLoader />}>
         <Outlet />
       </Suspense>
     </div>

@@ -8,7 +8,7 @@ import ReactDOM from 'react-dom/client'
 import { ErrorBoundary } from 'react-error-boundary'
 import { BrowserRouter, useRoutes } from 'react-router'
 import BoundaryError from '#/components/errors/boundary'
-import PageLoader from '#/components/loaders/page-loader'
+import AppLoader from '#/components/loaders/app-loader'
 import AppProvider from '#/context/providers/app-provider'
 
 import appConfig from '~~/app.config'
@@ -35,7 +35,7 @@ ReactDOM.createRoot(rootElement).render(
       <BrowserRouter basename={appConfig.adminPath}>
         <TRPCProvider>
           <AppProvider defaultTheme="system">
-            <Suspense fallback={<PageLoader />}>
+            <Suspense fallback={<AppLoader />}>
               <AppRoutes />
             </Suspense>
             <ReactQueryDevtools
