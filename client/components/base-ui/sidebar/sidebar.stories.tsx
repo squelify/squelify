@@ -3,6 +3,7 @@ import * as Lucide from 'lucide-react'
 import { Breadcrumb, BreadcrumbPage, BreadcrumbSeparator } from '../breadcrumb/breadcrumb'
 import { BreadcrumbItem, BreadcrumbLink, BreadcrumbList } from '../breadcrumb/breadcrumb'
 import { Button } from '../button/button'
+import { Link } from '../link/link'
 import { Separator } from '../separator/separator'
 import { Sidebar, SidebarTrigger } from './sidebar'
 import { SidebarContent, SidebarInput, SidebarInset } from './sidebar-content'
@@ -101,10 +102,36 @@ export const Default: Story = {
               {items.map((item) => (
                 <SidebarMenuItem key={item.title}>
                   <SidebarMenuButton asChild>
-                    <a href={item.url}>
+                    <Link href={item.url} variant="nav">
                       <item.icon className="size-4" />
                       <span>{item.title}</span>
-                    </a>
+                    </Link>
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+              ))}
+            </SidebarMenu>
+          </SidebarGroupContent>
+        </SidebarGroup>
+      </SidebarContent>
+    </Sidebar>
+  ),
+}
+
+export const CollapsibleIcon: Story = {
+  render: () => (
+    <Sidebar variant="sidebar" collapsible="icon">
+      <SidebarContent>
+        <SidebarGroup>
+          <SidebarGroupLabel>Application</SidebarGroupLabel>
+          <SidebarGroupContent>
+            <SidebarMenu>
+              {items.map((item) => (
+                <SidebarMenuItem key={item.title}>
+                  <SidebarMenuButton asChild>
+                    <Link href={item.url} variant="nav">
+                      <item.icon className="size-4" />
+                      <span>{item.title}</span>
+                    </Link>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
               ))}
@@ -130,10 +157,10 @@ export const WithSearch: Story = {
               {items.map((item) => (
                 <SidebarMenuItem key={item.title}>
                   <SidebarMenuButton asChild>
-                    <a href={item.url}>
+                    <Link href={item.url} variant="nav">
                       <item.icon className="size-4" />
                       <span>{item.title}</span>
-                    </a>
+                    </Link>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
               ))}
@@ -156,10 +183,10 @@ export const WithFooter: Story = {
               {items.map((item) => (
                 <SidebarMenuItem key={item.title}>
                   <SidebarMenuButton asChild>
-                    <a href={item.url}>
+                    <Link href={item.url} variant="nav">
                       <item.icon className="size-4" />
                       <span>{item.title}</span>
-                    </a>
+                    </Link>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
               ))}

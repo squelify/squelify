@@ -9,11 +9,11 @@ export const UserSchema = z.object({
   lastName: z.string().nullable(),
   username: z
     .string()
-    .min(3, 'Username minimal 3 karakter')
-    .max(50, 'Username maksimal 50 karakter')
-    .regex(/^[a-z0-9_]+$/, 'Username hanya boleh mengandung huruf kecil, angka, dan underscore')
+    .min(4, 'Username must be at least 4 characters')
+    .max(50, 'Username must be a maximum of 50 characters')
+    .regex(/^[a-z0-9_]+$/, 'Usernames may only contain lowercase letters, numbers and underscores')
     .nullable(),
-  avatarUrl: z.string().url('URL avatar tidak valid').optional(),
+  avatarUrl: z.string().url('Invalid avatar URL').nullable(),
   isActive: z.number().min(0).max(1).default(1),
   createdAt: z.custom<ColumnType<number>>().optional(),
   updatedAt: z.custom<ColumnType<number | null>>().nullable(),

@@ -4,7 +4,7 @@ import { CartesianGrid, Line, LineChart, XAxis, YAxis } from 'recharts'
 import { ChartContainer, ChartTooltip, ChartTooltipContent } from './chart'
 
 const meta: Meta<typeof ChartContainer> = {
-  title: 'Basic Components/Chart',
+  title: 'Visualizations/Chart',
   component: ChartContainer,
 }
 

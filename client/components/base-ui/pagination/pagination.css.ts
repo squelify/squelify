@@ -9,7 +9,7 @@ export const paginationStyles = tv({
     previousIcon: 'size-4',
     next: 'gap-1 pr-2.5 hover:no-underline',
     nextIcon: 'size-4',
-    ellipsis: 'flex h-9 w-9 items-center justify-center',
+    ellipsis: 'flex size-9 items-center justify-center',
     ellipsisIcon: 'size-4',
   },
 })

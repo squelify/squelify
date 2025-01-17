@@ -1,6 +1,6 @@
 import { type DialogProps } from '@radix-ui/react-dialog'
 import { Command as CommandPrimitive } from 'cmdk'
-import { Search } from 'lucide-react'
+import * as Lucide from 'lucide-react'
 import * as React from 'react'
 import { Dialog, DialogContent } from '../dialog/dialog'
 import { ScrollArea } from '../scroll-area/scroll-area'
@@ -32,7 +32,7 @@ const CommandInput = React.forwardRef<
   const styles = commandStyles()
   return (
     <div className={styles.inputWrapper()} cmdk-input-wrapper="">
-      <Search className={styles.searchIcon()} />
+      <Lucide.Search className={styles.searchIcon()} strokeWidth={2} />
       <CommandPrimitive.Input ref={ref} className={styles.input({ className })} {...props} />
     </div>
   )

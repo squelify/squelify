@@ -1,6 +1,6 @@
 import './styles/fontface.css'
 import './styles/globals.css'
-import './styles/tokens.css'
+import './styles/colors.css'
 
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
 import React, { Suspense } from 'react'

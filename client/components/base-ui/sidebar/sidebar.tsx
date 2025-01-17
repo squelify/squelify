@@ -3,8 +3,10 @@ import * as React from 'react'
 import { clx } from '#/utils/helper'
 import { Button } from '../button/button'
 import { Sheet, SheetContent } from '../sheet/sheet'
-import { SIDEBAR_WIDTH_MOBILE } from './sidebar-constants'
 import { useSidebar } from './sidebar-provider'
+import { sidebarStyles } from './sidebar.css'
+
+const SIDEBAR_WIDTH_MOBILE = '18rem'
 
 const Sidebar = React.forwardRef<
   HTMLDivElement,
@@ -26,6 +28,7 @@ const Sidebar = React.forwardRef<
     ref
   ) => {
     const { isMobile, state, openMobile, setOpenMobile } = useSidebar()
+    // const styles = sidebarStyles()
 
     if (collapsible === 'none') {
       return (
@@ -107,13 +110,18 @@ const Sidebar = React.forwardRef<
     )
   }
 )
-Sidebar.displayName = 'Sidebar'
 
 const SidebarTrigger = React.forwardRef<
   React.ComponentRef<typeof Button>,
   React.ComponentProps<typeof Button>
 >(({ className, onClick, ...props }, ref) => {
   const { toggleSidebar, state } = useSidebar()
+  const styles = sidebarStyles()
+
+  const handleClick = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+    onClick?.(event)
+    toggleSidebar()
+  }
 
   return (
     <Button
@@ -121,11 +129,8 @@ const SidebarTrigger = React.forwardRef<
       data-sidebar="trigger"
       variant="ghost"
       size="icon"
-      className={clx('size-7', className)}
-      onClick={(event) => {
-        onClick?.(event)
-        toggleSidebar()
-      }}
+      className={styles.sidebarTriggerButton({ className })}
+      onClick={handleClick}
       {...props}
     >
       {state === 'expanded' ? <Lucide.PanelLeftClose /> : <Lucide.PanelLeftOpen />}
@@ -133,6 +138,8 @@ const SidebarTrigger = React.forwardRef<
     </Button>
   )
 })
+
+Sidebar.displayName = 'Sidebar'
 SidebarTrigger.displayName = 'SidebarTrigger'
 
 export { Sidebar, SidebarTrigger }

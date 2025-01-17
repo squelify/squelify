@@ -31,7 +31,7 @@ export const Default: Story = {
               Polyglot & enthusiastic developer, web artisan, lecturer, and Open Source enthusiast.
             </p>
             <div className="flex items-center pt-2">
-              <Lucide.Calendar className="mr-2 h-4 w-4 opacity-70" />{' '}
+              <Lucide.Calendar className="mr-2 size-4 opacity-70" />{' '}
               <span className="text-muted-foreground text-xs">Joined December 2021</span>
             </div>
           </div>
@@ -59,7 +59,7 @@ export const AlignStart: Story = {
               Polyglot & enthusiastic developer, web artisan, lecturer, and Open Source enthusiast.
             </p>
             <div className="flex items-center pt-2">
-              <Lucide.Calendar className="mr-2 h-4 w-4 opacity-70" />{' '}
+              <Lucide.Calendar className="mr-2 size-4 opacity-70" />{' '}
               <span className="text-muted-foreground text-xs">Joined December 2021</span>
             </div>
           </div>
@@ -87,7 +87,7 @@ export const AlignEnd: Story = {
               Polyglot & enthusiastic developer, web artisan, lecturer, and Open Source enthusiast.
             </p>
             <div className="flex items-center pt-2">
-              <Lucide.Calendar className="mr-2 h-4 w-4 opacity-70" />{' '}
+              <Lucide.Calendar className="mr-2 size-4 opacity-70" />{' '}
               <span className="text-muted-foreground text-xs">Joined December 2021</span>
             </div>
           </div>

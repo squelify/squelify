@@ -4,6 +4,7 @@ import { Input } from '../input/input'
 import { ScrollArea } from '../scroll-area/scroll-area'
 import { Separator } from '../separator/separator'
 import { useSidebar } from './sidebar-provider'
+import { type SidebarVariants, sidebarStyles } from './sidebar.css'
 
 const SidebarRail = React.forwardRef<HTMLButtonElement, React.ComponentProps<'button'>>(
   ({ className, ...props }, ref) => {
@@ -31,7 +32,6 @@ const SidebarRail = React.forwardRef<HTMLButtonElement, React.ComponentProps<'bu
     )
   }
 )
-SidebarRail.displayName = 'SidebarRail'
 
 const SidebarInset = React.forwardRef<HTMLDivElement, React.ComponentProps<'main'>>(
   ({ className, ...props }, ref) => {
@@ -48,7 +48,6 @@ const SidebarInset = React.forwardRef<HTMLDivElement, React.ComponentProps<'main
     )
   }
 )
-SidebarInset.displayName = 'SidebarInset'
 
 const SidebarInput = React.forwardRef<
   React.ComponentRef<typeof Input>,
@@ -67,8 +66,6 @@ const SidebarInput = React.forwardRef<
   )
 })
 
-SidebarInput.displayName = 'SidebarInput'
-
 const SidebarHeader = React.forwardRef<HTMLDivElement, React.ComponentProps<'div'>>(
   ({ className, ...props }, ref) => {
     return (
@@ -81,7 +78,6 @@ const SidebarHeader = React.forwardRef<HTMLDivElement, React.ComponentProps<'div
     )
   }
 )
-SidebarHeader.displayName = 'SidebarHeader'
 
 const SidebarFooter = React.forwardRef<HTMLDivElement, React.ComponentProps<'div'>>(
   ({ className, ...props }, ref) => {
@@ -95,7 +91,6 @@ const SidebarFooter = React.forwardRef<HTMLDivElement, React.ComponentProps<'div
     )
   }
 )
-SidebarFooter.displayName = 'SidebarFooter'
 
 const SidebarSeparator = React.forwardRef<
   React.ComponentRef<typeof Separator>,
@@ -110,7 +105,6 @@ const SidebarSeparator = React.forwardRef<
     />
   )
 })
-SidebarSeparator.displayName = 'SidebarSeparator'
 
 const SidebarContent = React.forwardRef<HTMLDivElement, React.ComponentProps<'div'>>(
   ({ className, ...props }, ref) => {
@@ -126,6 +120,13 @@ const SidebarContent = React.forwardRef<HTMLDivElement, React.ComponentProps<'di
     )
   }
 )
+
+SidebarRail.displayName = 'SidebarRail'
+SidebarInset.displayName = 'SidebarInset'
+SidebarInput.displayName = 'SidebarInput'
+SidebarHeader.displayName = 'SidebarHeader'
+SidebarFooter.displayName = 'SidebarFooter'
+SidebarSeparator.displayName = 'SidebarSeparator'
 SidebarContent.displayName = 'SidebarContent'
 
 export {

@@ -12,7 +12,7 @@ A composable, themeable and customizable sidebar component.
 #### `layouts/app-layout.tsx`
 
 ```tsx
-import { SidebarProvider, SidebarTrigger } from "#/components/base-ui"
+import { Link, SidebarProvider, SidebarTrigger } from "#/components/base-ui"
 import { AppSidebar } from "#/components/app-sidebar"
 
 export default function Layout({ children }: { children: React.ReactNode }) {
@@ -85,10 +85,10 @@ export function AppSidebar() {
               {items.map((item) => (
                 <SidebarMenuItem key={item.title}>
                   <SidebarMenuButton asChild>
-                    <a href={item.url}>
+                    <Link href={item.url} variant="nav">
                       <item.icon />
                       <span>{item.title}</span>
-                    </a>
+                    </Link>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
               ))}

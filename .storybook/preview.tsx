@@ -4,7 +4,7 @@ import { themes } from '@storybook/theming'
 import * as React from 'react'
 import { MemoryRouter } from 'react-router'
 import '../client/styles/globals.css'
-import '../client/styles/tokens.css'
+import '../client/styles/colors.css'
 
 const preview: Preview = {
   // Optional parameter to center the component in the Canvas.

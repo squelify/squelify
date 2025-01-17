@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react'
-import { Calculator, Calendar, CreditCard, Settings, Smile, User } from 'lucide-react'
+import * as Lucide from 'lucide-react'
 import * as React from 'react'
 import {
   Command,
@@ -29,32 +29,32 @@ export const Default: Story = {
         <CommandEmpty>No results found.</CommandEmpty>
         <CommandGroup heading="Suggestions">
           <CommandItem>
-            <Calendar className="mr-2 h-4 w-4" />
+            <Lucide.Calendar className="mr-2 size-4" strokeWidth={2} />
             <span>Calendar</span>
           </CommandItem>
           <CommandItem>
-            <Smile className="mr-2 h-4 w-4" />
+            <Lucide.Smile className="mr-2 size-4" strokeWidth={2} />
             <span>Search Emoji</span>
           </CommandItem>
           <CommandItem>
-            <Calculator className="mr-2 h-4 w-4" />
+            <Lucide.Calculator className="mr-2 size-4" strokeWidth={2} />
             <span>Calculator</span>
           </CommandItem>
         </CommandGroup>
         <CommandSeparator />
         <CommandGroup heading="Settings">
           <CommandItem>
-            <User className="mr-2 h-4 w-4" />
+            <Lucide.User className="mr-2 size-4" strokeWidth={2} />
             <span>Profile</span>
             <CommandShortcut>⌘P</CommandShortcut>
           </CommandItem>
           <CommandItem>
-            <CreditCard className="mr-2 h-4 w-4" />
+            <Lucide.CreditCard className="mr-2 size-4" strokeWidth={2} />
             <span>Billing</span>
             <CommandShortcut>⌘B</CommandShortcut>
           </CommandItem>
           <CommandItem>
-            <Settings className="mr-2 h-4 w-4" />
+            <Lucide.Settings className="mr-2 size-4" strokeWidth={2} />
             <span>Settings</span>
             <CommandShortcut>⌘S</CommandShortcut>
           </CommandItem>
@@ -93,32 +93,32 @@ export const WithTrigger: Story = {
             <CommandEmpty>No results found.</CommandEmpty>
             <CommandGroup heading="Suggestions">
               <CommandItem>
-                <Calendar className="mr-2 h-4 w-4" />
+                <Lucide.Calendar className="mr-2 size-4" strokeWidth={2} />
                 <span>Calendar</span>
               </CommandItem>
               <CommandItem>
-                <Smile className="mr-2 h-4 w-4" />
+                <Lucide.Smile className="mr-2 size-4" strokeWidth={2} />
                 <span>Search Emoji</span>
               </CommandItem>
               <CommandItem>
-                <Calculator className="mr-2 h-4 w-4" />
+                <Lucide.Calculator className="mr-2 size-4" strokeWidth={2} />
                 <span>Calculator</span>
               </CommandItem>
             </CommandGroup>
             <CommandSeparator />
             <CommandGroup heading="Settings">
               <CommandItem>
-                <User className="mr-2 h-4 w-4" />
+                <Lucide.User className="mr-2 size-4" strokeWidth={2} />
                 <span>Profile</span>
                 <CommandShortcut>⌘P</CommandShortcut>
               </CommandItem>
               <CommandItem>
-                <CreditCard className="mr-2 h-4 w-4" />
+                <Lucide.CreditCard className="mr-2 size-4" strokeWidth={2} />
                 <span>Billing</span>
                 <CommandShortcut>⌘B</CommandShortcut>
               </CommandItem>
               <CommandItem>
-                <Settings className="mr-2 h-4 w-4" />
+                <Lucide.Settings className="mr-2 size-4" strokeWidth={2} />
                 <span>Settings</span>
                 <CommandShortcut>⌘S</CommandShortcut>
               </CommandItem>

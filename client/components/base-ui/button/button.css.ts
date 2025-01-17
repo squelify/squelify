@@ -10,7 +10,8 @@ export const buttonStyles = tv({
   },
   variants: {
     variant: {
-      default: 'bg-primary text-primary-foreground shadow-sm hover:bg-primary/90',
+      default: 'bg-gray-900 text-white shadow-sm hover:bg-gray-900/90',
+      primary: 'bg-primary text-white shadow-sm hover:bg-primary/90',
       destructive: 'bg-destructive text-destructive-foreground shadow-xs hover:bg-destructive/90',
       outline:
         'border border-input bg-background shadow-xs hover:bg-accent hover:text-accent-foreground',
@@ -35,7 +36,7 @@ export const buttonStyles = tv({
       className: '[&>svg]:-ml-1 [&>svg]:size-4 [&>svg]:animate-spin',
     },
     {
-      variant: ['default', 'destructive', 'outline', 'secondary', 'ghost', 'link'],
+      variant: ['default', 'primary', 'secondary', 'outline', 'destructive', 'ghost', 'link'],
       isLoading: true,
       className: 'text-white/70',
     },
@@ -55,7 +56,7 @@ export const buttonStyles = tv({
       className: 'font-semibold tracking-wide',
     },
     {
-      variant: ['default', 'destructive', 'outline', 'secondary', 'ghost', 'link'],
+      variant: ['default', 'primary', 'secondary', 'outline', 'destructive', 'ghost', 'link'],
       size: ['lg'],
       className: 'shadow-md',
     },

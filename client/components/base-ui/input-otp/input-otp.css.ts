@@ -14,17 +14,17 @@ export const inputOtpStyles = tv({
   variants: {
     size: {
       sm: {
-        slot: 'h-7 w-7 text-xs',
+        slot: 'size-7 text-xs',
         caretBlink: 'h-3',
         separator: '[&>svg]:size-3',
       },
       default: {
-        slot: 'h-9 w-9 text-sm',
+        slot: 'size-9 text-sm',
         caretBlink: 'h-4',
         separator: '[&>svg]:size-4',
       },
       lg: {
-        slot: 'h-11 w-11 text-base',
+        slot: 'size-11 text-base',
         caretBlink: 'h-5',
         separator: '[&>svg]:size-5',
       },

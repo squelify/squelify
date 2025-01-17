@@ -33,7 +33,7 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
 
     const PasswordToggle = () => (
       <TooltipProvider>
-        <Tooltip>
+        <Tooltip delayDuration={150}>
           <TooltipTrigger asChild>
             <button type="button" onClick={togglePassword} className={styles.toggleButton()}>
               {showPassword ? (

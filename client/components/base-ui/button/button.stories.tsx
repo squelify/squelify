@@ -6,9 +6,10 @@ import type { ButtonVariants } from './button.css'
 
 const variantOptions: NonNullable<ButtonVariants['variant']>[] = [
   'default',
+  'primary',
+  'secondary',
   'destructive',
   'outline',
-  'secondary',
   'ghost',
   'link',
 ]
@@ -78,6 +79,9 @@ export const VariantShowcase: Story = {
   render: (args) => (
     <div className="flex flex-wrap items-center gap-4">
       <Button {...args}>Default</Button>
+      <Button {...args} variant="primary">
+        Primary
+      </Button>
       <Button {...args} variant="secondary">
         Secondary
       </Button>

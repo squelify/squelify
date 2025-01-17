@@ -48,9 +48,10 @@ export * from './scroll-area/scroll-area'
 export * from './select/select'
 export * from './separator/separator'
 export * from './sheet/sheet'
-export * from './sidebar'
 export * from './skeleton/skeleton'
 export * from './slider/slider'
+export * from './spinner/spinner'
+export * from './squircle/squircle'
 export * from './switch/switch'
 export * from './table/table'
 export * from './tabs/tabs'
@@ -61,30 +62,8 @@ export * from './toggle-group/toggle-group'
 export * from './toggle/toggle'
 export * from './tooltip/tooltip'
 
-// Advanced Components
-// export * from './clipboard/clipboard'
-// export * from './color-picker/color-picker'
-// export * from './date-picker/date-picker'
-// export * from './editable/editable'
-// export * from './field/field'
-// export * from './fieldset/fieldset'
-// export * from './file-upload/file-upload'
-// export * from './number-input/number-input'
-// export * from './pin-input/pin-input'
-// export * from './radio-button-group/radio-button-group'
-// export * from './rating-group/rating-group'
-// export * from './segment-group/segment-group'
-// export * from './spinner/spinner'
-// export * from './tags-input/tags-input'
-
-// export * from './tree-view/tree-view'
-
-// Extra Components
-// Combobox: The Combobox is built using a composition of the <Popover /> and the <Command /> components.
-// Data Table: Powerful table and datagrids built using TanStack Table.
-// Date Picker: A date picker component with range and presets.
-// Menubar: A visually persistent menu common in desktop applications that provides quick access to a consistent set of commands.
-// Navigation Menu: A collection of links for navigating websites.
+// Layout Components
+export * from './sidebar'
 
 // Visualizations
 export * from './chart/chart'

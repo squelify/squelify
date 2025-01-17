@@ -2,9 +2,8 @@ import { useStore } from '@nanostores/react'
 import * as React from 'react'
 import { useIsMobile } from '#/context/hooks/use-mobile'
 import { saveUiState, uiStore } from '#/context/stores/ui.store'
-import { clx } from '#/utils/helper'
 import { TooltipProvider } from '../tooltip/tooltip'
-import { SIDEBAR_KEYBOARD_SHORTCUT, SIDEBAR_WIDTH, SIDEBAR_WIDTH_ICON } from './sidebar-constants'
+import { sidebarStyles } from './sidebar.css'
 
 type SidebarContext = {
   state: 'expanded' | 'collapsed'
@@ -33,6 +32,7 @@ const SidebarProvider = React.forwardRef<
     defaultOpen?: boolean
     open?: boolean
     onOpenChange?: (open: boolean) => void
+    shortcutKey?: string
   }
 >(
   (
@@ -40,6 +40,7 @@ const SidebarProvider = React.forwardRef<
       defaultOpen = true,
       open: openProp,
       onOpenChange: setOpenProp,
+      shortcutKey = 'e',
       className,
       style,
       children,
@@ -50,6 +51,7 @@ const SidebarProvider = React.forwardRef<
     const isMobile = useIsMobile()
     const [openMobile, setOpenMobile] = React.useState(false)
     const uiState = useStore(uiStore)
+    const styles = sidebarStyles()
 
     // This is the internal state of the sidebar.
     // We use openProp and setOpenProp for control from outside the component.
@@ -78,11 +80,7 @@ const SidebarProvider = React.forwardRef<
     // Adds a keyboard shortcut to toggle the sidebar.
     React.useEffect(() => {
       const handleKeyDown = (event: KeyboardEvent) => {
-        if (
-          event.key === SIDEBAR_KEYBOARD_SHORTCUT &&
-          (event.metaKey || event.ctrlKey) &&
-          event.shiftKey
-        ) {
+        if (event.key === shortcutKey && (event.metaKey || event.ctrlKey) && event.shiftKey) {
           event.preventDefault()
           toggleSidebar()
         }
@@ -90,7 +88,7 @@ const SidebarProvider = React.forwardRef<
 
       window.addEventListener('keydown', handleKeyDown)
       return () => window.removeEventListener('keydown', handleKeyDown)
-    }, [toggleSidebar])
+    }, [toggleSidebar, shortcutKey])
 
     // We add a state so that we can do data-state="expanded" or "collapsed".
     // This makes it easier to style the sidebar with Tailwind classes.
@@ -113,17 +111,8 @@ const SidebarProvider = React.forwardRef<
       <SidebarContext.Provider value={contextValue}>
         <TooltipProvider delayDuration={0}>
           <div
-            style={
-              {
-                '--sidebar-width': SIDEBAR_WIDTH,
-                '--sidebar-width-icon': SIDEBAR_WIDTH_ICON,
-                ...style,
-              } as React.CSSProperties
-            }
-            className={clx(
-              'group/sidebar-wrapper flex min-h-svh w-full has-[[data-variant=inset]]:bg-sidebar',
-              className
-            )}
+            style={{ ...style } as React.CSSProperties}
+            className={styles.sidebarProvider({ className })}
             ref={ref}
             {...props}
           >
