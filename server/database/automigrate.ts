@@ -60,20 +60,20 @@ export async function getMigrationItems(): Promise<DatabaseMigration[]> {
       migration: await import('./migrations/202303012_create_permissions_table'),
     },
     {
-      name: '202303013_create_roles_table',
-      migration: await import('./migrations/202303013_create_roles_table'),
+      name: '202303013_create_organizations_table',
+      migration: await import('./migrations/202303013_create_organizations_table'),
     },
     {
-      name: '202303014_create_role_permissions_table',
-      migration: await import('./migrations/202303014_create_role_permissions_table'),
+      name: '202303014_create_roles_table',
+      migration: await import('./migrations/202303014_create_roles_table'),
     },
     {
       name: '202303015_create_user_roles_table',
       migration: await import('./migrations/202303015_create_user_roles_table'),
     },
     {
-      name: '202303016_create_organizations_table',
-      migration: await import('./migrations/202303016_create_organizations_table'),
+      name: '202303016_create_role_permissions_table',
+      migration: await import('./migrations/202303016_create_role_permissions_table'),
     },
     {
       name: '202303017_create_members_table',
