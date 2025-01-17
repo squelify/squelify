@@ -1,6 +1,6 @@
 @layer utilities {
     :root {
-        --background: oklch(96% 0.02 252);
+        --background: oklch(1 0 0);
         --foreground: oklch(25% 0.02 252);
         --primary: oklch(85% 0.2 95);
         --primary-foreground: oklch(25% 0.02 252);

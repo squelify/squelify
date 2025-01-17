@@ -11,15 +11,18 @@
         "**/build": true,
         "**/dist": true
     },
-    // "tailwindCSS.experimental.classRegex": [
-    //     // https://www.tailwind-variants.org/docs/getting-started#intellisense-setup-optional
-    //     ["([\"'`][^\"'`]*.*?[\"'`])", "[\"'`]([^\"'`]*).*?[\"'`]"],
-    //     "cn\\(([^)]*)\\)", // cn(xxx)
-    //     "clx\\(([^)]*)\\)", // clx(xxx)
-    //     "cx\\(([^)]*)\\)", // cx(xxx)
-    //     "tv\\(([^)]*)\\)" // cx(xxx)
-    // ],
-    "tailwindCSS.files.exclude": ["**/server/**", "vite.config.ts"],
+    "tailwindCSS.experimental.classRegex": [
+        // @ref: https://github.com/paolotiu/tailwind-intellisense-regex-list
+        ["(?:twMerge|twJoin)\\(([^;]*)[\\);]", "[`'\"`]([^'\"`;]*)[`'\"`]"],
+        ["classList={{([^;]*)}}", "\\s*?[\"'`]([^\"'`]*).*?:"],
+        ["clsx\\(.*?\\)(?!\\])", "(?:'|\"|`)([^\"'`]*)(?:'|\"|`)"],
+        ["cva\\(([^)]*)\\)", "[\"'`]([^\"'`]*).*?[\"'`]"],
+        ["tv\\(([^)]*)\\)", "{?\\s?[\\w].*:\\s*?[\"'`]([^\"'`]*).*?,?\\s?}?"],
+        "clx\\(([^)]*)\\)", // clx(xxx)
+        "cn\\(([^)]*)\\)", // cn(xxx)
+        "cx\\(([^)]*)\\)" // cx(xxx)
+    ],
+    "tailwindCSS.files.exclude": ["**/server/!(views)/**"],
     "[css]": {
         "editor.defaultFormatter": "biomejs.biome"
     },

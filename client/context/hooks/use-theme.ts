@@ -12,17 +12,26 @@ export const useTheme = () => {
 
 export const useThemeHandler = (theme: Theme) => {
   useEffect(() => {
-    const root = window.document.documentElement
-    root.classList.remove('light', 'dark')
+    const root = document.documentElement
 
-    if (theme === 'system') {
-      const systemTheme = window.matchMedia('(prefers-color-scheme: dark)').matches
-        ? 'dark'
-        : 'light'
-      root.classList.add(systemTheme)
+    // Update data-theme accordingly if user selects light or dark
+    if (theme !== 'system') {
+      root.dataset.theme = theme
       return
     }
 
-    root.classList.add(theme)
+    // For auto mode, we need to watch system preferences
+    const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)')
+
+    // Set initial theme based on system preference
+    root.dataset.theme = mediaQuery.matches ? 'dark' : 'light'
+
+    // Update theme when system preference changes
+    function handleChange(event: MediaQueryListEvent) {
+      root.dataset.theme = event.matches ? 'dark' : 'light'
+    }
+
+    mediaQuery.addEventListener('change', handleChange)
+    return () => mediaQuery.removeEventListener('change', handleChange)
   }, [theme])
 }

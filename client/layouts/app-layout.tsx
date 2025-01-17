@@ -57,7 +57,9 @@ export default function AppLayout() {
                 </BreadcrumbList>
               </Breadcrumb>
             </header>
-            <main className={clx('h-full flex-1 overflow-y-auto bg-background pt-14')}>
+            <main
+              className={clx('h-full flex-1 overflow-y-auto bg-gray-50 pt-14 dark:bg-background')}
+            >
               <Suspense fallback={<AppLoader />}>
                 <Outlet context={{ user, logout } satisfies OutletContext} />
               </Suspense>
