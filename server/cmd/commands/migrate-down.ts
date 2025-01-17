@@ -24,6 +24,8 @@ export default defineCommand({
     try {
       consola.log('🍀 Rolling back migration...')
       await runMigration('rollback')
+      consola.log('🍀 Migration rolled back!')
+      process.exit(0)
     } catch (error) {
       consola.error(error instanceof Error ? error.message : 'Unknown error occurred')
       process.exit(1)

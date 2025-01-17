@@ -24,6 +24,8 @@ export default defineCommand({
     try {
       consola.log('🍀 Running database migration...')
       await runMigration('migrate')
+      consola.log('🍀 Database migration completed!')
+      process.exit(0)
     } catch (error) {
       consola.error(error instanceof Error ? error.message : 'Unknown error occurred')
       process.exit(1)
