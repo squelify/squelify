@@ -1,5 +1,6 @@
 import { zodResolver } from '@hookform/resolvers/zod'
 import type { Meta, StoryObj } from '@storybook/react'
+import consola from 'consola'
 import { addDays, format } from 'date-fns'
 import * as Lucide from 'lucide-react'
 import * as React from 'react'
@@ -47,7 +48,7 @@ export const SimpleCalendar: StoryObj = {
         mode="single"
         selected={date}
         onSelect={setDate}
-        className="rounded-md border shadow"
+        className="w-full max-w-[250px] rounded-md border shadow"
       />
     )
   },
@@ -66,7 +67,7 @@ export const DatePickerWithForm: StoryObj = {
     })
 
     function onSubmit(data: z.infer<typeof FormSchema>) {
-      console.info(data)
+      consola.debug(data)
     }
 
     return (
