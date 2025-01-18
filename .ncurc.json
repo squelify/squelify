@@ -8,5 +8,5 @@
     "install": "always",
     "packageManager": "pnpm",
     "silent": false,
-    "reject": ["@tailwindcss/vite", "tailwindcss", "react-day-picker"]
+    "reject": ["@tailwindcss/vite", "tailwindcss"]
 }

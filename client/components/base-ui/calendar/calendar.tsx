@@ -1,64 +1,61 @@
 // TODO: refactor (https://github.com/huybuidac/shadcn-datetime-picker)
 
 import * as Lucide from 'lucide-react'
-import {
-  DayPicker,
-  type DayPickerDefaultProps,
-  type DayPickerMultipleProps,
-  type DayPickerRangeProps,
-  type DayPickerSingleProps,
-} from 'react-day-picker'
+import { DayPicker } from 'react-day-picker'
+import type { DayPickerProps } from 'react-day-picker'
 import { clx } from '#/utils/helper'
 import { calendarStyles } from './calendar.css'
 
-export type CalendarProps =
-  | DayPickerDefaultProps
-  | DayPickerSingleProps
-  | DayPickerRangeProps
-  | DayPickerMultipleProps
+export type CalendarProps = {
+  timezone?: string
+} & DayPickerProps
 
-function Calendar({ className, classNames, showOutsideDays = true, ...props }: CalendarProps) {
+function Calendar({
+  className,
+  classNames,
+  showOutsideDays = true,
+  timezone,
+  ...props
+}: CalendarProps) {
   const styles = calendarStyles()
-
   return (
     <DayPicker
+      timeZone={timezone}
       showOutsideDays={showOutsideDays}
-      className={clx(styles.base(), className)}
+      className={styles.root({ className })}
       classNames={{
+        root: styles.root(),
         months: styles.months(),
         month: styles.month(),
-        caption: styles.caption(),
+        month_caption: styles.month_caption(),
         caption_label: styles.caption_label(),
         nav: styles.nav(),
-        nav_button: styles.nav_button(),
-        nav_button_previous: styles.nav_button_previous(),
-        nav_button_next: styles.nav_button_next(),
-        table: styles.table(),
-        head_row: styles.head_row(),
-        head_cell: styles.head_cell(),
-        row: styles.row(),
-        cell: clx(
+        button_previous: styles.button_previous(),
+        button_next: styles.button_next(),
+        month_grid: styles.month_grid(),
+        weekdays: styles.weekdays(),
+        weekday: styles.weekday(),
+        week: styles.week(),
+        day: clx(
           styles.cell(),
           props.mode === 'range' ? styles.cell_range() : styles.cell_single()
         ),
-        day: styles.day(),
-        day_range_start: styles.day_range_start(),
-        day_range_end: styles.day_range_end(),
-        day_selected: styles.day_selected(),
-        day_today: styles.day_today(),
-        day_outside: styles.day_outside(),
-        day_disabled: styles.day_disabled(),
-        day_range_middle: styles.day_range_middle(),
-        day_hidden: styles.day_hidden(),
+        day_button: styles.day_button(),
+        range_start: styles.range_start(),
+        range_end: styles.range_end(),
+        selected: styles.selected(),
+        today: styles.today(),
+        outside: styles.outside(),
+        disabled: styles.disabled(),
+        range_middle: styles.range_middle(),
+        hidden: styles.hidden(),
         ...classNames,
       }}
       components={{
-        IconLeft: ({ className }) => (
-          <Lucide.ChevronLeft className={clx(styles.icon(), className)} />
-        ),
-        IconRight: ({ className }) => (
-          <Lucide.ChevronRight className={clx(styles.icon(), className)} />
-        ),
+        Chevron: ({ orientation, ...props }) => {
+          const Icon = orientation === 'left' ? Lucide.ChevronLeft : Lucide.ChevronRight
+          return <Icon className={clx(styles.icon(), props.className)} />
+        },
       }}
       {...props}
     />
