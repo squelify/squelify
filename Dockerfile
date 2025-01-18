@@ -4,7 +4,7 @@
 ARG PLATFORM=linux/amd64
 ARG NODE_VERSION=20
 
-FROM busybox:1.37-uclibc as busybox
+FROM busybox:1.37-glibc as glibc
 
 # -----------------------------------------------------------------------------
 # Base image with pnpm package manager.
@@ -16,9 +16,9 @@ RUN corepack enable && corepack prepare pnpm@latest-9 --activate
 WORKDIR /srv
 
 # -----------------------------------------------------------------------------
-# Install dependencies and some toolchains.
+# Install dependencies and build the application.
 # -----------------------------------------------------------------------------
-FROM base AS installer
+FROM base AS builder
 
 # Install system dependencies.
 RUN apt-get update && apt-get -yqq install tini
@@ -31,16 +31,17 @@ RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install \
     --ignore-scripts && pnpm prepare && NODE_ENV=production pnpm build
 
 # -----------------------------------------------------------------------------
-# Compile the application and install production only dependencies.
+# Cleanup the pruner stage and create data directory.
 # -----------------------------------------------------------------------------
-FROM base AS builder
+FROM base AS pruner
 
-# Copy output files and config file from the installer stage.
-COPY --from=installer /srv/ecosystem.json /srv/ecosystem.json
-COPY --from=installer /srv/.output /srv
+# Copy output files and config file from the builder stage.
+COPY --from=builder /srv/ecosystem.json /srv/ecosystem.json
+COPY --from=builder /srv/.output /srv
 
 # Create the data directory and set permissions.
-RUN mkdir -p /srv/_data/{migrations,functions} && chmod -R 0775 /srv/_data
+RUN mkdir -p /srv/_data/{backup,functions,migrations,public_html}
+RUN chmod -R 0775 /srv/_data
 
 # -----------------------------------------------------------------------------
 # Production image, copy build output files and run the application.
@@ -87,18 +88,18 @@ ENV DATABASE_MODE=$DATABASE_MODE \
 
 # ----- Read application environment variables --------------------------------
 
-# Copy the build output files from the builder stage.
-COPY --chown=nonroot:nonroot --from=builder /srv /srv
+# Copy the build output files from the pruner stage.
+COPY --chown=nonroot:nonroot --from=pruner /srv /srv
 
 # Copy some necessary system utilities from previous stage.
 # To enhance security, consider avoiding the copying of sysutils.
-COPY --from=installer /usr/bin/tini /usr/bin/tini
-COPY --from=busybox /bin/clear /bin/clear
-COPY --from=busybox /bin/mkdir /bin/mkdir
-COPY --from=busybox /bin/which /bin/which
-COPY --from=busybox /bin/cat /bin/cat
-COPY --from=busybox /bin/ls /bin/ls
-COPY --from=busybox /bin/sh /bin/sh
+COPY --from=builder /usr/bin/tini /usr/bin/tini
+COPY --from=glibc /bin/clear /bin/clear
+COPY --from=glibc /bin/mkdir /bin/mkdir
+COPY --from=glibc /bin/which /bin/which
+COPY --from=glibc /bin/cat /bin/cat
+COPY --from=glibc /bin/ls /bin/ls
+COPY --from=glibc /bin/sh /bin/sh
 
 # Define the host and port to listen on.
 ARG NODE_ENV=production HOST=0.0.0.0 PORT=3278
