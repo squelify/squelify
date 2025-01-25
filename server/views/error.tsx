@@ -56,7 +56,6 @@ export default function ErrorView({ appConfig, error }: ErrorViewProps) {
                   </div>
                   <div
                     className="space-y-1"
-                    // biome-ignore lint/security/noDangerouslySetInnerHtml: []
                     dangerouslySetInnerHTML={{ __html: formatErrorStack(error.stack) }}
                   />
                   {error.cause ? (

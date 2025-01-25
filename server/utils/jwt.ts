@@ -38,6 +38,7 @@ export interface JWTPayload {
   org_id?: string // Active organization context
   roles?: string[] // User roles
   perms?: string[] // User permissions
+  locale?: string // User locale
 }
 
 const TOKEN_MAX_AGE = '15m' // 15 minutes

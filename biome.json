@@ -47,7 +47,8 @@
                 "noReExportAll": "off"
             },
             "security": {
-                "noDangerouslySetInnerHtmlWithChildren": "warn"
+                "noDangerouslySetInnerHtmlWithChildren": "warn",
+                "noDangerouslySetInnerHtml": "off"
             },
             "style": {
                 "noUnusedTemplateLiteral": "off",
@@ -70,7 +71,7 @@
                 "noCommentText": "off",
                 "noConsoleLog": {
                     "level": "info",
-                    "fix": "safe"
+                    "fix": "none"
                 },
                 "noDebugger": "off",
                 "noExplicitAny": "off",

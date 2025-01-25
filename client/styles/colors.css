@@ -6,7 +6,7 @@
         --primary-foreground: oklch(25% 0.02 252);
         --secondary: oklch(94% 0.02 252);
         --secondary-foreground: oklch(25% 0.02 252);
-        --destructive: oklch(65% 0.25 25);
+        --destructive: oklch(0.589 0.199 27.84);
         --destructive-foreground: oklch(96% 0.02 252);
         --card: oklch(100% 0 0);
         --card-foreground: oklch(25% 0.02 252);
@@ -19,6 +19,8 @@
         --border: oklch(90% 0.02 252);
         --input: oklch(90% 0.02 252);
         --ring: oklch(85% 0.2 95);
+
+        /* Sidebar Colors */
         --sidebar-background: oklch(100% 0 0);
         --sidebar-foreground: oklch(25% 0.02 252);
         --sidebar-primary: oklch(85% 0.2 95);
@@ -65,6 +67,8 @@
             --border: oklch(32% 0.02 252);
             --input: oklch(30% 0.02 252);
             --ring: oklch(85% 0.2 95);
+
+            /* Sidebar Colors */
             --sidebar-background: oklch(22% 0.02 252);
             --sidebar-foreground: oklch(96% 0.01 252);
             --sidebar-primary: oklch(85% 0.2 95);

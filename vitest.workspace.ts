@@ -1,3 +1,4 @@
+import { resolve } from 'pathe'
 import { loadEnv } from 'vite'
 import { defineWorkspace } from 'vitest/config'
 
@@ -17,6 +18,7 @@ export default defineWorkspace([
     test: {
       name: 'server',
       environment: 'node',
+      alias: { '~': resolve('server'), '~~': resolve('.') },
       include: ['./tests/server/**/*.{test,spec}.ts'],
     },
   },

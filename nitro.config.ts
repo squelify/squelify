@@ -14,7 +14,7 @@ import appConfig from './app.config'
 import pkg from './package.json' assert { type: 'json' }
 
 export default defineNitroConfig({
-  compatibilityDate: '2025-01-14',
+  compatibilityDate: '2025-01-23',
   preset: 'node-server',
   serveStatic: 'node',
   srcDir: 'server',
