@@ -5,6 +5,7 @@ import InternalError from '#/components/errors/500'
 
 // Lazy load the components for better performance
 const AuthLayout = lazy(() => import('#/layouts/auth-layout'))
+const Installer = lazy(() => import('#/pages/installer/page'))
 const ForgotPassword = lazy(() => import('#/pages/auth/password/forgot'))
 const ResetPassword = lazy(() => import('#/pages/auth/password/reset'))
 const SignIn = lazy(() => import('#/pages/auth/login'))
@@ -12,6 +13,7 @@ const SignUp = lazy(() => import('#/pages/auth/signup'))
 
 export const publicRoutes: RouteObject[] = [
   { path: '/', element: <Navigate to="dashboard" replace /> },
+  { path: 'installer', element: <Installer /> },
   {
     element: <AuthLayout />,
     children: [

@@ -231,7 +231,10 @@ export default defineEventHandler(async (event) => {
     if (error instanceof H3Error) {
       const err = error.data.errors[0]
       const errorMessage = `${err.message} (${err.path.join(', ')})`
-      return sendRedirect(event, `/installer?error=${encodeURIComponent(errorMessage)}`)
+      return sendRedirect(
+        event,
+        `/admin/installer?token=1234567890?error=${encodeURIComponent(errorMessage)}`
+      )
     }
 
     if (error instanceof ZodError) {

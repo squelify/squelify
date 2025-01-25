@@ -19,16 +19,9 @@ export default function BaseLayout({ children, csrfToken, title, cssLinks }: Bas
         {cssLinks?.map((link) => (
           <link key={link} rel="stylesheet" href={`/${link}`} />
         ))}
-        <script src="/installer.js" defer />
         <title>{title}</title>
       </head>
       <body>{children}</body>
-      <script
-        src="https://unpkg.com/htmx.org@2.0.4"
-        integrity="sha384-HGfztofotfshcF7+8n44JQL2oJmowVChPTg48S+jvZoztPfvwD79OC/LTtG6dMp+"
-        crossOrigin="anonymous"
-        defer
-      />
     </html>
   )
 }

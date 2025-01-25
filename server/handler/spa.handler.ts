@@ -28,7 +28,7 @@ export async function handleSPAClient(event: H3Event, options: SPAClientOptions)
 
   // Redirect to installer if not installed
   if (!isInstalled) {
-    return sendRedirect(event, '/installer', 302)
+    return sendRedirect(event, '/admin/installer?token=1234567890', 302)
   }
 
   // Check existing CSRF token
