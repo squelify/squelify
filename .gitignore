@@ -6,6 +6,7 @@
 /.cache
 /.output
 /.husky
+/.temp
 .pnp.js
 .DS_Store
 .DS_Store?
@@ -19,13 +20,11 @@ $RECYCLE.BIN/
 !.vscode/extensions.json
 !.vscode/settings.json
 !.vscode/launch.json
-
 *.bak
 
 # SQLite
 *.sqlite*
 *.sqlite3*
-*.libsql
 *.db
 
 # Nitro
@@ -67,15 +66,16 @@ compose.env*
 
 # Storybook
 *storybook.log
-/storybook-static/
+storybook-static/
 
 # fly.io
 fly*.toml*
 !fly*.example.toml
 
 # Miscellaneous
-slim.report.json
+pnpm-exec-summary.json
 RELEASE_NOTE.md
+slim.report.json
 .unikraft/
 
 # Terraform

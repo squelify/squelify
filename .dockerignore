@@ -8,6 +8,7 @@ _data/
 .cache
 .github
 .husky
+.temp
 .unikraft
 .vscode
 .DS_Store
@@ -20,7 +21,6 @@ node_modules
 npm-debug.log
 slim.report.json
 playwright-report/
-storybook-static/
 tests-results/
 /public/build
 .playwright/
@@ -28,7 +28,6 @@ tests-results/
 .gitignore
 *.sqlite*
 *.sqlite3*
-*.libsql*
 *.db*
 *.log
 *.md

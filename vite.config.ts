@@ -57,10 +57,10 @@ export default defineConfig({
   },
   customLogger: !isTest
     ? ({
-        info: (msg: string) => consola.info(msg),
-        warn: (msg: string) => consola.warn(msg),
-        warnOnce: (msg: string) => consola.warn(msg),
-        error: (msg: string) => consola.error(msg),
+        info: (msg: string) => consola.withTag('vite').info(msg),
+        warn: (msg: string) => consola.withTag('vite').warn(msg),
+        warnOnce: (msg: string) => consola.withTag('vite').warn(msg),
+        error: (msg: string) => consola.withTag('vite').error(msg),
         clearScreen: () => {},
         hasErrorLogged: () => true,
         hasWarned: false,

@@ -1,4 +1,4 @@
-import { promises as fs } from 'node:fs'
+import { globby } from 'globby'
 import type { Migration, MigrationProvider } from 'kysely'
 import { join, resolve } from 'pathe'
 import { env } from 'std-env'
@@ -26,9 +26,12 @@ export default class SquelifyMigrator implements MigrationProvider {
   }
 
   async getMigrations(): Promise<Record<string, Migration>> {
+    // ESM File Migration mode
     if (!this.shouldAutoMigrate) {
-      // ESM File Migration mode
-      const files = await fs.readdir(this.resolvedPath)
+      const files = await globby('**/*.ts', {
+        cwd: this.resolvedPath,
+      })
+
       return Object.fromEntries(
         await Promise.all(
           files

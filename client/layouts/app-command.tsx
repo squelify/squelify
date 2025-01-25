@@ -26,7 +26,7 @@ export default function AppCommand({ logout }: { logout: () => void }) {
         className="flex w-full select-none justify-between rounded-lg border border-input bg-background/10 py-1.5 pr-2 pl-2.5 text-muted-foreground text-xs shadow-none transition-colors hover:bg-secondary/60"
         variant="secondary"
       >
-        <span>Open command</span>
+        <span>Quick Action</span>
         <kbd className="pointer-events-none inline-flex h-5 select-none items-center gap-1 rounded-sm border bg-muted px-1.5 font-medium font-mono text-[10px] text-muted-foreground opacity-100">
           <span className="text-xs">⌘</span>K
         </kbd>

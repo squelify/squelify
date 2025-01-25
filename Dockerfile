@@ -21,10 +21,10 @@ WORKDIR /srv
 FROM base AS builder
 
 # Install system dependencies.
-RUN apt-get update && apt-get -yqq install tini
+RUN apt-get update && apt-get -yqq --no-install-recommends install tini
 
 # Copy the source files
-COPY --chown=node:node . .
+COPY --link --chown=node:node . .
 
 # Install dependencies and build the application.
 RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install \
@@ -46,7 +46,7 @@ RUN chmod -R 0775 /srv/_data
 # -----------------------------------------------------------------------------
 # Production image, copy build output files and run the application.
 # -----------------------------------------------------------------------------
-FROM --platform=${PLATFORM} gcr.io/distroless/nodejs20-debian12 AS runner
+FROM --platform=${PLATFORM} gcr.io/distroless/nodejs${NODE_VERSION}-debian12 AS runner
 LABEL org.opencontainers.image.source="https://github.com/squelify/squelify"
 
 # ----- Read application environment variables --------------------------------

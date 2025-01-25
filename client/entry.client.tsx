@@ -3,18 +3,30 @@ import './styles/globals.css'
 import './styles/colors.css'
 
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
+import consola from 'consola'
 import React, { Suspense } from 'react'
 import ReactDOM from 'react-dom/client'
 import { ErrorBoundary } from 'react-error-boundary'
 import { BrowserRouter, useRoutes } from 'react-router'
+import appConfig from '~~/app.config'
+import pkg from '~~/package.json'
 import BoundaryError from '#/components/errors/boundary'
 import AppLoader from '#/components/loaders/app-loader'
 import AppProvider from '#/context/providers/app-provider'
-
-import appConfig from '~~/app.config'
 import { protectedRoutes } from '#/routes/protected'
 import { catchAllRoute, publicRoutes } from '#/routes/public'
 import TRPCProvider from './context/providers/trpc-provider'
+
+if (import.meta.env.PROD) {
+  consola.log(
+    `%cWelcome to ${appConfig.title}!%c\n
+Does this page need fixes or improvements? ${String.fromCodePoint(0x1f91d)} We like your curiosity!
+Help us improve ${appConfig.title} by joining the team: ${pkg.homepage}
+`,
+    'padding-top: 0.5em; font-size: 2em;',
+    'padding-bottom: 0.5em;'
+  )
+}
 
 // The root element for the app.
 const rootElement = document.getElementById('root')

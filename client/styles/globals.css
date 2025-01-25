@@ -2,7 +2,7 @@
 
 @import "tailwindcss";
 @plugin "tailwindcss-animate";
-@variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
+@variant dark (&:where([data-theme="dark"] *));
 @source "../../server/views";
 
 @theme {

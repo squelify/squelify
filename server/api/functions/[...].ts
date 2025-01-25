@@ -1,15 +1,14 @@
 import { existsSync } from 'node:fs'
-import { readdir } from 'node:fs/promises'
+import { globby } from 'globby'
 import { createError, defineEventHandler, setCookie } from 'h3'
 import { getCookie, getHeaders, getQuery, readBody } from 'h3'
-import { parse, relative, resolve } from 'pathe'
+import { parse, resolve } from 'pathe'
 import { createRouter } from 'radix3'
 import { libSQLClient } from '~/database/db.client'
 import { createRateLimit, getRateLimitInfo } from '~/database/repository/rate_limit.repo'
 import { DURATION } from '~/utils/datetime'
 import { createErrorResponse, createSuccessResponse, getClientInfo } from '~/utils/http'
 
-const ALLOWED_EXTENSIONS = ['.mjs', '.js']
 const FUNCTION_TIMEOUT = 30 * 1000 // 30 seconds (in milliseconds)
 const HTTP_METHODS = ['get', 'post', 'put', 'patch', 'delete'] as const
 type HttpMethod = (typeof HTTP_METHODS)[number]
@@ -80,29 +79,6 @@ function parseFileName(fileName: string): { routeName: string; method: HttpMetho
   }
 }
 
-async function scanFunctionsDir(dir: string, baseDir: string): Promise<string[]> {
-  const entries = await readdir(dir, { withFileTypes: true })
-  const files: string[] = []
-
-  for (const entry of entries) {
-    const fullPath = resolve(dir, entry.name)
-    const relativePath = relative(baseDir, fullPath)
-
-    if (entry.isDirectory()) {
-      const subFiles = await scanFunctionsDir(fullPath, baseDir)
-      files.push(...subFiles)
-    } else {
-      const { ext } = parse(entry.name)
-      if (ALLOWED_EXTENSIONS.includes(ext)) {
-        files.push(relativePath)
-        logger.debug('[functions:scan]', `Found function: ${relativePath}`)
-      }
-    }
-  }
-
-  return files
-}
-
 export default defineEventHandler(async (event) => {
   const url = event.path
   const { db } = event.context
@@ -155,7 +131,13 @@ export default defineEventHandler(async (event) => {
       return
     }
 
-    const files = await scanFunctionsDir(functionsDir, functionsDir)
+    // Read all files in the functions directory
+    // Only read files with .js or .mjs extensions
+    const files = await globby('**/*.{mjs,js}', {
+      onlyFiles: true,
+      cwd: functionsDir,
+    })
+
     if (files.length === 0) {
       logger.info('[functions]', 'No user functions files found')
       return

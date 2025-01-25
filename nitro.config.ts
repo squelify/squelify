@@ -43,12 +43,12 @@ export default defineNitroConfig({
 
   hooks: {
     'rollup:before': async (nitro, _config) => {
-      consola.info('Creating data directory...')
+      consola.withTag('nitro').info('Creating data directory...')
       await makeDirectory(resolve('_data'), { mode: 0o755 })
 
       if (!nitro.options.dev) {
-        consola.info('Building frontend application...')
-        await vite().then(() => consola.success('Frontend application built!'))
+        consola.withTag('nitro').info('Building frontend application...')
+        await vite().then(() => consola.withTag('nitro').success('Frontend application built!'))
       }
     },
   },
