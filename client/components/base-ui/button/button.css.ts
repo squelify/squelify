@@ -34,7 +34,7 @@ export const buttonStyles = tv({
     {
       isLoading: true,
       className:
-        '[&>svg]:-ml-1 [&>svg]:motion-preset-spin [&>svg]:motion-duration-1000 [&>svg]:size-4',
+        '[&>svg]:-ml-1 [&>svg]:motion-safe:motion-preset-spin [&>svg]:motion-safe:motion-duration-1000 [&>svg]:size-4',
     },
     {
       variant: ['default', 'primary', 'secondary', 'outline', 'destructive', 'ghost', 'link'],

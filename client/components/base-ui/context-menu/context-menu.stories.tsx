@@ -66,7 +66,7 @@ export const Default: Story = {
           <ContextMenuLabel inset>People</ContextMenuLabel>
           <ContextMenuSeparator />
           <ContextMenuRadioItem value="pedro">Aris Ripandi</ContextMenuRadioItem>
-          <ContextMenuRadioItem value="colm">Colm Tuite</ContextMenuRadioItem>
+          <ContextMenuRadioItem value="colm">Tom Cruise</ContextMenuRadioItem>
         </ContextMenuRadioGroup>
       </ContextMenuContent>
     </ContextMenu>

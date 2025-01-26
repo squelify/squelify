@@ -15,6 +15,9 @@ import {
 
 const meta: Meta<typeof Dialog> = {
   title: 'Basic Components/Dialog',
+  parameters: {
+    layout: 'centered',
+  },
   component: Dialog,
 }
 
