@@ -13,7 +13,7 @@ interface SettingsTab {
 
 const SETTINGS_TABS: SettingsTab[] = [
   { label: 'General', value: 'general', href: '/settings/general' },
-  { label: 'Authentication', value: 'auth', href: '/settings/auth' },
+  { label: 'Authentication', value: 'authentication', href: '/settings/authentication' },
   { label: 'Email', value: 'email', href: '/settings/email' },
   { label: 'Storage', value: 'storage', href: '/settings/storage' },
   { label: 'Backup', value: 'backup', href: '/settings/backup' },
@@ -39,7 +39,7 @@ export default function SettingsLayout() {
         <Separator className="my-6" />
 
         <Tabs value={activeSection} defaultValue={activeSection} className="space-y-6">
-          <TabsList className="w-full justify-start overflow-x-auto">
+          <TabsList className="w-full justify-start gap-2 overflow-x-auto">
             {SETTINGS_TABS.map((tab) => (
               <TabsTrigger key={tab.value} value={tab.value} asChild>
                 <Link href={tab.href}>{tab.label}</Link>

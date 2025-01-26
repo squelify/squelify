@@ -24,7 +24,7 @@ export default function Page() {
   )
 
   return (
-    <TabsContent value="auth" tabIndex={-1}>
+    <TabsContent value="authentication" tabIndex={-1}>
       <Card>
         <CardHeader className="md:px-10">
           <div className="flex items-center justify-between">

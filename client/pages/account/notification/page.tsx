@@ -7,7 +7,7 @@ export default function Page() {
   useSEOMeta('Notification')
 
   return (
-    <TabsContent value="notifications">
+    <TabsContent value="notification">
       <Card>
         <CardHeader className="space-y-1">
           <CardTitle>Notification Preferences</CardTitle>

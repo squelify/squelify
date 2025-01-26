@@ -28,7 +28,7 @@ const CollapsedMenuItem = ({ item, isActive }: MenuItemProps) => (
     <TooltipTrigger asChild>
       <SidebarMenuButton className={clx(isActive && 'bg-accent text-accent-foreground')} asChild>
         <Link href={item.url}>
-          <item.icon className={clx(isActive && 'bg-accent text-brand-500')} strokeWidth={1.8} />
+          <item.icon className={clx(isActive && 'bg-accent text-primary')} strokeWidth={1.8} />
           <span>{item.title}</span>
         </Link>
       </SidebarMenuButton>
@@ -42,7 +42,7 @@ const CollapsedMenuItem = ({ item, isActive }: MenuItemProps) => (
 const ExpandedMenuItem = ({ item, isActive }: MenuItemProps) => (
   <SidebarMenuButton className={clx(isActive && 'bg-accent text-accent-foreground')} asChild>
     <Link href={item.url}>
-      <item.icon className={clx(isActive && 'bg-accent text-brand-500')} strokeWidth={1.8} />
+      <item.icon className={clx(isActive && 'bg-accent text-primary')} strokeWidth={1.8} />
       <span>{item.title}</span>
     </Link>
   </SidebarMenuButton>

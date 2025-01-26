@@ -1,6 +1,5 @@
-import { useQueryState } from 'nuqs'
 import { Suspense } from 'react'
-import { Outlet } from 'react-router'
+import { Link, Outlet, useLocation } from 'react-router'
 import { Separator, Tabs, TabsList, TabsTrigger } from '#/components/base-ui'
 import PageLoader from '#/components/loaders/page-loader'
 import { useSEOMeta } from '#/context/hooks/use-seo-meta'
@@ -11,18 +10,18 @@ interface AccountSettingsTab {
 }
 
 const ACCOUNT_TABS: AccountSettingsTab[] = [
-  { label: 'General', value: 'general' },
+  { label: 'Profile', value: 'profile' },
   { label: 'Security', value: 'security' },
-  { label: 'Notifications', value: 'notifications' },
+  { label: 'Notifications', value: 'notification' },
   { label: 'Login History', value: 'login-history' },
 ]
 
 export default function AccountLayout() {
   const { pageTitle } = useSEOMeta('Account Settings')
+  const location = useLocation()
 
-  // Extract the active section from the query parameter
-  const [activeTab, setActiveTab] = useQueryState('activeTab')
-  const activeSection = activeTab || 'general'
+  // Extract the active section from the path
+  const activeSection = location.pathname.split('/account/')[1] || 'profile'
 
   return (
     <div className="mx-auto w-full max-w-3xl space-y-6 p-4 md:p-6 lg:p-8">
@@ -38,8 +37,8 @@ export default function AccountLayout() {
       <Tabs value={activeSection} defaultValue={activeSection} className="space-y-4">
         <TabsList className="grid w-full grid-cols-4">
           {ACCOUNT_TABS.map((tab) => (
-            <TabsTrigger key={tab.value} value={tab.value} onClick={() => setActiveTab(tab.value)}>
-              {tab.label}
+            <TabsTrigger key={tab.value} value={tab.value} asChild>
+              <Link to={tab.value}>{tab.label}</Link>
             </TabsTrigger>
           ))}
         </TabsList>

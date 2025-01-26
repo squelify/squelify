@@ -8,7 +8,7 @@ export const contextMenuStyles = tv({
       'data-[state=open]:bg-accent data-[state=open]:text-accent-foreground',
     ],
     content: [
-      'z-50 min-w-[8rem] overflow-hidden rounded-md border bg-popover p-1 text-popover-foreground shadow-md',
+      'z-50 min-w-[8rem] overflow-hidden rounded-md border bg-popover p-1 text-popover-foreground shadow-sm',
       'data-[state=open]:fade-in-0 data-[state=open]:zoom-in-95 data-[state=open]:animate-in',
       'data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95 data-[state=closed]:animate-out',
       'data-[side=bottom]:slide-in-from-top-2 data-[side=top]:slide-in-from-bottom-2',

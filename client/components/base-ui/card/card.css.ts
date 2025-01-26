@@ -2,7 +2,7 @@ import { type VariantProps, tv } from 'tailwind-variants'
 
 export const cardStyles = tv({
   slots: {
-    base: 'rounded-lg border bg-card text-card-foreground shadow-sm',
+    base: 'rounded-xl border bg-card text-card-foreground shadow-xs',
     header: 'flex flex-col space-y-1.5 p-6',
     title: 'font-semibold leading-none tracking-tight',
     description: 'text-muted-foreground text-sm',

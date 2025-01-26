@@ -43,8 +43,8 @@ export default function UserMenu({ user, sidebarState, logout }: UserMenuProps) 
       <DropdownMenuContent
         className="w-(--radix-dropdown-menu-trigger-width) min-w-56 rounded-lg px-1"
         side={sidebarState === 'expanded' && isMobile ? 'top' : 'right'}
-        align="end"
         sideOffset={4}
+        align="end"
       >
         <DropdownMenuLabel className="p-0 font-normal">
           <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
@@ -66,19 +66,6 @@ export default function UserMenu({ user, sidebarState, logout }: UserMenuProps) 
             <Link href="/account">
               <Lucide.UserRoundCog strokeWidth={1.8} />
               <span>Account Settings</span>
-            </Link>
-          </DropdownMenuItem>
-          <DropdownMenuSeparator />
-          <DropdownMenuItem asChild>
-            <Link href="https://squelify.com/docs?utm_source=squelify&utm_medium=profile" newTab>
-              <Lucide.ExternalLink strokeWidth={1.8} />
-              <span>Documentation</span>
-            </Link>
-          </DropdownMenuItem>
-          <DropdownMenuItem asChild>
-            <Link href="https://github.com/squelify/squelify?utm_source=squelify" newTab>
-              <Lucide.ExternalLink strokeWidth={1.8} />
-              <span>Source Code</span>
             </Link>
           </DropdownMenuItem>
         </DropdownMenuGroup>

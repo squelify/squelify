@@ -9,7 +9,7 @@ export default function SendTestEmailDialog() {
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
-        <Button variant="outline">Send Test Email</Button>
+        <Button variant="ghost">Send Test Email</Button>
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
@@ -27,8 +27,8 @@ export default function SendTestEmailDialog() {
             Cancel
           </Button>
           <Button
+            // TODO: Implement send test email
             onClick={() => {
-              // TODO: Implement send test email
               setIsOpen(false)
             }}
           >

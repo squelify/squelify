@@ -34,7 +34,7 @@ export default function ErrorView({ appConfig, error }: ErrorViewProps) {
       <main className="mx-auto w-full max-w-5xl rounded-xl border-border bg-card px-10 py-12 shadow-sm">
         <div className="space-y-6">
           <div className="space-y-4 text-center">
-            <h1 className="bg-gradient-to-r from-brand-500 to-indigo-600 bg-clip-text font-black text-8xl text-transparent">
+            <h1 className="bg-gradient-to-r from-blue-500 to-indigo-600 bg-clip-text font-black text-8xl text-transparent">
               {error.statusCode}
             </h1>
             <h2 className="font-bold text-3xl text-foreground">Something went wrong!</h2>

@@ -31,6 +31,8 @@ export default function Page() {
     defaultValues: { remember: false },
   })
 
+  const isDisabled = form.formState.isLoading || form.formState.isSubmitting
+
   const onSubmit: SubmitHandler<FormType> = async ({ identity, password }) => {
     console.info('DEBUG:onSubmit', { identity, password })
     toast.promise(auth.login(identity, password), {
@@ -114,9 +116,7 @@ export default function Page() {
                               onCheckedChange={field.onChange}
                             />
                           </FormControl>
-                          <FormLabel className="font-medium text-sm leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
-                            Remember me
-                          </FormLabel>
+                          <FormLabel>Remember me</FormLabel>
                         </div>
                         <Link
                           href="/forgot-password"
@@ -132,7 +132,8 @@ export default function Page() {
                 <Button
                   type="submit"
                   className="w-full"
-                  disabled={form.formState.isLoading || form.formState.isSubmitting}
+                  disabled={isDisabled}
+                  isLoading={isDisabled}
                 >
                   Sign In
                 </Button>

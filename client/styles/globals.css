@@ -6,21 +6,8 @@
 @source "../../server/views";
 
 @theme {
-    /* Brand Colors */
-    --color-brand-50: #fefbe8;
-    --color-brand-100: #fff8c2;
-    --color-brand-200: #ffec89;
-    --color-brand-300: #ffde59;
-    --color-brand-400: #fdc512;
-    --color-brand-500: #ecab06;
-    --color-brand-600: #cc8302;
-    --color-brand-700: #a35c05;
-    --color-brand-800: #86480d;
-    --color-brand-900: #723b11;
-    --color-brand-950: #431e05;
-    --color-black: #1a1a1a;
-
     /* Base Colors */
+    --color-black: #1a1a1a;
     --color-background: var(--background);
     --color-foreground: var(--foreground);
     --color-primary: var(--primary);
@@ -73,14 +60,14 @@
     --color-error-foreground: var(--error-foreground);
 
     /* Border Radius */
-    --radius: 0.3rem;
+    --radius: 0.4rem;
     --radius-lg: var(--radius);
     --radius-md: calc(var(--radius) - 2px);
     --radius-sm: calc(var(--radius) - 4px);
     --spacing: 0.25rem;
 
     /* Sidebar Width */
-    --sidebar-width: 16rem;
+    --sidebar-width: 14rem;
     --sidebar-width-mobile: 18rem;
     --sidebar-width-icon: 3rem;
 
