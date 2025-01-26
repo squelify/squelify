@@ -46,7 +46,7 @@ RUN chmod -R 0775 /srv/_data
 # -----------------------------------------------------------------------------
 # Production image, copy build output files and run the application.
 # -----------------------------------------------------------------------------
-FROM --platform=${PLATFORM} gcr.io/distroless/nodejs${NODE_VERSION}-debian12 AS runner
+FROM --platform=${PLATFORM} gcr.io/distroless/nodejs${NODE_VERSION}-debian12
 LABEL org.opencontainers.image.source="https://github.com/squelify/squelify"
 
 # ----- Read application environment variables --------------------------------
@@ -64,9 +64,10 @@ ARG DATABASE_MODE DATABASE_URL DATABASE_TOKEN DATABASE_AUTO_MIGRATE \
 # Copy the build output files from the pruner stage.
 COPY --chown=nonroot:nonroot --from=pruner /srv /srv
 
-# Copy some necessary system utilities from previous stage.
+# Copy some necessary system utilities from previous stage (~7MB).
 # To enhance security, consider avoiding the copying of sysutils.
 COPY --from=builder /usr/bin/tini /usr/bin/tini
+COPY --from=glibc /bin/whoami /bin/whoami
 COPY --from=glibc /bin/clear /bin/clear
 COPY --from=glibc /bin/mkdir /bin/mkdir
 COPY --from=glibc /bin/which /bin/which
