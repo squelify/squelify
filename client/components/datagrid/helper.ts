@@ -1,6 +1,6 @@
-import type { GridColumn, Theme } from '@glideapps/glide-data-grid'
-import { useMemo } from 'react'
-import { useTheme } from '#/context/hooks/use-theme'
+import type { Theme as GlideTheme, GridColumn } from '@glideapps/glide-data-grid'
+import { useEffect, useMemo, useState } from 'react'
+import type { Theme } from '#/context/stores/ui.store'
 import { darkTheme, lightTheme } from './styles'
 
 // Helper function to calculate text width (can be memoized if needed)
@@ -46,18 +46,35 @@ export const calculateColumnWidths = <T extends Record<string, any>>(
   return widths
 }
 
-export function useDataGridTheme(customTheme?: Partial<Theme>) {
-  const { theme } = useTheme()
+export function useDataGridTheme(customTheme?: Partial<GlideTheme>) {
+  const [effectiveTheme, setEffectiveTheme] = useState<Theme>(
+    () => document.documentElement.dataset.theme as Theme
+  )
 
-  const effectiveTheme = useMemo(() => {
-    // Handle system theme preference
-    if (theme === 'system') {
-      return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
-    }
-    return theme
-  }, [theme])
+  useEffect(() => {
+    const observer = new MutationObserver((mutations) => {
+      for (const mutation of mutations) {
+        if (mutation.attributeName === 'data-theme') {
+          const newTheme = document.documentElement.dataset.theme as Theme
+          setEffectiveTheme(
+            newTheme === 'system'
+              ? window.matchMedia('(prefers-color-scheme: dark)').matches
+                ? 'dark'
+                : 'light'
+              : newTheme
+          )
+        }
+      }
+    })
 
-  // Combine base theme with custom overrides
+    observer.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ['data-theme'],
+    })
+
+    return () => observer.disconnect()
+  }, [])
+
   const tableTheme = useMemo(() => {
     const baseTheme = effectiveTheme === 'dark' ? darkTheme : lightTheme
     return {

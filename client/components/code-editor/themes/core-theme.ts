@@ -301,16 +301,17 @@ const createEditorTheme = (colors: typeof editorColors.light | typeof editorColo
   })
 }
 
+// Get the theme of the app, sync with the theme of the app
+// We use data-theme attribute to set the theme
+const getAppTheme = (): EditorTheme => {
+  if (typeof window === 'undefined') return 'light'
+  return document.documentElement.dataset.theme === 'dark' ? 'dark' : 'light'
+}
+
+// Get system theme preference
 const getSystemTheme = (): EditorTheme => {
   if (typeof window === 'undefined') return 'light'
   return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
-}
-
-// Get the theme of the app, sync with the theme of the app
-// In Tailwind we use `class` to set the theme of the app
-const getAppTheme = (): EditorTheme => {
-  if (typeof window === 'undefined') return 'light'
-  return document.documentElement.classList.contains('dark') ? 'dark' : 'light'
 }
 
 export const getEditorTheme = (theme: EditorTheme = 'auto') => {

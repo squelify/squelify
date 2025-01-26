@@ -129,7 +129,7 @@ export const CodeEditor = forwardRef<EditorRef, CodeEditorProps>(function CodeEd
 
     observer.observe(document.documentElement, {
       attributes: true,
-      attributeFilter: ['class'],
+      attributeFilter: ['data-theme'],
     })
 
     return () => observer.disconnect()
@@ -172,7 +172,7 @@ export const CodeEditor = forwardRef<EditorRef, CodeEditorProps>(function CodeEd
 
     const effectiveTheme =
       theme === 'auto'
-        ? document.documentElement.classList.contains('dark')
+        ? document.documentElement.dataset.theme === 'dark'
           ? 'dark'
           : 'light'
         : theme
