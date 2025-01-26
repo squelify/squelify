@@ -50,11 +50,7 @@ ReactDOM.createRoot(rootElement).render(
             <Suspense fallback={<AppLoader />}>
               <AppRoutes />
             </Suspense>
-            <ReactQueryDevtools
-              initialIsOpen={false}
-              buttonPosition="bottom-right"
-              position="right"
-            />
+            <ReactQueryDevtools position="right" />
           </AppProvider>
         </TRPCProvider>
       </BrowserRouter>

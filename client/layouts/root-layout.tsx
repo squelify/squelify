@@ -1,3 +1,4 @@
+import consola from 'consola'
 import React, { useEffect, useRef } from 'react'
 import { useErrorBoundary } from 'react-error-boundary'
 import { env } from 'std-env'
@@ -6,7 +7,6 @@ import { Toaster, toast } from '#/components/base-ui'
 import { useApiClient } from '#/context/hooks/use-api-client'
 import type { ApiResponse } from '#/services'
 import { clx } from '#/utils/helper'
-import logger from '#/utils/logger'
 
 interface RootLayoutProps {
   children: React.ReactNode
@@ -48,7 +48,7 @@ export default function RootLayout({ children, className }: RootLayoutProps) {
     }
 
     const handleError = (error: unknown) => {
-      logger.error('[ERROR] Health Check Failed:', error)
+      consola.error('[ERROR] Health Check Failed:', error)
 
       if (error instanceof Error) {
         if (BLOCK_ON_ERROR) showBoundary({ message: error.message })
@@ -75,11 +75,11 @@ export default function RootLayout({ children, className }: RootLayoutProps) {
       }
 
       lastCheckTimeRef.current = now
-      logger.info('Performing health check...')
+      consola.info('Performing health check...')
 
       try {
         const result = await apiClient._healthCheck()
-        logger.debug('Health Check Details:', result)
+        consola.debug('Health Check Details:', result)
 
         if (result.status === 'unhealthy' || result.database.status === 'down') {
           handleUnhealthyStatus(result)
@@ -94,7 +94,7 @@ export default function RootLayout({ children, className }: RootLayoutProps) {
           retryCountRef.current = 0
         }
 
-        logger.info('[RESULT] Health Check Status:', result.status)
+        consola.info('[RESULT] Health Check Status:', result.status)
       } catch (error: unknown) {
         handleError(error)
       }

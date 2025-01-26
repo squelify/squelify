@@ -3,8 +3,8 @@ import { type $Fetch, FetchError, ofetch } from 'ofetch'
 import { hasWindow, isProduction } from 'std-env'
 import { HealthCheckResponse } from '~/api/healthz.get'
 import { authStore } from '#/context/stores/auth.store'
-import { LOG_LEVEL } from '#/utils/logger'
 
+import appConfig from '~~/app.config'
 import AccountService from './modules/account.service'
 import ApiKeyService from './modules/api-key.service'
 import AuditLogService from './modules/auditlog.service'
@@ -18,8 +18,6 @@ import RoleService from './modules/role.service'
 import SettingsService from './modules/settings.service'
 import UserService from './modules/user.service'
 import WebhooksService from './modules/webhooks.service'
-
-import { DEFAULT_OPTIONS } from './options'
 import type { ApiClientOptions } from './types'
 
 const HTTPRegexp = /^http:\/\//
@@ -66,15 +64,13 @@ export default class ApiClient {
     /**
      * Initializes the some properties of the `ApiClient` class with a default value.
      * The `clientInfo` property is used to identify the client making requests to the API.
-     * The `DEFAULT_OPTIONS` object is merged with the provided `options` object,
-     * and the resulting object is used to configure the `ApiClient` instance.
      */
     const clientInfo = `ApiClient ${import.meta.env.SQUELIFY_VERSION}`
-    const settings = { ...DEFAULT_OPTIONS, ...options, clientInfo }
+    const settings = { ...options, clientInfo }
 
     // By default, in DEV mode we log all requests and responses.
     // This setting can be overridden via the `logLevel` option.
-    const defaultLogLevel = settings.logLevel || LOG_LEVEL
+    const defaultLogLevel = settings.logLevel || appConfig.logLevel
     this.logLevel = options.logLevel ?? defaultLogLevel
     this.logger = createConsola({
       level: this.logLevel,

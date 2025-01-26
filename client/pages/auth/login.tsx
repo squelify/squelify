@@ -1,4 +1,5 @@
 import { zodResolver } from '@hookform/resolvers/zod'
+import consola from 'consola'
 import * as Lucide from 'lucide-react'
 import { type SubmitHandler, useForm } from 'react-hook-form'
 import { useNavigate, useSearchParams } from 'react-router'
@@ -9,7 +10,6 @@ import { FormLabel, FormMessage } from '#/components/base-ui'
 import { Link } from '#/components/base-ui'
 import { useAuth } from '#/context/hooks/use-auth'
 import { useSEOMeta } from '#/context/hooks/use-seo-meta'
-import logger from '#/utils/logger'
 
 const FormSchema = z.object({
   identity: z.string({ message: 'Email address required' }).min(1),
@@ -43,7 +43,7 @@ export default function Page() {
         return `Sign in successful!`
       },
       error: (err) => {
-        logger.error('[LOGIN]', err)
+        consola.error('[LOGIN]', err)
         form.setFocus('identity')
         return `Failed to sign in: ${err.message}`
       },

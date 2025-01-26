@@ -1,4 +1,5 @@
 import { zodResolver } from '@hookform/resolvers/zod'
+import consola from 'consola'
 import { type SubmitHandler, useForm } from 'react-hook-form'
 import { useNavigate, useSearchParams } from 'react-router'
 import { z } from 'zod'
@@ -8,7 +9,6 @@ import { FormLabel, FormMessage } from '#/components/base-ui'
 import { Link } from '#/components/base-ui'
 import { useApiClient } from '#/context/hooks/use-api-client'
 import { useSEOMeta } from '#/context/hooks/use-seo-meta'
-import logger from '#/utils/logger'
 
 const FormSchema = z
   .object({
@@ -52,7 +52,7 @@ export default function Page() {
         return 'Password reset successful!'
       },
       error: (err) => {
-        logger.error('[RESET_PASSWORD]', err)
+        consola.error('[RESET_PASSWORD]', err)
         form.setFocus('password')
         return `Failed to reset password: ${err.message}`
       },

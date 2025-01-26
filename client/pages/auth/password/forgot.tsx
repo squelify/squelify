@@ -1,4 +1,5 @@
 import { zodResolver } from '@hookform/resolvers/zod'
+import consola from 'consola'
 import { type SubmitHandler, useForm } from 'react-hook-form'
 import { useNavigate } from 'react-router'
 import { z } from 'zod'
@@ -8,7 +9,6 @@ import { FormLabel, FormMessage } from '#/components/base-ui'
 import { Link } from '#/components/base-ui'
 import { useApiClient } from '#/context/hooks/use-api-client'
 import { useSEOMeta } from '#/context/hooks/use-seo-meta'
-import logger from '#/utils/logger'
 
 const FormSchema = z.object({
   email: z.string().min(1, { message: 'Email address is required' }).email('Invalid email address'),
@@ -33,7 +33,7 @@ export default function Page() {
         return 'Reset instructions sent to your email'
       },
       error: (err) => {
-        logger.error('[FORGOT_PASSWORD]', err)
+        consola.error('[FORGOT_PASSWORD]', err)
         form.setFocus('email')
         return `Failed to send reset instructions: ${err.message}`
       },

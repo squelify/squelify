@@ -1,3 +1,4 @@
+import consola from 'consola'
 import * as Lucide from 'lucide-react'
 import { useEffect, useRef, useState } from 'react'
 import { HealthCheckResponse } from '~/api/healthz.get'
@@ -5,7 +6,6 @@ import { toast } from '#/components/base-ui'
 import { useApiClient } from '#/context/hooks/use-api-client'
 import { useSEOMeta } from '#/context/hooks/use-seo-meta'
 import PageWrapper from '#/layouts/page-wrapper'
-import logger from '#/utils/logger'
 // import CardGetStarted from './card-get-started'
 import CardSystemMetrics from './card-metrics'
 import CardQuickAccess from './card-quick-access'
@@ -44,7 +44,7 @@ export default function Page() {
     }
 
     const handleError = (error: unknown) => {
-      logger.error('[ERROR] Health Check Failed:', error)
+      consola.error('[ERROR] Health Check Failed:', error)
       toast.error('Dashboard Health Check Error', {
         description: error instanceof Error ? error.message : 'Failed to check system health',
       })
@@ -57,13 +57,13 @@ export default function Page() {
       }
 
       lastCheckTimeRef.current = now
-      logger.info('Performing health check...')
+      consola.info('Performing health check...')
 
       try {
         setIsLoading(true)
         const result = await apiClient._healthCheck()
         healthDataRef.current = result
-        logger.debug('Health Check Details:', result)
+        consola.debug('Health Check Details:', result)
 
         if (result.status === 'unhealthy' || result.database.status === 'down') {
           handleUnhealthyStatus(result)
@@ -77,7 +77,7 @@ export default function Page() {
           retryCountRef.current = 0
         }
 
-        logger.info('[RESULT] Health Check Status:', result.status)
+        consola.info('[RESULT] Health Check Status:', result.status)
       } catch (error: unknown) {
         handleError(error)
       } finally {

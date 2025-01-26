@@ -1,4 +1,4 @@
-import type { LogLevel } from 'consola'
+import type { LogType } from 'consola'
 import { IUserInfoResponse } from '~/api/auth/whoami.post'
 
 export interface ApiClientOptions {
@@ -7,7 +7,7 @@ export interface ApiClientOptions {
   /** Custom headers for all requests */
   headers?: { [key: string]: string }
   /** Enable debug mode or provide a custom logging function */
-  logLevel?: LogLevel
+  logLevel?: LogType
 }
 
 export interface ApiResponse<T = unknown> {
