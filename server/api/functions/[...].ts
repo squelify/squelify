@@ -131,12 +131,8 @@ export default defineEventHandler(async (event) => {
       return
     }
 
-    // Read all files in the functions directory
-    // Only read files with .js or .mjs extensions
-    const files = await globby('**/*.{mjs,js}', {
-      onlyFiles: true,
-      cwd: functionsDir,
-    })
+    // Read all files in the functions directory and register routes
+    const files = await globby('**/*.mjs', { onlyFiles: true, cwd: functionsDir })
 
     if (files.length === 0) {
       logger.info('[functions]', 'No user functions files found')
