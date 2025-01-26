@@ -18,6 +18,9 @@ import {
 const meta: Meta<typeof ContextMenu> = {
   title: 'Basic Components/ContextMenu',
   component: ContextMenu,
+  parameters: {
+    layout: 'centered',
+  },
 }
 
 export default meta
@@ -26,7 +29,7 @@ type Story = StoryObj<typeof meta>
 export const Default: Story = {
   render: () => (
     <ContextMenu>
-      <ContextMenuTrigger className="flex h-[150px] w-[300px] items-center justify-center rounded-md border border-dashed text-sm">
+      <ContextMenuTrigger className="flex h-[250px] w-[400px] items-center justify-center rounded-md border border-dashed text-sm">
         Right click here
       </ContextMenuTrigger>
       <ContextMenuContent className="w-64">
@@ -62,7 +65,7 @@ export const Default: Story = {
         <ContextMenuRadioGroup value="pedro">
           <ContextMenuLabel inset>People</ContextMenuLabel>
           <ContextMenuSeparator />
-          <ContextMenuRadioItem value="pedro">Pedro Duarte</ContextMenuRadioItem>
+          <ContextMenuRadioItem value="pedro">Aris Ripandi</ContextMenuRadioItem>
           <ContextMenuRadioItem value="colm">Colm Tuite</ContextMenuRadioItem>
         </ContextMenuRadioGroup>
       </ContextMenuContent>

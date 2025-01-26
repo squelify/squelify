@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react'
 import * as React from 'react'
-import { useMediaQuery } from '#/context/hooks/use-media-query'
+import useMediaQuery from '#/context/hooks/use-media-query'
 import { Button } from '../button/button'
 import { Dialog, DialogDescription, DialogTrigger } from '../dialog/dialog'
 import { DialogContent, DialogHeader, DialogTitle } from '../dialog/dialog'

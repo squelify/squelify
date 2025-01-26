@@ -1,5 +1,6 @@
 import { zodResolver } from '@hookform/resolvers/zod'
 import type { Meta, StoryObj } from '@storybook/react'
+import consola from 'consola'
 import * as Lucide from 'lucide-react'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
@@ -41,7 +42,7 @@ export const Default: Story = {
     })
 
     function onSubmit(data: z.infer<typeof FormSchema>) {
-      console.info(data)
+      consola.debug(data)
     }
 
     return (

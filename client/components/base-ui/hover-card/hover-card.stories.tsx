@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react'
 import * as Lucide from 'lucide-react'
+import { getInitials } from '#/utils/helper'
 import { Avatar, AvatarFallback, AvatarImage } from '../avatar/avatar'
 import { Button } from '../button/button'
 import { HoverCard, HoverCardContent, HoverCardTrigger } from './hover-card'
@@ -23,7 +24,7 @@ export const Default: Story = {
         <div className="flex justify-between space-x-4">
           <Avatar>
             <AvatarImage src="https://avatars.githubusercontent.com/u/921834?v=4" />
-            <AvatarFallback>AR</AvatarFallback>
+            <AvatarFallback>{getInitials('Aris Ripandi')}</AvatarFallback>
           </Avatar>
           <div className="space-y-1">
             <h4 className="font-semibold text-sm">@riipandi</h4>
@@ -51,7 +52,7 @@ export const AlignStart: Story = {
         <div className="flex justify-between space-x-4">
           <Avatar>
             <AvatarImage src="https://avatars.githubusercontent.com/u/921834?v=4" />
-            <AvatarFallback>AR</AvatarFallback>
+            <AvatarFallback>{getInitials('Aris Ripandi')}</AvatarFallback>
           </Avatar>
           <div className="space-y-1">
             <h4 className="font-semibold text-sm">@riipandi</h4>
@@ -79,7 +80,7 @@ export const AlignEnd: Story = {
         <div className="flex justify-between space-x-4">
           <Avatar>
             <AvatarImage src="https://avatars.githubusercontent.com/u/921834?v=4" />
-            <AvatarFallback>AR</AvatarFallback>
+            <AvatarFallback>{getInitials('Aris Ripandi')}</AvatarFallback>
           </Avatar>
           <div className="space-y-1">
             <h4 className="font-semibold text-sm">@riipandi</h4>

@@ -7,6 +7,9 @@ import { Popover, PopoverContent, PopoverTrigger } from './popover'
 const meta: Meta<typeof Popover> = {
   title: 'Basic Components/Popover',
   component: Popover,
+  parameters: {
+    layout: 'centered',
+  },
 }
 
 export default meta

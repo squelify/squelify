@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react'
 import { fn } from '@storybook/test'
+import { Button } from '../button/button'
 import {
   AlertDialog,
   AlertDialogAction,
@@ -15,6 +16,9 @@ import {
 const meta: Meta = {
   title: 'Basic Components/AlertDialog',
   component: AlertDialog,
+  parameters: {
+    layout: 'centered',
+  },
   argTypes: {
     defaultOpen: {
       control: 'boolean',
@@ -30,7 +34,9 @@ type Story = StoryObj<typeof meta>
 export const Default: Story = {
   render: (args) => (
     <AlertDialog {...args}>
-      <AlertDialogTrigger>Delete Account</AlertDialogTrigger>
+      <AlertDialogTrigger className="cursor-pointer hover:underline">
+        Show Dialog
+      </AlertDialogTrigger>
       <AlertDialogContent>
         <AlertDialogHeader>
           <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
@@ -51,8 +57,8 @@ export const Default: Story = {
 export const CustomTrigger: Story = {
   render: (args) => (
     <AlertDialog {...args}>
-      <AlertDialogTrigger className="text-red-500 hover:text-red-600">
-        Danger Zone
+      <AlertDialogTrigger asChild>
+        <Button variant="destructive">Delete Account</Button>
       </AlertDialogTrigger>
       <AlertDialogContent>
         <AlertDialogHeader>

@@ -25,7 +25,7 @@ export const Default: Story = {
   render: () => (
     <Collapsible className="w-[350px] space-y-2">
       <div className="flex w-full items-center justify-between space-x-4 pr-0 pl-4">
-        <h4 className="font-semibold text-sm">@peduarte starred 3 repositories</h4>
+        <h4 className="font-semibold text-sm">@riipandi starred 3 repositories</h4>
         <CollapsibleTrigger asChild>
           <Button variant="ghost" size="sm" className="w-9 p-0">
             <Lucide.ChevronsUpDown className="size-4" />

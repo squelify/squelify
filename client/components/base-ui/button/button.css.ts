@@ -12,10 +12,10 @@ export const buttonStyles = tv({
     variant: {
       default: 'bg-gray-900 text-white shadow-sm hover:bg-gray-900/90',
       primary: 'bg-primary text-white shadow-sm hover:bg-primary/90',
+      secondary: 'bg-secondary text-secondary-foreground shadow-xs hover:bg-secondary/80',
       destructive: 'bg-destructive text-destructive-foreground shadow-xs hover:bg-destructive/90',
       outline:
         'border border-input bg-background shadow-xs hover:bg-accent hover:text-accent-foreground',
-      secondary: 'bg-secondary text-secondary-foreground shadow-xs hover:bg-secondary/80',
       ghost: 'hover:bg-accent hover:text-accent-foreground',
       link: 'text-primary underline-offset-4 hover:underline',
     },
@@ -33,7 +33,8 @@ export const buttonStyles = tv({
   compoundVariants: [
     {
       isLoading: true,
-      className: '[&>svg]:-ml-1 [&>svg]:size-4 [&>svg]:animate-spin',
+      className:
+        '[&>svg]:-ml-1 [&>svg]:motion-preset-spin [&>svg]:motion-duration-1000 [&>svg]:size-4',
     },
     {
       variant: ['default', 'primary', 'secondary', 'outline', 'destructive', 'ghost', 'link'],

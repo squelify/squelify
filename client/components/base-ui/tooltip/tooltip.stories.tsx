@@ -6,6 +6,9 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from './tool
 const meta: Meta = {
   title: 'Basic Components/Tooltip',
   component: Tooltip,
+  parameters: {
+    layout: 'centered',
+  },
   decorators: [
     (Story) => (
       <TooltipProvider>

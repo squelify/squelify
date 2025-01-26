@@ -8,12 +8,13 @@ export const alertStyles = tv({
     ],
     title: 'mb-1 font-medium leading-none tracking-tight',
     description: 'text-sm [&_p]:leading-relaxed',
+    icon: 'size-4',
   },
   variants: {
     variant: {
       default: 'bg-background text-foreground',
       destructive:
-        'border-destructive/50 bg-destructive/10 text-destructive dark:border-destructive [&>svg]:text-destructive',
+        'border-destructive/50 text-destructive dark:border-destructive [&>svg]:text-destructive',
     },
   },
   compoundVariants: [],

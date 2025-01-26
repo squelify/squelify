@@ -30,7 +30,7 @@ const ResizableHandle = ({
   return (
     <ResizablePrimitive.PanelResizeHandle
       className={styles.handle({
-        class: [
+        className: [
           styles.handleVertical(),
           styles.handleAfter(),
           styles.handleAfterVertical(),

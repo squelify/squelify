@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react'
 export function LoadingSpinner() {
   return (
     <svg
-      className="size-3.5 animate-spin"
+      className="motion-preset-spin motion-duration-1000 size-3.5"
       xmlns="http://www.w3.org/2000/svg"
       fill="none"
       viewBox="0 0 24 24"

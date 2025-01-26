@@ -42,13 +42,13 @@ export const Default: Story = {
             <Label htmlFor="name" className="text-right">
               Name
             </Label>
-            <Input id="name" defaultValue="Pedro Duarte" className="col-span-3 w-auto" />
+            <Input id="name" defaultValue="Aris Ripandi" className="col-span-3 w-auto" />
           </div>
           <div className="grid grid-cols-4 items-center gap-4">
             <Label htmlFor="username" className="text-right">
               Username
             </Label>
-            <Input id="username" defaultValue="@peduarte" className="col-span-3 w-auto" />
+            <Input id="username" defaultValue="@riipandi" className="col-span-3 w-auto" />
           </div>
         </div>
         <SheetFooter>
@@ -61,13 +61,13 @@ export const Default: Story = {
   ),
 }
 
-export const Sides: Story = {
+export const Position: Story = {
   render: () => (
     <div className="grid grid-cols-2 gap-4">
       {['top', 'right', 'bottom', 'left'].map((side) => (
         <Sheet key={side}>
           <SheetTrigger asChild>
-            <Button variant="outline">Open {side}</Button>
+            <Button variant="outline">{side}</Button>
           </SheetTrigger>
           <SheetContent side={side as 'top' | 'right' | 'bottom' | 'left'}>
             <SheetHeader>
