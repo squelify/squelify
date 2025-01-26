@@ -8,5 +8,5 @@
     "install": "always",
     "packageManager": "pnpm",
     "silent": false,
-    "reject": ["@tailwindcss/vite", "tailwindcss"]
+    "reject": []
 }

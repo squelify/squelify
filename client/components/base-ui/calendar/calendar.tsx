@@ -1,5 +1,3 @@
-// TODO: refactor (https://github.com/huybuidac/shadcn-datetime-picker)
-
 import * as Lucide from 'lucide-react'
 import { DayPicker } from 'react-day-picker'
 import type { DayPickerProps } from 'react-day-picker'
