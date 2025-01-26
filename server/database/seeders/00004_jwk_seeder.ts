@@ -25,7 +25,7 @@ export default async function seed(db: Kysely<Database>): Promise<void> {
   }
 
   await db
-    .insertInto('sq_jwks')
+    .insertInto('_sq_jwks')
     .values(jwk)
     .onConflict((oc) => oc.column('keyId').doNothing())
     .execute()

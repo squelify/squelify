@@ -6,7 +6,7 @@ import { DURATION } from '~/utils/datetime'
 export default async function seed(db: Kysely<Database>): Promise<void> {
   await db.transaction().execute(async (trx) => {
     const admin = await trx
-      .selectFrom('sq_users')
+      .selectFrom('_sq_users')
       .where('username', '=', 'admin')
       .select(['id'])
       .executeTakeFirst()

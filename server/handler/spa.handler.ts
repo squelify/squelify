@@ -18,9 +18,9 @@ export async function handleSPAClient(event: H3Event, options: SPAClientOptions)
 
   // Check if application is installed by checking existence of admin user
   const isInstalled = await db
-    .selectFrom('sq_users as users')
-    .innerJoin('sq_user_roles as user_roles', 'user_roles.userId', 'users.id')
-    .innerJoin('sq_roles as roles', 'roles.id', 'user_roles.roleId')
+    .selectFrom('_sq_users as users')
+    .innerJoin('_sq_user_roles as user_roles', 'user_roles.userId', 'users.id')
+    .innerJoin('_sq_roles as roles', 'roles.id', 'user_roles.roleId')
     .where('roles.name', '=', 'admin')
     .where('users.isActive', '=', 1)
     .select('users.id')

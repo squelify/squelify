@@ -72,7 +72,7 @@ export async function auditLog(event: H3Event, params: AuditLogParams) {
     const retention = getRetentionPeriod(params.action, params.entity, params.retention)
 
     await db
-      .insertInto('sq_audit_logs')
+      .insertInto('_sq_audit_logs')
       .values({
         id: typeid('log').toString(),
         userId: params.userId || ctx.user?.id || null,
@@ -113,14 +113,14 @@ export async function auditLogBatch(event: H3Event, logs: AuditLogParams[]) {
       createdAt: Math.floor(Date.now() / 1000),
     }))
 
-    await db.insertInto('sq_audit_logs').values(values).execute()
+    await db.insertInto('_sq_audit_logs').values(values).execute()
   })
 }
 
 export async function exportAuditLog(filters: AuditLogFilters) {
   if (!isAuditEnabled) return []
 
-  const query = db.selectFrom('sq_audit_logs')
+  const query = db.selectFrom('_sq_audit_logs')
 
   if (filters.startDate) {
     query.where('createdAt', '>=', filters.startDate)
@@ -142,7 +142,7 @@ export async function exportAuditLog(filters: AuditLogFilters) {
 }
 
 export class AuditLogQuery {
-  private query = db.selectFrom('sq_audit_logs')
+  private query = db.selectFrom('_sq_audit_logs')
 
   filterByDateRange(start: number, end: number) {
     this.query.where('createdAt', '>=', start).where('createdAt', '<=', end)
@@ -176,7 +176,7 @@ export async function getAuditStats(timeframe: number) {
   const startTime = Math.floor(Date.now() / 1000) - timeframe
 
   return await db
-    .selectFrom('sq_audit_logs')
+    .selectFrom('_sq_audit_logs')
     .select([
       'action',
       'entity',

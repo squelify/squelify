@@ -18,7 +18,7 @@ export default defineEventHandler(async (event) => {
 
     // Validate current session
     const session = await db
-      .selectFrom('sq_sessions')
+      .selectFrom('_sq_sessions')
       .where('id', '=', body.sessionId)
       .select(['isActive', 'expiresAt', 'deviceId'])
       .executeTakeFirst()
@@ -70,7 +70,7 @@ export default defineEventHandler(async (event) => {
 
     // Deactivate current session
     await db
-      .updateTable('sq_sessions')
+      .updateTable('_sq_sessions')
       .set({
         isActive: 0,
         updatedAt: now,
@@ -80,7 +80,7 @@ export default defineEventHandler(async (event) => {
 
     // Handle device-specific or all devices logout
     const logoutQuery = db
-      .updateTable('sq_sessions')
+      .updateTable('_sq_sessions')
       .set({
         isActive: 0,
         updatedAt: now,

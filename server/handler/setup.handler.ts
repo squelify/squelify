@@ -50,7 +50,7 @@ export default defineEventHandler(async (event) => {
       const privateKeyString = await jose.exportPKCS8(privateKey)
 
       await trx
-        .insertInto('sq_jwks')
+        .insertInto('_sq_jwks')
         .values({
           id: typeid('jwk').toString(),
           keyId: typeid('kid').toString(),
@@ -88,7 +88,7 @@ export default defineEventHandler(async (event) => {
       ]
 
       await trx
-        .insertInto('sq_permissions')
+        .insertInto('_sq_permissions')
         .values(permissions)
         .onConflict((oc) => oc.column('name').doNothing())
         .execute()
@@ -96,7 +96,7 @@ export default defineEventHandler(async (event) => {
       // 3. Create admin role
       const adminRoleId = typeid('role').toString()
       await trx
-        .insertInto('sq_roles')
+        .insertInto('_sq_roles')
         .values({
           id: adminRoleId,
           name: 'admin',
@@ -113,7 +113,7 @@ export default defineEventHandler(async (event) => {
         .execute()
 
       // 4. Assign permissions to admin role
-      const dbPermissions = await trx.selectFrom('sq_permissions').select(['id']).execute()
+      const dbPermissions = await trx.selectFrom('_sq_permissions').select(['id']).execute()
       const rolePermissions = dbPermissions.map((permission) => ({
         id: typeid('rper').toString(),
         roleId: adminRoleId,
@@ -123,7 +123,7 @@ export default defineEventHandler(async (event) => {
       }))
 
       await trx
-        .insertInto('sq_role_permissions')
+        .insertInto('_sq_role_permissions')
         .values(rolePermissions)
         .onConflict((oc) => oc.columns(['roleId', 'permissionId']).doNothing())
         .execute()
@@ -132,7 +132,7 @@ export default defineEventHandler(async (event) => {
       const userId = typeid('user').toString()
       const username = body.email.split('@')[0]
       await trx
-        .insertInto('sq_users')
+        .insertInto('_sq_users')
         .values({
           id: userId,
           username,
@@ -145,7 +145,7 @@ export default defineEventHandler(async (event) => {
 
       // 6. Create admin email
       await trx
-        .insertInto('sq_emails')
+        .insertInto('_sq_emails')
         .values({
           id: typeid('eml').toString(),
           userId: userId,
@@ -159,7 +159,7 @@ export default defineEventHandler(async (event) => {
       // 7. Create admin password
       const hashedPassword = await hashPassword(body.password, DEFAULT_PASSWORD_ALGORITHM)
       await trx
-        .insertInto('sq_passwords')
+        .insertInto('_sq_passwords')
         .values({
           id: typeid('pwd').toString(),
           userId: userId,
@@ -172,7 +172,7 @@ export default defineEventHandler(async (event) => {
       // 8. Create root organization
       const orgId = typeid('org').toString()
       await trx
-        .insertInto('sq_organizations')
+        .insertInto('_sq_organizations')
         .values({
           id: orgId,
           name: body.appName,
@@ -188,7 +188,7 @@ export default defineEventHandler(async (event) => {
 
       // 9. Create admin membership
       await trx
-        .insertInto('sq_members')
+        .insertInto('_sq_members')
         .values({
           id: typeid('mem').toString(),
           organizationId: orgId,
@@ -201,7 +201,7 @@ export default defineEventHandler(async (event) => {
 
       // 10. Create admin account
       await trx
-        .insertInto('sq_accounts')
+        .insertInto('_sq_accounts')
         .values({
           id: typeid('acc').toString(),
           userId: userId,
@@ -213,7 +213,7 @@ export default defineEventHandler(async (event) => {
 
       // 11. Assign admin role
       await trx
-        .insertInto('sq_user_roles')
+        .insertInto('_sq_user_roles')
         .values({
           id: typeid('urol').toString(),
           userId: userId,

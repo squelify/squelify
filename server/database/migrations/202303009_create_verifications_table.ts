@@ -4,9 +4,9 @@ import type { Database } from '~/database/db.schema'
 
 export const up = async (db: Kysely<Database>): Promise<void> => {
   await db.schema
-    .createTable('sq_verifications')
+    .createTable('_sq_verifications')
     .addColumn('id', 'text', (col) => col.primaryKey())
-    .addColumn('user_id', 'text', (col) => col.references('sq_users.id').onDelete('cascade'))
+    .addColumn('user_id', 'text', (col) => col.references('_sq_users.id').onDelete('cascade'))
     .addColumn('type', 'text', (col) =>
       col.notNull().check(sql`type IN ('email', 'phone', 'password_reset', 'magic_link', 'otp')`)
     )
@@ -28,11 +28,11 @@ export const up = async (db: Kysely<Database>): Promise<void> => {
    * Ensures accurate tracking of verification attempts and status changes
    */
   await sql`
-    CREATE TRIGGER IF NOT EXISTS sq_trg_verifications_timestamp
-    AFTER UPDATE ON sq_verifications
+    CREATE TRIGGER IF NOT EXISTS _sq_trg_verifications_timestamp
+    AFTER UPDATE ON _sq_verifications
     FOR EACH ROW
     BEGIN
-      UPDATE sq_verifications
+      UPDATE _sq_verifications
       SET updated_at = strftime('%s', 'now')
       WHERE id = NEW.id;
     END;
@@ -43,8 +43,8 @@ export const up = async (db: Kysely<Database>): Promise<void> => {
    * Optimizes queries filtering by user_id
    */
   await db.schema
-    .createIndex('sq_idx_verifications_user')
-    .on('sq_verifications')
+    .createIndex('_sq_idx_verifications_user')
+    .on('_sq_verifications')
     .column('user_id')
     .ifNotExists()
     .execute()
@@ -54,8 +54,8 @@ export const up = async (db: Kysely<Database>): Promise<void> => {
    * Ensures token uniqueness and improves token validation queries
    */
   await db.schema
-    .createIndex('sq_idx_verifications_token')
-    .on('sq_verifications')
+    .createIndex('_sq_idx_verifications_token')
+    .on('_sq_verifications')
     .column('token')
     .unique()
     .ifNotExists()
@@ -66,8 +66,8 @@ export const up = async (db: Kysely<Database>): Promise<void> => {
    * Enhances verification request validation
    */
   await db.schema
-    .createIndex('sq_idx_verifications_identifier')
-    .on('sq_verifications')
+    .createIndex('_sq_idx_verifications_identifier')
+    .on('_sq_verifications')
     .columns(['identifier', 'type'])
     .ifNotExists()
     .execute()
@@ -77,18 +77,18 @@ export const up = async (db: Kysely<Database>): Promise<void> => {
    * Optimizes cleanup of expired verification requests
    */
   await db.schema
-    .createIndex('sq_idx_verifications_expires')
-    .on('sq_verifications')
+    .createIndex('_sq_idx_verifications_expires')
+    .on('_sq_verifications')
     .column('expires_at')
     .ifNotExists()
     .execute()
 }
 
 export const down = async (db: Kysely<Database>): Promise<void> => {
-  await db.schema.dropIndex('sq_idx_verifications_expires').ifExists().execute()
-  await db.schema.dropIndex('sq_idx_verifications_identifier').ifExists().execute()
-  await db.schema.dropIndex('sq_idx_verifications_token').ifExists().execute()
-  await db.schema.dropIndex('sq_idx_verifications_user').ifExists().execute()
-  await sql`DROP TRIGGER IF EXISTS sq_trg_verifications_timestamp;`.execute(db)
-  await db.schema.dropTable('sq_verifications').ifExists().execute()
+  await db.schema.dropIndex('_sq_idx_verifications_expires').ifExists().execute()
+  await db.schema.dropIndex('_sq_idx_verifications_identifier').ifExists().execute()
+  await db.schema.dropIndex('_sq_idx_verifications_token').ifExists().execute()
+  await db.schema.dropIndex('_sq_idx_verifications_user').ifExists().execute()
+  await sql`DROP TRIGGER IF EXISTS _sq_trg_verifications_timestamp;`.execute(db)
+  await db.schema.dropTable('_sq_verifications').ifExists().execute()
 }

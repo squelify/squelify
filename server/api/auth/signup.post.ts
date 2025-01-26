@@ -42,7 +42,7 @@ export default defineEventHandler(async (event) => {
     const email = body.email.toLowerCase()
 
     const existingEmail = await db
-      .selectFrom('sq_emails')
+      .selectFrom('_sq_emails')
       .where('email', '=', email)
       .select('id')
       .executeTakeFirst()
@@ -69,7 +69,7 @@ export default defineEventHandler(async (event) => {
       username = generateUsername(email)
 
       const existingUser = await db
-        .selectFrom('sq_users')
+        .selectFrom('_sq_users')
         .where('username', '=', username)
         .where('deletedAt', 'is', null)
         .select(['id'])
@@ -81,7 +81,7 @@ export default defineEventHandler(async (event) => {
     }
 
     const existingUser = await db
-      .selectFrom('sq_users')
+      .selectFrom('_sq_users')
       .where('username', '=', username)
       .where('deletedAt', 'is', null)
       .select(['id'])
@@ -110,7 +110,7 @@ export default defineEventHandler(async (event) => {
 
     await db.transaction().execute(async (trx) => {
       await trx
-        .insertInto('sq_users')
+        .insertInto('_sq_superusers')
         .values({
           id: userId,
           firstName: body.firstName,
@@ -122,7 +122,7 @@ export default defineEventHandler(async (event) => {
         .execute()
 
       await trx
-        .insertInto('sq_user_metadata')
+        .insertInto('_sq_user_metadata')
         .values({
           id: typeid('meta').toString(),
           userId,
@@ -134,7 +134,7 @@ export default defineEventHandler(async (event) => {
         .execute()
 
       await trx
-        .insertInto('sq_passwords')
+        .insertInto('_sq_passwords')
         .values({
           id: typeid('pwd').toString(),
           userId,
@@ -145,7 +145,7 @@ export default defineEventHandler(async (event) => {
         .execute()
 
       await trx
-        .insertInto('sq_accounts')
+        .insertInto('_sq_accounts')
         .values({
           id: typeid('acc').toString(),
           userId,
@@ -156,7 +156,7 @@ export default defineEventHandler(async (event) => {
         .execute()
 
       await trx
-        .insertInto('sq_emails')
+        .insertInto('_sq_emails')
         .values({
           id: typeid('eml').toString(),
           userId,
@@ -167,7 +167,7 @@ export default defineEventHandler(async (event) => {
         .execute()
 
       await trx
-        .insertInto('sq_verifications')
+        .insertInto('_sq_verifications')
         .values({
           id: typeid('ver').toString(),
           userId,
@@ -180,14 +180,14 @@ export default defineEventHandler(async (event) => {
         .execute()
 
       const defaultRole = await trx
-        .selectFrom('sq_roles')
+        .selectFrom('_sq_roles')
         .where('isDefault', '=', 1)
         .select(['id'])
         .executeTakeFirst()
 
       if (defaultRole) {
         await trx
-          .insertInto('sq_user_roles')
+          .insertInto('_sq_user_roles')
           .values({
             id: typeid('urol').toString(),
             userId,

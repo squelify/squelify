@@ -16,7 +16,7 @@ export default defineEventHandler(async (event) => {
   try {
     // Get organization with complete status check
     const org = await db
-      .selectFrom('sq_organizations')
+      .selectFrom('_sq_organizations')
       .where('id', '=', orgId)
       .select(['id', 'name', 'slug', 'status', 'isVerified', 'createdBy'])
       .executeTakeFirst()
@@ -27,7 +27,7 @@ export default defineEventHandler(async (event) => {
 
     // Verify user is an owner
     const member = await db
-      .selectFrom('sq_members')
+      .selectFrom('_sq_members')
       .where('organizationId', '=', orgId)
       .where('userId', '=', userId)
       .where('role', '=', 'org:owner')
@@ -77,7 +77,7 @@ export default defineEventHandler(async (event) => {
 
     // Count organization members
     const memberCount = await db
-      .selectFrom('sq_members')
+      .selectFrom('_sq_members')
       .where('organizationId', '=', orgId)
       .select(({ fn }) => [fn.count<number>('id').as('count')])
       .executeTakeFirst()
@@ -104,8 +104,8 @@ export default defineEventHandler(async (event) => {
 
     // Hard delete organization and related data
     await db.transaction().execute(async (trx) => {
-      await trx.deleteFrom('sq_members').where('organizationId', '=', orgId).execute()
-      await trx.deleteFrom('sq_organizations').where('id', '=', orgId).execute()
+      await trx.deleteFrom('_sq_members').where('organizationId', '=', orgId).execute()
+      await trx.deleteFrom('_sq_organizations').where('id', '=', orgId).execute()
     })
 
     // Log successful deletion

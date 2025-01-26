@@ -30,14 +30,14 @@ export default defineCachedEventHandler(
       const result = await db.transaction().execute(async (trx) => {
         const [userData, userBan, metadata, roles, permissions] = await Promise.all([
           trx
-            .selectFrom('sq_users')
+            .selectFrom('_sq_users')
             .where('id', '=', payload.sub)
             .where('deletedAt', 'is', null)
             .selectAll()
             .executeTakeFirst(),
 
           trx
-            .selectFrom('sq_user_bans')
+            .selectFrom('_sq_user_bans')
             .where('userId', '=', payload.sub)
             .where((eb) =>
               eb.or([
@@ -49,23 +49,23 @@ export default defineCachedEventHandler(
             .executeTakeFirst(),
 
           trx
-            .selectFrom('sq_user_metadata')
+            .selectFrom('_sq_user_metadata')
             .where('userId', '=', payload.sub)
             .where('isPublic', '=', 1)
             .select(['key', 'value'])
             .execute(),
 
           trx
-            .selectFrom('sq_roles as roles')
-            .innerJoin('sq_user_roles as urole', 'roles.id', 'urole.roleId')
+            .selectFrom('_sq_roles as roles')
+            .innerJoin('_sq_user_roles as urole', 'roles.id', 'urole.roleId')
             .where('urole.userId', '=', payload.sub)
             .select(['roles.id', 'roles.name', 'roles.type', 'roles.organizationId'])
             .execute(),
 
           trx
-            .selectFrom('sq_permissions as perms')
-            .innerJoin('sq_role_permissions as rp', 'perms.id', 'rp.permissionId')
-            .innerJoin('sq_user_roles as urole', 'rp.roleId', 'urole.roleId')
+            .selectFrom('_sq_permissions as perms')
+            .innerJoin('_sq_role_permissions as rp', 'perms.id', 'rp.permissionId')
+            .innerJoin('_sq_user_roles as urole', 'rp.roleId', 'urole.roleId')
             .where('urole.userId', '=', payload.sub)
             .select(['perms.id', 'perms.name', 'perms.category', 'perms.action', 'perms.resource'])
             .execute(),

@@ -4,7 +4,7 @@ import type { Database } from '~/database/db.schema'
 
 export const up = async (db: Kysely<Database>): Promise<void> => {
   await db.schema
-    .createTable('sq_jwks')
+    .createTable('_sq_jwks')
     .addColumn('id', 'text', (col) => col.primaryKey())
     .addColumn('key_id', 'text', (col) => col.notNull().unique())
     .addColumn('public_key', 'text', (col) => col.notNull())
@@ -35,11 +35,11 @@ export const up = async (db: Kysely<Database>): Promise<void> => {
    * Ensures accurate tracking of key changes for security audit
    */
   await sql`
-    CREATE TRIGGER IF NOT EXISTS sq_trg_jwks_timestamp
-    AFTER UPDATE ON sq_jwks
+    CREATE TRIGGER IF NOT EXISTS _sq_trg_jwks_timestamp
+    AFTER UPDATE ON _sq_jwks
     FOR EACH ROW
     BEGIN
-      UPDATE sq_jwks
+      UPDATE _sq_jwks
       SET updated_at = strftime('%s', 'now')
       WHERE id = NEW.id;
     END;
@@ -50,8 +50,8 @@ export const up = async (db: Kysely<Database>): Promise<void> => {
    * Optimizes JWK retrieval during token verification
    */
   await db.schema
-    .createIndex('sq_idx_jwks_key')
-    .on('sq_jwks')
+    .createIndex('_sq_idx_jwks_key')
+    .on('_sq_jwks')
     .column('key_id')
     .ifNotExists()
     .execute()
@@ -61,8 +61,8 @@ export const up = async (db: Kysely<Database>): Promise<void> => {
    * Improves queries that filter active signing keys
    */
   await db.schema
-    .createIndex('sq_idx_jwks_active')
-    .on('sq_jwks')
+    .createIndex('_sq_idx_jwks_active')
+    .on('_sq_jwks')
     .column('is_active')
     .ifNotExists()
     .execute()
@@ -72,17 +72,17 @@ export const up = async (db: Kysely<Database>): Promise<void> => {
    * Enhances queries that validate key validity
    */
   await db.schema
-    .createIndex('sq_idx_jwks_expires')
-    .on('sq_jwks')
+    .createIndex('_sq_idx_jwks_expires')
+    .on('_sq_jwks')
     .column('expires_at')
     .ifNotExists()
     .execute()
 }
 
 export const down = async (db: Kysely<Database>): Promise<void> => {
-  await db.schema.dropIndex('sq_idx_jwks_expires').ifExists().execute()
-  await db.schema.dropIndex('sq_idx_jwks_active').ifExists().execute()
-  await db.schema.dropIndex('sq_idx_jwks_key').ifExists().execute()
-  await sql`DROP TRIGGER IF EXISTS sq_trg_jwks_timestamp;`.execute(db)
-  await db.schema.dropTable('sq_jwks').ifExists().execute()
+  await db.schema.dropIndex('_sq_idx_jwks_expires').ifExists().execute()
+  await db.schema.dropIndex('_sq_idx_jwks_active').ifExists().execute()
+  await db.schema.dropIndex('_sq_idx_jwks_key').ifExists().execute()
+  await sql`DROP TRIGGER IF EXISTS _sq_trg_jwks_timestamp;`.execute(db)
+  await db.schema.dropTable('_sq_jwks').ifExists().execute()
 }

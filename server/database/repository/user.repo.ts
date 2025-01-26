@@ -5,15 +5,15 @@ import type { User, UserInsert } from '~/database/schemas/user'
 export default function createUserRepository(db: Kysely<Database>) {
   return {
     findMany: async (): Promise<User[]> => {
-      return await db.selectFrom('sq_users').selectAll().execute()
+      return await db.selectFrom('_sq_users').selectAll().execute()
     },
 
-    findById: async <SE extends SelectExpression<Database, 'sq_users'>>(
+    findById: async <SE extends SelectExpression<Database, '_sq_users'>>(
       id: string,
       cols?: readonly SE[]
     ): Promise<Partial<User> | undefined> => {
       try {
-        const query = db.selectFrom('sq_users').where('id', '=', id)
+        const query = db.selectFrom('_sq_users').where('id', '=', id)
         const result = cols
           ? await query.select(cols).executeTakeFirst()
           : await query.selectAll().executeTakeFirst()
@@ -27,8 +27,8 @@ export default function createUserRepository(db: Kysely<Database>) {
     findByEmail: async (email: string): Promise<Partial<User> | undefined> => {
       try {
         const result = await db
-          .selectFrom('sq_users as users')
-          .innerJoin('sq_emails as emails', 'emails.userId', 'users.id')
+          .selectFrom('_sq_users as users')
+          .innerJoin('_sq_emails as emails', 'emails.userId', 'users.id')
           .where('emails.email', '=', email)
           .where('emails.isPrimary', '=', 1)
           .where('users.isActive', '=', 1)
@@ -43,7 +43,7 @@ export default function createUserRepository(db: Kysely<Database>) {
     },
     findActive: async (username: string) => {
       return db
-        .selectFrom('sq_users')
+        .selectFrom('_sq_users')
         .select(['id', 'username', 'firstName', 'lastName', 'isActive'])
         .where('username', '=', username)
         .where('isActive', '=', 1)
@@ -52,7 +52,7 @@ export default function createUserRepository(db: Kysely<Database>) {
     },
 
     create: async (data: UserInsert): Promise<User> => {
-      const result = await db.insertInto('sq_users').values(data).returningAll().executeTakeFirst()
+      const result = await db.insertInto('_sq_users').values(data).returningAll().executeTakeFirst()
       if (!result) {
         throw new Error('Failed to create user')
       }

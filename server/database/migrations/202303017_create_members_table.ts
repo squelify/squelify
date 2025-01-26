@@ -4,20 +4,20 @@ import type { Database } from '~/database/db.schema'
 
 export const up = async (db: Kysely<Database>): Promise<void> => {
   await db.schema
-    .createTable('sq_members')
+    .createTable('_sq_members')
     .addColumn('id', 'text', (col) => col.primaryKey())
     .addColumn('organization_id', 'text', (col) =>
-      col.notNull().references('sq_organizations.id').onDelete('cascade')
+      col.notNull().references('_sq_organizations.id').onDelete('cascade')
     )
     .addColumn('user_id', 'text', (col) =>
-      col.notNull().references('sq_users.id').onDelete('cascade')
+      col.notNull().references('_sq_users.id').onDelete('cascade')
     )
     .addColumn('role', 'text', (col) =>
       col.notNull().check(sql`role IN ('org:owner', 'org:admin', 'org:member')`)
     )
     .addColumn('title', 'text')
     .addColumn('department', 'text')
-    .addColumn('invited_by', 'text', (col) => col.references('sq_users.id'))
+    .addColumn('invited_by', 'text', (col) => col.references('_sq_users.id'))
     .addColumn('invited_at', 'integer')
     .addColumn('joined_at', 'integer')
     .addColumn('is_default', 'integer', (col) =>
@@ -34,11 +34,11 @@ export const up = async (db: Kysely<Database>): Promise<void> => {
    * Ensures accurate tracking of membership modifications
    */
   await sql`
-    CREATE TRIGGER IF NOT EXISTS sq_trg_members_timestamp
-    AFTER UPDATE ON sq_members
+    CREATE TRIGGER IF NOT EXISTS _sq_trg_members_timestamp
+    AFTER UPDATE ON _sq_members
     FOR EACH ROW
     BEGIN
-      UPDATE sq_members
+      UPDATE _sq_members
       SET updated_at = strftime('%s', 'now')
       WHERE id = NEW.id;
     END;
@@ -49,8 +49,8 @@ export const up = async (db: Kysely<Database>): Promise<void> => {
    * Prevents duplicate memberships for users in organizations
    */
   await db.schema
-    .createIndex('sq_idx_members_org_user')
-    .on('sq_members')
+    .createIndex('_sq_idx_members_org_user')
+    .on('_sq_members')
     .columns(['organization_id', 'user_id'])
     .unique()
     .ifNotExists()
@@ -61,8 +61,8 @@ export const up = async (db: Kysely<Database>): Promise<void> => {
    * Optimizes queries that fetch members of an organization
    */
   await db.schema
-    .createIndex('sq_idx_members_organization')
-    .on('sq_members')
+    .createIndex('_sq_idx_members_organization')
+    .on('_sq_members')
     .column('organization_id')
     .ifNotExists()
     .execute()
@@ -72,8 +72,8 @@ export const up = async (db: Kysely<Database>): Promise<void> => {
    * Enhances queries that find user memberships
    */
   await db.schema
-    .createIndex('sq_idx_members_user')
-    .on('sq_members')
+    .createIndex('_sq_idx_members_user')
+    .on('_sq_members')
     .column('user_id')
     .ifNotExists()
     .execute()
@@ -83,8 +83,8 @@ export const up = async (db: Kysely<Database>): Promise<void> => {
    * Improves performance when filtering members by role
    */
   await db.schema
-    .createIndex('sq_idx_members_role')
-    .on('sq_members')
+    .createIndex('_sq_idx_members_role')
+    .on('_sq_members')
     .column('role')
     .ifNotExists()
     .execute()
@@ -94,19 +94,19 @@ export const up = async (db: Kysely<Database>): Promise<void> => {
    * Optimizes queries that check user roles across organizations
    */
   await db.schema
-    .createIndex('sq_idx_members_user_role')
-    .on('sq_members')
+    .createIndex('_sq_idx_members_user_role')
+    .on('_sq_members')
     .columns(['user_id', 'role'])
     .ifNotExists()
     .execute()
 }
 
 export const down = async (db: Kysely<Database>): Promise<void> => {
-  await db.schema.dropIndex('sq_idx_members_role').ifExists().execute()
-  await db.schema.dropIndex('sq_idx_members_user').ifExists().execute()
-  await db.schema.dropIndex('sq_idx_members_organization').ifExists().execute()
-  await db.schema.dropIndex('sq_idx_members_org_user').ifExists().execute()
-  await db.schema.dropIndex('sq_idx_members_user_role').ifExists().execute()
-  await sql`DROP TRIGGER IF EXISTS sq_trg_members_timestamp;`.execute(db)
-  await db.schema.dropTable('sq_members').ifExists().execute()
+  await db.schema.dropIndex('_sq_idx_members_role').ifExists().execute()
+  await db.schema.dropIndex('_sq_idx_members_user').ifExists().execute()
+  await db.schema.dropIndex('_sq_idx_members_organization').ifExists().execute()
+  await db.schema.dropIndex('_sq_idx_members_org_user').ifExists().execute()
+  await db.schema.dropIndex('_sq_idx_members_user_role').ifExists().execute()
+  await sql`DROP TRIGGER IF EXISTS _sq_trg_members_timestamp;`.execute(db)
+  await db.schema.dropTable('_sq_members').ifExists().execute()
 }

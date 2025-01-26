@@ -43,7 +43,7 @@ export default defineEventHandler(async (event) => {
 
     // Get organization and verify existence
     const org = await db
-      .selectFrom('sq_organizations')
+      .selectFrom('_sq_organizations')
       .where('id', '=', orgId)
       .select(['id', 'name', 'status'])
       .executeTakeFirst()
@@ -54,7 +54,7 @@ export default defineEventHandler(async (event) => {
 
     // Verify user is an owner
     const member = await db
-      .selectFrom('sq_members')
+      .selectFrom('_sq_members')
       .where('organizationId', '=', orgId)
       .where('userId', '=', userId)
       .where('role', '=', 'org:owner')
@@ -86,7 +86,7 @@ export default defineEventHandler(async (event) => {
 
     // Update organization
     const updatedOrg = await db
-      .updateTable('sq_organizations')
+      .updateTable('_sq_organizations')
       .set({
         ...body,
         updatedAt: now,

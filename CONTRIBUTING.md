@@ -91,7 +91,7 @@ format `YYYYMMXXX_description.sql`:
 #### Validation Rules
 
 - File size limit: 1MB
-- Reserved prefix `sq_` not allowed
+- Reserved prefix `_sq_` not allowed
 - Valid SQLite syntax required
 - Foreign key integrity checks
 - Column naming conventions

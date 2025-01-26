@@ -4,7 +4,7 @@ import { bytesToHex } from '@noble/hashes/utils'
 
 const MAX_FILE_SIZE = 1024 * 1024 // 1MB
 const MAX_INDEXES_PER_TABLE = 5
-const RESERVED_PREFIX = 'sq_'
+const RESERVED_PREFIX = '_sq_'
 const VALID_SQLITE_TYPES = ['TEXT', 'INTEGER', 'REAL', 'BLOB', 'NULL']
 
 // const SQLITE_KEYWORDS = [

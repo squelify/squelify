@@ -28,7 +28,7 @@ export default defineEventHandler(async (event) => {
     const now = Math.floor(Date.now() / 1000)
 
     const verification = await db
-      .selectFrom('sq_verifications')
+      .selectFrom('_sq_verifications')
       .where('token', '=', body.token)
       .where('type', '=', 'password_reset')
       .where('verifiedAt', 'is', null)
@@ -68,7 +68,7 @@ export default defineEventHandler(async (event) => {
 
     await db.transaction().execute(async (trx) => {
       await trx
-        .updateTable('sq_verifications')
+        .updateTable('_sq_verifications')
         .set({
           verifiedAt: now,
           attempts: verification.attempts + 1,
@@ -78,7 +78,7 @@ export default defineEventHandler(async (event) => {
         .execute()
 
       await trx
-        .updateTable('sq_passwords')
+        .updateTable('_sq_passwords')
         .set({
           hash: hashedPassword,
           updatedAt: now,

@@ -31,11 +31,11 @@ import type { IUserRole } from './schemas/user_role'
 import type { IVerification } from './schemas/verification'
 
 /**
- * The `AppMigrationSchema` interface defines the schema for the `sq_migrations`
+ * The `AppMigrationSchema` interface defines the schema for the `_sq_migrations`
  * table, which stores information about user defined migrations.
  */
 interface AppMigrationSchema {
-  sq_migrations: {
+  _sq_migrations: {
     name: string
     checksum: string
     executedAt: ColumnType<Date, number | undefined, never>
@@ -50,28 +50,28 @@ interface AppMigrationSchema {
  * @see: https://www.kysely.dev/docs/recipes/schemas
  */
 export interface Database extends AppMigrationSchema {
-  sq_accounts: IAccount
-  sq_api_keys: IApiKey
-  sq_audit_logs: IAuditLog
-  sq_emails: IEmail
-  sq_invitations: IInvitation
-  sq_jwks: IJWK
-  sq_members: IMember
-  sq_organizations: IOrganization
-  sq_passkeys: IPasskey
-  sq_passwords: IPassword
-  sq_permissions: IPermission
-  sq_rate_limits: IRateLimit
-  sq_role_permissions: IRolePermission
-  sq_roles: IRole
-  sq_sessions: ISession
-  sq_superusers: ISuperuser
-  sq_two_factors: ITwoFactor
-  sq_user_bans: IUserBan
-  sq_user_metadata: IUserMetadata
-  sq_user_roles: IUserRole
-  sq_users: IUser
-  sq_verifications: IVerification
+  _sq_accounts: IAccount
+  _sq_api_keys: IApiKey
+  _sq_audit_logs: IAuditLog
+  _sq_emails: IEmail
+  _sq_invitations: IInvitation
+  _sq_jwks: IJWK
+  _sq_members: IMember
+  _sq_organizations: IOrganization
+  _sq_passkeys: IPasskey
+  _sq_passwords: IPassword
+  _sq_permissions: IPermission
+  _sq_rate_limits: IRateLimit
+  _sq_role_permissions: IRolePermission
+  _sq_roles: IRole
+  _sq_sessions: ISession
+  _sq_superusers: ISuperuser
+  _sq_two_factors: ITwoFactor
+  _sq_user_bans: IUserBan
+  _sq_user_metadata: IUserMetadata
+  _sq_user_roles: IUserRole
+  _sq_users: IUser
+  _sq_verifications: IVerification
 }
 
 /**

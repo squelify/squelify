@@ -16,7 +16,7 @@ export default defineEventHandler(async (event) => {
   try {
     // Get member record with role info
     const targetMember = await db
-      .selectFrom('sq_members')
+      .selectFrom('_sq_members')
       .where('id', '=', memberId)
       .where('organizationId', '=', orgId)
       .select(['id', 'userId', 'role', 'isDefault'])
@@ -28,7 +28,7 @@ export default defineEventHandler(async (event) => {
 
     // Get requester's role
     const requesterMember = await db
-      .selectFrom('sq_members')
+      .selectFrom('_sq_members')
       .where('organizationId', '=', orgId)
       .where('userId', '=', userId)
       .select(['id', 'role'])
@@ -95,7 +95,7 @@ export default defineEventHandler(async (event) => {
 
     // Delete member
     await db
-      .deleteFrom('sq_members')
+      .deleteFrom('_sq_members')
       .where('id', '=', memberId)
       .where('organizationId', '=', orgId)
       .execute()

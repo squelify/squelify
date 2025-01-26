@@ -35,7 +35,7 @@ export default defineEventHandler(async (event) => {
     const keyId = body.keyId || typeid('kid').toString()
 
     const existingKey = await db
-      .selectFrom('sq_jwks')
+      .selectFrom('_sq_jwks')
       .where('keyId', '=', keyId)
       .select(['id'])
       .executeTakeFirst()
@@ -71,7 +71,7 @@ export default defineEventHandler(async (event) => {
     }
 
     const jwk = await db
-      .insertInto('sq_jwks')
+      .insertInto('_sq_jwks')
       .values({
         id: typeid('jwk').toString(),
         keyId: keyId,

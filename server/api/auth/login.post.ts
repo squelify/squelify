@@ -73,16 +73,16 @@ export default defineEventHandler(async (event) => {
     // Query user data in parallel
     const [roles, permissions, twoFactor] = await Promise.all([
       db
-        .selectFrom('sq_roles as r')
-        .innerJoin('sq_user_roles as urole', 'r.id', 'urole.roleId')
+        .selectFrom('_sq_roles as r')
+        .innerJoin('_sq_user_roles as urole', 'r.id', 'urole.roleId')
         .where('urole.userId', '=', user.id)
         .select(['r.id', 'r.name', 'r.type', 'r.organizationId'])
         .execute(),
 
       db
-        .selectFrom('sq_permissions as perms')
-        .innerJoin('sq_role_permissions as rp', 'perms.id', 'rp.permissionId')
-        .innerJoin('sq_user_roles as urole', 'rp.roleId', 'urole.roleId')
+        .selectFrom('_sq_permissions as perms')
+        .innerJoin('_sq_role_permissions as rp', 'perms.id', 'rp.permissionId')
+        .innerJoin('_sq_user_roles as urole', 'rp.roleId', 'urole.roleId')
         .where('urole.userId', '=', user.id)
         .select([
           'perms.id',
@@ -95,7 +95,7 @@ export default defineEventHandler(async (event) => {
         .execute(),
 
       db
-        .selectFrom('sq_two_factors')
+        .selectFrom('_sq_two_factors')
         .where('userId', '=', user.id)
         .where('verifiedAt', '!=', null)
         .select(['type'])

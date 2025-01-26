@@ -4,7 +4,7 @@ import type { Database } from '~/database/db.schema'
 
 export const up = async (db: Kysely<Database>): Promise<void> => {
   await db.schema
-    .createTable('sq_permissions')
+    .createTable('_sq_permissions')
     .addColumn('id', 'text', (col) => col.primaryKey())
     .addColumn('name', 'text', (col) => col.notNull().unique().check(sql`LENGTH(name) >= 3`))
     .addColumn('description', 'text')
@@ -27,11 +27,11 @@ export const up = async (db: Kysely<Database>): Promise<void> => {
    * Ensures accurate tracking of permission modifications
    */
   await sql`
-    CREATE TRIGGER IF NOT EXISTS sq_trg_permissions_timestamp
-    AFTER UPDATE ON sq_permissions
+    CREATE TRIGGER IF NOT EXISTS _sq_trg_permissions_timestamp
+    AFTER UPDATE ON _sq_permissions
     FOR EACH ROW
     BEGIN
-      UPDATE sq_permissions
+      UPDATE _sq_permissions
       SET updated_at = strftime('%s', 'now')
       WHERE id = NEW.id;
     END;
@@ -42,8 +42,8 @@ export const up = async (db: Kysely<Database>): Promise<void> => {
    * Optimizes permission validation queries
    */
   await db.schema
-    .createIndex('sq_idx_permissions_name')
-    .on('sq_permissions')
+    .createIndex('_sq_idx_permissions_name')
+    .on('_sq_permissions')
     .column('name')
     .ifNotExists()
     .execute()
@@ -53,8 +53,8 @@ export const up = async (db: Kysely<Database>): Promise<void> => {
    * Enhances queries that filter permissions by category
    */
   await db.schema
-    .createIndex('sq_idx_permissions_category')
-    .on('sq_permissions')
+    .createIndex('_sq_idx_permissions_category')
+    .on('_sq_permissions')
     .column('category')
     .ifNotExists()
     .execute()
@@ -64,17 +64,17 @@ export const up = async (db: Kysely<Database>): Promise<void> => {
    * Improves performance of permission checking queries
    */
   await db.schema
-    .createIndex('sq_idx_permissions_resource_action')
-    .on('sq_permissions')
+    .createIndex('_sq_idx_permissions_resource_action')
+    .on('_sq_permissions')
     .columns(['resource', 'action'])
     .ifNotExists()
     .execute()
 }
 
 export const down = async (db: Kysely<Database>): Promise<void> => {
-  await db.schema.dropIndex('sq_idx_permissions_resource_action').ifExists().execute()
-  await db.schema.dropIndex('sq_idx_permissions_category').ifExists().execute()
-  await db.schema.dropIndex('sq_idx_permissions_name').ifExists().execute()
-  await sql`DROP TRIGGER IF EXISTS sq_trg_permissions_timestamp;`.execute(db)
-  await db.schema.dropTable('sq_permissions').ifExists().execute()
+  await db.schema.dropIndex('_sq_idx_permissions_resource_action').ifExists().execute()
+  await db.schema.dropIndex('_sq_idx_permissions_category').ifExists().execute()
+  await db.schema.dropIndex('_sq_idx_permissions_name').ifExists().execute()
+  await sql`DROP TRIGGER IF EXISTS _sq_trg_permissions_timestamp;`.execute(db)
+  await db.schema.dropTable('_sq_permissions').ifExists().execute()
 }

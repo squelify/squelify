@@ -4,7 +4,7 @@ import type { Database } from '~/database/db.schema'
 
 export const up = async (db: Kysely<Database>): Promise<void> => {
   await db.schema
-    .createTable('sq_rate_limits')
+    .createTable('_sq_rate_limits')
     .addColumn('id', 'text', (col) => col.primaryKey())
     .addColumn('key', 'text', (col) => col.notNull())
     .addColumn('context', 'text', (col) =>
@@ -26,8 +26,8 @@ export const up = async (db: Kysely<Database>): Promise<void> => {
    * Ensures unique rate limit tracking per key and context
    */
   await db.schema
-    .createIndex('sq_idx_rate_limits_key')
-    .on('sq_rate_limits')
+    .createIndex('_sq_idx_rate_limits_key')
+    .on('_sq_rate_limits')
     .columns(['key', 'context'])
     .unique()
     .ifNotExists()
@@ -38,8 +38,8 @@ export const up = async (db: Kysely<Database>): Promise<void> => {
    * Optimizes queries that manage rate limit expiration and blocking
    */
   await db.schema
-    .createIndex('sq_idx_rate_limits_cleanup')
-    .on('sq_rate_limits')
+    .createIndex('_sq_idx_rate_limits_cleanup')
+    .on('_sq_rate_limits')
     .columns(['expires_at', 'blocked_until'])
     .ifNotExists()
     .execute()
@@ -49,10 +49,10 @@ export const up = async (db: Kysely<Database>): Promise<void> => {
    * Maintains database hygiene by removing expired entries
    */
   await sql`
-    CREATE TRIGGER IF NOT EXISTS sq_trg_rate_limits_cleanup
-    AFTER INSERT ON sq_rate_limits
+    CREATE TRIGGER IF NOT EXISTS _sq_trg_rate_limits_cleanup
+    AFTER INSERT ON _sq_rate_limits
     BEGIN
-      DELETE FROM sq_rate_limits
+      DELETE FROM _sq_rate_limits
       WHERE expires_at < strftime('%s', 'now')
       AND blocked_until IS NULL;
     END;
@@ -60,8 +60,8 @@ export const up = async (db: Kysely<Database>): Promise<void> => {
 }
 
 export const down = async (db: Kysely<Database>): Promise<void> => {
-  await db.schema.dropIndex('sq_idx_rate_limits_key').ifExists().execute()
-  await db.schema.dropIndex('sq_idx_rate_limits_cleanup').ifExists().execute()
-  await sql`DROP TRIGGER IF EXISTS sq_trg_rate_limits_cleanup;`.execute(db)
-  await db.schema.dropTable('sq_rate_limits').ifExists().execute()
+  await db.schema.dropIndex('_sq_idx_rate_limits_key').ifExists().execute()
+  await db.schema.dropIndex('_sq_idx_rate_limits_cleanup').ifExists().execute()
+  await sql`DROP TRIGGER IF EXISTS _sq_trg_rate_limits_cleanup;`.execute(db)
+  await db.schema.dropTable('_sq_rate_limits').ifExists().execute()
 }

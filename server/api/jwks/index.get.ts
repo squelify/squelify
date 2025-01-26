@@ -40,13 +40,13 @@ export default defineCachedEventHandler(
 
       // Get total count for pagination
       const totalCount = await db
-        .selectFrom('sq_jwks')
+        .selectFrom('_sq_jwks')
         .select((eb) => eb.fn.countAll().as('count'))
         .executeTakeFirst()
 
       // Get paginated JWKs
       const jwks = await db
-        .selectFrom('sq_jwks')
+        .selectFrom('_sq_jwks')
         .select([
           'id',
           'keyId',

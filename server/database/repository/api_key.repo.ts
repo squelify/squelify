@@ -55,7 +55,7 @@ export async function createApiKey(db: Kysely<Database>, options: CreateApiKeyOp
     const hash = await hashToken(key)
 
     const apiKey = await db
-      .insertInto('sq_api_keys')
+      .insertInto('_sq_api_keys')
       .values({ id, userId, name, key, hash, isActive, expiresAt: expiry, createdAt })
       .onConflict((oc) => oc.column('key').doNothing())
       .returningAll()
@@ -113,7 +113,7 @@ export async function validateApiKey(db: Kysely<Database>, key: string): Promise
 
     // Get API key record with active status
     const apiKey = await db
-      .selectFrom('sq_api_keys')
+      .selectFrom('_sq_api_keys')
       .where('key', '=', key)
       .where('isActive', '=', 1)
       .where((eb) =>
@@ -131,7 +131,7 @@ export async function validateApiKey(db: Kysely<Database>, key: string): Promise
 
     // Update last used timestamp
     await db
-      .updateTable('sq_api_keys')
+      .updateTable('_sq_api_keys')
       .set({ lastUsedAt: now })
       .where('id', '=', apiKey.id)
       .execute()

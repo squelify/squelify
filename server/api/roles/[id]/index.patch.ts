@@ -32,7 +32,7 @@ export default defineEventHandler(async (event) => {
 
     // Get existing role
     const role = await db
-      .selectFrom('sq_roles')
+      .selectFrom('_sq_roles')
       .where('id', '=', roleId)
       .selectAll()
       .executeTakeFirst()
@@ -44,7 +44,7 @@ export default defineEventHandler(async (event) => {
     // Verify update permissions
     if (role.type === 'organization') {
       const member = await db
-        .selectFrom('sq_members')
+        .selectFrom('_sq_members')
         .where('organizationId', '=', role.organizationId)
         .where('userId', '=', userId)
         .where('role', '=', 'org:owner')
@@ -77,7 +77,7 @@ export default defineEventHandler(async (event) => {
 
     // Update role
     const updatedRole = await db
-      .updateTable('sq_roles')
+      .updateTable('_sq_roles')
       .set({
         ...updateData,
         updatedAt: now,

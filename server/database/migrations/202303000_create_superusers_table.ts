@@ -10,37 +10,37 @@ import type { Database } from '~/database/db.schema'
 export const up = async (db: Kysely<Database>): Promise<void> => {
   // Create table
   await db.schema
-    .createTable('sq_superusers')
+    .createTable('_sq_superusers')
     .addColumn('id', 'text', (col) => col.primaryKey())
     .$call(addColumnTimestamps)
     .modifyEnd(sql`STRICT`)
     .execute()
 
   // Create auto-update trigger
-  await createTriggerUpdatedAt('sq_superusers', true).execute(db)
+  await createTriggerUpdatedAt('_sq_superusers', true).execute(db)
 
   // Create indexes for primary key
-  await db.schema.createIndex('sq_idx_superusers_id').on('sq_superusers').column('id').execute()
+  await db.schema.createIndex('_sq_idx_superusers_id').on('_sq_superusers').column('id').execute()
 
   // Create indexes for created_at
   await db.schema
-    .createIndex('sq_idx_superusers_created_at')
-    .on('sq_superusers')
+    .createIndex('_sq_idx_superusers_created_at')
+    .on('_sq_superusers')
     .column('created_at')
     .execute()
 
   // Create indexes for updated_at
   await db.schema
-    .createIndex('sq_idx_superusers_updated_at')
-    .on('sq_superusers')
+    .createIndex('_sq_idx_superusers_updated_at')
+    .on('_sq_superusers')
     .column('updated_at')
     .execute()
 }
 
 export const down = async (db: Kysely<Database>): Promise<void> => {
-  await db.schema.dropIndex('sq_idx_superusers_updated_at').ifExists().execute()
-  await db.schema.dropIndex('sq_idx_superusers_created_at').ifExists().execute()
-  await db.schema.dropIndex('sq_idx_superusers_id').ifExists().execute()
-  await dropTriggerUpdatedAt('sq_superusers', true).execute(db)
-  await db.schema.dropTable('sq_superusers').ifExists().execute()
+  await db.schema.dropIndex('_sq_idx_superusers_updated_at').ifExists().execute()
+  await db.schema.dropIndex('_sq_idx_superusers_created_at').ifExists().execute()
+  await db.schema.dropIndex('_sq_idx_superusers_id').ifExists().execute()
+  await dropTriggerUpdatedAt('_sq_superusers', true).execute(db)
+  await db.schema.dropTable('_sq_superusers').ifExists().execute()
 }

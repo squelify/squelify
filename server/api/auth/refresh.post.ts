@@ -18,9 +18,9 @@ export default defineEventHandler(async (event) => {
     const now = Math.floor(Date.now() / 1000)
 
     const sessionQuery = db
-      .selectFrom('sq_sessions as sessions')
-      .innerJoin('sq_users as users', 'users.id', 'sessions.userId')
-      .innerJoin('sq_emails as emails', 'emails.userId', 'users.id')
+      .selectFrom('_sq_sessions as sessions')
+      .innerJoin('_sq_users as users', 'users.id', 'sessions.userId')
+      .innerJoin('_sq_emails as emails', 'emails.userId', 'users.id')
       .where('sessions.refreshToken', '=', refreshToken)
       .where('sessions.isActive', '=', 1)
       .where('sessions.expiresAt', '>', now)
@@ -54,16 +54,16 @@ export default defineEventHandler(async (event) => {
 
     const [roles, permissions] = await Promise.all([
       db
-        .selectFrom('sq_roles as r')
-        .innerJoin('sq_user_roles as urole', 'r.id', 'urole.roleId')
+        .selectFrom('_sq_roles as r')
+        .innerJoin('_sq_user_roles as urole', 'r.id', 'urole.roleId')
         .where('urole.userId', '=', session.userId)
         .select(['r.name', 'r.type', 'r.organizationId'])
         .execute(),
 
       db
-        .selectFrom('sq_permissions as perms')
-        .innerJoin('sq_role_permissions as rp', 'perms.id', 'rp.permissionId')
-        .innerJoin('sq_user_roles as urole', 'rp.roleId', 'urole.roleId')
+        .selectFrom('_sq_permissions as perms')
+        .innerJoin('_sq_role_permissions as rp', 'perms.id', 'rp.permissionId')
+        .innerJoin('_sq_user_roles as urole', 'rp.roleId', 'urole.roleId')
         .where('urole.userId', '=', session.userId)
         .select(['perms.action', 'perms.resource'])
         .execute(),
@@ -99,7 +99,7 @@ export default defineEventHandler(async (event) => {
     })
 
     await db
-      .updateTable('sq_sessions')
+      .updateTable('_sq_sessions')
       .set({ lastActiveAt: now })
       .where('id', '=', session.sessionId)
       .execute()

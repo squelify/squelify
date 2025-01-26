@@ -34,7 +34,7 @@ export default defineEventHandler(async (event) => {
     }
 
     const verification = await db
-      .selectFrom('sq_verifications')
+      .selectFrom('_sq_verifications')
       .where('token', '=', token)
       .where('type', '=', 'email')
       .select(['id', 'userId', 'identifier', 'attempts', 'maxAttempts', 'verifiedAt', 'expiresAt'])
@@ -71,7 +71,7 @@ export default defineEventHandler(async (event) => {
     }
 
     const rateLimit = await db
-      .selectFrom('sq_rate_limits')
+      .selectFrom('_sq_rate_limits')
       .where('key', '=', verification.identifier)
       .where('context', '=', 'email')
       .where('expiresAt', '>', now)
@@ -93,7 +93,7 @@ export default defineEventHandler(async (event) => {
         const blocked = newPoints >= 3
 
         await db
-          .updateTable('sq_rate_limits')
+          .updateTable('_sq_rate_limits')
           .set({
             points: newPoints,
             blockedUntil: blocked ? now + 30 * 60 : null,
@@ -108,7 +108,7 @@ export default defineEventHandler(async (event) => {
         }
       } else {
         await db
-          .insertInto('sq_rate_limits')
+          .insertInto('_sq_rate_limits')
           .values({
             id: typeid('rlim').toString(),
             key: verification.identifier,
@@ -124,7 +124,7 @@ export default defineEventHandler(async (event) => {
 
       const newToken = typeid().toString()
       await db
-        .insertInto('sq_verifications')
+        .insertInto('_sq_verifications')
         .values({
           id: typeid('ver').toString(),
           userId: verification.userId,
@@ -164,7 +164,7 @@ export default defineEventHandler(async (event) => {
 
     await db.transaction().execute(async (trx) => {
       await trx
-        .updateTable('sq_verifications')
+        .updateTable('_sq_verifications')
         .set({
           verifiedAt: now,
           attempts: verification.attempts + 1,
@@ -174,7 +174,7 @@ export default defineEventHandler(async (event) => {
         .execute()
 
       await trx
-        .updateTable('sq_emails')
+        .updateTable('_sq_emails')
         .set({
           verifiedAt: now,
           updatedAt: now,

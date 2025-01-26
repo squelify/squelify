@@ -33,14 +33,14 @@ export default defineEventHandler(async (event) => {
     // Get user and metadata
     const [user, metadata] = await db.transaction().execute(async (trx) => {
       const userPromise = trx
-        .selectFrom('sq_users')
+        .selectFrom('_sq_users')
         .where('id', '=', userId)
         .where('deletedAt', 'is', null)
         .select(['id', 'firstName', 'lastName', 'username', 'avatarUrl'])
         .executeTakeFirst()
 
       const metadataPromise = trx
-        .selectFrom('sq_user_metadata')
+        .selectFrom('_sq_user_metadata')
         .where('userId', '=', userId)
         .where('isPublic', '=', 1)
         .select(['key', 'value'])
@@ -80,7 +80,7 @@ export default defineEventHandler(async (event) => {
     // Update user and track profile update in metadata
     const [updatedUser] = await db.transaction().execute(async (trx) => {
       const userUpdatePromise = trx
-        .updateTable('sq_users')
+        .updateTable('_sq_users')
         .set({
           ...updateData,
           updatedAt: now,
@@ -90,7 +90,7 @@ export default defineEventHandler(async (event) => {
         .executeTakeFirst()
 
       await trx
-        .insertInto('sq_user_metadata')
+        .insertInto('_sq_user_metadata')
         .values({
           id: typeid('meta').toString(),
           userId,

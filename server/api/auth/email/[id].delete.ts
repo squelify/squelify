@@ -13,7 +13,7 @@ export default defineEventHandler(async (event) => {
 
   try {
     const emailCount = await db
-      .selectFrom('sq_emails')
+      .selectFrom('_sq_emails')
       .where('userId', '=', payload.sub)
       .where('verifiedAt', 'is not', null)
       .select(({ fn }) => [fn.count<number>('id').as('count')])
@@ -36,7 +36,7 @@ export default defineEventHandler(async (event) => {
     }
 
     const email = await db
-      .selectFrom('sq_emails')
+      .selectFrom('_sq_emails')
       .where('id', '=', event.context.params?.id)
       .where('userId', '=', payload.sub)
       .select(['id', 'email', 'isPrimary', 'verifiedAt'])
@@ -77,14 +77,14 @@ export default defineEventHandler(async (event) => {
 
     await db.transaction().execute(async (trx) => {
       await trx
-        .deleteFrom('sq_verifications')
+        .deleteFrom('_sq_verifications')
         .where('userId', '=', payload.sub)
         .where('identifier', '=', email.email)
         .where('type', '=', 'email')
         .execute()
 
       await trx
-        .deleteFrom('sq_emails')
+        .deleteFrom('_sq_emails')
         .where('id', '=', event.context.params?.id)
         .where('userId', '=', payload.sub)
         .execute()

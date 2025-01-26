@@ -4,7 +4,7 @@ import { Kysely } from 'kysely'
 
 /**
  * Checks if a table exists in the database
- * Excludes system tables and internal tables with sq_ prefix
+ * Excludes system tables and internal tables with _sq_ prefix
  */
 export async function isTableExists(db: Kysely<any>, tableName: string): Promise<boolean> {
   const table = await db
@@ -14,7 +14,7 @@ export async function isTableExists(db: Kysely<any>, tableName: string): Promise
     .where('name', 'not like', 'sqlite_%') // exclude system tables
     .where('name', 'not like', '_migration') // exclude internal migration table
     .where('name', 'not like', '_migration_lock') // exclude internal migration lock table
-    .where('name', 'not like', 'sq_%') // exclude internal tables with `sq_` prefix
+    .where('name', 'not like', '_sq_%') // exclude internal tables with `_sq_` prefix
     .where('name', '=', tableName)
     .limit(1)
     .execute()
@@ -43,7 +43,7 @@ export async function listTables(db: Kysely<any>) {
     .select(['name', 'sql'])
     .where('type', '=', 'table')
     .where('name', 'not like', 'sqlite_%')
-    .where('name', 'not like', 'sq_%')
+    .where('name', 'not like', '_sq_%')
     .execute()
 }
 

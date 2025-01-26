@@ -51,7 +51,7 @@ export default defineEventHandler(async (event) => {
 
     // Check if email already exists
     const existingEmail = await db
-      .selectFrom('sq_emails')
+      .selectFrom('_sq_emails')
       .where('email', '=', body.email)
       .select(['id'])
       .executeTakeFirst()
@@ -71,7 +71,7 @@ export default defineEventHandler(async (event) => {
 
       while (!isUnique && attempt < 5) {
         const exists = await db
-          .selectFrom('sq_users')
+          .selectFrom('_sq_users')
           .where('username', '=', username)
           .where('deletedAt', 'is', null)
           .select(['id'])
@@ -90,7 +90,7 @@ export default defineEventHandler(async (event) => {
       }
     } else {
       const existingUser = await db
-        .selectFrom('sq_users')
+        .selectFrom('_sq_users')
         .where('username', '=', username)
         .where('deletedAt', 'is', null)
         .select(['id'])
@@ -106,7 +106,7 @@ export default defineEventHandler(async (event) => {
     const result = await db.transaction().execute(async (trx) => {
       // Create user
       const user = await trx
-        .insertInto('sq_users')
+        .insertInto('_sq_users')
         .values({
           id: userId,
           firstName: body.firstName,
@@ -121,7 +121,7 @@ export default defineEventHandler(async (event) => {
 
       // Create primary email
       await trx
-        .insertInto('sq_emails')
+        .insertInto('_sq_emails')
         .values({
           id: typeid('eml').toString(),
           userId: userId,
@@ -133,7 +133,7 @@ export default defineEventHandler(async (event) => {
 
       // Create initial metadata
       await trx
-        .insertInto('sq_user_metadata')
+        .insertInto('_sq_user_metadata')
         .values({
           id: typeid('meta').toString(),
           userId: userId,
@@ -147,7 +147,7 @@ export default defineEventHandler(async (event) => {
       if (body.password) {
         const hashedPassword = await hashPassword(body.password, DEFAULT_PASSWORD_ALGORITHM)
         await trx
-          .insertInto('sq_passwords')
+          .insertInto('_sq_passwords')
           .values({
             id: typeid('pwd').toString(),
             userId: userId,
@@ -160,7 +160,7 @@ export default defineEventHandler(async (event) => {
 
       // Get public metadata
       const metadata = await trx
-        .selectFrom('sq_user_metadata')
+        .selectFrom('_sq_user_metadata')
         .where('userId', '=', userId)
         .where('isPublic', '=', 1)
         .select(['key', 'value'])

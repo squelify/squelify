@@ -41,7 +41,7 @@ export default defineEventHandler(async (event) => {
 
     // Verify organization exists
     const org = await db
-      .selectFrom('sq_organizations')
+      .selectFrom('_sq_organizations')
       .where('id', '=', orgId)
       .select(['id', 'name', 'status'])
       .executeTakeFirst()
@@ -52,7 +52,7 @@ export default defineEventHandler(async (event) => {
 
     // Verify requester is an owner or admin
     const requester = await db
-      .selectFrom('sq_members')
+      .selectFrom('_sq_members')
       .where('organizationId', '=', orgId)
       .where('userId', '=', userId)
       .where('role', 'in', ['org:owner', 'org:admin'])
@@ -100,7 +100,7 @@ export default defineEventHandler(async (event) => {
 
     // Check if user is already a member
     const existingMember = await db
-      .selectFrom('sq_members')
+      .selectFrom('_sq_members')
       .where('organizationId', '=', orgId)
       .where('userId', '=', body.userId)
       .select(['id'])
@@ -113,7 +113,7 @@ export default defineEventHandler(async (event) => {
     // Create member
     const memberId = typeid('mem').toString()
     await db
-      .insertInto('sq_members')
+      .insertInto('_sq_members')
       .values({
         id: memberId,
         organizationId: orgId,
@@ -131,9 +131,9 @@ export default defineEventHandler(async (event) => {
 
     // Get member with user info
     const memberWithUser = await db
-      .selectFrom('sq_members as m')
-      .innerJoin('sq_users as u', 'u.id', 'm.userId')
-      .leftJoin('sq_emails as e', (join) =>
+      .selectFrom('_sq_members as m')
+      .innerJoin('_sq_users as u', 'u.id', 'm.userId')
+      .leftJoin('_sq_emails as e', (join) =>
         join.onRef('e.userId', '=', 'u.id').on('e.isPrimary', '=', 1)
       )
       .where('m.id', '=', memberId)

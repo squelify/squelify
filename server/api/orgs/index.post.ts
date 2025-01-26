@@ -49,7 +49,7 @@ export default defineEventHandler(async (event) => {
 
     // Check existing organization
     const existingOrg = await db
-      .selectFrom('sq_organizations')
+      .selectFrom('_sq_organizations')
       .where((eb) =>
         eb.or([
           eb('slug', '=', body.slug),
@@ -83,7 +83,7 @@ export default defineEventHandler(async (event) => {
     await db.transaction().execute(async (trx) => {
       // Create organization
       await trx
-        .insertInto('sq_organizations')
+        .insertInto('_sq_organizations')
         .values({
           id: orgId,
           name: body.name,
@@ -105,7 +105,7 @@ export default defineEventHandler(async (event) => {
 
       // Create owner member
       await trx
-        .insertInto('sq_members')
+        .insertInto('_sq_members')
         .values({
           id: memberId,
           organizationId: orgId,
@@ -120,7 +120,7 @@ export default defineEventHandler(async (event) => {
 
     // Get created organization
     const org = await db
-      .selectFrom('sq_organizations')
+      .selectFrom('_sq_organizations')
       .where('id', '=', orgId)
       .selectAll()
       .executeTakeFirst()

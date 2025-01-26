@@ -1,4 +1,5 @@
-import { existsSync, readFileSync, readdirSync } from 'node:fs'
+import { existsSync, readFileSync } from 'node:fs'
+import { globby } from 'globby'
 import { join, resolve } from 'pathe'
 import { env } from 'std-env'
 import db, { libSQLClient } from '~/database/db.client'
@@ -34,9 +35,9 @@ export default defineNitroPlugin(async (_nitroApp) => {
 
     // Check if application is installed by checking existence of admin user
     const isInstalled = await db
-      .selectFrom('sq_users as users')
-      .innerJoin('sq_user_roles as user_roles', 'user_roles.userId', 'users.id')
-      .innerJoin('sq_roles as roles', 'roles.id', 'user_roles.roleId')
+      .selectFrom('_sq_users as users')
+      .innerJoin('_sq_user_roles as user_roles', 'user_roles.userId', 'users.id')
+      .innerJoin('_sq_roles as roles', 'roles.id', 'user_roles.roleId')
       .where('roles.name', '=', 'admin')
       .where('users.isActive', '=', 1)
       .select('users.id')
@@ -56,9 +57,9 @@ export default defineNitroPlugin(async (_nitroApp) => {
       return
     }
 
-    const userFiles = readdirSync(migrationDir)
-      .filter((f) => f.endsWith('.sql'))
-      .sort()
+    const userFiles = await globby('**/*.sql', {
+      cwd: migrationDir,
+    })
 
     if (userFiles.length === 0) {
       logger.info('[app]', 'No user migration files found, skipping...')
@@ -67,7 +68,7 @@ export default defineNitroPlugin(async (_nitroApp) => {
 
     // Get executed migrations
     const executed = await db
-      .selectFrom('sq_migrations')
+      .selectFrom('_sq_migrations')
       .select('name')
       .execute()
       .then((rows) => rows.map((r) => r.name))
@@ -109,7 +110,7 @@ export default defineNitroPlugin(async (_nitroApp) => {
 
       // Save the migration status to the database
       await db
-        .insertInto('sq_migrations')
+        .insertInto('_sq_migrations')
         .values({
           name: migrationName,
           checksum: validation.checksum,

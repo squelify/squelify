@@ -53,7 +53,7 @@ export function json<T>(value: T): RawBuilder<T> {
 }
 
 export function createTriggerUpdatedAt(table: string, isInternal = false): RawBuilder<string> {
-  const triggerName = `${isInternal ? 'sq_' : ''}trg_${table}_updated_at`
+  const triggerName = `${isInternal ? '_sq_' : ''}trg_${table}_updated_at`
   return sql.raw(`CREATE TRIGGER IF NOT EXISTS ${triggerName}
     AFTER UPDATE ON ${table} FOR EACH ROW
     BEGIN
@@ -64,6 +64,6 @@ export function createTriggerUpdatedAt(table: string, isInternal = false): RawBu
 }
 
 export function dropTriggerUpdatedAt(table: string, isInternal = false): RawBuilder<string> {
-  const triggerName = `${isInternal ? 'sq_' : ''}trg_${table}_updated_at`
+  const triggerName = `${isInternal ? '_sq_' : ''}trg_${table}_updated_at`
   return sql.raw(`DROP TRIGGER IF EXISTS ${triggerName};`)
 }

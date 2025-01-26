@@ -40,7 +40,7 @@ export default defineCachedEventHandler(
     try {
       // Get organization details
       const org = await db
-        .selectFrom('sq_organizations')
+        .selectFrom('_sq_organizations')
         .where('id', '=', orgId)
         .selectAll()
         .executeTakeFirst()
@@ -51,7 +51,7 @@ export default defineCachedEventHandler(
 
       // Get member count by role
       const memberStats = await db
-        .selectFrom('sq_members')
+        .selectFrom('_sq_members')
         .where('organizationId', '=', orgId)
         .select(['role'])
         .select((eb) => eb.fn.count('id').as('count'))
@@ -60,9 +60,9 @@ export default defineCachedEventHandler(
 
       // Get all owners info
       const owners = await db
-        .selectFrom('sq_members as m')
-        .innerJoin('sq_users as u', 'u.id', 'm.userId')
-        .leftJoin('sq_emails as e', (join) =>
+        .selectFrom('_sq_members as m')
+        .innerJoin('_sq_users as u', 'u.id', 'm.userId')
+        .leftJoin('_sq_emails as e', (join) =>
           join.onRef('e.userId', '=', 'u.id').on('e.isPrimary', '=', 1)
         )
         .where('m.organizationId', '=', orgId)

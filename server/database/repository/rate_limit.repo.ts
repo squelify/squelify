@@ -35,7 +35,7 @@ export async function createRateLimit(
 
   try {
     await db
-      .insertInto('sq_rate_limits')
+      .insertInto('_sq_rate_limits')
       .values(data)
       .onConflict((oc) =>
         oc.columns(['key', 'context']).doUpdateSet({
@@ -64,7 +64,7 @@ export async function createRateLimit(
 
 async function cleanupExpiredRecords(db: Kysely<Database>, now: number): Promise<void> {
   await db
-    .deleteFrom('sq_rate_limits')
+    .deleteFrom('_sq_rate_limits')
     .where('expiresAt', '<', now)
     .where('blockedUntil', 'is', null)
     .execute()
@@ -79,7 +79,7 @@ export async function getRateLimitInfo(
 
   try {
     const limit = await db
-      .selectFrom('sq_rate_limits')
+      .selectFrom('_sq_rate_limits')
       .where('key', '=', key)
       .where('context', '=', context)
       .where((eb) => eb.or([eb('expiresAt', '>', now), eb('blockedUntil', '>', now)]))
@@ -116,7 +116,7 @@ export async function clearRateLimit(
 ): Promise<void> {
   try {
     await db
-      .deleteFrom('sq_rate_limits')
+      .deleteFrom('_sq_rate_limits')
       .where('key', '=', key)
       .where('context', '=', context)
       .execute()

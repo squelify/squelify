@@ -34,15 +34,15 @@ export default defineEventHandler(async (event) => {
     // Get organization and target member in one query
     const [org, member] = await Promise.all([
       db
-        .selectFrom('sq_organizations')
+        .selectFrom('_sq_organizations')
         .where('id', '=', orgId)
         .select(['id', 'name', 'status'])
         .executeTakeFirst(),
 
       db
-        .selectFrom('sq_members as m')
-        .innerJoin('sq_users as u', 'u.id', 'm.userId')
-        .leftJoin('sq_emails as e', (join) =>
+        .selectFrom('_sq_members as m')
+        .innerJoin('_sq_users as u', 'u.id', 'm.userId')
+        .leftJoin('_sq_emails as e', (join) =>
           join.onRef('e.userId', '=', 'u.id').on('e.isPrimary', '=', 1)
         )
         .where('m.id', '=', body.memberId)
@@ -109,7 +109,7 @@ export default defineEventHandler(async (event) => {
 
     // Verify requester is an owner
     const requester = await db
-      .selectFrom('sq_members')
+      .selectFrom('_sq_members')
       .where('organizationId', '=', orgId)
       .where('userId', '=', userId)
       .where('role', '=', 'org:owner')
@@ -138,7 +138,7 @@ export default defineEventHandler(async (event) => {
     // If downgrading from owner, check if there are other owners
     if (member.role === 'org:owner' && body.role !== 'org:owner') {
       const ownerCount = await db
-        .selectFrom('sq_members')
+        .selectFrom('_sq_members')
         .where('organizationId', '=', orgId)
         .where('role', '=', 'org:owner')
         .select((eb) => eb.fn.count<number>('id').as('count'))
@@ -166,7 +166,7 @@ export default defineEventHandler(async (event) => {
 
     // Update member role
     const updatedMember = await db
-      .updateTable('sq_members')
+      .updateTable('_sq_members')
       .set({ role: body.role, updatedAt: now })
       .where('id', '=', member.id)
       .returning(['id', 'role', 'updatedAt'])

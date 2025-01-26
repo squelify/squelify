@@ -4,10 +4,10 @@ import type { Database } from '~/database/db.schema'
 
 export const up = async (db: Kysely<Database>): Promise<void> => {
   await db.schema
-    .createTable('sq_passkeys')
+    .createTable('_sq_passkeys')
     .addColumn('id', 'text', (col) => col.primaryKey())
     .addColumn('user_id', 'text', (col) =>
-      col.notNull().references('sq_users.id').onDelete('cascade')
+      col.notNull().references('_sq_users.id').onDelete('cascade')
     )
     .addColumn('webauthn_user_id', 'text', (col) => col.notNull())
     .addColumn('name', 'text', (col) => col.notNull())
@@ -29,11 +29,11 @@ export const up = async (db: Kysely<Database>): Promise<void> => {
    * Ensures accurate tracking of passkey usage and modifications
    */
   await sql`
-    CREATE TRIGGER IF NOT EXISTS sq_trg_passkeys_timestamp
-    AFTER UPDATE ON sq_passkeys
+    CREATE TRIGGER IF NOT EXISTS _sq_trg_passkeys_timestamp
+    AFTER UPDATE ON _sq_passkeys
     FOR EACH ROW
     BEGIN
-      UPDATE sq_passkeys
+      UPDATE _sq_passkeys
       SET updated_at = strftime('%s', 'now')
       WHERE id = NEW.id;
     END;
@@ -44,8 +44,8 @@ export const up = async (db: Kysely<Database>): Promise<void> => {
    * Optimizes queries filtering by user_id
    */
   await db.schema
-    .createIndex('sq_idx_passkeys_user')
-    .on('sq_passkeys')
+    .createIndex('_sq_idx_passkeys_user')
+    .on('_sq_passkeys')
     .column('user_id')
     .ifNotExists()
     .execute()
@@ -55,8 +55,8 @@ export const up = async (db: Kysely<Database>): Promise<void> => {
    * Enhances WebAuthn credential validation queries
    */
   await db.schema
-    .createIndex('sq_idx_passkeys_credential')
-    .on('sq_passkeys')
+    .createIndex('_sq_idx_passkeys_credential')
+    .on('_sq_passkeys')
     .column('credential_id')
     .ifNotExists()
     .execute()
@@ -66,8 +66,8 @@ export const up = async (db: Kysely<Database>): Promise<void> => {
    * Ensures unique passkey names per user
    */
   await db.schema
-    .createIndex('sq_idx_passkeys_name')
-    .on('sq_passkeys')
+    .createIndex('_sq_idx_passkeys_name')
+    .on('_sq_passkeys')
     .columns(['user_id', 'name'])
     .unique()
     .ifNotExists()
@@ -75,9 +75,9 @@ export const up = async (db: Kysely<Database>): Promise<void> => {
 }
 
 export const down = async (db: Kysely<Database>): Promise<void> => {
-  await db.schema.dropIndex('sq_idx_passkeys_name').ifExists().execute()
-  await db.schema.dropIndex('sq_idx_passkeys_credential').ifExists().execute()
-  await db.schema.dropIndex('sq_idx_passkeys_user').ifExists().execute()
-  await sql`DROP TRIGGER IF EXISTS sq_trg_passkeys_timestamp;`.execute(db)
-  await db.schema.dropTable('sq_passkeys').ifExists().execute()
+  await db.schema.dropIndex('_sq_idx_passkeys_name').ifExists().execute()
+  await db.schema.dropIndex('_sq_idx_passkeys_credential').ifExists().execute()
+  await db.schema.dropIndex('_sq_idx_passkeys_user').ifExists().execute()
+  await sql`DROP TRIGGER IF EXISTS _sq_trg_passkeys_timestamp;`.execute(db)
+  await db.schema.dropTable('_sq_passkeys').ifExists().execute()
 }

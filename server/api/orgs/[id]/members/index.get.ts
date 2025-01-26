@@ -47,16 +47,16 @@ export default defineCachedEventHandler(
 
       // Get total count for pagination
       const totalCount = await db
-        .selectFrom('sq_members')
+        .selectFrom('_sq_members')
         .where('organizationId', '=', orgId)
         .select((eb) => eb.fn.countAll().as('count'))
         .executeTakeFirst()
 
       // Get paginated members with user info and primary email
       const members = await db
-        .selectFrom('sq_members as m')
-        .innerJoin('sq_users as u', 'u.id', 'm.userId')
-        .leftJoin('sq_emails as e', (join) =>
+        .selectFrom('_sq_members as m')
+        .innerJoin('_sq_users as u', 'u.id', 'm.userId')
+        .leftJoin('_sq_emails as e', (join) =>
           join.onRef('e.userId', '=', 'u.id').on('e.isPrimary', '=', 1)
         )
         .where('m.organizationId', '=', orgId)

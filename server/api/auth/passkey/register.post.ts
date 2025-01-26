@@ -59,7 +59,7 @@ export default defineEventHandler(async (event) => {
     const now = Math.floor(Date.now() / 1000)
 
     const user = await db
-      .selectFrom('sq_users')
+      .selectFrom('_sq_users')
       .where('id', '=', payload.sub)
       .select(['id', 'username'])
       .executeTakeFirst()
@@ -79,7 +79,7 @@ export default defineEventHandler(async (event) => {
     }
 
     const existingPasskey = await db
-      .selectFrom('sq_passkeys')
+      .selectFrom('_sq_passkeys')
       .where('userId', '=', user.id)
       .where('name', '=', body.name)
       .select(['id'])
@@ -101,7 +101,7 @@ export default defineEventHandler(async (event) => {
     }
 
     const existingPasskeys = await db
-      .selectFrom('sq_passkeys')
+      .selectFrom('_sq_passkeys')
       .where('userId', '=', user.id)
       .select(['credentialId', 'transports'])
       .execute()
@@ -157,7 +157,7 @@ export default defineEventHandler(async (event) => {
 
     const passkeyId = typeid('pass').toString()
     await db
-      .insertInto('sq_passkeys')
+      .insertInto('_sq_passkeys')
       .values({
         id: passkeyId,
         userId: user.id,

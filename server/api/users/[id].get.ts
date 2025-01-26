@@ -29,13 +29,13 @@ export default defineCachedEventHandler(
       // Get user data, ban status and metadata in parallel
       const [user, userBan, metadata] = await db.transaction().execute(async (trx) => {
         const userPromise = trx
-          .selectFrom('sq_users')
+          .selectFrom('_sq_users')
           .where('id', '=', userId)
           .selectAll()
           .executeTakeFirst()
 
         const banPromise = trx
-          .selectFrom('sq_user_bans')
+          .selectFrom('_sq_user_bans')
           .where('userId', '=', userId)
           .where((eb) =>
             eb.or([
@@ -47,7 +47,7 @@ export default defineCachedEventHandler(
           .executeTakeFirst()
 
         const metadataPromise = trx
-          .selectFrom('sq_user_metadata')
+          .selectFrom('_sq_user_metadata')
           .where('userId', '=', userId)
           .where('isPublic', '=', 1)
           .select(['key', 'value'])

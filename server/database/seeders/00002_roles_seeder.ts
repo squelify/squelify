@@ -26,14 +26,14 @@ export default async function seed(db: Kysely<Database>): Promise<void> {
 
   // Insert roles dengan onConflict
   await db
-    .insertInto('sq_roles')
+    .insertInto('_sq_roles')
     .values(roles)
     .onConflict((oc) => oc.column('name').doNothing())
     .execute()
 
   // Dapatkan role yang sudah ada
   const existingRole = await db
-    .selectFrom('sq_roles')
+    .selectFrom('_sq_roles')
     .where('name', '=', 'admin')
     .select(['id'])
     .executeTakeFirst()
@@ -41,7 +41,7 @@ export default async function seed(db: Kysely<Database>): Promise<void> {
   if (!existingRole) return
 
   // Assign permissions ke role yang sudah ada
-  const permissions = await db.selectFrom('sq_permissions').select(['id']).execute()
+  const permissions = await db.selectFrom('_sq_permissions').select(['id']).execute()
 
   const rolePermissions: RolePermissionInsert[] = permissions.map((permission) => ({
     id: typeid('rper').toString(),
@@ -52,7 +52,7 @@ export default async function seed(db: Kysely<Database>): Promise<void> {
   }))
 
   await db
-    .insertInto('sq_role_permissions')
+    .insertInto('_sq_role_permissions')
     .values(rolePermissions)
     .onConflict((oc) => oc.columns(['roleId', 'permissionId']).doNothing())
     .execute()

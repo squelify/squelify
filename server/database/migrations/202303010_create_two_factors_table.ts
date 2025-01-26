@@ -4,10 +4,10 @@ import type { Database } from '~/database/db.schema'
 
 export const up = async (db: Kysely<Database>): Promise<void> => {
   await db.schema
-    .createTable('sq_two_factors')
+    .createTable('_sq_two_factors')
     .addColumn('id', 'text', (col) => col.primaryKey())
     .addColumn('user_id', 'text', (col) =>
-      col.notNull().references('sq_users.id').onDelete('cascade')
+      col.notNull().references('_sq_users.id').onDelete('cascade')
     )
     .addColumn('name', 'text', (col) => col.notNull())
     .addColumn('type', 'text', (col) => col.notNull().check(sql`type IN ('totp', 'email', 'sms')`))
@@ -29,11 +29,11 @@ export const up = async (db: Kysely<Database>): Promise<void> => {
    * Ensures accurate tracking of 2FA modifications and usage
    */
   await sql`
-    CREATE TRIGGER IF NOT EXISTS sq_trg_two_factors_timestamp
-    AFTER UPDATE ON sq_two_factors
+    CREATE TRIGGER IF NOT EXISTS _sq_trg_two_factors_timestamp
+    AFTER UPDATE ON _sq_two_factors
     FOR EACH ROW
     BEGIN
-      UPDATE sq_two_factors
+      UPDATE _sq_two_factors
       SET updated_at = strftime('%s', 'now')
       WHERE id = NEW.id;
     END;
@@ -44,11 +44,11 @@ export const up = async (db: Kysely<Database>): Promise<void> => {
    * Maintains data integrity for primary 2FA selection
    */
   await sql`
-    CREATE TRIGGER IF NOT EXISTS sq_trg_two_factors_single_primary
-    BEFORE INSERT ON sq_two_factors
+    CREATE TRIGGER IF NOT EXISTS _sq_trg_two_factors_single_primary
+    BEFORE INSERT ON _sq_two_factors
     WHEN NEW.is_primary = 1
     BEGIN
-      UPDATE sq_two_factors
+      UPDATE _sq_two_factors
       SET is_primary = 0
       WHERE user_id = NEW.user_id AND is_primary = 1;
     END;
@@ -59,8 +59,8 @@ export const up = async (db: Kysely<Database>): Promise<void> => {
    * Optimizes queries filtering by user_id
    */
   await db.schema
-    .createIndex('sq_idx_two_factors_user')
-    .on('sq_two_factors')
+    .createIndex('_sq_idx_two_factors_user')
+    .on('_sq_two_factors')
     .column('user_id')
     .ifNotExists()
     .execute()
@@ -70,8 +70,8 @@ export const up = async (db: Kysely<Database>): Promise<void> => {
    * Ensures unique combination of user, type and name
    */
   await db.schema
-    .createIndex('sq_idx_two_factors_method')
-    .on('sq_two_factors')
+    .createIndex('_sq_idx_two_factors_method')
+    .on('_sq_two_factors')
     .columns(['user_id', 'type', 'name'])
     .unique()
     .ifNotExists()
@@ -82,8 +82,8 @@ export const up = async (db: Kysely<Database>): Promise<void> => {
    * Enhances queries filtering verified 2FA methods
    */
   await db.schema
-    .createIndex('sq_idx_two_factors_verified')
-    .on('sq_two_factors')
+    .createIndex('_sq_idx_two_factors_verified')
+    .on('_sq_two_factors')
     .columns(['user_id', 'verified_at'])
     .ifNotExists()
     .execute()
@@ -93,8 +93,8 @@ export const up = async (db: Kysely<Database>): Promise<void> => {
    * Improves performance when querying primary 2FA methods
    */
   await db.schema
-    .createIndex('sq_idx_two_factors_primary')
-    .on('sq_two_factors')
+    .createIndex('_sq_idx_two_factors_primary')
+    .on('_sq_two_factors')
     .columns(['user_id', 'is_primary'])
     .ifNotExists()
     .execute()
@@ -104,20 +104,20 @@ export const up = async (db: Kysely<Database>): Promise<void> => {
    * Optimizes queries based on verification time
    */
   await db.schema
-    .createIndex('sq_idx_two_factors_verified_at')
-    .on('sq_two_factors')
+    .createIndex('_sq_idx_two_factors_verified_at')
+    .on('_sq_two_factors')
     .column('verified_at')
     .ifNotExists()
     .execute()
 }
 
 export const down = async (db: Kysely<Database>): Promise<void> => {
-  await db.schema.dropIndex('sq_idx_two_factors_verified_at').ifExists().execute()
-  await db.schema.dropIndex('sq_idx_two_factors_primary').ifExists().execute()
-  await db.schema.dropIndex('sq_idx_two_factors_verified').ifExists().execute()
-  await db.schema.dropIndex('sq_idx_two_factors_method').ifExists().execute()
-  await db.schema.dropIndex('sq_idx_two_factors_user').ifExists().execute()
-  await sql`DROP TRIGGER IF EXISTS sq_trg_two_factors_single_primary;`.execute(db)
-  await sql`DROP TRIGGER IF EXISTS sq_trg_two_factors_timestamp;`.execute(db)
-  await db.schema.dropTable('sq_two_factors').ifExists().execute()
+  await db.schema.dropIndex('_sq_idx_two_factors_verified_at').ifExists().execute()
+  await db.schema.dropIndex('_sq_idx_two_factors_primary').ifExists().execute()
+  await db.schema.dropIndex('_sq_idx_two_factors_verified').ifExists().execute()
+  await db.schema.dropIndex('_sq_idx_two_factors_method').ifExists().execute()
+  await db.schema.dropIndex('_sq_idx_two_factors_user').ifExists().execute()
+  await sql`DROP TRIGGER IF EXISTS _sq_trg_two_factors_single_primary;`.execute(db)
+  await sql`DROP TRIGGER IF EXISTS _sq_trg_two_factors_timestamp;`.execute(db)
+  await db.schema.dropTable('_sq_two_factors').ifExists().execute()
 }
