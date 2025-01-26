@@ -3,6 +3,8 @@ import { defineConfig } from 'vitest/config'
 
 export default defineConfig({
   test: {
+    silent: true,
+    hideSkippedTests: true,
     exclude: ['node_modules', 'tests-e2e'],
     reporters: process.env.CI ? ['html', 'github-actions'] : ['html', 'default'],
     outputFile: {
@@ -13,7 +15,7 @@ export default defineConfig({
       provider: 'istanbul',
       reporter: ['html-spa', 'text-summary'],
       reportsDirectory: './tests-results/coverage',
-      include: ['./tests/client/**/*.{test,spec}.{ts,tsx}'],
+      include: ['./tests/client/**/*.{test,spec}.{ts,tsx}', './tests/server/**/*.{test,spec}.ts'],
       cleanOnRerun: true,
       clean: true,
       thresholds: {

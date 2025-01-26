@@ -35,8 +35,7 @@ RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install \
 # -----------------------------------------------------------------------------
 FROM base AS pruner
 
-# Copy output files and config file from the builder stage.
-COPY --from=builder /srv/ecosystem.json /srv/ecosystem.json
+# Copy output and config file from the builder stage.
 COPY --from=builder /srv/.output /srv
 
 # Create the data directory and set permissions.
