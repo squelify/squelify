@@ -3,7 +3,7 @@ import { Button, Card, CardContent, Input, Skeleton } from '#/components/base-ui
 import { Dialog, DialogContent, DialogTrigger } from '#/components/base-ui'
 import { DialogHeader, DialogTitle } from '#/components/base-ui'
 import { Popover, PopoverContent, PopoverTrigger } from '#/components/base-ui'
-import { type MediaItem } from './dummy'
+import { type MediaItem } from '#/utils/dummy'
 
 interface GridViewProps {
   items: MediaItem[]

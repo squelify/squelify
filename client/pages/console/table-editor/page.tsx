@@ -1,5 +1,4 @@
 import { EditableGridCell, GridCellKind, GridColumn, Item } from '@glideapps/glide-data-grid'
-import { copycat } from '@snaplet/copycat'
 import consola from 'consola'
 import * as Lucide from 'lucide-react'
 import { useQueryState } from 'nuqs'
@@ -7,6 +6,7 @@ import { useCallback } from 'react'
 import { Button, ResizablePanel, ResizablePanelGroup } from '#/components/base-ui'
 import DataGrid from '#/components/datagrid'
 import { useSEOMeta } from '#/context/hooks/use-seo-meta'
+import { generateEmail, generateName, generatePhone, getRandomElement } from '#/utils/dummy'
 
 type DummyItem = {
   name: string
@@ -17,16 +17,19 @@ type DummyItem = {
 
 const TOTAL_ROWS = 100
 
-// Helper function untuk generate data
-const generateDummyData = (count: number): DummyItem[] => {
-  return Array.from({ length: count }, (_, index) => ({
-    name: copycat.fullName(`person-${index}`),
-    company: copycat.words(`company-${index}`),
-    email: copycat.email(`person-${index}`).toLowerCase(),
-    phone: copycat.phoneNumber(`person-${index}`),
-  }))
-}
+const COMPANIES = ['Acme Corp', 'TechStart', 'GlobalSys', 'DataFlow', 'CloudNet', 'SecureIT']
 
+const generateDummyData = (count: number): DummyItem[] => {
+  return Array.from({ length: count }, () => {
+    const name = generateName()
+    return {
+      name,
+      company: getRandomElement(COMPANIES),
+      email: generateEmail(name),
+      phone: generatePhone(),
+    }
+  })
+}
 // Ganti definisi data yang ada dengan:
 const data = generateDummyData(TOTAL_ROWS)
 

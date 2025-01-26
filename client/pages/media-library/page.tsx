@@ -11,7 +11,7 @@ import { saveUiState, uiStore } from '#/context/stores/ui.store'
 import PageWrapper from '#/layouts/page-wrapper'
 import { clx } from '#/utils/helper'
 
-import { type MediaItem, generateDummyMedia } from './dummy'
+import { type MediaItem, generateDummyMedia } from '#/utils/dummy'
 import GridView, { GridViewSkeleton } from './grid-view'
 import ListView, { ListViewSkeleton } from './list-view'
 
