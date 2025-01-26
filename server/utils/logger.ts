@@ -1,5 +1,12 @@
+import { createConsola } from 'consola'
 import Redactyl from 'redactyl.js'
 import { env } from 'std-env'
+import superjson from 'superjson'
+
+// Create a new instance of the consola logger
+const consola = createConsola({
+  defaults: { tag: 'server' },
+})
 
 /**
  * Defines the log level for the application.
@@ -70,17 +77,17 @@ const LOG_COLORS: Record<Exclude<LogLevel, 'silent'>, (text: string) => string> 
 
 // Constants for log methods with uppercase keys
 const LOG_METHODS: Record<string, (...args: unknown[]) => void> = {
-  DEBUG: console.debug,
-  ERROR: console.error,
-  INFO: console.info,
-  QUERY: console.log,
-  TRACE: console.log,
-  WARN: console.warn,
+  DEBUG: consola.debug,
+  ERROR: consola.error,
+  INFO: consola.info,
+  QUERY: consola.log,
+  TRACE: consola.log,
+  WARN: consola.warn,
 }
 
 // Fallback constants
 const DEFAULT_COLOR = colors.gray
-const DEFAULT_LOG_METHOD = console.log
+const DEFAULT_LOG_METHOD = consola.log
 const LOG_LEVELS = Object.keys(LOG_METHODS)
 const MAX_LEVEL_LENGTH = Math.max(...LOG_LEVELS.map((level) => level.length))
 
@@ -97,7 +104,7 @@ const stripNewLinesAndSpaces = (content: unknown) =>
 // Helper function to process and clean the message
 const processMessage = (message: unknown) => {
   if (typeof message === 'object') {
-    return JSON.stringify(message)
+    return superjson.stringify(message)
   }
   if (
     typeof message === 'string' &&
@@ -123,11 +130,14 @@ const handleErrorLogging = (
   }
   if (level === 'debug') {
     const redactedError = redactyl.redact<any>(errorObj)
-    logFunc(logPrefix, JSON.stringify(redactedError, null, 2))
+    logFunc(logPrefix, superjson.stringify(redactedError))
   } else if (level === 'trace') {
-    logFunc(logPrefix, JSON.stringify(errorObj, null, 2))
+    logFunc(logPrefix, superjson.stringify(errorObj))
   }
 }
+
+// Helper function to check if the script is running from the CLI
+const isRunningFromCLI = (): boolean => process.argv.length > 2
 
 /**
  * Logs a message with the specified log level.
@@ -141,8 +151,10 @@ function log(
   ...args: unknown[]
 ): void {
   // Determine log color and method
-  const colorFunc = LOG_COLORS[level] || DEFAULT_COLOR
   const logFunc = LOG_METHODS[level.toUpperCase()] || DEFAULT_LOG_METHOD
+
+  const colorFunc = LOG_COLORS[level] || DEFAULT_COLOR
+  const paddedLevel = level.toUpperCase().padEnd(MAX_LEVEL_LENGTH)
 
   // Clean and process the message
   const cleanedMessage = processMessage(message)
@@ -151,12 +163,11 @@ function log(
   const filteredMessage = level !== 'trace' ? redactyl.redact<any>(cleanedMessage) : cleanedMessage
 
   // Build the log message
-  const paddedLevel = level.toUpperCase().padEnd(MAX_LEVEL_LENGTH)
-  const logPrefix = `${logTimestamp()} ${colorFunc(paddedLevel)}`
-  const logMessage = ` ${filteredMessage}` // Space after prefix for consistent alignment
+  const logPrefix = isRunningFromCLI() ? '' : `${logTimestamp()} ${colorFunc(paddedLevel)}`
+  const logMessage = `${filteredMessage}` // Space after prefix for consistent alignment
 
   // Handle silent mode for debug logs
-  if (level === 'debug' && env.SQUELIFY_LOG_LEVEL?.toLowerCase() === 'silent') {
+  if (level === 'debug' && env.APP_LOG_LEVEL?.toLowerCase() === 'silent') {
     return
   }
 
@@ -177,7 +188,7 @@ function log(
  *
  * Example usage:
  *  logger.info('This is an info message');
- *  logger.debug('This is a debug message');
+ *  logger.info('This is a debug message');
  *  logger.error('This is an error message', { someError: 'details' });
  *  logger.warn('This is a warning');
  *  logger.query('SELECT * FROM users');

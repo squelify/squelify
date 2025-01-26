@@ -1,3 +1,4 @@
+import consola from 'consola'
 import { Kysely, Migrator, NO_MIGRATIONS } from 'kysely'
 import { join } from 'pathe'
 import { env } from 'std-env'
@@ -39,16 +40,16 @@ export async function runSeeds(): Promise<void> {
 
     if (seeders.length > 0) {
       for (const { name, seeder } of seeders) {
-        console.info(`🍀 Seeding table ${name}...`)
+        consola.info(`🍀 Seeding table ${name}...`)
         await seeder.default(migrateDBClient)
       }
-      console.info('🍀 Database seeding completed')
+      consola.info('🍀 Database seeding completed')
     } else {
-      console.info('🍀 No seeders provided. Skipping database seeding.')
+      consola.info('🍀 No seeders provided. Skipping database seeding.')
     }
   } catch (error) {
     const errMsg = error instanceof Error ? error.message : String(error)
-    console.error('🔥 Database seeding failed:', errMsg)
+    consola.error('🔥 Database seeding failed:', errMsg)
     throw error
   }
 }
@@ -65,14 +66,14 @@ const migrationActions: Record<MigrationAction, () => Promise<void>> = {
         if (it.status === 'Success') {
           const message = `🍀 Migration "${it.migrationName}:up" was executed successfully`
           if (isRunningFromCLI()) {
-            console.info(message)
+            consola.info(message)
           } else {
             logger.info('[app]', message)
           }
         } else if (it.status === 'Error') {
           const message = `🔥 Failed to execute migration "${it.migrationName}"`
           if (isRunningFromCLI()) {
-            console.error(message)
+            consola.error(message)
           } else {
             logger.info('[app]', message)
           }
@@ -81,7 +82,7 @@ const migrationActions: Record<MigrationAction, () => Promise<void>> = {
     }
 
     if (error) {
-      console.error('🔥 Failed to migrate:', error)
+      consola.error('🔥 Failed to migrate:', error)
       if (isRunningFromCLI()) {
         process.exit(1)
       }
@@ -93,15 +94,15 @@ const migrationActions: Record<MigrationAction, () => Promise<void>> = {
     if (results) {
       for (const it of results) {
         if (it.status === 'Success') {
-          console.info(`🍀 Migration "${it.migrationName}:down" was executed successfully`)
+          consola.info(`🍀 Migration "${it.migrationName}:down" was executed successfully`)
         } else if (it.status === 'Error') {
-          console.error(`🔥 Failed to execute migration "${it.migrationName}"`)
+          consola.error(`🔥 Failed to execute migration "${it.migrationName}"`)
         }
       }
     }
 
     if (error) {
-      console.error('🔥 Failed to migrate:', error)
+      consola.error('🔥 Failed to migrate:', error)
       if (isRunningFromCLI()) {
         process.exit(1)
       }
@@ -111,24 +112,24 @@ const migrationActions: Record<MigrationAction, () => Promise<void>> = {
     await migrateClient
       .migrateTo(NO_MIGRATIONS)
       .then(async () => {
-        console.info('🍀 Database has been reset')
+        consola.info('🍀 Database has been reset')
 
         // If has parameter --migrate then run the migration.
         if (process.argv.includes('--migrate')) {
-          console.info('🍀 Running database migration...')
+          consola.info('🍀 Running database migration...')
           await runMigration('migrate')
         }
 
         // If has parameter --seed then run the migration.
         if (process.argv.includes('--seed')) {
-          console.info('🍀 Populating database with seeders...')
+          consola.info('🍀 Populating database with seeders...')
           await runSeeds()
         }
 
         process.exit(0)
       })
       .catch((e) => {
-        console.error('🔥 Failed to reset database:', e.message)
+        consola.error('🔥 Failed to reset database:', e.message)
         if (isRunningFromCLI()) {
           process.exit(1)
         }
@@ -141,7 +142,7 @@ export async function runMigration(action: MigrationAction): Promise<void> {
   try {
     await migrationActions[action]()
   } catch (error) {
-    console.error(`Migration action '${action}' failed:`, error)
+    consola.error(`Migration action '${action}' failed:`, error)
     throw error
   }
 }

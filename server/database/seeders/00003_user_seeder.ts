@@ -23,7 +23,7 @@ export default async function seed(db: Kysely<Database>): Promise<void> {
       .executeTakeFirst()
 
     if (existingUser) {
-      console.info(`✋ Admin user already exists, skipping user seed`)
+      consola.info(`✋ Admin user already exists, skipping user seed`)
       return
     }
 

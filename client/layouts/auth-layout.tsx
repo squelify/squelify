@@ -1,3 +1,4 @@
+import consola from 'consola'
 import { Suspense } from 'react'
 import { Outlet, useSearchParams } from 'react-router'
 import AppLoader from '#/components/loaders/page-loader'
@@ -7,7 +8,7 @@ import { clx } from '#/utils/helper'
 export default function AuthLayout() {
   const { user } = useAuth()
 
-  console.debug('DEBUG:user', user)
+  consola.debug('DEBUG:user', user)
 
   const [searchParams] = useSearchParams()
   const _redirectTo = searchParams.get('redirect_to') || '/dashboard'

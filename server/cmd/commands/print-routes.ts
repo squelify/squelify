@@ -2,6 +2,7 @@ import { readdir } from 'node:fs/promises'
 import chalk from 'chalk'
 import { defineCommand } from 'citty'
 import Table from 'cli-table3'
+import consola from 'consola'
 import { resolve } from 'pathe'
 import stripAnsi from 'strip-ansi'
 
@@ -210,9 +211,9 @@ export default defineCommand({
           .join(chalk.gray(' · ')),
       ])
 
-      console.info(table.toString())
+      consola.log(table.toString())
     } catch (error) {
-      console.error(error instanceof Error ? error.message : 'Unknown error occurred')
+      consola.error(error instanceof Error ? error.message : 'Unknown error occurred')
       process.exit(1)
     }
   },
