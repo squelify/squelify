@@ -13,7 +13,7 @@ export default defineCachedEventHandler(
       dir: 'ltr',
       name: appConfig.title,
       short_name: appConfig.title.toLowerCase(),
-      description: appConfig.description,
+      description: 'Lightweight Headless CMS and Backend Platform without hassle',
       theme_color: '#0a0a0a',
       background_color: '#0a0a0a',
       start_url: startUrl,

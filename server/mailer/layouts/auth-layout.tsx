@@ -27,7 +27,7 @@ export default function EmailAuthTemplate({ children, preview }: EmailAuthTempla
             <Section>
               <Hr className="border-gray-200 pb-2" />
               <Text className="text-gray-400 text-xs">
-                &copy; {new Date().getFullYear()} {appConfig.title}, {appConfig.address}
+                &copy; {new Date().getFullYear()} {appConfig.title}, The Internet
               </Text>
             </Section>
           </Container>

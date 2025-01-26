@@ -56,8 +56,8 @@ export default defineNitroConfig({
     production: 'prerender',
     route: '/api-specs.json',
     meta: {
-      title: `${appConfig.title} API`,
-      description: `${appConfig.title} API documentation`,
+      title: 'Squelify API',
+      description: 'Squelify API documentation',
       version: pkg.version,
     },
     ui: {

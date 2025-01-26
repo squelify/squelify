@@ -19,9 +19,9 @@ import TRPCProvider from './context/providers/trpc-provider'
 
 if (import.meta.env.PROD) {
   consola.log(
-    `%cWelcome to ${appConfig.title}!%c\n
+    `%cWelcome to Squelify!%c\n
 Does this page need fixes or improvements? ${String.fromCodePoint(0x1f91d)} We like your curiosity!
-Help us improve ${appConfig.title} by joining the team: ${pkg.homepage}
+Help us improve Squelify by joining the team: ${pkg.homepage}
 `,
     'padding-top: 0.5em; font-size: 2em;',
     'padding-bottom: 0.5em;'

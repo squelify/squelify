@@ -50,10 +50,10 @@ export default function OnboardingEmail(data: OnboardingEmailProps) {
         <Hr className="mt-4 border-gray-200 pb-2" />
         <Text className="font-light text-gray-600 text-sm leading-7">
           If you&apos;re into social stuff, let&apos;s connect! Follow us on{' '}
-          <Link href={appConfig.socials.twitter}>Twitter</Link>
+          <Link href="https://x.com/squelify">Twitter/X</Link>
           {' and '}
-          <Link href={appConfig.socials.github}>GitHub</Link> to stay in the loop about the latest
-          news, updates, and cool happenings.
+          <Link href="https://github.com/squelify">GitHub</Link> to stay in the loop about the
+          latest news, updates, and cool happenings.
         </Text>
       </Section>
     </EmailMarketingTemplate>

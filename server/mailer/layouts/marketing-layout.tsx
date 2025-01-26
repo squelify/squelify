@@ -29,7 +29,7 @@ export default function EmailMarketingTemplate({ children, preview }: EmailMarke
             <Section>
               <Hr className="border-gray-200 pb-2" />
               <Text className="text-center text-gray-500 text-xs">
-                &copy; {new Date().getFullYear()} {appConfig.title}, {appConfig.address}
+                &copy; {new Date().getFullYear()} {appConfig.title}, The Internet
               </Text>
               <Text className="text-center text-gray-400 text-xs leading-4" disableDefaultStyle>
                 You are receiving this email as it contains important updates and several
