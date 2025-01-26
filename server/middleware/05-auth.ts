@@ -10,10 +10,10 @@ import type { JWTPayload } from '~/utils/jwt'
 const HeadersSchema = z.object({
   'x-client-info': z
     .string({
-      required_error: 'X-Client-Info header wajib dicantumkan',
-      invalid_type_error: 'X-Client-Info harus berupa string',
+      required_error: 'X-Client-Info header is required',
+      invalid_type_error: 'X-Client-Info must be a string',
     })
-    .min(1, 'X-Client-Info tidak boleh kosong'),
+    .min(1, 'X-Client-Info cannot be empty'),
 })
 
 const UNPROTECTED_ROUTES = [
@@ -83,6 +83,7 @@ export default defineEventHandler(async (event) => {
     pathname.startsWith('/api/functions') ||
     pathname.startsWith('/api/healthz') ||
     pathname.startsWith('/api/settings') ||
+    pathname.startsWith('/api/realtime') ||
     pathname.startsWith('/api-docs') ||
     pathname === '/api-specs.json'
   ) {

@@ -1,8 +1,10 @@
-import * as Lucide from 'lucide-react'
+import consola from 'consola'
+import * as React from 'react'
 import { Line, LineChart, XAxis, YAxis } from 'recharts'
 import { Card, CardContent, CardHeader, CardTitle } from '#/components/base-ui'
 import { ChartContainer, ChartTooltip } from '#/components/base-ui'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '#/components/base-ui'
+import useSSE from '#/context/hooks/use-sse'
 import type { ResourceMetric } from './types'
 
 const resourceData: ResourceMetric[] = [
@@ -30,6 +32,19 @@ const resourceConfig = {
 }
 
 export default function CardSystemMetrics({ className }: { className?: string }) {
+  const { isConnected, messages } = useSSE('/api/realtime/hello')
+
+  // Log any message changes
+  React.useEffect(() => {
+    if (messages.length > 0) {
+      consola.log('SSE Messages:', {
+        isConnected,
+        total: messages.length,
+        message: messages[messages.length - 1].message,
+      })
+    }
+  }, [messages, isConnected])
+
   return (
     <Card className={className}>
       <CardHeader className="flex flex-row items-center justify-between pb-2">

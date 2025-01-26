@@ -138,6 +138,7 @@ export default defineEventHandler(async (event): Promise<HealthCheckResponse> =>
     },
   }
 })
+
 defineRouteMeta({
   openAPI: {
     summary: 'Health Check',

@@ -1,4 +1,5 @@
 /**
+ * TODO: migrate to Vite plugin (https://www.npmjs.com/package/@analogjs/vite-plugin-nitro)
  * Configures the Nitro server for the application.
  * @see https://nitro.unjs.io/config
  */
