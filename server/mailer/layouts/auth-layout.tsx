@@ -2,7 +2,7 @@ import { Body, ColorScheme, Container, Head, Hr, Html, Preview, Section, Text } 
 import { Tailwind } from 'jsx-email'
 import * as React from 'react'
 import { isProduction } from 'std-env'
-import appConfig from '~~/app.config'
+import pkg from '~~/package.json'
 import AppLogo from './app-logo'
 
 interface EmailAuthTemplateProps {
@@ -27,7 +27,7 @@ export default function EmailAuthTemplate({ children, preview }: EmailAuthTempla
             <Section>
               <Hr className="border-gray-200 pb-2" />
               <Text className="text-gray-400 text-xs">
-                &copy; {new Date().getFullYear()} {appConfig.title}, The Internet
+                &copy; {new Date().getFullYear()} {pkg.config.appName}, The Internet
               </Text>
             </Section>
           </Container>

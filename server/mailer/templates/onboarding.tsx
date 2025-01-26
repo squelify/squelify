@@ -1,5 +1,6 @@
 import { Heading, Hr, Link, Preview, Section, Text } from 'jsx-email'
 import appConfig from '~~/app.config'
+import pkg from '~~/package.json'
 import EmailMarketingTemplate from '../layouts/marketing-layout'
 
 export interface OnboardingEmailProps {
@@ -8,14 +9,14 @@ export interface OnboardingEmailProps {
 
 export default function OnboardingEmail(data: OnboardingEmailProps) {
   return (
-    <EmailMarketingTemplate preview={<Preview>Welcome to {appConfig.title}!</Preview>}>
+    <EmailMarketingTemplate preview={<Preview>Welcome to {pkg.config.appName}!</Preview>}>
       <Section>
         <Hr className="mt-8 border-gray-200 pb-2" />
         <Heading as="h4" className="text-gray-900">
           Howdy {data.name}
         </Heading>
         <Text className="font-light text-base text-gray-600 leading-7">
-          Congratulations and welcome to {appConfig.title}. <br />
+          Congratulations and welcome to {pkg.config.appName}. <br />
           We are thrilled to have you on board as our newest registered user. 🎉
         </Text>
         <Text className="font-light text-base text-gray-600 leading-7">
@@ -32,7 +33,7 @@ export default function OnboardingEmail(data: OnboardingEmailProps) {
           <Link href={`${appConfig.baseURL}/docs`} className="font-medium">
             documentation page
           </Link>{' '}
-          that will take your experience with {appConfig.title} to the next level.
+          that will take your experience with {pkg.config.appName} to the next level.
         </Text>
         <Text className="font-light text-base text-gray-600 leading-7">
           We are looking forward to achieving greatness together.
@@ -42,7 +43,7 @@ export default function OnboardingEmail(data: OnboardingEmailProps) {
       <Section>
         <Text className="text-base text-gray-700 leading-4 tracking-tight">
           Best regards, <br />
-          The {appConfig.title} Team
+          The {pkg.config.appName} Team
         </Text>
       </Section>
 

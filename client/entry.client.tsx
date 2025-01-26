@@ -13,9 +13,8 @@ import pkg from '~~/package.json'
 import BoundaryError from '#/components/errors/boundary'
 import AppLoader from '#/components/loaders/app-loader'
 import AppProvider from '#/context/providers/app-provider'
-import { protectedRoutes } from '#/routes/protected'
-import { catchAllRoute, publicRoutes } from '#/routes/public'
-import TRPCProvider from './context/providers/trpc-provider'
+import TRPCProvider from '#/context/providers/trpc-provider'
+import { catchAllRoute, protectedRoutes, publicRoutes } from '#/routes'
 
 if (import.meta.env.PROD) {
   consola.log(

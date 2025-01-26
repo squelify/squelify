@@ -2,6 +2,7 @@ import { type H3Event } from 'h3'
 import { process } from 'std-env'
 import { DURATION } from '~/utils/datetime'
 import { generateCSRFToken } from '~/utils/string'
+import pkg from '~~/package.json'
 import { useStorage } from '#imports'
 
 interface SPAClientOptions {
@@ -13,7 +14,6 @@ type Manifest = Record<string, { css: string[]; file: string; isEntry: boolean }
 
 export async function handleSPAClient(event: H3Event, options: SPAClientOptions) {
   const { entryName, title } = options
-  const appConfig = event.context.appConfig
   const db = event.context.db
 
   // Check if application is installed by checking existence of admin user
@@ -47,7 +47,7 @@ export async function handleSPAClient(event: H3Event, options: SPAClientOptions)
     })
   }
 
-  const pageTitle = title ? `${appConfig.title} ${title}` : appConfig.title
+  const pageTitle = title ? `${pkg.config.appName} ${title}` : pkg.config.appName
 
   if (process.dev) {
     // Check Vite server

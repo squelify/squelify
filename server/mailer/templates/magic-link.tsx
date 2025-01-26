@@ -1,5 +1,6 @@
 import { Button, Heading, Hr, Link, Preview, Section, Text } from 'jsx-email'
 import appConfig from '~~/app.config'
+import pkg from '~~/package.json'
 import EmailAuthTemplate from '../layouts/auth-layout'
 
 export interface MagicLinkProps {
@@ -10,14 +11,14 @@ export interface MagicLinkProps {
 
 export default function MagicLink(data: MagicLinkProps) {
   return (
-    <EmailAuthTemplate preview={<Preview>Verify your {appConfig.title} account</Preview>}>
+    <EmailAuthTemplate preview={<Preview>Verify your {pkg.config.appName} account</Preview>}>
       <Section>
         <Hr className="mt-8 border-gray-200 pb-2" />
         <Heading as="h4" className="text-gray-900">
           Howdy {data.email}
         </Heading>
         <Text className="font-light text-base text-gray-600 leading-7">
-          Thanks for starting the new {appConfig.title} account creation process. We want to make
+          Thanks for starting the new {pkg.config.appName} account creation process. We want to make
           sure it's really you. If you don't want to create an account, you can ignore this message.
           To complete the signup process, please verify your email address by clicking the button
           below.
@@ -34,7 +35,7 @@ export default function MagicLink(data: MagicLinkProps) {
           height={40}
           width={240}
         >
-          Login to {appConfig.title}
+          Login to {pkg.config.appName}
         </Button>
       </Section>
 

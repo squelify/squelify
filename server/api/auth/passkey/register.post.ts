@@ -1,8 +1,5 @@
-import {
-  VerifiedRegistrationResponse,
-  generateRegistrationOptions,
-  verifyRegistrationResponse,
-} from '@simplewebauthn/server'
+import { VerifiedRegistrationResponse, verifyRegistrationResponse } from '@simplewebauthn/server'
+import { generateRegistrationOptions } from '@simplewebauthn/server'
 import type {
   AuthenticatorAttestationResponseJSON,
   AuthenticatorTransportFuture,
@@ -14,6 +11,7 @@ import type {
 import * as jose from 'jose'
 import { typeid } from 'typeid-js'
 import { z } from 'zod'
+import pkg from '~~/package.json'
 
 export interface IRegisterPasskeyResponse {
   passkey: {
@@ -110,7 +108,7 @@ export default defineEventHandler(async (event) => {
     crypto.getRandomValues(webauthnUserId)
 
     const options: PublicKeyCredentialCreationOptionsJSON = await generateRegistrationOptions({
-      rpName: appConfig.title,
+      rpName: pkg.config.appName,
       rpID: appConfig.domain,
       userID: webauthnUserId,
       userName: user.username,

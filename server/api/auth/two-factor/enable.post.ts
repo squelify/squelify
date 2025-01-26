@@ -1,6 +1,7 @@
 import { typeid } from 'typeid-js'
 import { z } from 'zod'
 import { generateTOTPSecret, generateTOTPUri } from '~/utils/totp'
+import pkg from '~~/package.json'
 
 export interface IEnable2FAResponse {
   authenticator: {
@@ -118,7 +119,7 @@ export default defineEventHandler(async (event) => {
     const totpUri = generateTOTPUri({
       secret,
       accountName: user.email || user.username,
-      issuer: appConfig.title,
+      issuer: pkg.config.appName,
     })
 
     const qrCodeUrl = `${appConfig.baseURL}/api/qrcode?chl=${encodeURIComponent(totpUri)}`

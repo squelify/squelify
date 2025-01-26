@@ -3,6 +3,7 @@ import { Body, ColorScheme, Head, Tailwind } from 'jsx-email'
 import * as React from 'react'
 import { isProduction } from 'std-env'
 import appConfig from '~~/app.config'
+import pkg from '~~/package.json'
 import AppLogo from './app-logo'
 
 interface EmailMarketingTemplateProps {
@@ -29,12 +30,12 @@ export default function EmailMarketingTemplate({ children, preview }: EmailMarke
             <Section>
               <Hr className="border-gray-200 pb-2" />
               <Text className="text-center text-gray-500 text-xs">
-                &copy; {new Date().getFullYear()} {appConfig.title}, The Internet
+                &copy; {new Date().getFullYear()} {pkg.config.appName}, The Internet
               </Text>
               <Text className="text-center text-gray-400 text-xs leading-4" disableDefaultStyle>
                 You are receiving this email as it contains important updates and several
-                information about your {appConfig.title} account. To manage your preferences, visit
-                your <Link href={`${appConfig.baseURL}/account`}>account settings</Link>.
+                information about your {pkg.config.appName} account. To manage your preferences,
+                visit your <Link href={`${appConfig.baseURL}/account`}>account settings</Link>.
               </Text>
             </Section>
           </Container>

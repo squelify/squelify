@@ -1,5 +1,6 @@
 import { handleBypassCache } from '~/utils/cache'
 import { DURATION } from '~/utils/datetime'
+import pkg from '~~/package.json'
 
 export default defineCachedEventHandler(
   async (event) => {
@@ -11,9 +12,9 @@ export default defineCachedEventHandler(
     return {
       lang: 'en',
       dir: 'ltr',
-      name: appConfig.title,
-      short_name: appConfig.title.toLowerCase(),
-      description: 'Lightweight Headless CMS and Backend Platform without hassle',
+      name: pkg.config.appName,
+      short_name: pkg.name,
+      description: pkg.description,
       theme_color: '#0a0a0a',
       background_color: '#0a0a0a',
       start_url: startUrl,

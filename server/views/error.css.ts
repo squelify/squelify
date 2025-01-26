@@ -16,10 +16,11 @@ export const errorStyles = {
   description: 'mt-6 text-base leading-7 text-gray-600 dark:text-gray-400',
   actions: 'mt-10 flex items-center justify-center gap-x-4',
   primaryButton: [
-    'min-w-[140px] rounded-lg bg-gray-900 px-4 py-2.5 text-sm cursor-pointer font-semibold text-white',
-    'transition-all duration-200 hover:bg-gray-800 hover:shadow-lg hover:shadow-gray-500/20',
+    'min-w-[140px] cursor-pointer rounded-lg bg-gray-900 px-4 py-2.5 font-semibold text-sm text-white',
+    'transition-all duration-200 hover:bg-gray-800 hover:shadow-gray-500/20 hover:shadow-lg',
     'focus:outline-none focus:ring-2 focus:ring-gray-400/50 focus:ring-offset-2',
     'focus:ring-offset-gray-50 dark:focus:ring-offset-gray-950',
+    'border border-gray-200 dark:border-gray-800',
   ].join(' '),
   secondaryButton: [
     'min-w-[140px] rounded-lg border border-gray-200 dark:border-gray-800 bg-white/80 dark:bg-gray-900/80 px-4 py-2.5',

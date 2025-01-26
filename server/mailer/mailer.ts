@@ -5,7 +5,7 @@ import type { PasswordChangedEmailProps } from '~/mailer/templates/password-chan
 import PasswordChangedEmail from '~/mailer/templates/password-changed'
 import ResetPassword, { type ResetPasswordEmailProps } from '~/mailer/templates/reset-password'
 import VerifyEmail, { type VerifyEmailProps } from '~/mailer/templates/verify-email'
-import appConfig from '~~/app.config'
+import pkg from '~~/package.json'
 
 const EmailTemplates = {
   VerifyEmail,
@@ -34,23 +34,23 @@ export const EMAIL_CONFIG = {
   },
   onboarding: {
     template: EmailTemplates.OnboardingEmail,
-    subject: `Welcome to ${appConfig.title}`,
+    subject: `Welcome to ${pkg.config.appName}`,
   },
   'magic-link': {
     template: EmailTemplates.MagicLink,
-    subject: `Sign in to ${appConfig.title}`,
+    subject: `Sign in to ${pkg.config.appName}`,
   },
   'otp-code': {
     template: EmailTemplates.OtpCode,
-    subject: `Your ${appConfig.title} OTP Code`,
+    subject: `Your ${pkg.config.appName} OTP Code`,
   },
   'reset-password': {
     template: EmailTemplates.ResetPassword,
-    subject: `Reset your ${appConfig.title} password`,
+    subject: `Reset your ${pkg.config.appName} password`,
   },
   'password-changed': {
     template: EmailTemplates.PasswordChangedEmail,
-    subject: `Your ${appConfig.title} password has been changed`,
+    subject: `Your ${pkg.config.appName} password has been changed`,
   },
 } as const
 

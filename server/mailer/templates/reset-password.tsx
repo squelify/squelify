@@ -1,5 +1,6 @@
 import { Button, Heading, Hr, Link, Preview, Section, Text } from 'jsx-email'
 import appConfig from '~~/app.config'
+import pkg from '~~/package.json'
 import EmailAuthTemplate from '../layouts/auth-layout'
 
 export interface ResetPasswordEmailProps {
@@ -9,15 +10,15 @@ export interface ResetPasswordEmailProps {
 
 export default function ResetPasswordEmail(data: ResetPasswordEmailProps) {
   return (
-    <EmailAuthTemplate preview={<Preview>Reset your {appConfig.title} password</Preview>}>
+    <EmailAuthTemplate preview={<Preview>Reset your {pkg.config.appName} password</Preview>}>
       <Section>
         <Hr className="mt-8 border-gray-200 pb-2" />
         <Heading as="h4" className="text-gray-900">
           Howdy {data.name}
         </Heading>
         <Text className="font-light text-base text-gray-600 leading-7">
-          Someone recently requested a password change for your {appConfig.title} account. If this
-          was you, you can set a new password here:
+          Someone recently requested a password change for your {pkg.config.appName} account. If
+          this was you, you can set a new password here:
         </Text>
       </Section>
 

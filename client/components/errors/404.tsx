@@ -1,9 +1,9 @@
 import { useNavigate } from 'react-router'
-import { Link } from '#/components/base-ui'
 import { errorStyles } from './error.css'
 
 export default function NotFound() {
   const navigate = useNavigate()
+  const styles = errorStyles()
 
   const handleBack = () => {
     if (window.history.length > 1) {
@@ -14,33 +14,32 @@ export default function NotFound() {
   }
 
   return (
-    <div className={errorStyles.wrapper}>
-      <div className={errorStyles.decorativeGradient}>
-        <div className={errorStyles.gradientInner}>
-          <div className={errorStyles.gradientBg} />
+    <div className={styles.wrapper()}>
+      <div className={styles.decorativeGradient()}>
+        <div className={styles.gradientInner()}>
+          <div className={styles.gradientBg()} />
         </div>
       </div>
-      <div className={errorStyles.decorativeCode}>
-        <h2 className={errorStyles.decorativeText}>404</h2>
+      <div className={styles.decorativeCode()}>
+        <h2 className={styles.decorativeText()}>404</h2>
       </div>
-      <div className={errorStyles.content}>
-        <div className={errorStyles.container}>
-          <p className={errorStyles.errorCode}>404</p>
-          <h1 className={errorStyles.title}>Page not found</h1>
-          <p className={errorStyles.description}>
+      <div className={styles.content()}>
+        <div className={styles.container()}>
+          <p className={styles.errorCode()}>404</p>
+          <h1 className={styles.title()}>Page not found</h1>
+          <p className={styles.description()}>
             Sorry, we couldn't find the page you're looking for.
           </p>
-          <div className={errorStyles.actions}>
-            <button type="button" onClick={handleBack} className={errorStyles.primaryButton}>
+          <div className={styles.actions()}>
+            <button type="button" onClick={handleBack} className={styles.primaryButton()}>
               Go back
             </button>
-            <Link
+            <a
               href="https://squelify.com/docs?utm_source=squelify&utm_medium=404"
-              className={errorStyles.secondaryButton}
-              newTab
+              className={styles.secondaryButton()}
             >
-              View Documentation
-            </Link>
+              Docs
+            </a>
           </div>
         </div>
       </div>

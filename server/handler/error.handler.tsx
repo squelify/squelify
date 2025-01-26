@@ -3,6 +3,7 @@ import { process } from 'std-env'
 import { generateCSRFToken } from '~/utils/string'
 import ErrorView from '~/views/error'
 import BaseLayout from '~/views/layout'
+import pkg from '~~/package.json'
 import { useStorage } from '#imports'
 
 type Manifest = Record<string, { css: string[]; file: string; isEntry: boolean }>
@@ -71,7 +72,7 @@ export default defineNitroErrorHandler(async (error, event) => {
   }
 
   const html = renderToStaticMarkup(
-    <BaseLayout title={appConfig.title} cssLinks={entryChunk.css} csrfToken={csrfToken}>
+    <BaseLayout title={pkg.config.appName} cssLinks={entryChunk.css} csrfToken={csrfToken}>
       <ErrorView appConfig={appConfig} error={error} />
     </BaseLayout>
   )
