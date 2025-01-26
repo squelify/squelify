@@ -5,7 +5,7 @@ import { ZodError, z } from 'zod'
 import { DEFAULT_PASSWORD_ALGORITHM } from '~/database/schemas/password'
 import { hashPassword } from '~/utils/security'
 
-const InstallerSchema = z.object({
+const SetupSchema = z.object({
   firstName: z
     .string()
     .min(2)
@@ -38,7 +38,7 @@ export default defineEventHandler(async (event) => {
   const now = Math.floor(Date.now() / 1000)
 
   try {
-    const body = await readValidatedBody(event, (body) => InstallerSchema.parse(body))
+    const body = await readValidatedBody(event, (body) => SetupSchema.parse(body))
     if (!body) {
       throw createError({ statusCode: 400, message: 'Invalid form data' })
     }
@@ -233,7 +233,7 @@ export default defineEventHandler(async (event) => {
       const errorMessage = `${err.message} (${err.path.join(', ')})`
       return sendRedirect(
         event,
-        `/admin/installer?token=1234567890?error=${encodeURIComponent(errorMessage)}`
+        `/admin/setup?token=1234567890?error=${encodeURIComponent(errorMessage)}`
       )
     }
 

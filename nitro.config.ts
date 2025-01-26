@@ -27,7 +27,7 @@ export default defineNitroConfig({
   handlers: [
     { route: '/robots.txt', handler: '~/handler/robots.handler' },
     { route: '/site.webmanifest', handler: '~/handler/manifest.handler' },
-    { route: '/installer', handler: '~/handler/installer.handler', method: 'post' },
+    { route: '/setup', handler: '~/handler/setup.handler', method: 'post' },
   ],
 
   publicAssets: [{ dir: resolve('public') }],
