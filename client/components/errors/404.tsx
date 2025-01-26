@@ -20,7 +20,7 @@ export default function NotFound() {
           <div className={errorStyles.gradientBg} />
         </div>
       </div>
-      <div className={errorStyles.decorative404}>
+      <div className={errorStyles.decorativeCode}>
         <h2 className={errorStyles.decorativeText}>404</h2>
       </div>
       <div className={errorStyles.content}>

@@ -24,7 +24,7 @@ export default function InternalError({ error }: InternalErrorProps) {
           <div className={errorStyles.gradientBg} />
         </div>
       </div>
-      <div className={errorStyles.decorative500}>
+      <div className={errorStyles.decorativeCode}>
         <h2 className={errorStyles.decorativeText}>500</h2>
       </div>
       <div className={errorStyles.content}>

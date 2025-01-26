@@ -1,5 +1,6 @@
 import { H3Error } from 'h3'
 import { AppConfig } from '~~/app.config'
+import { errorStyles } from './error.css'
 
 interface ErrorViewProps {
   appConfig: AppConfig
@@ -29,22 +30,22 @@ export default function ErrorView({ appConfig, error }: ErrorViewProps) {
     return JSON.stringify(cause, null, 2)
   }
 
-  return (
-    <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-white to-gray-100 p-4 dark:from-gray-950 dark:to-gray-900">
-      <main className="mx-auto w-full max-w-5xl rounded-xl border-border bg-card px-10 py-12 shadow-sm">
-        <div className="space-y-6">
-          <div className="space-y-4 text-center">
-            <h1 className="bg-gradient-to-r from-blue-500 to-indigo-600 bg-clip-text font-black text-8xl text-transparent">
-              {error.statusCode}
-            </h1>
-            <h2 className="font-bold text-3xl text-foreground">Something went wrong!</h2>
-            <p className="mx-auto max-w-xl text-lg text-muted-foreground">
-              {error.message ||
-                'The page you are looking for might have been removed or is temporarily unavailable.'}
-            </p>
-          </div>
+  if (process.dev) {
+    return (
+      <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-white to-gray-100 p-4 dark:from-gray-950 dark:to-gray-900">
+        <main className="mx-auto w-full max-w-5xl rounded-xl border-border bg-card px-10 py-12 shadow-sm">
+          <div className="space-y-6">
+            <div className="space-y-4 text-center">
+              <h1 className="bg-gradient-to-r from-blue-500 to-indigo-600 bg-clip-text font-black text-8xl text-transparent">
+                {error.statusCode}
+              </h1>
+              <h2 className="font-bold text-3xl text-foreground">Something went wrong!</h2>
+              <p className="mx-auto max-w-xl text-lg text-muted-foreground">
+                {error.message ||
+                  'The page you are looking for might have been removed or is temporarily unavailable.'}
+              </p>
+            </div>
 
-          {process.dev ? (
             <div className="space-y-6">
               <div className="max-h-max overflow-auto rounded-lg border-rose-200 bg-rose-50 p-6 text-left dark:border-rose-900 dark:bg-rose-900/30">
                 <div className="font-mono text-sm leading-relaxed">
@@ -55,8 +56,8 @@ export default function ErrorView({ appConfig, error }: ErrorViewProps) {
                     <span className="text-rose-700 dark:text-rose-400">{error.name}</span>
                   </div>
                   <div
-                    className="space-y-1"
                     dangerouslySetInnerHTML={{ __html: formatErrorStack(error.stack) }}
+                    className="space-y-1"
                   />
                   {error.cause ? (
                     <div className="mt-4 border-rose-200 border-t pt-4 dark:border-rose-800">
@@ -69,25 +70,66 @@ export default function ErrorView({ appConfig, error }: ErrorViewProps) {
                 </div>
               </div>
             </div>
-          ) : null}
 
-          <div className="mx-auto grid max-w-sm grid-cols-2 gap-4">
-            <a
-              href={appConfig.baseURL}
-              className="inline-flex w-full items-center justify-center rounded-md bg-primary px-5 py-2.5 font-medium text-primary-foreground text-sm shadow-sm transition-all duration-200 hover:shadow-md hover:brightness-90"
-            >
-              Return Home
-            </a>
+            <div className="mx-auto grid max-w-sm grid-cols-2 gap-4">
+              <a
+                href={appConfig.baseURL}
+                className="inline-flex w-full items-center justify-center rounded-md bg-primary px-5 py-2.5 font-medium text-primary-foreground text-sm shadow-sm transition-all duration-200 hover:shadow-md hover:brightness-90"
+              >
+                Return Home
+              </a>
+              <button
+                type="button"
+                className="inline-flex w-full items-center justify-center rounded-md border border-border bg-muted px-5 py-2.5 font-medium text-muted-foreground text-sm shadow-sm transition-all duration-200 hover:bg-accent hover:shadow-md"
+                onClick={() => window.location.reload()}
+              >
+                Try Again
+              </button>
+            </div>
+          </div>
+        </main>
+      </div>
+    )
+  }
+
+  return (
+    <div className={errorStyles.wrapper}>
+      <div className={errorStyles.decorativeGradient}>
+        <div className={errorStyles.gradientInner}>
+          <div className={errorStyles.gradientBg} />
+        </div>
+      </div>
+      <div className={errorStyles.decorativeCode}>
+        <h2 className={errorStyles.decorativeText}>{error.statusCode}</h2>
+      </div>
+      <div className={errorStyles.content}>
+        <div className={errorStyles.container}>
+          <p className={errorStyles.errorCode}>{error.statusCode}</p>
+          <h1 className={errorStyles.title}>Something went wrong!</h1>
+          <p className={errorStyles.description}>
+            {error instanceof Error
+              ? error.message
+              : 'Something went wrong on our end. Please try again later.'}
+          </p>
+          <div className={errorStyles.actions}>
             <button
               type="button"
-              className="inline-flex w-full items-center justify-center rounded-md border border-border bg-muted px-5 py-2.5 font-medium text-muted-foreground text-sm shadow-sm transition-all duration-200 hover:bg-accent hover:shadow-md"
+              className={errorStyles.primaryButton}
               onClick={() => window.location.reload()}
             >
               Try Again
             </button>
+            <a
+              href="https://squelify.com/docs/troubleshooting"
+              className={errorStyles.secondaryButton}
+              rel="noopener noreferrer"
+              target="_blank"
+            >
+              Troubleshooting Guide
+            </a>
           </div>
         </div>
-      </main>
+      </div>
     </div>
   )
 }
