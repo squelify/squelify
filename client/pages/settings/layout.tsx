@@ -4,6 +4,7 @@ import { Separator } from '#/components/base-ui'
 import { Tabs, TabsList, TabsTrigger } from '#/components/base-ui'
 import { Link } from '#/components/base-ui'
 import BoundaryError from '#/components/errors/boundary'
+import { clx } from '#/utils/helper'
 
 interface SettingsTab {
   label: string
@@ -28,7 +29,7 @@ export default function SettingsLayout() {
 
   return (
     <ErrorBoundary FallbackComponent={BoundaryError}>
-      <div className="container mx-auto w-full max-w-4xl space-y-6 p-4 md:p-6 lg:p-8">
+      <div className="container mx-auto w-full max-w-5xl space-y-6 p-4 md:p-6 lg:p-8">
         <header className="space-y-0.5">
           <h1 className="font-semibold text-2xl tracking-tight">System Settings</h1>
           <p className="text-muted-foreground text-sm">
@@ -38,16 +39,23 @@ export default function SettingsLayout() {
 
         <Separator className="my-6" />
 
-        <Tabs value={activeSection} defaultValue={activeSection} className="space-y-6">
-          <TabsList className="w-full justify-start gap-2 overflow-x-auto">
+        <Tabs value={activeSection} defaultValue={activeSection} className="w-full">
+          <TabsList
+            className={clx('mb-0 w-full justify-start rounded-none border-b bg-transparent p-0')}
+          >
             {SETTINGS_TABS.map((tab) => (
-              <TabsTrigger key={tab.value} value={tab.value} asChild>
+              <TabsTrigger
+                key={tab.value}
+                value={tab.value}
+                className="-mb-[2px] h-full rounded-none rounded-t border border-transparent border-b-border bg-transparent data-[state=active]:border-border data-[state=active]:border-b-background data-[state=active]:shadow-none"
+                asChild
+              >
                 <Link href={tab.href}>{tab.label}</Link>
               </TabsTrigger>
             ))}
           </TabsList>
 
-          <div className="min-h-[400px]">
+          <div className="min-h-[400px] w-full py-4">
             <Outlet />
           </div>
         </Tabs>

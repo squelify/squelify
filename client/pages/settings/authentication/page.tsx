@@ -64,6 +64,7 @@ export default function Page() {
                           </p>
                         </div>
                         <Badge
+                          rounded="full"
                           variant={
                             provider.status === 'active'
                               ? 'success'

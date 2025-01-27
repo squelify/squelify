@@ -10,6 +10,13 @@ export const inputStyles = tv({
       'focus:ring-0 focus-visible:border-primary focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-primary/50',
       'disabled:cursor-not-allowed disabled:opacity-50',
     ],
+    numberInput: [
+      'flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-xs transition-colors',
+      'file:border-0 file:bg-transparent file:font-medium file:text-foreground file:text-sm placeholder:text-muted-foreground/60',
+      'focus:ring-0 focus-visible:border-primary focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-primary/50',
+      'relative [appearance:textfield] disabled:cursor-not-allowed disabled:opacity-50',
+      '[&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none',
+    ],
     inputWithIcon: 'pr-9',
     toggleButton: [
       'absolute top-1/2 right-3 cursor-pointer text-muted-foreground/60 hover:text-muted-foreground',

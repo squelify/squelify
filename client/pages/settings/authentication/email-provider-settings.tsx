@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { Input, Label } from '#/components/base-ui'
+import { Input, Label, NumberInput } from '#/components/base-ui'
 
 export function EmailProviderSettings() {
   return (
@@ -9,7 +9,12 @@ export function EmailProviderSettings() {
           <Label>Password Requirements</Label>
           <div className="grid gap-4 sm:grid-cols-2">
             <div className="grid gap-2">
-              <Input type="number" placeholder="Minimum length" />
+              <NumberInput
+                placeholder="Minimum length"
+                className="w-full"
+                defaultValue={8}
+                min={6}
+              />
               <p className="text-muted-foreground text-xs">Minimum characters required</p>
             </div>
             <div className="grid gap-2">
@@ -25,11 +30,11 @@ export function EmailProviderSettings() {
           <Label>Security Policy</Label>
           <div className="grid gap-4 sm:grid-cols-2">
             <div className="grid gap-2">
-              <Input type="number" placeholder="Maximum attempts" />
+              <NumberInput placeholder="Maximum attempts" className="w-full" max={100} min={0} />
               <p className="text-muted-foreground text-xs">Before account lockout</p>
             </div>
             <div className="grid gap-2">
-              <Input type="number" placeholder="Lockout duration" />
+              <NumberInput placeholder="Lockout duration" className="w-full" min={0} />
               <p className="text-muted-foreground text-xs">Duration in minutes</p>
             </div>
           </div>

@@ -1,4 +1,4 @@
-import { Button, Input, Label, Separator, Switch } from '#/components/base-ui'
+import { Button, Input, Label, NumberInput, Separator, Switch } from '#/components/base-ui'
 import { Card, CardContent, CardFooter, CardHeader } from '#/components/base-ui'
 import { CardDescription, CardTitle } from '#/components/base-ui'
 import { Select, SelectTrigger, SelectValue } from '#/components/base-ui'
@@ -40,7 +40,12 @@ export default function Page() {
           </div>
           <div className="grid gap-2">
             <Label>Retention Period (days)</Label>
-            <Input type="number" placeholder="30" />
+            <NumberInput
+              placeholder="Retention period"
+              className="w-full"
+              defaultValue={30}
+              min={0}
+            />
           </div>
         </CardContent>
         <Separator />

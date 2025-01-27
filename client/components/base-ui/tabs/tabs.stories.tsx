@@ -185,3 +185,57 @@ export const TabsInCell: Story = {
     </Tabs>
   ),
 }
+
+export const TabsBootstrap: Story = {
+  render: (_args) => {
+    const tabs = [
+      {
+        name: 'pnpm',
+        value: 'pnpm',
+        content: 'pnpm dlx shadcn@latest add tabs',
+      },
+      {
+        name: 'npm',
+        value: 'npm',
+        content: 'npx shadcn@latest add tabs',
+      },
+      {
+        name: 'yarn',
+        value: 'yarn',
+        content: 'npx shadcn@latest add tabs',
+      },
+      {
+        name: 'bun',
+        value: 'bun',
+        content: 'bunx --bun shadcn@latest add tabs',
+      },
+    ]
+
+    return (
+      <Tabs defaultValue={tabs[0].value} className="w-full max-w-xs">
+        <TabsList className="w-full justify-start rounded-none border-b bg-background p-0">
+          {tabs.map((tab) => (
+            <TabsTrigger
+              key={tab.value}
+              value={tab.value}
+              className="-mb-[2px] h-full rounded-none rounded-t border border-transparent border-b-border bg-background data-[state=active]:border-border data-[state=active]:border-b-background data-[state=active]:shadow-none"
+            >
+              <code className="text-[13px]">{tab.name}</code>
+            </TabsTrigger>
+          ))}
+        </TabsList>
+
+        {tabs.map((tab) => (
+          <TabsContent key={tab.value} value={tab.value}>
+            <div className="flex h-10 items-center justify-between gap-2 rounded-md border pr-1.5 pl-3">
+              <code className="text-[13px]">{tab.content}</code>
+              <Button size="icon" variant="secondary" className="h-7 w-7">
+                <Lucide.Copy className="!h-3.5 !w-3.5" />
+              </Button>
+            </div>
+          </TabsContent>
+        ))}
+      </Tabs>
+    )
+  },
+}

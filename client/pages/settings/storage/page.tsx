@@ -1,4 +1,4 @@
-import { Button, Input, Label, Separator, Switch } from '#/components/base-ui'
+import { Button, Input, Label, NumberInput, Separator, Switch } from '#/components/base-ui'
 import { Card, CardContent, CardFooter, CardHeader } from '#/components/base-ui'
 import { CardDescription, CardTitle } from '#/components/base-ui'
 import { Select, SelectTrigger, SelectValue } from '#/components/base-ui'
@@ -32,7 +32,7 @@ export default function Page() {
           </div>
           <div className="grid gap-2">
             <Label>Upload Limit (MB)</Label>
-            <Input type="number" placeholder="10" />
+            <NumberInput placeholder="Limit in MB" className="w-full" min={1} />
           </div>
           <div className="flex items-center justify-between">
             <div className="space-y-0.5">

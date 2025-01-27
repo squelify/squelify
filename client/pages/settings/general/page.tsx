@@ -10,71 +10,65 @@ export default function Page() {
   useSEOMeta('System Settings')
 
   return (
-    <TabsContent value="general" tabIndex={-1}>
-      <div className="grid gap-6">
-        <Card>
-          <CardHeader className="md:px-10">
-            <CardTitle>Application Settings</CardTitle>
-            <CardDescription>Configure your application details</CardDescription>
-          </CardHeader>
-          <Separator />
-          <CardContent className="grid gap-6 pt-6 pb-8 md:px-10">
-            <div className="grid gap-2">
-              <Label>Application Name</Label>
-              <Input placeholder="My Application" />
-            </div>
-            <div className="grid gap-2">
-              <Label>Application URL</Label>
-              <Input placeholder="https://example.com" />
-            </div>
-            <div className="grid gap-2">
-              <Label>Default Timezone</Label>
-              <Select>
-                <SelectTrigger>
-                  <SelectValue placeholder="Select timezone" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="utc+7">Western Indonesia Time (UTC+7)</SelectItem>
-                  <SelectItem value="utc+8">Singapore Time (UTC+8)</SelectItem>
-                  <SelectItem value="utc+0">UTC</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-          </CardContent>
-          <Separator />
-          <CardFooter className="flex justify-end pt-6 md:px-10">
-            <Button>Save Changes</Button>
-          </CardFooter>
-        </Card>
+    <TabsContent value="general" tabIndex={-1} className="grid gap-6">
+      <Card>
+        <CardHeader className="md:px-10">
+          <CardTitle>Application Settings</CardTitle>
+          <CardDescription>Configure your application details</CardDescription>
+        </CardHeader>
+        <Separator />
+        <CardContent className="grid gap-6 pt-6 pb-8 md:px-10">
+          <div className="grid gap-2">
+            <Label>Application Name</Label>
+            <Input placeholder="My Application" />
+          </div>
+          <div className="grid gap-2">
+            <Label>Application URL</Label>
+            <Input placeholder="https://example.com" />
+          </div>
+          <div className="grid gap-2">
+            <Label>Default Timezone</Label>
+            <Select>
+              <SelectTrigger>
+                <SelectValue placeholder="Select timezone" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="utc+7">Western Indonesia Time (UTC+7)</SelectItem>
+                <SelectItem value="utc+8">Singapore Time (UTC+8)</SelectItem>
+                <SelectItem value="utc+0">UTC</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+        </CardContent>
+        <Separator />
+        <CardFooter className="flex justify-end pt-6 md:px-10">
+          <Button>Save Changes</Button>
+        </CardFooter>
+      </Card>
 
-        <Card>
-          <CardHeader className="md:px-10">
-            <CardTitle>Security Settings</CardTitle>
-            <CardDescription>Configure security preferences</CardDescription>
-          </CardHeader>
-          <Separator />
-          <CardContent className="grid gap-6 pt-6 pb-8 md:px-10">
-            <div className="flex items-center justify-between">
-              <div className="space-y-0.5">
-                <Label>Rate Limiting</Label>
-                <p className="text-muted-foreground text-sm">
-                  Limit request rates to prevent abuse
-                </p>
-              </div>
-              <Switch />
+      <Card>
+        <CardHeader className="md:px-10">
+          <CardTitle>Security Settings</CardTitle>
+          <CardDescription>Configure security preferences</CardDescription>
+        </CardHeader>
+        <Separator />
+        <CardContent className="grid gap-6 pt-6 pb-8 md:px-10">
+          <div className="flex items-center justify-between">
+            <div className="space-y-0.5">
+              <Label>Rate Limiting</Label>
+              <p className="text-muted-foreground text-sm">Limit request rates to prevent abuse</p>
             </div>
-            <div className="flex items-center justify-between">
-              <div className="space-y-0.5">
-                <Label>CORS Protection</Label>
-                <p className="text-muted-foreground text-sm">
-                  Control cross-origin resource sharing
-                </p>
-              </div>
-              <Switch />
+            <Switch />
+          </div>
+          <div className="flex items-center justify-between">
+            <div className="space-y-0.5">
+              <Label>CORS Protection</Label>
+              <p className="text-muted-foreground text-sm">Control cross-origin resource sharing</p>
             </div>
-          </CardContent>
-        </Card>
-      </div>
+            <Switch />
+          </div>
+        </CardContent>
+      </Card>
     </TabsContent>
   )
 }

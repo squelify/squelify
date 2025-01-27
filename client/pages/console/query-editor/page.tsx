@@ -12,6 +12,7 @@ import CodeEditor, { type EditorContextData, EditorRef } from '#/components/code
 import DataGrid from '#/components/datagrid'
 import { useSEOMeta } from '#/context/hooks/use-seo-meta'
 import { generateEmail, generateName, generatePhone, getRandomElement } from '#/utils/dummy'
+import { clx } from '#/utils/helper'
 
 type DummyItem = {
   name: string
@@ -115,14 +116,14 @@ export default function Page() {
                         className="cursor-pointer rounded-xs px-3 py-1.5 text-muted-foreground text-xs hover:bg-primary/20 hover:text-foreground focus:bg-primary/30"
                         onClick={() => editorRef.current?.execute()}
                       >
-                        <span>Run Current Statement</span>
+                        <span>Run current statement</span>
                         <DropdownMenuShortcut>⌘↵</DropdownMenuShortcut>
                       </DropdownMenuItem>
                       <DropdownMenuItem
                         className="cursor-pointer rounded-xs px-3 py-1.5 text-muted-foreground text-xs hover:bg-primary/20 hover:text-foreground focus:bg-primary/30"
                         onClick={() => editorRef.current?.executeAll()}
                       >
-                        <span>Run All Statement</span>
+                        <span>Run all statements</span>
                         <DropdownMenuShortcut>⇧⌘↵</DropdownMenuShortcut>
                       </DropdownMenuItem>
                     </DropdownMenuContent>
@@ -175,17 +176,23 @@ export default function Page() {
         <ResizablePanel defaultSize={40}>
           <Tabs defaultValue="results" className="h-full space-y-0">
             <div className="flex w-full gap-2 bg-muted/20 px-2">
-              <TabsList className="-mx-2 h-9 w-96 items-center justify-start rounded-none bg-transparent">
+              <TabsList className="h-9 w-full max-w-96 items-center justify-start gap-2.5 rounded-none rounded-t-md border-b bg-transparent p-0">
                 <TabsTrigger
                   value="results"
-                  className="flex h-7 w-full items-center gap-1.5 px-3 text-xs data-[state=active]:bg-gray-200/60 data-[state=active]:shadow-none dark:data-[state=active]:bg-gray-700/60"
+                  className={clx(
+                    'flex h-7 items-center gap-1.5 rounded-none rounded-t-sm border-transparent border-b-2 px-1 text-xs',
+                    'data-[state=active]:border-primary data-[state=active]:bg-transparent data-[state=active]:shadow-none'
+                  )}
                 >
                   <Lucide.Sheet className="size-3.5" />
                   Results
                 </TabsTrigger>
                 <TabsTrigger
                   value="messages"
-                  className="flex h-7 w-full items-center gap-1.5 px-3 text-xs data-[state=active]:bg-gray-200/60 data-[state=active]:shadow-none dark:data-[state=active]:bg-gray-700/60"
+                  className={clx(
+                    'flex h-7 items-center gap-1.5 rounded-none rounded-t-sm border-transparent border-b-2 px-1 text-xs',
+                    'data-[state=active]:border-primary data-[state=active]:bg-transparent data-[state=active]:shadow-none'
+                  )}
                 >
                   <Lucide.MessageSquare className="size-3.5" />
                   Messages
@@ -203,23 +210,25 @@ export default function Page() {
               </div>
             </div>
 
-            <TabsContent value="results" className="h-[calc(100%-36px)]" asChild>
-              <div id="portal" className="custom-datagrid z-[9999] border-t bg-sidebar/80">
-                <DataGrid
-                  data={data}
-                  columns={columns}
-                  enableCopyPaste
-                  enableRowMarkers
-                  enableMultiSelect
-                  onCellEdited={onCellEdited}
-                  onSelectionChange={(selection) => {
-                    consola.log('Selection:', selection)
-                  }}
-                />
-              </div>
+            <TabsContent
+              value="results"
+              className="custom-datagrid z-[9999] mt-0 h-[calc(100%-36px)] border-t bg-sidebar/80"
+              id="portal"
+            >
+              <DataGrid
+                data={data}
+                columns={columns}
+                enableCopyPaste
+                enableRowMarkers
+                enableMultiSelect
+                onCellEdited={onCellEdited}
+                onSelectionChange={(selection) => {
+                  consola.log('Selection:', selection)
+                }}
+              />
             </TabsContent>
-            <TabsContent value="messages" className="h-[calc(100%-36px)]">
-              <ScrollArea className="size-full border-t bg-sidebar/80 p-3">
+            <TabsContent value="messages" asChild>
+              <ScrollArea className="mt-0 size-full h-[calc(100%-36px)] border-t bg-sidebar/80 p-3">
                 <div className="rounded-sm bg-background/60 p-3 font-mono text-sm">
                   Query executed successfully
                 </div>

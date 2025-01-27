@@ -20,17 +20,25 @@ export default function AuthorizationLayout() {
 
         <Separator className="my-6" />
 
-        <Tabs value={activeSection} defaultValue={activeSection} className="space-y-6">
-          <TabsList className="w-full justify-start overflow-x-auto">
-            <TabsTrigger value="roles" asChild>
+        <Tabs value={activeSection} defaultValue={activeSection} className="w-full">
+          <TabsList className="w-full justify-start rounded-none border-b bg-transparent p-0">
+            <TabsTrigger
+              value="roles"
+              className="-mb-[2px] h-full rounded-none rounded-t border border-transparent border-b-border bg-transparent data-[state=active]:border-border data-[state=active]:border-b-background data-[state=active]:shadow-none"
+              asChild
+            >
               <Link href="/authorization/roles">Roles</Link>
             </TabsTrigger>
-            <TabsTrigger value="permissions" asChild>
+            <TabsTrigger
+              value="permissions"
+              className="-mb-[2px] h-full rounded-none rounded-t border border-transparent border-b-border bg-transparent data-[state=active]:border-border data-[state=active]:border-b-background data-[state=active]:shadow-none"
+              asChild
+            >
               <Link href="/authorization/permissions">Permissions</Link>
             </TabsTrigger>
           </TabsList>
 
-          <div className="min-h-[400px] w-full">
+          <div className="min-h-[400px] w-full py-1">
             <Outlet />
           </div>
         </Tabs>
