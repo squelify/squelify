@@ -1,9 +1,10 @@
 import * as Lucide from 'lucide-react'
-import { Button, Card, CardContent, Input, Skeleton } from '#/components/base-ui'
+import { AspectRatio, Button, Card, CardContent, Input, Skeleton } from '#/components/base-ui'
 import { Dialog, DialogContent, DialogTrigger } from '#/components/base-ui'
 import { DialogHeader, DialogTitle } from '#/components/base-ui'
 import { Popover, PopoverContent, PopoverTrigger } from '#/components/base-ui'
 import { type MediaItem } from '#/utils/dummy'
+import { clx } from '#/utils/helper'
 
 interface GridViewProps {
   items: MediaItem[]
@@ -75,8 +76,9 @@ export default function GridView({ items }: GridViewProps) {
 
                 {/* Preview */}
                 <div className="relative size-full">
-                  <img src={item.url} alt={item.name} className="size-full object-cover" />
-
+                  <AspectRatio ratio={1 / 1}>
+                    <img src={item.url} alt={item.name} className="size-full object-cover" />
+                  </AspectRatio>
                   {/* Eye Icon on Hover */}
                   <div className="absolute inset-0 flex items-center justify-center bg-black/40 opacity-0 transition-all duration-200 group-hover:opacity-100">
                     <Lucide.Eye className="size-8 scale-50 text-white opacity-0 transition-all duration-200 group-hover:scale-100 group-hover:opacity-100" />
@@ -130,16 +132,22 @@ export default function GridView({ items }: GridViewProps) {
               </CardContent>
             </Card>
           </DialogTrigger>
-          <DialogContent>
+          <DialogContent
+            className={clx(
+              item.type === 'application/pdf' ? 'sm:max-w-lg' : 'sm:max-w-xl',
+              'max-w-full'
+            )}
+          >
             <DialogHeader>
               <DialogTitle>Preview</DialogTitle>
             </DialogHeader>
             <div className="space-y-4">
-              <img
-                src={item.url}
-                alt={item.name}
-                className="aspect-square w-full rounded-lg object-cover"
-              />
+              <AspectRatio
+                ratio={item.type === 'application/pdf' ? 4 / 5 : 16 / 9}
+                className="rounded-lg border border-muted-foreground/20 bg-muted"
+              >
+                <img src={item.url} alt={item.name} className="size-full rounded-md object-cover" />
+              </AspectRatio>
               <div className="space-y-2">
                 <div className="flex justify-between">
                   <span className="text-muted-foreground">Name:</span>

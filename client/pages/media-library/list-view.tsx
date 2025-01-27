@@ -1,11 +1,11 @@
 import * as Lucide from 'lucide-react'
-import { Button, Input, Skeleton } from '#/components/base-ui'
+import { AspectRatio, Button, Input, Skeleton } from '#/components/base-ui'
 import { Dialog, DialogContent, DialogTrigger } from '#/components/base-ui'
 import { DialogHeader, DialogTitle } from '#/components/base-ui'
 import { Popover, PopoverContent, PopoverTrigger } from '#/components/base-ui'
 import { Table, TableBody, TableCell, TableRow } from '#/components/base-ui'
 import { TableHead, TableHeader } from '#/components/base-ui'
-import { type MediaItem } from './dummy'
+import { type MediaItem } from '#/utils/dummy'
 
 interface ListViewProps {
   items: MediaItem[]
@@ -160,11 +160,16 @@ export default function ListView({ items }: ListViewProps) {
                 <DialogTitle>Preview</DialogTitle>
               </DialogHeader>
               <div className="space-y-4">
-                <img
-                  src={item.url}
-                  alt={item.name}
-                  className="aspect-square w-full rounded-lg object-cover"
-                />
+                <AspectRatio
+                  ratio={item.type === 'application/pdf' ? 3 / 4 : 16 / 9}
+                  className="rounded-lg border border-muted-foreground/20 bg-muted"
+                >
+                  <img
+                    src={item.url}
+                    alt={item.name}
+                    className="size-full rounded-md object-cover"
+                  />
+                </AspectRatio>
                 <div className="space-y-2">
                   <div className="flex justify-between">
                     <span className="text-muted-foreground">Name:</span>
