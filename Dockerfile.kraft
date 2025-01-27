@@ -11,7 +11,7 @@ COPY --from=base /usr/bin/tini /usr/bin/tini
 COPY --from=base /srv /srv
 
 # Copy distro configuration and some utils from the runner images.
+COPY --from=base /lib/x86_64-linux-gnu/libc.so.6 /lib/x86_64-linux-gnu/
+COPY --from=base /lib/x86_64-linux-gnu/libm.so.6 /lib/x86_64-linux-gnu/
+COPY --from=base /lib64/ld-linux-x86-64.so.2 /lib64/
 COPY --from=base /etc/os-release /etc/os-release
-COPY --from=base /lib/x86_64-linux-gnu/libc.so.6 /lib/x86_64-linux-gnu/libc.so.6
-COPY --from=base /lib/x86_64-linux-gnu/libm.so.6 /lib/x86_64-linux-gnu/libm.so.6
-COPY --from=base /lib64/ld-linux-x86-64.so.2 /lib64/ld-linux-x86-64.so.2
