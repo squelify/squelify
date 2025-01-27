@@ -21,8 +21,8 @@ node_modules
 npm-debug.log
 slim.report.json
 playwright-report/
+storybook-static/
 tests-results/
-/public/build
 .playwright/
 .git
 .gitignore
@@ -33,7 +33,6 @@ tests-results/
 *.md
 .env*
 .meta
-.data
 .nitro
 .output
 .client
