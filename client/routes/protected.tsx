@@ -30,6 +30,7 @@ const SQLConsole = {
   Layout: lazy(() => import('#/pages/console/layout')),
   Table: lazy(() => import('#/pages/console/table-editor/page')),
   Query: lazy(() => import('#/pages/console/query-editor/page')),
+  Diagram: lazy(() => import('#/pages/diagram/page')),
 }
 
 // Content feature group
@@ -87,6 +88,7 @@ export const protectedRoutes: RouteObject[] = [
           { path: 'query', element: <SQLConsole.Query /> },
         ],
       },
+      { path: 'diagram', element: <SQLConsole.Diagram /> },
       {
         path: 'content',
         children: [

@@ -45,11 +45,11 @@ export function getBreadcrumbItems(
  */
 function handleStandaloneRoute(path: string): { title: string; url: string }[] {
   const standalonePages: Record<string, string> = {
-    account: 'My Account',
     'audit-log': 'Audit Log',
-    webhooks: 'Webhooks',
     'api-keys': 'API Keys',
-    users: 'Users',
+    account: 'My Account',
+    users: 'User Management',
+    webhooks: 'Webhooks',
   }
 
   const segment = path.split('/')[1]

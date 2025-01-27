@@ -18,7 +18,7 @@ const CommandDialog = ({ children, ...props }: DialogProps) => {
   const styles = commandStyles()
   return (
     <Dialog {...props}>
-      <DialogContent className="overflow-hidden p-0">
+      <DialogContent className={styles.dialogContent()}>
         <Command className={styles.dialog()}>{children}</Command>
       </DialogContent>
     </Dialog>
@@ -89,6 +89,16 @@ const CommandShortcut = ({ className, ...props }: React.HTMLAttributes<HTMLSpanE
   return <span className={styles.shortcut({ className })} {...props} />
 }
 
+const CommandFooter = ({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) => {
+  const styles = commandStyles()
+  return <div className={styles.footer({ className })} {...props} />
+}
+
+const CommandFooterKeyBox = ({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) => {
+  const styles = commandStyles()
+  return <div className={styles.footerKeyBox({ className })} {...props} />
+}
+
 Command.displayName = CommandPrimitive.displayName
 CommandInput.displayName = CommandPrimitive.Input.displayName
 CommandList.displayName = CommandPrimitive.List.displayName
@@ -97,6 +107,8 @@ CommandGroup.displayName = CommandPrimitive.Group.displayName
 CommandSeparator.displayName = CommandPrimitive.Separator.displayName
 CommandItem.displayName = CommandPrimitive.Item.displayName
 CommandShortcut.displayName = 'CommandShortcut'
+CommandFooter.displayName = 'CommandFooter'
+CommandFooterKeyBox.displayName = 'CommandFooterKeyBox'
 
 export {
   Command,
@@ -108,4 +120,6 @@ export {
   CommandItem,
   CommandShortcut,
   CommandSeparator,
+  CommandFooter,
+  CommandFooterKeyBox,
 }

@@ -1,5 +1,6 @@
 import * as Lucide from 'lucide-react'
-import { useLocation } from 'react-router'
+import { useMemo } from 'react'
+import { useLocation, useNavigate } from 'react-router'
 import { Button } from '#/components/base-ui'
 import { SidebarFooter, SidebarHeader } from '#/components/base-ui'
 import { SidebarGroup, SidebarGroupContent, SidebarGroupLabel } from '#/components/base-ui'
@@ -10,7 +11,7 @@ import { Link } from '#/components/base-ui'
 import { MenuItem, useMenu } from '#/context/hooks/use-menu'
 import type { UserInfo } from '#/services/types'
 import { clx } from '#/utils/helper'
-import AppCommand from './app-command'
+import AppCommand, { CommandMenuGroup } from './app-command'
 import UserMenu from './user-menu'
 
 interface AppSidebarProps {
@@ -52,6 +53,7 @@ export default function AppSidebar({ user, logout }: AppSidebarProps) {
   const { state: sidebarState, toggleSidebar } = useSidebar()
   const { pathname } = useLocation()
   const { menuGroups } = useMenu()
+  const navigate = useNavigate()
 
   // Helper to check the active state of the menu
   const isMenuActive = (itemUrl: string): boolean => {
@@ -59,6 +61,146 @@ export default function AppSidebar({ user, logout }: AppSidebarProps) {
     const isSpecialPath = specialPaths.some((path) => itemUrl.startsWith(path))
     return isSpecialPath ? pathname.startsWith(itemUrl) : pathname === itemUrl
   }
+
+  const commandMenuItems: CommandMenuGroup[] = useMemo(
+    () => [
+      {
+        id: 'main-nav',
+        heading: 'Overview',
+        items: [
+          {
+            id: 'dashboard',
+            icon: Lucide.LayoutDashboard,
+            label: 'Dashboard',
+            onSelect: () => navigate('/dashboard'),
+            shortcut: '/dashboard',
+          },
+        ],
+        showSeparator: true,
+      },
+      {
+        id: 'database',
+        heading: 'Database',
+        items: [
+          {
+            id: 'table-editor',
+            icon: Lucide.Table2,
+            label: 'Table Editor',
+            onSelect: () => navigate('/console/table'),
+            shortcut: '/console/table',
+          },
+          {
+            id: 'query-editor',
+            icon: Lucide.SquareChartGantt,
+            label: 'Query Editor',
+            onSelect: () => navigate('/console/query'),
+            shortcut: '/console/query',
+          },
+          {
+            id: 'schema-diagram',
+            icon: Lucide.Proportions,
+            label: 'Schema Diagram',
+            onSelect: () => navigate('/diagram'),
+            shortcut: '/diagram',
+          },
+        ],
+        showSeparator: false,
+      },
+      {
+        id: 'content',
+        heading: 'Manage Content',
+        items: [
+          {
+            id: 'collections',
+            icon: Lucide.Database,
+            label: 'Collections',
+            onSelect: () => navigate('/content/collections'),
+            shortcut: '/content/collections',
+          },
+          {
+            id: 'media-library',
+            icon: Lucide.Image,
+            label: 'Media Library',
+            onSelect: () => navigate('/content/media-library'),
+            shortcut: '/content/media-library',
+          },
+        ],
+        showSeparator: false,
+      },
+      {
+        id: 'authentication',
+        heading: 'Authentication',
+        items: [
+          {
+            id: 'users',
+            icon: Lucide.Users,
+            label: 'Users',
+            onSelect: () => navigate('/users'),
+            shortcut: '/users',
+          },
+          {
+            id: 'roles',
+            icon: Lucide.KeySquare,
+            label: 'Roles',
+            onSelect: () => navigate('/authorization/roles'),
+            shortcut: '/authorization/roles',
+          },
+          {
+            id: 'permissions',
+            icon: Lucide.SquareAsterisk,
+            label: 'Permissions',
+            onSelect: () => navigate('/authorization/permissions'),
+            shortcut: '/authorization/permissions',
+          },
+        ],
+        showSeparator: true,
+      },
+      {
+        id: 'miscellaneous',
+        heading: 'Miscellaneous',
+        items: [
+          {
+            id: 'toggle-sidebar',
+            icon: Lucide.PanelRightOpen,
+            label: 'Toggle Sidebar',
+            onSelect: toggleSidebar,
+            shortcut: '⌘+shift+e',
+          },
+        ],
+        showSeparator: true,
+      },
+      {
+        id: 'resources',
+        heading: 'Resources',
+        items: [
+          { id: 'docs', icon: Lucide.BookUser, label: 'Documentation' },
+          { id: 'changelog', icon: Lucide.NotebookText, label: 'Release Notes' },
+        ],
+        showSeparator: true,
+      },
+      {
+        id: 'account',
+        heading: 'Account',
+        items: [
+          {
+            id: 'profile',
+            icon: Lucide.UserCog,
+            label: 'Profile',
+            onSelect: () => navigate('/account/profile'),
+            shortcut: '/account/profile',
+          },
+          {
+            id: 'logout',
+            icon: Lucide.LogOut,
+            label: 'Sign out',
+            onSelect: () => logout(),
+            shortcut: '/signout',
+          },
+        ],
+      },
+    ],
+    [navigate, toggleSidebar, logout]
+  )
 
   return (
     <Sidebar variant="sidebar" collapsible="icon">
@@ -87,7 +229,7 @@ export default function AppSidebar({ user, logout }: AppSidebarProps) {
           className={clx(sidebarState === 'expanded' ? 'flex' : 'hidden', 'w-full p-0')}
         >
           <SidebarGroupContent>
-            <AppCommand logout={logout} />
+            <AppCommand menuItems={commandMenuItems} />
           </SidebarGroupContent>
         </SidebarGroup>
       </SidebarHeader>

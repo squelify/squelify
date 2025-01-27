@@ -14,23 +14,37 @@ export const commandStyles = tv({
     listInner: '-ml-1 p-1',
     empty: 'py-6 text-center text-sm',
     group: [
-      'overflow-hidden p-1 text-foreground [&_[cmdk-group-heading]]:px-2 [&_[cmdk-group-heading]]:py-1.5',
-      '[&_[cmdk-group-heading]]:font-medium [&_[cmdk-group-heading]]:text-muted-foreground [&_[cmdk-group-heading]]:text-xs',
+      'overflow-hidden p-1 text-foreground [&_[cmdk-group-heading]]:px-1 [&_[cmdk-group-heading]]:py-1.5',
+      '[&_[cmdk-group-heading]]:font-medium [&_[cmdk-group-heading]]:tracking-tight',
+      '[&_[cmdk-group-heading]]:text-muted-foreground [&_[cmdk-group-heading]]:text-xs',
     ],
-    separator: '-mx-1 h-px bg-border',
+    separator: '-mx-1 mb-1.5 h-px bg-border/60',
     item: [
-      'relative flex cursor-pointer select-none items-center gap-2 rounded-sm px-2 py-1.5 text-sm outline-none',
-      'data-[disabled=true]:pointer-events-none data-[selected=true]:bg-accent data-[selected=true]:text-accent-foreground',
+      'relative flex cursor-pointer select-none items-center gap-1.5 rounded-md px-2 py-1.5 text-sm outline-none',
+      'data-[disabled=true]:pointer-events-none data-[selected=true]:bg-accent/80 data-[selected=true]:text-accent-foreground',
       'data-[disabled=true]:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0',
     ],
-    shortcut: 'ml-auto text-muted-foreground text-xs tracking-widest',
+    shortcut: 'ml-auto text-muted-foreground/80 text-xs tracking-wider',
+    dialogContent: 'top-[40%] overflow-hidden p-0',
     dialog: [
-      '[&_[cmdk-group-heading]]:px-2 [&_[cmdk-group-heading]]:font-medium [&_[cmdk-group-heading]]:text-muted-foreground',
-      '[&_[cmdk-group]:not([hidden])_~[cmdk-group]]:pt-0 [&_[cmdk-group]]:px-2 [&_[cmdk-input-wrapper]_svg]:h-5',
-      '[&_[cmdk-input-wrapper]_svg]:w-5 [&_[cmdk-input]]:h-12 [&_[cmdk-item]]:px-2 [&_[cmdk-item]]:py-3',
-      '[&_[cmdk-item]_svg]:h-5 [&_[cmdk-item]_svg]:w-5',
+      '[&_[cmdk-group-heading]]:px-2 [&_[cmdk-group-heading]]:pt-1',
+      '[&_[cmdk-group]:not([hidden])_~[cmdk-group]]:pt-0 [&_[cmdk-group]]:px-2 [&_[cmdk-item]_svg]:size-4',
+      '[&_[cmdk-input-wrapper]_svg]:size-4 [&_[cmdk-input]]:h-12 [&_[cmdk-item]]:px-2 [&_[cmdk-item]]:py-2',
+      '[&_[cmdk-group-heading]]:font-medium [&_[cmdk-group-heading]]:text-muted-foreground',
+    ],
+    footer: [
+      'flex h-12 items-center justify-between gap-3 px-4 py-2 text-sm',
+      'border-border border-t bg-muted/30 text-muted-foreground',
+    ],
+    footerKeyBox: [
+      'flex size-5 shrink-0 items-center justify-center',
+      'rounded-sm bg-muted/40 text-muted-foreground',
+      'ring-1 ring-border ring-inset',
     ],
   },
+  variants: {},
+  compoundVariants: [],
+  defaultVariants: {},
 })
 
 export type CommandVariants = VariantProps<typeof commandStyles>

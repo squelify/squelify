@@ -3,7 +3,7 @@ import { useSEOMeta } from '#/context/hooks/use-seo-meta'
 import PageWrapper from '#/layouts/page-wrapper'
 
 export default function Page() {
-  const { pageTitle } = useSEOMeta('Collections')
+  const { pageTitle } = useSEOMeta('Schema Diagram')
 
   return (
     <PageWrapper className="mx-auto flex size-full items-center justify-center">

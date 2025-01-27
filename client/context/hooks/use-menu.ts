@@ -21,6 +21,12 @@ export function useMenu() {
       items: [
         { title: 'Dashboard', url: '/dashboard', icon: Lucide.LayoutDashboard },
         { title: 'SQL Console', url: '/console', icon: Lucide.SquareChartGantt },
+        { title: 'Schema Diagram', url: '/diagram', icon: Lucide.Proportions },
+      ],
+    },
+    {
+      label: 'Authentication',
+      items: [
         { title: 'User Management', url: '/users', icon: Lucide.Users },
         { title: 'Authorization', url: '/authorization', icon: Lucide.ShieldCheck },
       ],
