@@ -12,7 +12,7 @@ import { resolve } from 'pathe'
 import { isDevelopment, isProduction } from 'std-env'
 import { build as vite } from 'vite'
 import appConfig from './app.config'
-import pkg from './package.json' assert { type: 'json' }
+import pkg from './package.json' with { type: 'json' }
 
 export default defineNitroConfig({
   compatibilityDate: '2025-01-23',

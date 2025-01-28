@@ -5,7 +5,7 @@ import { resolve } from 'pathe'
 import { isProduction, isTest } from 'std-env'
 import { type Logger as ViteLogger, defineConfig } from 'vite'
 import tsconfigPaths from 'vite-tsconfig-paths'
-import pkg from './package.json' assert { type: 'json' }
+import pkg from './package.json' with { type: 'json' }
 
 export default defineConfig({
   clearScreen: true,
