@@ -3,6 +3,7 @@ import consola from 'consola'
 import { NuqsAdapter } from 'nuqs/adapters/react'
 import { createContext, useCallback, useEffect, useMemo, useRef } from 'react'
 import { ILoginResponse } from '~/api/auth/login.post'
+import pkg from '~~/package.json' with { type: 'json' }
 import { useApiClient } from '#/context/hooks/use-api-client'
 import { authStore, resetAuthState, saveAuthState } from '#/context/stores/auth.store'
 import { defaultAuthStoreValues } from '#/context/stores/auth.store'
@@ -25,7 +26,7 @@ export type AppProviderState = {
 }
 
 const initialState: AppProviderState = {
-  defaultSuffix: 'Squelify',
+  defaultSuffix: pkg.config.appName,
   defaultSeparator: '-',
   auth: {
     user: defaultAuthStoreValues.user,

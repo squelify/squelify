@@ -1,4 +1,5 @@
 import * as OTPAuth from 'otpauth'
+import pkg from '~~/package.json' with { type: 'json' }
 
 export function generateTOTPSecret(): string {
   const secret = new OTPAuth.Secret({ size: 20 }) // 160 bits
@@ -24,7 +25,7 @@ export function generateTOTPUri(options: {
 
 export function verifyTOTP(secret: string, token: string): boolean {
   const totp = new OTPAuth.TOTP({
-    issuer: 'Squelify',
+    issuer: pkg.config.appName,
     label: 'auth',
     algorithm: 'SHA1',
     digits: 6,
