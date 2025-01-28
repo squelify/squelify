@@ -16,6 +16,7 @@ import {
 const meta: Meta = {
   title: 'Basic Components/AlertDialog',
   component: AlertDialog,
+  tags: [],
   parameters: {
     layout: 'centered',
   },

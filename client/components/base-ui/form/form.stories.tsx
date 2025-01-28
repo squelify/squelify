@@ -14,6 +14,7 @@ import {
 const meta: Meta<typeof Form> = {
   title: 'Basic Components/Form',
   component: Form,
+  tags: [],
 }
 
 export default meta

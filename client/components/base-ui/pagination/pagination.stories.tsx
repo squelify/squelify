@@ -13,6 +13,7 @@ import {
 const meta: Meta<typeof Pagination> = {
   title: 'Basic Components/Pagination',
   component: Pagination,
+  tags: [],
 }
 
 export default meta

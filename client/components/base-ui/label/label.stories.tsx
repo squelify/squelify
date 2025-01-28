@@ -5,6 +5,7 @@ import { Label } from './label'
 const meta: Meta<typeof Label> = {
   title: 'Basic Components/Label',
   component: Label,
+  tags: [],
   argTypes: {
     children: {
       control: 'text',

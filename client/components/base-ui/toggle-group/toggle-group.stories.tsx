@@ -5,6 +5,7 @@ import { ToggleGroup, ToggleGroupItem } from './toggle-group'
 const meta = {
   title: 'Basic Components/ToggleGroup',
   component: ToggleGroup,
+  tags: [],
   parameters: {
     layout: 'centered',
   },

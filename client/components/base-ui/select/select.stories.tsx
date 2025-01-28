@@ -12,6 +12,7 @@ import {
 const meta: Meta<typeof Select> = {
   title: 'Basic Components/Select',
   component: Select,
+  tags: [],
 }
 
 export default meta

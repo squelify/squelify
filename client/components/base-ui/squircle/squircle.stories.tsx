@@ -5,6 +5,7 @@ import { LargeSquircle, SquircleIconContainer } from './squircle'
 const meta: Meta<typeof SquircleIconContainer> = {
   title: 'Basic Components/Squircle',
   component: SquircleIconContainer,
+  tags: [],
   argTypes: {
     size: {
       control: { type: 'radio' },

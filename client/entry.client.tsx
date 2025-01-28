@@ -13,6 +13,7 @@ import pkg from '~~/package.json'
 import BoundaryError from '#/components/errors/boundary'
 import AppLoader from '#/components/loaders/app-loader'
 import AppProvider from '#/context/providers/app-provider'
+import { ThemeProvider } from '#/context/providers/theme-provider'
 import TRPCProvider from '#/context/providers/trpc-provider'
 import { catchAllRoute, protectedRoutes, publicRoutes } from '#/routes'
 
@@ -42,17 +43,19 @@ const AppRoutes = () => {
 // @ref: https://react.dev/blog/2022/03/08/react-18-upgrade-guide#react
 ReactDOM.createRoot(rootElement).render(
   <React.StrictMode>
-    <ErrorBoundary fallback={<BoundaryError />}>
-      <BrowserRouter basename={appConfig.adminPath}>
-        <TRPCProvider>
-          <AppProvider defaultTheme="system">
-            <Suspense fallback={<AppLoader />}>
-              <AppRoutes />
-            </Suspense>
-            <ReactQueryDevtools position="right" />
-          </AppProvider>
-        </TRPCProvider>
-      </BrowserRouter>
-    </ErrorBoundary>
+    <ThemeProvider>
+      <ErrorBoundary fallback={<BoundaryError />}>
+        <BrowserRouter basename={appConfig.adminPath}>
+          <TRPCProvider>
+            <AppProvider>
+              <Suspense fallback={<AppLoader />}>
+                <AppRoutes />
+              </Suspense>
+              <ReactQueryDevtools position="right" />
+            </AppProvider>
+          </TRPCProvider>
+        </BrowserRouter>
+      </ErrorBoundary>
+    </ThemeProvider>
   </React.StrictMode>
 )

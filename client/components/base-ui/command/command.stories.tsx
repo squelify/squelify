@@ -16,6 +16,7 @@ import {
 const meta: Meta<typeof Command> = {
   title: 'Basic Components/Command',
   component: Command,
+  tags: [],
 }
 
 export default meta

@@ -10,6 +10,7 @@ const orientationOptions: NonNullable<SeparatorVariants['orientation']>[] = [
 const meta: Meta<typeof Separator> = {
   title: 'Basic Components/Separator',
   component: Separator,
+  tags: [],
   argTypes: {
     orientation: {
       control: 'radio',

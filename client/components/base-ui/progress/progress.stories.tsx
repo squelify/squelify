@@ -7,6 +7,7 @@ const sizeOptions: NonNullable<ProgressVariants['size']>[] = ['default', 'sm', '
 const meta: Meta<typeof Progress> = {
   title: 'Basic Components/Progress',
   component: Progress,
+  tags: [],
   args: {
     value: 60,
   },

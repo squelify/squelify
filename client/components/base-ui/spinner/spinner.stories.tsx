@@ -4,6 +4,7 @@ import { LazyLoadingSpinner, LoadingSpinner } from './spinner'
 const meta: Meta<typeof LoadingSpinner> = {
   title: 'Basic Components/Spinner',
   component: LoadingSpinner,
+  tags: [],
 }
 
 export default meta

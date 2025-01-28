@@ -5,6 +5,7 @@ import { Switch } from './switch'
 const meta: Meta<typeof Switch> = {
   title: 'Basic Components/Switch',
   component: Switch,
+  tags: [],
   argTypes: {
     checked: {
       control: 'boolean',

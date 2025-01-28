@@ -13,6 +13,7 @@ import {
 const meta: Meta<typeof Table> = {
   title: 'Basic Components/Table',
   component: Table,
+  tags: [],
 }
 
 export default meta

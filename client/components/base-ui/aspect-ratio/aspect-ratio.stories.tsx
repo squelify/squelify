@@ -4,6 +4,7 @@ import { AspectRatio } from './aspect-ratio'
 const meta: Meta = {
   title: 'Basic Components/AspectRatio',
   component: AspectRatio,
+  tags: [],
   argTypes: {
     ratio: {
       control: { type: 'number' },

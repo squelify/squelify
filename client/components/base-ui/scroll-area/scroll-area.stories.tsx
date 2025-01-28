@@ -5,6 +5,7 @@ import { ScrollArea } from './scroll-area'
 const meta: Meta<typeof ScrollArea> = {
   title: 'Basic Components/ScrollArea',
   component: ScrollArea,
+  tags: [],
 }
 
 export default meta

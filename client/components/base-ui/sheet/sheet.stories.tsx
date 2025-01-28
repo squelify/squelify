@@ -16,6 +16,7 @@ import {
 const meta = {
   title: 'Basic Components/Sheet',
   component: Sheet,
+  tags: ['status:experimental'],
   parameters: {
     layout: 'centered',
   },

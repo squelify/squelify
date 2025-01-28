@@ -5,6 +5,7 @@ import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious
 const meta: Meta<typeof Carousel> = {
   title: 'Basic Components/Carousel',
   component: Carousel,
+  tags: [],
 }
 
 export default meta

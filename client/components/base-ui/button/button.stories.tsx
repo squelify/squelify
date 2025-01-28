@@ -19,6 +19,7 @@ const sizeOptions: NonNullable<ButtonVariants['size']>[] = ['sm', 'default', 'lg
 const meta: Meta<ButtonProps> = {
   title: 'Basic Components/Button',
   component: Button,
+  tags: [],
   argTypes: {
     children: {
       control: 'text',

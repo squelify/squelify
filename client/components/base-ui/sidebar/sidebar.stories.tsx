@@ -48,6 +48,7 @@ function LayoutWrapper({ children }: { children: React.ReactNode }) {
 const meta = {
   title: 'Layout Components/Sidebar',
   component: Sidebar,
+  tags: [],
   parameters: {
     layout: 'fullscreen',
   },

@@ -15,10 +15,11 @@ import {
 
 const meta: Meta<typeof Dialog> = {
   title: 'Basic Components/Dialog',
+  component: Dialog,
+  tags: [],
   parameters: {
     layout: 'centered',
   },
-  component: Dialog,
 }
 
 export default meta

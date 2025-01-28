@@ -19,6 +19,7 @@ const roundedOptions: NonNullable<BadgeVariants['rounded']>[] = ['default', 'ful
 const meta: Meta<BadgeProps> = {
   title: 'Basic Components/Badge',
   component: Badge,
+  tags: [],
   argTypes: {
     children: {
       control: 'text',

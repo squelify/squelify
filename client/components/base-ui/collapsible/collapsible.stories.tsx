@@ -6,6 +6,7 @@ import { Collapsible, CollapsibleContent, CollapsibleTrigger } from './collapsib
 const meta: Meta<typeof Collapsible> = {
   title: 'Basic Components/Collapsible',
   component: Collapsible,
+  tags: [],
   argTypes: {
     open: {
       control: 'boolean',

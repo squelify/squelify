@@ -4,23 +4,18 @@ import { NuqsAdapter } from 'nuqs/adapters/react'
 import { createContext, useCallback, useEffect, useMemo, useRef } from 'react'
 import { ILoginResponse } from '~/api/auth/login.post'
 import { useApiClient } from '#/context/hooks/use-api-client'
-import { useThemeHandler } from '#/context/hooks/use-theme'
 import { authStore, resetAuthState, saveAuthState } from '#/context/stores/auth.store'
 import { defaultAuthStoreValues } from '#/context/stores/auth.store'
 import type { AuthStore } from '#/context/stores/auth.store'
-import { type Theme, saveUiState, uiStore } from '#/context/stores/ui.store'
 import type { ApiResponse } from '#/services/types'
 
 type AppProviderProps = {
   children: React.ReactNode
-  defaultTheme?: Theme
   defaultSuffix?: string
   defaultSeparator?: string
 }
 
 export type AppProviderState = {
-  theme: Theme
-  setTheme: (theme: Theme) => void
   defaultSuffix: string
   defaultSeparator?: string
   auth: Pick<AuthStore, 'user'> & {
@@ -30,8 +25,6 @@ export type AppProviderState = {
 }
 
 const initialState: AppProviderState = {
-  theme: 'system',
-  setTheme: () => null,
   defaultSuffix: 'Squelify',
   defaultSeparator: '-',
   auth: {
@@ -45,19 +38,15 @@ export const AppContext = createContext<AppProviderState>(initialState)
 
 export default function AppProvider({
   children,
-  defaultTheme = initialState.theme,
   defaultSuffix = initialState.defaultSuffix,
   defaultSeparator = initialState.defaultSeparator,
   ...props
 }: AppProviderProps) {
   const { current: apiClient } = useRef(useApiClient())
   const authState = useStore(authStore)
-  const uiState = useStore(uiStore)
 
   // Prevent concurrent login calls
   const loginLockRef = useRef(false)
-
-  useThemeHandler(uiState.theme)
 
   const checkAuthState = useCallback(async () => {
     const now = Math.floor(Date.now() / 1000)
@@ -137,13 +126,11 @@ export default function AppProvider({
 
   const value = useMemo(
     () => ({
-      theme: uiState.theme,
-      setTheme: (theme: Theme) => saveUiState({ theme }),
       defaultSuffix,
       defaultSeparator,
       auth: { user: authState.user, login, logout },
     }),
-    [uiState.theme, defaultSuffix, defaultSeparator, authState.user, login, logout]
+    [defaultSuffix, defaultSeparator, authState.user, login, logout]
   )
 
   return (

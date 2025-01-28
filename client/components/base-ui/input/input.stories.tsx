@@ -4,6 +4,7 @@ import { Input } from './input'
 const meta: Meta<typeof Input> = {
   title: 'Basic Components/Input',
   component: Input,
+  tags: [],
   args: {
     placeholder: 'Enter text...',
   },

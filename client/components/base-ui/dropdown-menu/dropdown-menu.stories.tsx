@@ -18,6 +18,7 @@ import {
 const meta: Meta<typeof DropdownMenu> = {
   title: 'Basic Components/DropdownMenu',
   component: DropdownMenu,
+  tags: [],
 }
 
 export default meta

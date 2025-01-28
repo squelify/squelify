@@ -6,6 +6,7 @@ import { ChartContainer, ChartTooltip, ChartTooltipContent } from './chart'
 const meta: Meta<typeof ChartContainer> = {
   title: 'Visualizations/Chart',
   component: ChartContainer,
+  tags: [],
 }
 
 export default meta

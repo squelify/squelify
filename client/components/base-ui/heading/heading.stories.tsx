@@ -16,6 +16,7 @@ const alignOptions: NonNullable<HeadingVariants['align']>[] = ['left', 'center',
 const meta: Meta<HeadingProps> = {
   title: 'Basic Components/Heading',
   component: Heading,
+  tags: [],
   parameters: {
     controls: {
       exclude: ['asChild'],

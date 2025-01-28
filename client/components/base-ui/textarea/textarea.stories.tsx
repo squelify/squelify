@@ -4,6 +4,7 @@ import { Textarea } from './textarea'
 const meta: Meta<typeof Textarea> = {
   title: 'Basic Components/Textarea',
   component: Textarea,
+  tags: [],
   argTypes: {
     placeholder: {
       control: 'text',

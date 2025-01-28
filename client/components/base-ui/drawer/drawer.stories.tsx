@@ -12,6 +12,7 @@ import { DrawerClose, DrawerContent, DrawerFooter, DrawerHeader } from './drawer
 const meta: Meta<typeof Drawer> = {
   title: 'Basic Components/Drawer',
   component: Drawer,
+  tags: [],
 }
 
 export default meta

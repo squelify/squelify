@@ -10,6 +10,7 @@ const sizeOptions: NonNullable<ToggleVariants['size']>[] = ['sm', 'default', 'lg
 const meta: Meta<typeof Toggle> = {
   title: 'Basic Components/Toggle',
   component: Toggle,
+  tags: [],
   argTypes: {
     variant: {
       control: { type: 'radio' },

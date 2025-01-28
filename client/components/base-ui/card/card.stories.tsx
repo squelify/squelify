@@ -30,6 +30,7 @@ const FormSchema = z.object({
 const meta: Meta<typeof Card> = {
   title: 'Basic Components/Card',
   component: Card,
+  tags: [],
 }
 
 export default meta

@@ -4,6 +4,7 @@ import { Skeleton } from './skeleton'
 const meta: Meta<typeof Skeleton> = {
   title: 'Basic Components/Skeleton',
   component: Skeleton,
+  tags: [],
 }
 
 export default meta

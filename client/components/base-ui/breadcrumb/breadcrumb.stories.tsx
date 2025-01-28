@@ -18,6 +18,7 @@ import {
 const meta: Meta<typeof Breadcrumb> = {
   title: 'Basic Components/Breadcrumb',
   component: Breadcrumb,
+  tags: [],
 }
 
 export default meta

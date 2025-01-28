@@ -4,6 +4,7 @@ import { Slider } from './slider'
 const meta: Meta<typeof Slider> = {
   title: 'Basic Components/Slider',
   component: Slider,
+  tags: [],
   argTypes: {
     defaultValue: {
       control: 'object',

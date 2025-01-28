@@ -8,6 +8,7 @@ const variantOptions: NonNullable<AlertVariants['variant']>[] = ['default', 'des
 const meta: Meta<typeof Alert> = {
   title: 'Basic Components/Alert',
   component: Alert,
+  tags: [],
   argTypes: {
     variant: {
       control: { type: 'radio' },

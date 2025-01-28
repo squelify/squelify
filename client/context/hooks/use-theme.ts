@@ -1,9 +1,9 @@
 import { useContext, useEffect } from 'react'
-import { AppContext } from '#/context/providers/app-provider'
+import { ThemeProviderContext } from '#/context/providers/theme-provider'
 import { type Theme } from '#/context/stores/ui.store'
 
 export const useTheme = () => {
-  const context = useContext(AppContext)
+  const context = useContext(ThemeProviderContext)
 
   if (context === undefined) throw new Error('useTheme must be used within a AppProvider')
 

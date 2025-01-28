@@ -5,6 +5,7 @@ import { Avatar, AvatarFallback, AvatarImage } from './avatar'
 const meta: Meta = {
   title: 'Basic Components/Avatar',
   component: Avatar,
+  tags: [],
   argTypes: {
     className: {
       control: 'text',

@@ -11,6 +11,7 @@ const sizeOptions: NonNullable<LinkVariants['size']>[] = ['sm', 'default', 'lg']
 const meta: Meta<LinkProps> = {
   title: 'Basic Components/Link',
   component: Link,
+  tags: [],
   argTypes: {
     children: {
       control: 'text',

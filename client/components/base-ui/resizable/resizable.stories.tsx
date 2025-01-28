@@ -4,6 +4,7 @@ import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from './resizabl
 const meta: Meta<typeof ResizablePanelGroup> = {
   title: 'Basic Components/Resizable',
   component: ResizablePanelGroup,
+  tags: [],
 }
 
 export default meta

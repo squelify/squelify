@@ -7,6 +7,7 @@ const sizeOptions: NonNullable<InputOtpVariants['size']>[] = ['sm', 'default', '
 const meta = {
   title: 'Basic Components/InputOTP',
   component: InputOTP,
+  tags: [],
   argTypes: {
     size: {
       control: 'radio',

@@ -15,6 +15,7 @@ const alignOptions: NonNullable<TextVariants['align']>[] = ['left', 'center', 'r
 const meta: Meta<TextProps> = {
   title: 'Basic Components/Text',
   component: Text,
+  tags: [],
   parameters: {
     controls: {
       exclude: ['asChild'],

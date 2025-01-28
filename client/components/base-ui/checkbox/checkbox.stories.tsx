@@ -5,6 +5,7 @@ import { Checkbox } from './checkbox'
 const meta: Meta<typeof Checkbox> = {
   title: 'Basic Components/Checkbox',
   component: Checkbox,
+  tags: [],
   argTypes: {
     checked: {
       control: 'boolean',

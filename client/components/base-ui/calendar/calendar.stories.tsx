@@ -24,6 +24,7 @@ import { Calendar, type CalendarProps } from './calendar'
 const meta: Meta<CalendarProps> = {
   title: 'Basic Components/Calendar',
   component: Calendar,
+  tags: [],
   parameters: {
     controls: {
       exclude: ['components', 'classNames'],

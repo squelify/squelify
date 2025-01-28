@@ -11,6 +11,7 @@ const orientationOptions: NonNullable<RadioGroupVariants['orientation']>[] = [
 const meta: Meta<typeof RadioGroup> = {
   title: 'Basic Components/RadioGroup',
   component: RadioGroup,
+  tags: [],
   argTypes: {
     orientation: {
       control: 'radio',

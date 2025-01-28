@@ -1,17 +1,27 @@
-import { withThemeByClassName } from '@storybook/addon-themes'
-import type { Preview, ReactRenderer } from '@storybook/react'
-import { themes } from '@storybook/theming'
-import * as React from 'react'
-import { MemoryRouter } from 'react-router'
+import type { Preview } from '@storybook/react'
+import { DocsContainer } from './components/docs-container'
+import { Link } from './components/link'
+import { modes } from './constants'
+import { withThemeProvider } from './decorators'
+import { light } from './themes'
+
+// Import the stylesheet (Tailwind CSS)
+import '../client/styles/fontface.css'
 import '../client/styles/globals.css'
 import '../client/styles/colors.css'
+
+const components = {
+  a: Link,
+}
 
 const preview: Preview = {
   // Optional parameter to center the component in the Canvas.
   // More info: https://storybook.js.org/docs/configure/story-layout
   parameters: {
     actions: { argTypesRegex: '^on[A-Z].*' },
+    previewTabs: { 'storybook/docs/panel': { index: -1 } },
     controls: {
+      expanded: true,
       hideNoControlsWarning: true,
       sort: 'requiredFirst',
       matchers: {
@@ -20,13 +30,35 @@ const preview: Preview = {
       },
       exclude: ['asChild', 'onClick'],
     },
+    viewport: {
+      viewports: {
+        smallMobile: {
+          name: 'Small mobile',
+          styles: { width: '320px', height: '568px' },
+        },
+        largeMobile: {
+          name: 'Large mobile',
+          styles: { width: '414px', height: '896px' },
+        },
+        tablet: {
+          name: 'Tablet',
+          styles: { width: '834px', height: '1112px' },
+        },
+        desktop: {
+          name: 'Desktop',
+          styles: { width: '1280px', height: '1000px' },
+        },
+      },
+    },
     options: {
       // https://storybook.js.org/docs/writing-stories/naming-components-and-hierarchy
       storySort: {
         method: 'alphabetical',
+        includeName: true,
         order: [
           'Introduction',
           'Getting Started',
+          'Changelog',
           'Basic Components',
           'Layout Components',
           'Visualizations',
@@ -36,8 +68,16 @@ const preview: Preview = {
     },
     backgrounds: { disable: true },
     layout: 'padded',
+    chromatic: {
+      modes: {
+        light: modes.light,
+        dark: modes.dark,
+      },
+    },
     docs: {
-      theme: themes.dark,
+      theme: light,
+      components,
+      container: DocsContainer,
       defaultName: 'Documentation',
       toc: {
         /* Enables the table of contents */
@@ -51,32 +91,25 @@ const preview: Preview = {
       },
     },
   },
-  // globalTypes: {
-  //   theme: {
-  //     name: 'Theme',
-  //     description: 'Theme switcher',
-  //     defaultValue: 'light',
-  //     toolbar: {
-  //       items: [
-  //         { value: 'light', icon: 'sun', title: 'Light Theme' },
-  //         { value: 'dark', icon: 'moon', title: 'Dark Theme' },
-  //       ],
-  //       showName: false,
-  //       dynamicTitle: false,
-  //     },
-  //   },
-  // },
-  decorators: [
-    withThemeByClassName<ReactRenderer>({
-      themes: { light: 'light', dark: 'dark' },
-      defaultTheme: 'light',
-    }),
-    (Story) => (
-      <MemoryRouter>
-        <Story />
-      </MemoryRouter>
-    ),
-  ],
+  globalTypes: {
+    theme: {
+      name: 'Color Scheme',
+      description: 'Global theme for components',
+      defaultValue: 'system',
+      toolbar: {
+        title: 'Color Scheme',
+        icon: 'paintbrush',
+        dynamicTitle: false,
+        showName: false,
+        items: [
+          { title: 'Match system', value: 'system', icon: 'mirror' },
+          { title: 'Light Mode', value: 'light', icon: 'circlehollow' },
+          { title: 'Dark Mode', value: 'dark', icon: 'circle' },
+        ],
+      },
+    },
+  },
+  decorators: [withThemeProvider],
 }
 
 export default preview

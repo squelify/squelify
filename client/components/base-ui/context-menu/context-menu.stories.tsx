@@ -18,6 +18,7 @@ import {
 const meta: Meta<typeof ContextMenu> = {
   title: 'Basic Components/ContextMenu',
   component: ContextMenu,
+  tags: [],
   parameters: {
     layout: 'centered',
   },

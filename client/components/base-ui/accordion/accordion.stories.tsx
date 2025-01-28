@@ -5,6 +5,7 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from './
 const meta: Meta = {
   title: 'Basic Components/Accordion',
   component: Accordion,
+  tags: [],
   argTypes: {
     type: {
       control: 'radio',
