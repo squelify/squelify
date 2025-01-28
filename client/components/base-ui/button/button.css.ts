@@ -10,7 +10,7 @@ export const buttonStyles = tv({
   },
   variants: {
     variant: {
-      default: 'bg-gray-900 text-white shadow-sm hover:bg-gray-900/90',
+      default: 'bg-black text-white shadow-sm hover:bg-black/80',
       primary: 'bg-primary text-white shadow-sm hover:bg-primary/90',
       secondary: 'bg-secondary text-secondary-foreground shadow-xs hover:bg-secondary/80',
       destructive: 'bg-destructive text-destructive-foreground shadow-xs hover:bg-destructive/90',

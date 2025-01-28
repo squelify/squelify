@@ -2,7 +2,7 @@ import { tv } from 'tailwind-variants'
 
 export const errorStyles = tv({
   slots: {
-    wrapper: 'relative min-h-screen overflow-hidden bg-gray-50 dark:bg-gray-950',
+    wrapper: 'relative min-h-screen overflow-hidden bg-black',
     decorativeGradient: 'absolute inset-0 overflow-hidden',
     gradientInner: '-inset-[10px] absolute opacity-50',
     gradientBg: [

@@ -1,5 +1,5 @@
 export const errorStyles = {
-  wrapper: 'relative min-h-screen bg-gray-50 dark:bg-gray-950 overflow-hidden',
+  wrapper: 'relative min-h-screen bg-black overflow-hidden',
   decorativeGradient: 'absolute inset-0 overflow-hidden',
   gradientInner: 'absolute -inset-[10px] opacity-50',
   gradientBg: [

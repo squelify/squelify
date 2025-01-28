@@ -78,7 +78,6 @@ COPY --from=glibc /bin/sh /bin/sh
 ARG NODE_ENV=production HOST=0.0.0.0 PORT=3278
 ENV NODE_ENV=$NODE_ENV HOST=$HOST PORT=$PORT
 ENV TINI_SUBREAPER=true
-STOPSIGNAL SIGQUIT
 
 WORKDIR /srv
 USER nonroot:nonroot
