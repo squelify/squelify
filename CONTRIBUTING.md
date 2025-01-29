@@ -6,7 +6,7 @@ This way we can guide you through the process and give feedback.
 
 ## 🏁 Quick Start
 
-You will need `Node.js >=20.18.0`, `pnpm >=9.15.0` and `Docker >= 27.0` installed on your machine.
+You will need `Node.js >=20.18.0`, `pnpm >=9.15.0` and `Docker >= 26.1.3` installed on your machine.
 
 ### Up and Running
 

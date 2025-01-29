@@ -24,7 +24,7 @@ FROM base AS builder
 RUN apt-get update && apt-get -yqq --no-install-recommends install tini
 
 # Copy the source files
-COPY --link --chown=node:node . .
+COPY --link . .
 
 # Install dependencies and build the application.
 RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install \
