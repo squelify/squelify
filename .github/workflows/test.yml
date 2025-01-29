@@ -1,0 +1,107 @@
+# yaml-language-server: $schema=https://json.schemastore.org/github-workflow.json
+
+name: Test
+
+on:
+  push:
+    branches: ['**']
+    tags-ignore: ['*']
+  pull_request:
+
+permissions: read-all
+
+env:
+  PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: true
+  LEFTHOOK: 0
+  CI: true
+
+jobs:
+  test:
+    name: Unit Test
+    strategy:
+      matrix:
+        node-version: ['20', '22']
+      fail-fast: false
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Run actions/setup-sdk@local
+        uses: ./.github/setup-sdk
+        with:
+          nodeVersion: ${{ matrix.node-version }}
+
+      - if: ${{ steps.pnpm-cache.outputs.cache-hit != 'true' }}
+        name: Test and build
+        run: |
+          cp .env.example .env
+          pnpm install --frozen-lockfile --ignore-scripts
+          pnpm run test
+          pnpm run test:coverage
+          pnpm run build
+
+      - name: Upload tests-results if exists
+        run: echo "TEST_RESULTS_EXISTS=$([ -d "tests-results" ] && echo "true" || echo "false")" >> $GITHUB_ENV
+
+      - name: Upload tests-results
+        uses: actions/upload-artifact@v4
+        if: env.TEST_RESULTS_EXISTS == 'true'
+        with:
+          name: tests-results-${{ matrix.node-version }}
+          path: tests-results/
+          retention-days: 7
+
+  # e2e-test:
+  #   name: E2E Test
+  #   timeout-minutes: 60
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - uses: actions/checkout@v4
+  #       with:
+  #         fetch-depth: 0
+
+  #     - name: Run actions/setup-sdk@local
+  #       uses: ./.github/setup-sdk
+
+  #     - name: Get installed Playwright version
+  #       id: playwright-version
+  #       #  |
+  #       run: |
+  #         PLAYWRIGHT_VERSION=$(jq -r '.devDependencies["@playwright/test"]? // "Package not found"' package.json | sed 's/^[^0-9]*//')
+  #         echo "PLAYWRIGHT_VERSION=$PLAYWRIGHT_VERSION" >> $GITHUB_ENV
+  #         echo "Playwright version: $PLAYWRIGHT_VERSION"
+
+  #     - name: Cache playwright binaries
+  #       uses: actions/cache@v4
+  #       id: playwright-cache
+  #       with:
+  #         path: ~/.cache/ms-playwright
+  #         key: ${{ runner.os }}-playwright-${{ env.PLAYWRIGHT_VERSION }}
+
+  #     - name: Install dependencies
+  #       run: pnpm install --frozen-lockfile --ignore-scripts
+
+  #     - name: Playwright install
+  #       # if: steps.playwright-cache.outputs.cache-hit != 'true'
+  #       run: pnpm exec playwright install --with-deps
+
+  #     - name: Playwright install-deps
+  #       run: pnpm exec playwright install-deps
+
+  #     - name: Run Playwright tests
+  #       run: |
+  #         cp .env.example .env
+  #         NODE_ENV=production pnpm build
+  #         pnpm exec playwright test
+
+  #     - name: Upload e2e-test-report
+  #       uses: actions/upload-artifact@v4
+  #       if: always()
+  #       with:
+  #         name: e2e-test-report-${{ github.run_id }}
+  #         path: tests-results/e2e/
+  #         retention-days: 7

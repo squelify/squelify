@@ -1,6 +1,6 @@
 {
     "name": "squelify",
-    "version": "0.0.0",
+    "version": "0.0.1",
     "license": "Apache-2.0",
     "description": "Lightweight Headless CMS and Backend Platform without hassle",
     "repository": {
