@@ -10,9 +10,10 @@ FROM busybox:1.37-glibc as glibc
 # Base image with pnpm package manager.
 # -----------------------------------------------------------------------------
 FROM --platform=${PLATFORM} node:${NODE_VERSION}-bookworm-slim AS base
-ENV PNPM_HOME="/pnpm" PATH="$PNPM_HOME:$PATH" COREPACK_ENABLE_DOWNLOAD_PROMPT=0
+ENV COREPACK_ENABLE_DOWNLOAD_PROMPT=0 COREPACK_INTEGRITY_KEYS=0
 ENV LEFTHOOK=0 CI=true PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD=true
-RUN corepack enable && corepack prepare pnpm@latest-9 --activate
+ENV PNPM_HOME="/pnpm" PATH="$PNPM_HOME:$PATH"
+RUN corepack enable && corepack prepare pnpm@latest-10 --activate
 WORKDIR /srv
 
 # -----------------------------------------------------------------------------
