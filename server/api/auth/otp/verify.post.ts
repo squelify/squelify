@@ -1,4 +1,3 @@
-import * as jose from 'jose'
 import { z } from 'zod'
 
 interface OTPMetadata {
@@ -9,8 +8,8 @@ interface OTPMetadata {
 
 const VerifyOTPSchema = z
   .object({
-    token: z.string({ required_error: 'Token verifikasi diperlukan' }),
-    code: z.string().length(6, 'Kode OTP harus 6 karakter'),
+    token: z.string({ required_error: 'Verification token is required' }),
+    code: z.string().length(6, 'OTP code must be 6 digits'),
   })
   .strict()
 

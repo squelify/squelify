@@ -1,4 +1,5 @@
 import { H3Error, type H3Event } from 'h3'
+import { status as httpStatus } from 'http-status'
 import { sha256base64 } from 'ohash'
 import { isDevelopment } from 'std-env'
 import { UAParser } from 'ua-parser-js'
@@ -53,7 +54,7 @@ export function throwErrorResponse(event: H3Event, error: unknown) {
   const err = error as Error
   return createErrorResponse(
     event,
-    err.message || 'Internal server error',
+    err.message || httpStatus['500_MESSAGE'],
     500,
     isDevelopment ? { stack: err.stack } : undefined
   )
@@ -99,7 +100,7 @@ export async function requireValidatedBody<T extends z.ZodType>(
           message: issue.message,
         })),
       },
-      message: 'Invalid request',
+      message: httpStatus['400_MESSAGE'],
     })
   }
 
