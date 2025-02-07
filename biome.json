@@ -31,7 +31,8 @@
                     "fix": "none"
                 },
                 "useJsxKeyInIterable": "error",
-                "noUnknownFunction": "off"
+                "noUnknownFunction": "off",
+                "noUnknownUnit": "error"
             },
             "nursery": {
                 "useSortedClasses": {
