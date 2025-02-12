@@ -19,7 +19,7 @@
             "type": "msedge",
             "request": "launch",
             "name": "Debug with Edge",
-            "url": "http://localhost:3000",
+            "url": "http://localhost:3278/admin",
             "webRoot": "${workspaceFolder}",
             "cleanUp": "wholeBrowser",
             // Chrome args: https://peter.sh/experiments/chromium-command-line-switches
