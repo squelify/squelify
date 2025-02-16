@@ -34,9 +34,13 @@ A modern headless CMS and backend-as-a-service platform powered by Nitro, TypeSc
 LibSQL, and Kysely. Squelify is a lightweight and developer-friendly headless CMS
 solution, inspired by amazing projects like Supabase, PocketBase, and Strapi.
 
-> [!WARNING]
-> 🚧 Heads up! We're actively cooking up new features - expect some bugs and changes along the way.
-> <br/>Use in production at your own discretion!
+> [!CAUTION]
+> 🚨🚨🚨
+>
+> Squelify is in a _very_ early development preview - expect some bugs and changes along the way.
+> Please do not use it in production yet, use in production at your own discretion!
+>
+> 🚨🚨🚨
 
 [Learn more in our documentation.][squelify-docs]
 
