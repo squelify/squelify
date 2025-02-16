@@ -10,19 +10,16 @@ services:
       - 8080:8080 # user HTTP connection
       - 8081:8081 # admin HTTP connection
     volumes:
-      - libsql_data:/var/lib/sqld/data
+      - libsql_data:/var/lib/sqld/data:rw
     command: '/bin/sqld --enable-namespaces --enable-http-console --max-active-namespaces 2000'
 
   mailcrab:
     image: marlonb/mailcrab:${MAILCRAB_VERSION:-latest}
     container_name: squelify_mailcrab
     hostname: mailcrab
-    environment:
-      SMTP_PORT: 2525 # port number for the SMTP server
-      HTTP_PORT: 2580 # port number for the web interface
     ports:
-      - 2525:2525 # port the SMTP server should be accessible on
-      - 2580:2580 # port the web interface should be accessible on
+      - 2525:1025 # port the SMTP server should be accessible on
+      - 2580:1080 # port the web interface should be accessible on
 
   valkey:
     image: valkey/valkey:${VALKEY_VERSION:-8-alpine}
@@ -42,9 +39,48 @@ services:
         soft: 262144
         hard: 262144
 
+  minio:
+    image: minio/minio:${MINIO_VERSION:-latest}
+    container_name: squelify_minio
+    restart: always
+    ports:
+      - 9000:9000
+      - 9001:9001
+    volumes:
+      - minio_data:/data/minio:rw
+    command: minio server --address ":9000" /data/minio --console-address ":9001"
+    healthcheck:
+      test: ['CMD', 'curl', '-f', 'http://localhost:9000/minio/health/live']
+      retries: 1
+      timeout: 3s
+    environment:
+      MINIO_ROOT_USER: ${MINIO_ROOT_USER:-s3admin}
+      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD:-s3passw0rd}
+      MINIO_DOMAIN: ${MINIO_DOMAIN:-localhost}
+
+  minio-mc:
+    image: minio/mc:${MINIO_MC_VERSION:-latest}
+    container_name: squelify_minio_mc
+    entrypoint: >
+      /bin/sh -c "
+      /usr/bin/mc alias set myminio http://minio:9000 s3admin s3passw0rd;
+      /usr/bin/mc mb myminio/devbucket;
+      /usr/bin/mc anonymous set public myminio/devbucket;
+      /usr/bin/mc admin user add myminio s3user s3passw0rd;
+      /usr/bin/mc admin accesskey create myminio/ s3admin --access-key myS3AccessKey --secret-key myS3SecretKey;
+      /usr/bin/mc admin user ls myminio;
+      /usr/bin/mc alias list;
+      exit 0;
+      "
+    depends_on:
+      minio:
+        condition: service_healthy
+
 volumes:
   libsql_data:
     name: squelify_libsql_data
     driver: local
   valkey_data:
+    driver: local
+  minio_data:
     driver: local
