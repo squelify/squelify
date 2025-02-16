@@ -38,7 +38,7 @@ solution, inspired by amazing projects like Supabase, PocketBase, and Strapi.
 > 🚨🚨🚨
 >
 > Squelify is in a _very_ early development preview - expect some bugs and changes along the way.
-> Please do not use it in production yet, use in production at your own discretion!
+> <br/>Please do not use it in production yet, use in production at your own discretion!
 >
 > 🚨🚨🚨
 
