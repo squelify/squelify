@@ -3,7 +3,7 @@ import { Card, CardContent, CardHeader } from '#/components/base-ui'
 import { CardDescription, CardTitle } from '#/components/base-ui'
 import { Badge, ScrollArea, TabsContent } from '#/components/base-ui'
 import { Tooltip, TooltipContent, TooltipTrigger } from '#/components/base-ui'
-import { useSEOMeta } from '#/context/hooks/use-seo-meta'
+import PageWrapper from '#/layouts/page-wrapper'
 
 interface LoginHistoryItem {
   id: string
@@ -16,8 +16,6 @@ interface LoginHistoryItem {
 }
 
 export default function Page() {
-  useSEOMeta('Login History')
-
   const historyItems: LoginHistoryItem[] = [
     {
       id: '1',
@@ -70,65 +68,67 @@ export default function Page() {
   }
 
   return (
-    <TabsContent value="login-history">
-      <Card>
-        <CardHeader className="space-y-1">
-          <CardTitle>Login History</CardTitle>
-          <CardDescription>Review your recent login activities</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <ScrollArea className="h-[400px] rounded-md">
-            <div className="space-y-4">
-              {historyItems.map((item) => (
-                <div
-                  key={item.id}
-                  className="group relative rounded-lg border p-4 transition-colors hover:bg-muted/50"
-                >
-                  <div className="flex items-center gap-4">
-                    <div className="shrink-0">{getStatusIcon(item.status)}</div>
+    <PageWrapper title="Login History">
+      <TabsContent value="login-history">
+        <Card>
+          <CardHeader className="space-y-1">
+            <CardTitle>Login History</CardTitle>
+            <CardDescription>Review your recent login activities</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <ScrollArea className="h-[400px] rounded-md">
+              <div className="space-y-4">
+                {historyItems.map((item) => (
+                  <div
+                    key={item.id}
+                    className="group relative rounded-lg border p-4 transition-colors hover:bg-muted/50"
+                  >
+                    <div className="flex items-center gap-4">
+                      <div className="shrink-0">{getStatusIcon(item.status)}</div>
 
-                    <div className="flex-1 space-y-1">
-                      <div className="flex items-center gap-2">
-                        <p className="font-medium">{item.location}</p>
-                        <Badge variant={item.status === 'success' ? 'default' : 'destructive'}>
-                          {item.status}
-                        </Badge>
+                      <div className="flex-1 space-y-1">
+                        <div className="flex items-center gap-2">
+                          <p className="font-medium">{item.location}</p>
+                          <Badge variant={item.status === 'success' ? 'default' : 'destructive'}>
+                            {item.status}
+                          </Badge>
+                        </div>
+
+                        <div className="flex items-center gap-4 text-muted-foreground text-sm">
+                          <div className="flex items-center gap-1">
+                            <Lucide.Globe2 className="size-3.5" />
+                            <span>{item.ipAddress}</span>
+                          </div>
+                          <Tooltip>
+                            <TooltipTrigger className="flex items-center gap-1">
+                              {getDeviceIcon(item.device)}
+                              <span>{item.userAgent}</span>
+                            </TooltipTrigger>
+                            <TooltipContent>
+                              <p>Browser: {item.userAgent}</p>
+                            </TooltipContent>
+                          </Tooltip>
+                        </div>
                       </div>
 
-                      <div className="flex items-center gap-4 text-muted-foreground text-sm">
-                        <div className="flex items-center gap-1">
-                          <Lucide.Globe2 className="size-3.5" />
-                          <span>{item.ipAddress}</span>
-                        </div>
+                      <div className="text-right">
                         <Tooltip>
-                          <TooltipTrigger className="flex items-center gap-1">
-                            {getDeviceIcon(item.device)}
-                            <span>{item.userAgent}</span>
+                          <TooltipTrigger className="text-muted-foreground text-sm">
+                            {getRelativeTime(item.timestamp)}
                           </TooltipTrigger>
                           <TooltipContent>
-                            <p>Browser: {item.userAgent}</p>
+                            <p>{new Date(item.timestamp).toLocaleString()}</p>
                           </TooltipContent>
                         </Tooltip>
                       </div>
                     </div>
-
-                    <div className="text-right">
-                      <Tooltip>
-                        <TooltipTrigger className="text-muted-foreground text-sm">
-                          {getRelativeTime(item.timestamp)}
-                        </TooltipTrigger>
-                        <TooltipContent>
-                          <p>{new Date(item.timestamp).toLocaleString()}</p>
-                        </TooltipContent>
-                      </Tooltip>
-                    </div>
                   </div>
-                </div>
-              ))}
-            </div>
-          </ScrollArea>
-        </CardContent>
-      </Card>
-    </TabsContent>
+                ))}
+              </div>
+            </ScrollArea>
+          </CardContent>
+        </Card>
+      </TabsContent>
+    </PageWrapper>
   )
 }

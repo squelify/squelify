@@ -10,13 +10,12 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '#/comp
 import { Link } from '#/components/base-ui'
 import { MenuItem, useMenu } from '#/context/hooks/use-menu'
 import { useTheme } from '#/context/hooks/use-theme'
-import type { UserInfo } from '#/services/types'
 import { clx } from '#/utils/helper'
 import AppCommand, { CommandMenuGroup } from './app-command'
 import UserMenu from './user-menu'
 
 interface AppSidebarProps {
-  user: UserInfo
+  user: any
   logout: () => void
 }
 

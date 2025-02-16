@@ -6,7 +6,6 @@ import { DropdownMenuLabel, DropdownMenuSeparator } from '#/components/base-ui'
 import { DropdownMenuCheckboxItem, DropdownMenuTrigger } from '#/components/base-ui'
 import { Button, Input, Select, SelectItem, SelectValue } from '#/components/base-ui'
 import { SelectContent, SelectTrigger } from '#/components/base-ui'
-import { useSEOMeta } from '#/context/hooks/use-seo-meta'
 import { saveUiState, uiStore } from '#/context/stores/ui.store'
 import PageWrapper from '#/layouts/page-wrapper'
 import { clx } from '#/utils/helper'
@@ -23,7 +22,6 @@ const visibleColumns = [
 ]
 
 export default function Page() {
-  const { pageTitle } = useSEOMeta('Media Library')
   const [isRefreshing, setIsRefreshing] = useState(false)
   const [items, setItems] = useState<MediaItem[]>(() => generateDummyMedia(20))
   const uiState = useStore(uiStore)
@@ -54,11 +52,14 @@ export default function Page() {
   }, [isRefreshing, viewMode, items])
 
   return (
-    <PageWrapper className="container mx-auto w-full space-y-4 p-4 md:space-y-6 md:p-6 lg:p-8">
+    <PageWrapper
+      title="Media Library"
+      className="container mx-auto w-full space-y-4 p-4 md:space-y-6 md:p-6 lg:p-8"
+    >
       {/* Header Section */}
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div className="space-y-1">
-          <h1 className="font-semibold text-2xl tracking-tight">{pageTitle}</h1>
+          <h1 className="font-semibold text-2xl tracking-tight">Media Library</h1>
           <p className="text-muted-foreground text-sm">Upload and manage your media files</p>
         </div>
         <Button>

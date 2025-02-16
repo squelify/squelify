@@ -1,129 +1,21 @@
-import consola from 'consola'
 import * as Lucide from 'lucide-react'
-import { useEffect, useRef, useState } from 'react'
-import { HealthCheckResponse } from '~/api/healthz.get'
-import { toast } from '#/components/base-ui'
-import { useApiClient } from '#/context/hooks/use-api-client'
-import { useSEOMeta } from '#/context/hooks/use-seo-meta'
 import PageWrapper from '#/layouts/page-wrapper'
-// import CardGetStarted from './card-get-started'
+import CardGetStarted from './card-get-started'
 import CardSystemMetrics from './card-metrics'
 import CardQuickAccess from './card-quick-access'
 import CardResources from './card-resources'
 import CardStats from './card-stats'
 
-// Health check configuration
-const HEALTH_CHECK_CONFIG = {
-  interval: 60 * 1000, // 1 minute in milliseconds
-  retryAttempts: 3,
-  retryDelay: 1000, // 1 second
-} as const
-
+// TODO: add health check here
 export default function Page() {
-  useSEOMeta('Dashboard')
-
-  const { current: apiClient } = useRef(useApiClient())
-
-  const lastCheckTimeRef = useRef<number>(0)
-  const retryCountRef = useRef<number>(0)
-  const [isLoading, setIsLoading] = useState(true)
-  const healthDataRef = useRef<HealthCheckResponse | null>(null)
-
-  useEffect(() => {
-    const handleUnhealthyStatus = (result: HealthCheckResponse) => {
-      const message =
-        result.database.status === 'down' ? 'Database connection is down' : 'API is not healthy'
-
-      const description = [
-        `Latency: ${result.database.latency}`,
-        `Memory: ${result.resources.heapUsed} used of ${result.resources.heapTotal}`,
-        `Uptime: ${result.uptime}`,
-      ].join(' | ')
-
-      toast.error(message, { description })
-    }
-
-    const handleError = (error: unknown) => {
-      consola.error('[ERROR] Health Check Failed:', error)
-      toast.error('Dashboard Health Check Error', {
-        description: error instanceof Error ? error.message : 'Failed to check system health',
-      })
-    }
-
-    const doHealthCheck = async () => {
-      const now = Date.now()
-      if (now - lastCheckTimeRef.current < HEALTH_CHECK_CONFIG.interval) {
-        return
-      }
-
-      lastCheckTimeRef.current = now
-      consola.info('Performing health check...')
-
-      try {
-        setIsLoading(true)
-        const result = await apiClient._healthCheck()
-        healthDataRef.current = result
-        consola.debug('Health Check Details:', result)
-
-        if (result.status === 'unhealthy' || result.database.status === 'down') {
-          handleUnhealthyStatus(result)
-
-          if (retryCountRef.current < HEALTH_CHECK_CONFIG.retryAttempts) {
-            retryCountRef.current++
-            setTimeout(doHealthCheck, HEALTH_CHECK_CONFIG.retryDelay)
-            return
-          }
-        } else {
-          retryCountRef.current = 0
-        }
-
-        consola.info('[RESULT] Health Check Status:', result.status)
-      } catch (error: unknown) {
-        handleError(error)
-      } finally {
-        setIsLoading(false)
-      }
-    }
-
-    doHealthCheck()
-    const intervalId = setInterval(doHealthCheck, HEALTH_CHECK_CONFIG.interval)
-
-    return () => clearInterval(intervalId)
-  }, [])
-
-  const healthData = healthDataRef.current
-
-  const renderMetric = (value: string | number | undefined, fallback = '-') => {
-    if (isLoading) {
-      return (
-        <span className="animate-pulse rounded-sm bg-muted px-3" aria-busy="true">
-          Loading...
-        </span>
-      )
-    }
-    return String(value ?? fallback)
-  }
-
   return (
-    <PageWrapper className="container mx-auto mb-8 flex w-full flex-col space-y-4 p-6 md:space-y-8 md:p-6 lg:p-8">
+    <PageWrapper
+      title="Dashboard"
+      className="container mx-auto mb-8 flex w-full flex-col space-y-4 p-6 md:space-y-8 md:p-6 lg:p-8"
+    >
       <div className="grid gap-6">
         {/* Stats Overview */}
-        <div className="grid gap-6 md:grid-cols-4">
-          <CardStats
-            title="System Status"
-            value={renderMetric(healthData?.status)}
-            trend={{ label: 'Uptime', value: renderMetric(healthData?.uptime) }}
-            icon={Lucide.Activity}
-            className="capitalize"
-          />
-          <CardStats
-            title="Database"
-            value={renderMetric(
-              healthData?.database.status === 'up' ? 'Connected' : 'Disconnected'
-            )}
-            trend={{ label: 'Latency', value: renderMetric(healthData?.database.latency) }}
-            icon={Lucide.Database}
-          />
+        <div className="grid gap-6 md:grid-cols-2">
           <CardStats
             title="API Requests"
             value="2.4k"
@@ -146,7 +38,7 @@ export default function Page() {
       </div>
 
       {/* Get Started */}
-      {/* <CardGetStarted /> */}
+      <CardGetStarted />
 
       {/* Quick Access */}
       <div className="grid gap-4">

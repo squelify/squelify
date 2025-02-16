@@ -2,10 +2,7 @@ import consola from 'consola'
 import React, { useEffect, useRef } from 'react'
 import { useErrorBoundary } from 'react-error-boundary'
 import { env } from 'std-env'
-import { HealthCheckResponse } from '~/api/healthz.get'
 import { Toaster, toast } from '#/components/base-ui'
-import { useApiClient } from '#/context/hooks/use-api-client'
-import type { ApiResponse } from '#/services'
 import { clx } from '#/utils/helper'
 
 interface RootLayoutProps {
@@ -25,28 +22,9 @@ const HEALTH_CHECK_CONFIG = {
 
 export default function RootLayout({ children, className }: RootLayoutProps) {
   const { showBoundary } = useErrorBoundary()
-  const { current: apiClient } = useRef(useApiClient())
   const lastCheckTimeRef = useRef<number>(0)
-  const retryCountRef = useRef<number>(0)
 
   useEffect(() => {
-    const handleUnhealthyStatus = (result: HealthCheckResponse) => {
-      const message =
-        result.database.status === 'down' ? 'Database connection is down' : 'API is not healthy'
-
-      const description = [
-        `Latency: ${result.database.latency}`,
-        `Memory: ${result.resources.heapUsed} used of ${result.resources.heapTotal}`,
-        `Uptime: ${result.uptime}`,
-      ].join(' | ')
-
-      if (BLOCK_ON_ERROR) {
-        showBoundary({ message: `${message}: ${description}` })
-      }
-
-      toast.error(message)
-    }
-
     const handleError = (error: unknown) => {
       consola.error('[ERROR] Health Check Failed:', error)
 
@@ -78,23 +56,7 @@ export default function RootLayout({ children, className }: RootLayoutProps) {
       consola.info('Performing health check...')
 
       try {
-        const result = await apiClient._healthCheck()
-        consola.debug('Health Check Details:', result)
-
-        if (result.status === 'unhealthy' || result.database.status === 'down') {
-          handleUnhealthyStatus(result)
-
-          // Retry logic
-          if (retryCountRef.current < HEALTH_CHECK_CONFIG.retryAttempts) {
-            retryCountRef.current++
-            setTimeout(doHealthCheck, HEALTH_CHECK_CONFIG.retryDelay)
-            return
-          }
-        } else {
-          retryCountRef.current = 0
-        }
-
-        consola.info('[RESULT] Health Check Status:', result.status)
+        consola.info('[RESULT] Health Check Status:')
       } catch (error: unknown) {
         handleError(error)
       }

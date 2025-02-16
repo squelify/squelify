@@ -1,5 +1,4 @@
 import { persistentMap } from '@nanostores/persistent'
-import type { UserInfo } from '#/services/types'
 import { storeDecode, storeEncode } from '#/utils/helper'
 
 type AuthStore = {
@@ -7,7 +6,13 @@ type AuthStore = {
   refreshToken: string | null
   accessTokenExpiry: number | null
   refreshTokenExpiry: number | null
-  user: UserInfo | null
+  user: {
+    id: string
+    name: string
+    email: string
+    avatar: string
+    role: string
+  } | null
 }
 
 // Default values for the AuthStore

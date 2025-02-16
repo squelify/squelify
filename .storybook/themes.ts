@@ -1,11 +1,11 @@
-import { GLOBALS_UPDATED } from '@storybook/core-events'
-import { create } from '@storybook/theming'
+import { type ThemeVarsColors, create } from '@storybook/theming'
 
-const brand = {
+export type Theme = 'light' | 'dark' | 'system'
+
+const brand: Partial<ThemeVarsColors> = {
   brandTitle: 'Squelify UI Components',
   brandUrl: 'https://www.squelify.com',
-  fontBase:
-    '"Inter", Helvetica, Arial, system-ui, sans-serif, "Segoe UI", Roboto, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol"',
+  fontBase: 'system-ui, Roboto, Ubuntu, "Helvetica Neue", Calibri, Arial, sans-serif',
   appBorderRadius: 4,
   inputBorderRadius: 4,
 }
@@ -13,7 +13,7 @@ const brand = {
 export const light = create({
   base: 'light',
   ...brand,
-  // brandImage: '/images/logo-name-light.png',
+  // brandImage: '/images/storybook-light.svg',
   colorPrimary: '#0f131a',
   colorSecondary: '#0f131a',
 
@@ -45,7 +45,7 @@ export const light = create({
 export const dark = create({
   base: 'dark',
   ...brand,
-  // brandImage: '/images/logo-name-dark.png',
+  // brandImage: '/images/storybook-dark.svg',
   colorPrimary: '#ffffff',
   colorSecondary: '#374151',
 
@@ -73,54 +73,3 @@ export const dark = create({
   inputBorder: '#374151',
   inputTextColor: '#ffffff',
 })
-
-export type Theme = 'light' | 'dark' | 'system'
-
-type EventListener = (
-  eventName: string,
-  callback: (context: { globals: Record<string, unknown> }) => void
-) => void
-
-export function listenToColorScheme(
-  eventEmitter: { on: EventListener; off: EventListener },
-  callback: (theme: Theme) => void
-) {
-  const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)')
-
-  const handleMediaChange = (event: MediaQueryListEvent) => {
-    callback(event.matches ? 'dark' : 'light')
-  }
-
-  const handleGlobalsChange = ({ globals }) => {
-    const theme = globals.theme as Theme
-
-    if (theme === 'system') {
-      callback(mediaQuery.matches ? 'dark' : 'light')
-      mediaQuery.addEventListener('change', handleMediaChange)
-    } else {
-      callback(theme)
-      mediaQuery.removeEventListener('change', handleMediaChange)
-    }
-  }
-
-  const initColorScheme = () => {
-    const globals = new URL(window.location.href).searchParams.get('globals')
-
-    if (globals) {
-      const [key, value] = globals.split(':')
-      if (key === 'theme') {
-        return handleGlobalsChange({ globals: { theme: value } })
-      }
-    }
-
-    handleGlobalsChange({ globals: { theme: 'system' } })
-  }
-
-  initColorScheme()
-
-  eventEmitter.on(GLOBALS_UPDATED, handleGlobalsChange)
-
-  return () => {
-    eventEmitter.off(GLOBALS_UPDATED, handleGlobalsChange)
-  }
-}

@@ -1,6 +1,7 @@
 import { DocsContainer as BaseContainer } from '@storybook/blocks'
 import * as React from 'react'
-import { dark, light, listenToColorScheme } from '../themes'
+import { dark, light } from '../themes'
+import { listenToColorScheme } from '../utils'
 
 const themes = { light, dark }
 

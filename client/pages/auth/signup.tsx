@@ -1,14 +1,13 @@
 import { zodResolver } from '@hookform/resolvers/zod'
 import * as Lucide from 'lucide-react'
 import { type SubmitHandler, useForm } from 'react-hook-form'
-import { useNavigate, useSearchParams } from 'react-router'
+// import { useNavigate, useSearchParams } from 'react-router'
 import { z } from 'zod'
 import { Button, Card, CardContent, toast } from '#/components/base-ui'
 import { Form, FormControl, FormItem, FormMessage } from '#/components/base-ui'
 import { FormField, FormLabel, Input } from '#/components/base-ui'
 import { Link } from '#/components/base-ui'
-import { useApiClient } from '#/context/hooks/use-api-client'
-import { useSEOMeta } from '#/context/hooks/use-seo-meta'
+import PageWrapper from '#/layouts/page-wrapper'
 
 const FormSchema = z.object({
   email: z.string().min(1, { message: 'Email address is required' }).email('Invalid email address'),
@@ -26,47 +25,47 @@ const FormSchema = z.object({
 type FormType = z.infer<typeof FormSchema>
 
 export default function Page() {
-  const { pageTitle } = useSEOMeta('Create Account')
-  const apiClient = useApiClient()
-
-  const navigate = useNavigate()
-  const [searchParams] = useSearchParams()
-  const redirectTo = searchParams.get('redirect_to') || '/dashboard'
+  // const navigate = useNavigate()
+  // const [searchParams] = useSearchParams()
+  // const redirectTo = searchParams.get('redirect_to') || '/dashboard'
 
   const form = useForm<FormType>({
     resolver: zodResolver(FormSchema),
   })
 
   // TODO: fix signup implementation
-  const onSubmit: SubmitHandler<FormType> = async (data) => {
-    toast.promise(
-      apiClient.auth.signup({
-        email: data.email,
-        password: data.password,
-        firstName: data.firstName,
-        lastName: data.lastName,
-      }),
-      {
-        loading: 'Creating account..',
-        success: (response) => {
-          if (!response?.data?.accessToken) throw new Error('Invalid response')
-          setTimeout(() => navigate(redirectTo), 500)
-          return `Account created successfully!`
-        },
-        error: (err) => {
-          logger.error('[SIGNUP]', err)
-          form.setFocus('email')
-          return `Failed to create account: ${err.message}`
-        },
-      }
-    )
+  const onSubmit: SubmitHandler<FormType> = async (_data) => {
+    // toast.promise(
+    //   apiClient.auth.signup({
+    //     email: data.email,
+    //     password: data.password,
+    //     firstName: data.firstName,
+    //     lastName: data.lastName,
+    //   }),
+    //   {
+    //     loading: 'Creating account..',
+    //     success: (response) => {
+    //       if (!response?.data?.accessToken) throw new Error('Invalid response')
+    //       setTimeout(() => navigate(redirectTo), 500)
+    //       return `Account created successfully!`
+    //     },
+    //     error: (err) => {
+    //       logger.error('[SIGNUP]', err)
+    //       form.setFocus('email')
+    //       return `Failed to create account: ${err.message}`
+    //     },
+    //   }
+    // )
   }
 
   return (
-    <div className="flex min-h-screen w-full flex-col items-center justify-center">
+    <PageWrapper
+      title="Create Account"
+      className="flex min-h-screen w-full flex-col items-center justify-center"
+    >
       <div className="mx-auto w-full max-w-md space-y-6">
         <div className="flex flex-col space-y-2 text-center">
-          <h1 className="font-semibold text-2xl tracking-tight">{pageTitle}</h1>
+          <h1 className="font-semibold text-2xl tracking-tight">Create Account</h1>
           <p className="text-muted-foreground text-sm">Create a new account to get started</p>
         </div>
 
@@ -184,6 +183,6 @@ export default function Page() {
           </Link>
         </p>
       </div>
-    </div>
+    </PageWrapper>
   )
 }

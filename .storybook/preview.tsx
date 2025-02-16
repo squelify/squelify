@@ -1,7 +1,6 @@
 import type { Preview } from '@storybook/react'
 import { DocsContainer } from './components/docs-container'
 import { Link } from './components/link'
-import { modes } from './constants'
 import { withThemeProvider } from './decorators'
 import { light } from './themes'
 
@@ -9,10 +8,6 @@ import { light } from './themes'
 import '../client/styles/fontface.css'
 import '../client/styles/globals.css'
 import '../client/styles/colors.css'
-
-const components = {
-  a: Link,
-}
 
 const preview: Preview = {
   // Optional parameter to center the component in the Canvas.
@@ -70,13 +65,19 @@ const preview: Preview = {
     layout: 'padded',
     chromatic: {
       modes: {
-        light: modes.light,
-        dark: modes.dark,
+        light: {
+          theme: 'light',
+        },
+        dark: {
+          theme: 'dark',
+        },
       },
     },
     docs: {
       theme: light,
-      components,
+      components: {
+        a: Link,
+      },
       container: DocsContainer,
       defaultName: 'Documentation',
       toc: {

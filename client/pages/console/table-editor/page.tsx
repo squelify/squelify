@@ -5,7 +5,7 @@ import { useQueryState } from 'nuqs'
 import { useCallback } from 'react'
 import { Button, ResizablePanel, ResizablePanelGroup } from '#/components/base-ui'
 import DataGrid from '#/components/datagrid'
-import { useSEOMeta } from '#/context/hooks/use-seo-meta'
+import PageWrapper from '#/layouts/page-wrapper'
 import { generateEmail, generateName, generatePhone, getRandomElement } from '#/utils/dummy'
 
 type DummyItem = {
@@ -65,7 +65,6 @@ const EmptyState = () => {
 }
 
 export default function Page() {
-  useSEOMeta('Table Editor')
   // Get collectionId from query params
   const [collectionId, _setCollectionId] = useQueryState('collectionId')
 
@@ -81,40 +80,42 @@ export default function Page() {
   }, [])
 
   return (
-    <ResizablePanel defaultSize={86} minSize={80} maxSize={86}>
-      <ResizablePanelGroup autoSaveId="table-editor" direction="vertical">
-        <ResizablePanel defaultSize={100}>
-          {collectionId ? (
-            <div className="flex size-full flex-col">
-              <div className="flex h-10 items-center justify-between border-b bg-muted/20 px-1.5 py-2.5">
-                <Button
-                  size="sm"
-                  variant="ghost"
-                  className="h-7 px-3 text-muted-foreground text-xs hover:bg-muted hover:text-foreground"
-                >
-                  <Lucide.Download className="-ml-0.5 mr-1.5 size-3" />
-                  <span>Export</span>
-                </Button>
+    <PageWrapper title="Table Editor">
+      <ResizablePanel defaultSize={86} minSize={80} maxSize={86}>
+        <ResizablePanelGroup autoSaveId="table-editor" direction="vertical">
+          <ResizablePanel defaultSize={100}>
+            {collectionId ? (
+              <div className="flex size-full flex-col">
+                <div className="flex h-10 items-center justify-between border-b bg-muted/20 px-1.5 py-2.5">
+                  <Button
+                    size="sm"
+                    variant="ghost"
+                    className="h-7 px-3 text-muted-foreground text-xs hover:bg-muted hover:text-foreground"
+                  >
+                    <Lucide.Download className="-ml-0.5 mr-1.5 size-3" />
+                    <span>Export</span>
+                  </Button>
+                </div>
+                <div id="portal" className="custom-datagrid z-[40] size-full bg-transparent">
+                  <DataGrid
+                    data={data}
+                    columns={columns}
+                    enableCopyPaste
+                    enableRowMarkers
+                    enableMultiSelect
+                    onCellEdited={onCellEdited}
+                    onSelectionChange={(selection) => {
+                      consola.log('Selection:', selection)
+                    }}
+                  />
+                </div>
               </div>
-              <div id="portal" className="custom-datagrid z-[40] size-full bg-transparent">
-                <DataGrid
-                  data={data}
-                  columns={columns}
-                  enableCopyPaste
-                  enableRowMarkers
-                  enableMultiSelect
-                  onCellEdited={onCellEdited}
-                  onSelectionChange={(selection) => {
-                    consola.log('Selection:', selection)
-                  }}
-                />
-              </div>
-            </div>
-          ) : (
-            <EmptyState />
-          )}
-        </ResizablePanel>
-      </ResizablePanelGroup>
-    </ResizablePanel>
+            ) : (
+              <EmptyState />
+            )}
+          </ResizablePanel>
+        </ResizablePanelGroup>
+      </ResizablePanel>
+    </PageWrapper>
   )
 }

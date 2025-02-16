@@ -1,14 +1,12 @@
 import { zodResolver } from '@hookform/resolvers/zod'
-import consola from 'consola'
 import { type SubmitHandler, useForm } from 'react-hook-form'
-import { useNavigate, useSearchParams } from 'react-router'
+import { useSearchParams } from 'react-router'
 import { z } from 'zod'
 import { Button, Card, CardContent, Input, toast } from '#/components/base-ui'
 import { Form, FormControl, FormField, FormItem } from '#/components/base-ui'
 import { FormLabel, FormMessage } from '#/components/base-ui'
 import { Link } from '#/components/base-ui'
-import { useApiClient } from '#/context/hooks/use-api-client'
-import { useSEOMeta } from '#/context/hooks/use-seo-meta'
+import PageWrapper from '#/layouts/page-wrapper'
 
 const FormSchema = z
   .object({
@@ -29,9 +27,7 @@ const FormSchema = z
 type FormType = z.infer<typeof FormSchema>
 
 export default function Page() {
-  const { pageTitle } = useSEOMeta('Reset Password')
-  const apiClient = useApiClient()
-  const navigate = useNavigate()
+  // const navigate = useNavigate()
   const [searchParams] = useSearchParams()
   const token = searchParams.get('token')
 
@@ -39,31 +35,34 @@ export default function Page() {
     resolver: zodResolver(FormSchema),
   })
 
-  const onSubmit: SubmitHandler<FormType> = async (data) => {
+  const onSubmit: SubmitHandler<FormType> = async (_data) => {
     if (!token) {
       toast.error('Invalid reset token')
       return
     }
 
-    toast.promise(apiClient.auth.resetPassword(token, data.password), {
-      loading: 'Resetting password..',
-      success: () => {
-        setTimeout(() => navigate('/login'), 1000)
-        return 'Password reset successful!'
-      },
-      error: (err) => {
-        consola.error('[RESET_PASSWORD]', err)
-        form.setFocus('password')
-        return `Failed to reset password: ${err.message}`
-      },
-    })
+    // toast.promise(apiClient.auth.resetPassword(token, data.password), {
+    //   loading: 'Resetting password..',
+    //   success: () => {
+    //     setTimeout(() => navigate('/login'), 1000)
+    //     return 'Password reset successful!'
+    //   },
+    //   error: (err) => {
+    //     consola.error('[RESET_PASSWORD]', err)
+    //     form.setFocus('password')
+    //     return `Failed to reset password: ${err.message}`
+    //   },
+    // })
   }
 
   return (
-    <div className="flex min-h-screen w-full flex-col items-center justify-center">
+    <PageWrapper
+      title="Reset Password"
+      className="flex min-h-screen w-full flex-col items-center justify-center"
+    >
       <div className="mx-auto w-full max-w-md space-y-6">
         <div className="flex flex-col space-y-2 text-center">
-          <h1 className="font-semibold text-2xl tracking-tight">{pageTitle}</h1>
+          <h1 className="font-semibold text-2xl tracking-tight">Reset Password</h1>
           <p className="text-muted-foreground text-sm">
             Enter your new password below. <br />
             Make sure it's secure and easy to remember.
@@ -131,6 +130,6 @@ export default function Page() {
           </Link>
         </p>
       </div>
-    </div>
+    </PageWrapper>
   )
 }

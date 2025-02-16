@@ -3,7 +3,8 @@
 import { addons } from '@storybook/manager-api'
 import * as React from 'react'
 import type { CSSProperties } from 'react'
-import { type Theme, dark, light, listenToColorScheme } from './themes'
+import { type Theme, dark, light } from './themes'
+import { listenToColorScheme } from './utils'
 
 type BadgeConfig = {
   style: CSSProperties

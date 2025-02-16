@@ -6,7 +6,6 @@ import { DropdownMenuCheckboxItem, DropdownMenuTrigger } from '#/components/base
 import { Button, Input, Skeleton } from '#/components/base-ui'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '#/components/base-ui'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '#/components/base-ui'
-import { useSEOMeta } from '#/context/hooks/use-seo-meta'
 import PageWrapper from '#/layouts/page-wrapper'
 import { clx } from '#/utils/helper'
 
@@ -19,7 +18,6 @@ const visibleColumns = [
 ]
 
 export default function Page() {
-  const { pageTitle } = useSEOMeta('Webhooks')
   const [isRefreshing, setIsRefreshing] = useState(false)
   const skeletonRows = ['skeleton-1', 'skeleton-2', 'skeleton-3', 'skeleton-4', 'skeleton-5']
 
@@ -29,11 +27,14 @@ export default function Page() {
   }
 
   return (
-    <PageWrapper className="container mx-auto w-full space-y-4 p-4 md:space-y-6 md:p-6 lg:p-8">
+    <PageWrapper
+      title="Webhooks"
+      className="container mx-auto w-full space-y-4 p-4 md:space-y-6 md:p-6 lg:p-8"
+    >
       {/* Header Section */}
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div className="space-y-1">
-          <h1 className="font-semibold text-2xl tracking-tight">{pageTitle}</h1>
+          <h1 className="font-semibold text-2xl tracking-tight">Webhooks</h1>
           <p className="text-muted-foreground text-sm">
             Manage webhook endpoints and event subscriptions
           </p>

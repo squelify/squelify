@@ -1,14 +1,11 @@
 import { zodResolver } from '@hookform/resolvers/zod'
-import consola from 'consola'
 import { type SubmitHandler, useForm } from 'react-hook-form'
-import { useNavigate } from 'react-router'
 import { z } from 'zod'
-import { Button, Card, CardContent, Input, toast } from '#/components/base-ui'
+import { Button, Card, CardContent, Input } from '#/components/base-ui'
 import { Form, FormControl, FormField, FormItem } from '#/components/base-ui'
 import { FormLabel, FormMessage } from '#/components/base-ui'
 import { Link } from '#/components/base-ui'
-import { useApiClient } from '#/context/hooks/use-api-client'
-import { useSEOMeta } from '#/context/hooks/use-seo-meta'
+import PageWrapper from '#/layouts/page-wrapper'
 
 const FormSchema = z.object({
   email: z.string().min(1, { message: 'Email address is required' }).email('Invalid email address'),
@@ -17,34 +14,33 @@ const FormSchema = z.object({
 type FormType = z.infer<typeof FormSchema>
 
 export default function Page() {
-  const { pageTitle } = useSEOMeta('Forgot Password')
-  const apiClient = useApiClient()
-  const navigate = useNavigate()
-
   const form = useForm<FormType>({
     resolver: zodResolver(FormSchema),
   })
 
-  const onSubmit: SubmitHandler<FormType> = async (data) => {
-    toast.promise(apiClient.auth.forgotPassword(data.email), {
-      loading: 'Sending reset instructions..',
-      success: () => {
-        setTimeout(() => navigate('/login'), 1000)
-        return 'Reset instructions sent to your email'
-      },
-      error: (err) => {
-        consola.error('[FORGOT_PASSWORD]', err)
-        form.setFocus('email')
-        return `Failed to send reset instructions: ${err.message}`
-      },
-    })
+  const onSubmit: SubmitHandler<FormType> = async (_data) => {
+    // toast.promise(apiClient.auth.forgotPassword(data.email), {
+    //   loading: 'Sending reset instructions..',
+    //   success: () => {
+    //     setTimeout(() => navigate('/login'), 1000)
+    //     return 'Reset instructions sent to your email'
+    //   },
+    //   error: (err) => {
+    //     consola.error('[FORGOT_PASSWORD]', err)
+    //     form.setFocus('email')
+    //     return `Failed to send reset instructions: ${err.message}`
+    //   },
+    // })
   }
 
   return (
-    <div className="flex min-h-screen w-full flex-col items-center justify-center">
+    <PageWrapper
+      title="Forgot Password"
+      className="flex min-h-screen w-full flex-col items-center justify-center"
+    >
       <div className="mx-auto w-full max-w-md space-y-6">
         <div className="flex flex-col space-y-2 text-center">
-          <h1 className="font-semibold text-2xl tracking-tight">{pageTitle}</h1>
+          <h1 className="font-semibold text-2xl tracking-tight">Forgot Password</h1>
           <p className="text-muted-foreground text-sm">
             Enter your email below to receive password reset instructions
           </p>
@@ -92,6 +88,6 @@ export default function Page() {
           </Link>
         </p>
       </div>
-    </div>
+    </PageWrapper>
   )
 }

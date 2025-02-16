@@ -6,11 +6,10 @@ import { DropdownMenu, DropdownMenuSeparator, DropdownMenuTrigger } from '#/comp
 import { SidebarMenuButton, useSidebar } from '#/components/base-ui'
 import { Link } from '#/components/base-ui'
 import { ThemeSwitcher } from '#/components/theme'
-import type { UserInfo } from '#/services/types'
 import { clx } from '#/utils/helper'
 
 interface UserMenuProps {
-  user: UserInfo
+  user: any
   sidebarState: 'expanded' | 'collapsed'
   logout: () => void
 }

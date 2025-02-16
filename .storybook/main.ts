@@ -1,4 +1,5 @@
 import type { StorybookConfig } from '@storybook/react-vite'
+import { resolve } from 'pathe'
 import { mergeConfig } from 'vite'
 import tsconfigPaths from 'vite-tsconfig-paths'
 
@@ -23,19 +24,23 @@ const config: StorybookConfig = {
     },
     '@storybook/addon-a11y',
   ],
+  staticDirs: [resolve('public')],
   framework: {
     name: '@storybook/react-vite',
-    options: {},
+    options: { strictMode: true },
   },
   core: {
     disableTelemetry: true, // 👈 Disables telemetry
     enableCrashReports: false, // 👈 Appends the crash reports to the telemetry events
+    disableWhatsNewNotifications: true, // 👈 Disables the whats new notification
+    disableProjectJson: true, // 👈 Disables project.json generation
   },
   async viteFinal(config) {
     return mergeConfig(config, {
       plugins: [tsconfigPaths()],
       build: {
         chunkSizeWarningLimit: 1024 * 4,
+        reportCompressedSize: false,
       },
     })
   },

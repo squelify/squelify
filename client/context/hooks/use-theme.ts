@@ -5,7 +5,7 @@ import { type Theme } from '#/context/stores/ui.store'
 export const useTheme = () => {
   const context = useContext(ThemeProviderContext)
 
-  if (context === undefined) throw new Error('useTheme must be used within a AppProvider')
+  if (context === undefined) throw new Error('useTheme must be used within a AuthProvider')
 
   return context
 }

@@ -1,33 +1,18 @@
 import { useStore } from '@nanostores/react'
 import consola from 'consola'
-import { NuqsAdapter } from 'nuqs/adapters/react'
 import { createContext, useCallback, useEffect, useMemo, useRef } from 'react'
-import { ILoginResponse } from '~/api/auth/login.post'
-import pkg from '~~/package.json' with { type: 'json' }
-import { useApiClient } from '#/context/hooks/use-api-client'
 import { authStore, resetAuthState, saveAuthState } from '#/context/stores/auth.store'
 import { defaultAuthStoreValues } from '#/context/stores/auth.store'
 import type { AuthStore } from '#/context/stores/auth.store'
-import type { ApiResponse } from '#/services/types'
 
-type AppProviderProps = {
-  children: React.ReactNode
-  defaultSuffix?: string
-  defaultSeparator?: string
-}
-
-export type AppProviderState = {
-  defaultSuffix: string
-  defaultSeparator?: string
+export type AuthProviderState = {
   auth: Pick<AuthStore, 'user'> & {
-    login: (identity: string, password: string) => Promise<ApiResponse<ILoginResponse> | null>
+    login: (identity: string, password: string) => Promise<ApiResponse<any> | null>
     logout: () => Promise<void>
   }
 }
 
-const initialState: AppProviderState = {
-  defaultSuffix: pkg.config.appName,
-  defaultSeparator: '-',
+const initialState: AuthProviderState = {
   auth: {
     user: defaultAuthStoreValues.user,
     login: async () => null,
@@ -35,15 +20,9 @@ const initialState: AppProviderState = {
   },
 }
 
-export const AppContext = createContext<AppProviderState>(initialState)
+export const AppContext = createContext<AuthProviderState>(initialState)
 
-export default function AppProvider({
-  children,
-  defaultSuffix = initialState.defaultSuffix,
-  defaultSeparator = initialState.defaultSeparator,
-  ...props
-}: AppProviderProps) {
-  const { current: apiClient } = useRef(useApiClient())
+export default function AuthProvider({ children }: React.PropsWithChildren) {
   const authState = useStore(authStore)
 
   // Prevent concurrent login calls
@@ -77,7 +56,7 @@ export default function AppProvider({
     }
   }, [checkAuthState])
 
-  const login = useCallback(async (identity: string, password: string) => {
+  const login = useCallback(async (_identity: string, _password: string) => {
     if (loginLockRef.current) {
       throw new Error('Login already in progress')
     }
@@ -85,27 +64,30 @@ export default function AppProvider({
     loginLockRef.current = true
 
     try {
-      const deviceType = 'browser'
-      const loginResult = await apiClient.auth.login({ identity, password, deviceType })
-      if (!loginResult?.data?.accessToken) {
-        throw new Error('Invalid response data')
+      const loginResult: ApiResponse<any> = {
+        status: 200,
+        success: true,
+        message: 'Login successful',
+        data: {
+          user: {
+            id: 'string',
+            name: 'string',
+            email: 'string',
+            avatar: 'string',
+            role: 'string',
+          },
+        },
       }
 
-      const authData = loginResult.data
       const initialAuthState: AuthStore = {
-        accessToken: authData.accessToken,
-        refreshToken: authData.refreshToken,
-        accessTokenExpiry: authData.tokenExpiry,
-        refreshTokenExpiry: authData.sessionExpiry,
+        accessToken: 'authData.accessToken',
+        refreshToken: 'authData.refreshToken',
+        accessTokenExpiry: Number(1234567890),
+        refreshTokenExpiry: Number(1234567890),
         user: null,
       }
 
       saveAuthState(initialAuthState)
-
-      const userResult = await apiClient.auth.getCurrentUser()
-      if (userResult?.data?.user) {
-        saveAuthState({ ...initialAuthState, user: userResult.data.user })
-      }
 
       return loginResult
     } catch (error) {
@@ -127,18 +109,10 @@ export default function AppProvider({
 
   const value = useMemo(
     () => ({
-      defaultSuffix,
-      defaultSeparator,
       auth: { user: authState.user, login, logout },
     }),
-    [defaultSuffix, defaultSeparator, authState.user, login, logout]
+    [authState.user, login, logout]
   )
 
-  return (
-    <NuqsAdapter>
-      <AppContext.Provider {...props} value={value}>
-        {children}
-      </AppContext.Provider>
-    </NuqsAdapter>
-  )
+  return <AppContext.Provider value={value}>{children}</AppContext.Provider>
 }

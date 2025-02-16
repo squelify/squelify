@@ -66,3 +66,16 @@ export default defineCachedEventHandler(
     maxAge: DURATION.MONTH * 6,
   }
 )
+
+defineRouteMeta({
+  openAPI: {
+    summary: 'site.webmanifest',
+    tags: ['Miscellaneous'],
+    parameters: [],
+    responses: {
+      200: { $ref: 'resp-ok' },
+      400: { $ref: 'resp-bad-request' },
+      500: { $ref: 'resp-internal-server-error' },
+    },
+  },
+})

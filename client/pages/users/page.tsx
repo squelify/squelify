@@ -3,7 +3,6 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '#
 import { Button, DropdownMenuLabel, DropdownMenuSeparator, Input } from '#/components/base-ui'
 import { DropdownMenuCheckboxItem, DropdownMenuTrigger } from '#/components/base-ui'
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem } from '#/components/base-ui'
-import { useSEOMeta } from '#/context/hooks/use-seo-meta'
 import PageWrapper from '#/layouts/page-wrapper'
 import { trpc } from '#/services/trpc-client'
 import { clx } from '#/utils/helper'
@@ -18,17 +17,19 @@ const visibleColumns = [
 ]
 
 export default function Page() {
-  const { pageTitle } = useSEOMeta('User Management')
   const { data: users, isLoading, refetch } = trpc.user.list.useQuery()
 
   const handleRefresh = async () => await refetch()
 
   return (
-    <PageWrapper className="container mx-auto w-full space-y-4 p-4 md:space-y-6 md:p-6 lg:p-8">
+    <PageWrapper
+      title="User Management"
+      className="container mx-auto w-full space-y-4 p-4 md:space-y-6 md:p-6 lg:p-8"
+    >
       {/* Header Section */}
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div className="space-y-1">
-          <h1 className="font-semibold text-2xl tracking-tight">{pageTitle}</h1>
+          <h1 className="font-semibold text-2xl tracking-tight">User Management</h1>
           <p className="text-muted-foreground text-sm">
             Manage and monitor user accounts in your organization
           </p>

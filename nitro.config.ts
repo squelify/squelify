@@ -26,9 +26,8 @@ export default defineNitroConfig({
   renderer: '~/entry.server',
   errorHandler: '~/handler/error.handler',
   handlers: [
-    { route: '/robots.txt', handler: '~/handler/robots.handler' },
-    { route: '/site.webmanifest', handler: '~/handler/manifest.handler' },
-    { route: '/setup', handler: '~/handler/setup.handler', method: 'post' },
+    { route: '/robots.txt', handler: '~/handler/robots.handler', lazy: true },
+    { route: '/site.webmanifest', handler: '~/handler/manifest.handler', lazy: true },
   ],
 
   publicAssets: [{ dir: resolve('public') }],

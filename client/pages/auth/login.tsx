@@ -9,7 +9,7 @@ import { Form, FormControl, FormField, FormItem } from '#/components/base-ui'
 import { FormLabel, FormMessage } from '#/components/base-ui'
 import { Link } from '#/components/base-ui'
 import { useAuth } from '#/context/hooks/use-auth'
-import { useSEOMeta } from '#/context/hooks/use-seo-meta'
+import PageWrapper from '#/layouts/page-wrapper'
 
 const FormSchema = z.object({
   identity: z.string({ message: 'Email address required' }).min(1),
@@ -20,7 +20,6 @@ const FormSchema = z.object({
 type FormType = z.infer<typeof FormSchema>
 
 export default function Page() {
-  const { pageTitle } = useSEOMeta('Sign In')
   const navigate = useNavigate()
   const [searchParams] = useSearchParams()
   const redirectTo = searchParams.get('redirect_to') || '/dashboard'
@@ -51,10 +50,13 @@ export default function Page() {
   }
 
   return (
-    <div className="flex min-h-screen w-full flex-col items-center justify-center">
+    <PageWrapper
+      title="Sign In"
+      className="flex min-h-screen w-full flex-col items-center justify-center"
+    >
       <div className="mx-auto w-full max-w-sm space-y-6">
         <div className="flex flex-col space-y-2 text-center">
-          <h1 className="font-semibold text-2xl tracking-tight">{pageTitle}</h1>
+          <h1 className="font-semibold text-2xl tracking-tight">Sign In</h1>
           <p className="text-muted-foreground text-sm">
             Enter your credentials to access your account
           </p>
@@ -165,6 +167,6 @@ export default function Page() {
           </Link>
         </p>
       </div>
-    </div>
+    </PageWrapper>
   )
 }

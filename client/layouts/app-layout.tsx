@@ -7,7 +7,7 @@ import { BreadcrumbSeparator } from '#/components/base-ui'
 import { SidebarInset, SidebarProvider } from '#/components/base-ui'
 import { useAuth } from '#/context/hooks/use-auth'
 import { useMenu } from '#/context/hooks/use-menu'
-import type { AppProviderState } from '#/context/providers/app-provider'
+import type { AuthProviderState } from '#/context/providers/auth-provider'
 import { getBreadcrumbItems } from '#/utils/breadcrumb'
 import { clx } from '#/utils/helper'
 
@@ -16,7 +16,7 @@ import AppLoader from '#/components/loaders/app-loader'
 import AppSidebar from './app-sidebar'
 import RootLayout from './root-layout'
 
-type OutletContext = Pick<AppProviderState['auth'], 'user' | 'logout'>
+type OutletContext = Pick<AuthProviderState['auth'], 'user' | 'logout'>
 
 export default function AppLayout() {
   const { user, logout } = useAuth()
