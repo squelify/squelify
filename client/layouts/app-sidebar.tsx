@@ -9,6 +9,7 @@ import { Sidebar, SidebarContent, useSidebar } from '#/components/base-ui'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '#/components/base-ui'
 import { Link } from '#/components/base-ui'
 import { MenuItem, useMenu } from '#/context/hooks/use-menu'
+import { useTheme } from '#/context/hooks/use-theme'
 import type { UserInfo } from '#/services/types'
 import { clx } from '#/utils/helper'
 import AppCommand, { CommandMenuGroup } from './app-command'
@@ -53,6 +54,7 @@ export default function AppSidebar({ user, logout }: AppSidebarProps) {
   const { state: sidebarState, toggleSidebar } = useSidebar()
   const { pathname } = useLocation()
   const { menuGroups } = useMenu()
+  const { theme, setTheme } = useTheme()
   const navigate = useNavigate()
 
   // Helper to check the active state of the menu
@@ -166,6 +168,12 @@ export default function AppSidebar({ user, logout }: AppSidebarProps) {
             onSelect: toggleSidebar,
             shortcut: '⌘+shift+e',
           },
+          {
+            id: 'toggle-theme',
+            icon: Lucide.SunMoon,
+            label: 'Toggle Theme',
+            onSelect: () => setTheme(theme === 'light' ? 'dark' : 'light'),
+          },
         ],
         showSeparator: true,
       },
@@ -199,7 +207,7 @@ export default function AppSidebar({ user, logout }: AppSidebarProps) {
         ],
       },
     ],
-    [navigate, toggleSidebar, logout]
+    [navigate, toggleSidebar, theme, setTheme, logout]
   )
 
   return (

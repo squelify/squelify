@@ -1,5 +1,3 @@
-/* Reference: https://tailwindcss.com/docs/v4-beta */
-
 @import "tailwindcss";
 /* @plugin "tailwindcss-motion"; */
 @variant dark (&:where([data-theme="dark"] *));

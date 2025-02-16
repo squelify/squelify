@@ -1,7 +1,7 @@
 import os from 'node:os'
 import { sql } from 'kysely'
 import { env, nodeENV, process } from 'std-env'
-import pkg from '~~/package.json' assert { type: 'json' }
+import pkg from '~~/package.json' with { type: 'json' }
 
 export interface HealthCheckResponse {
   status: 'healthy' | 'unhealthy'
