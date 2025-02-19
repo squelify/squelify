@@ -8,6 +8,8 @@ interface ErrorViewProps {
 }
 
 export default function ErrorView({ appConfig, error }: ErrorViewProps) {
+  const styles = errorStyles()
+
   const formatErrorStack = (stack?: string) => {
     if (!stack) return ''
     return stack
@@ -93,35 +95,35 @@ export default function ErrorView({ appConfig, error }: ErrorViewProps) {
   }
 
   return (
-    <div className={errorStyles.wrapper}>
-      <div className={errorStyles.decorativeGradient}>
-        <div className={errorStyles.gradientInner}>
-          <div className={errorStyles.gradientBg} />
+    <div className={styles.wrapper()}>
+      <div className={styles.decorativeGradient()}>
+        <div className={styles.gradientInner()}>
+          <div className={styles.gradientBg()} />
         </div>
       </div>
-      <div className={errorStyles.decorativeCode}>
-        <h2 className={errorStyles.decorativeText}>{error.statusCode}</h2>
+      <div className={styles.decorativeCode()}>
+        <h2 className={styles.decorativeText()}>{error.statusCode}</h2>
       </div>
-      <div className={errorStyles.content}>
-        <div className={errorStyles.container}>
-          <p className={errorStyles.errorCode}>{error.statusCode}</p>
-          <h1 className={errorStyles.title}>Something went wrong!</h1>
-          <p className={errorStyles.description}>
+      <div className={styles.content()}>
+        <div className={styles.container()}>
+          <p className={styles.errorCode()}>{error.statusCode}</p>
+          <h1 className={styles.title()}>Something went wrong!</h1>
+          <p className={styles.description()}>
             {error instanceof Error
               ? error.message
               : 'Something went wrong on our end. Please try again later.'}
           </p>
-          <div className={errorStyles.actions}>
+          <div className={styles.actions()}>
             <button
               type="button"
-              className={errorStyles.primaryButton}
+              className={styles.primaryButton()}
               onClick={() => window.location.reload()}
             >
               Try Again
             </button>
             <a
               href="https://squelify.com/docs/troubleshooting"
-              className={errorStyles.secondaryButton}
+              className={styles.secondaryButton()}
               rel="noopener noreferrer"
               target="_blank"
             >

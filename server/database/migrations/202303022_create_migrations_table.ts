@@ -5,7 +5,7 @@ import type { Database } from '~/database/db.schema'
 export const up = async (db: Kysely<Database>): Promise<void> => {
   // Create migrations table with strict mode enabled
   await db.schema
-    .createTable('_sq_migrations')
+    .createTable('_migrations')
     .addColumn('name', 'text', (col) => col.primaryKey().notNull())
     .addColumn('checksum', 'text', (col) => col.notNull())
     .addColumn('executed_at', 'integer', (col) => col.notNull().defaultTo(UNIX_TIMESTAMP))
@@ -16,7 +16,7 @@ export const up = async (db: Kysely<Database>): Promise<void> => {
   // Index for faster lookups by execution time
   await db.schema
     .createIndex('_sq_idx_migrations_executed_at')
-    .on('_sq_migrations')
+    .on('_migrations')
     .column('executed_at')
     .ifNotExists()
     .execute()
@@ -24,7 +24,7 @@ export const up = async (db: Kysely<Database>): Promise<void> => {
   // Index for faster lookups by checksum
   await db.schema
     .createIndex('_sq_idx_migrations_checksum')
-    .on('_sq_migrations')
+    .on('_migrations')
     .column('checksum')
     .ifNotExists()
     .execute()
@@ -33,5 +33,5 @@ export const up = async (db: Kysely<Database>): Promise<void> => {
 export const down = async (db: Kysely<Database>): Promise<void> => {
   await db.schema.dropIndex('_sq_idx_migrations_checksum').ifExists().execute()
   await db.schema.dropIndex('_sq_idx_migrations_executed_at').ifExists().execute()
-  await db.schema.dropTable('_sq_migrations').ifExists().execute()
+  await db.schema.dropTable('_migrations').ifExists().execute()
 }

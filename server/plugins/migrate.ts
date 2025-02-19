@@ -68,7 +68,7 @@ export default defineNitroPlugin(async (_nitroApp) => {
 
     // Get executed migrations
     const executed = await db
-      .selectFrom('_sq_migrations')
+      .selectFrom('_migrations')
       .select('name')
       .execute()
       .then((rows) => rows.map((r) => r.name))
@@ -110,7 +110,7 @@ export default defineNitroPlugin(async (_nitroApp) => {
 
       // Save the migration status to the database
       await db
-        .insertInto('_sq_migrations')
+        .insertInto('_migrations')
         .values({
           name: migrationName,
           checksum: validation.checksum,

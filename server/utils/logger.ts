@@ -1,7 +1,6 @@
 import { createConsola } from 'consola'
 import Redactyl from 'redactyl.js'
 import { env } from 'std-env'
-import superjson from 'superjson'
 
 // Create a new instance of the consola logger
 const consola = createConsola({
@@ -104,7 +103,7 @@ const stripNewLinesAndSpaces = (content: unknown) =>
 // Helper function to process and clean the message
 const processMessage = (message: unknown) => {
   if (typeof message === 'object') {
-    return superjson.stringify(message)
+    return JSON.stringify(message)
   }
   if (
     typeof message === 'string' &&
@@ -130,9 +129,9 @@ const handleErrorLogging = (
   }
   if (level === 'debug') {
     const redactedError = redactyl.redact<any>(errorObj)
-    logFunc(logPrefix, superjson.stringify(redactedError))
+    logFunc(logPrefix, JSON.stringify(redactedError))
   } else if (level === 'trace') {
-    logFunc(logPrefix, superjson.stringify(errorObj))
+    logFunc(logPrefix, JSON.stringify(errorObj))
   }
 }
 

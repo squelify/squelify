@@ -19,7 +19,7 @@ export const migrateDBClient = new Kysely<Database>({
 export const migrateClient = new Migrator({
   db: migrateDBClient,
   provider: new SquelifyMigrator(MIGRATION_FOLDER),
-  migrationTableName: '_migration',
+  migrationTableName: '_migrations_internal',
   migrationLockTableName: '_migration_lock',
 })
 

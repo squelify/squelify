@@ -1,9 +1,8 @@
 import { zodResolver } from '@hookform/resolvers/zod'
 import consola from 'consola'
-import * as Lucide from 'lucide-react'
 import { type SubmitHandler, useForm } from 'react-hook-form'
 import { useNavigate, useSearchParams } from 'react-router'
-import { z } from 'zod'
+import { LoginRequest, LoginRequestSchema } from '~/trpc/schema/auth.schema'
 import { Button, Card, CardContent, Checkbox, Input, toast } from '#/components/base-ui'
 import { Form, FormControl, FormField, FormItem } from '#/components/base-ui'
 import { FormLabel, FormMessage } from '#/components/base-ui'
@@ -11,39 +10,30 @@ import { Link } from '#/components/base-ui'
 import { useAuth } from '#/context/hooks/use-auth'
 import PageWrapper from '#/layouts/page-wrapper'
 
-const FormSchema = z.object({
-  identity: z.string({ message: 'Email address required' }).min(1),
-  password: z.string({ message: 'Password required' }).min(1),
-  remember: z.boolean().optional().default(false),
-})
-
-type FormType = z.infer<typeof FormSchema>
-
 export default function Page() {
   const navigate = useNavigate()
   const [searchParams] = useSearchParams()
   const redirectTo = searchParams.get('redirect_to') || '/dashboard'
   const auth = useAuth()
 
-  const form = useForm<FormType>({
-    resolver: zodResolver(FormSchema),
+  const form = useForm<LoginRequest>({
+    resolver: zodResolver(LoginRequestSchema),
     defaultValues: { remember: false },
   })
 
   const isDisabled = form.formState.isLoading || form.formState.isSubmitting
 
-  const onSubmit: SubmitHandler<FormType> = async ({ identity, password }) => {
-    consola.info('DEBUG:onSubmit', { identity, password })
-    toast.promise(auth.login(identity, password), {
+  const onSubmit: SubmitHandler<LoginRequest> = async ({ email, password }) => {
+    toast.promise(auth.login(email, password), {
       loading: 'Signing in..',
       success: (response) => {
-        if (!response?.data) throw new Error('Invalid response')
+        if (!response?.user) throw new Error('Invalid response')
         setTimeout(() => navigate(redirectTo), 500)
         return `Sign in successful!`
       },
       error: (err) => {
-        consola.error('[LOGIN]', err)
-        form.setFocus('identity')
+        form.setFocus('email')
+        consola.withTag('login').error(err)
         return `Failed to sign in: ${err.message}`
       },
     })
@@ -67,7 +57,7 @@ export default function Page() {
             <Form {...form}>
               <form onSubmit={form.handleSubmit(onSubmit)} className="grid gap-4">
                 <FormField
-                  name="identity"
+                  name="email"
                   control={form.control}
                   render={({ field, formState }) => (
                     <FormItem>
@@ -141,31 +131,8 @@ export default function Page() {
                 </Button>
               </form>
             </Form>
-
-            <div className="relative my-6">
-              <div className="absolute inset-0 flex items-center">
-                <span className="w-full border-t" />
-              </div>
-              <div className="relative flex justify-center text-xs uppercase">
-                <span className="bg-card px-2 text-muted-foreground">Or continue with</span>
-              </div>
-            </div>
-
-            <div className="grid grid-cols-1 gap-2">
-              <Button variant="outline" className="w-full" type="button">
-                <Lucide.Chrome className="mr-2 size-4" />
-                <span>Google</span>
-              </Button>
-            </div>
           </CardContent>
         </Card>
-
-        <p className="text-center text-muted-foreground text-sm">
-          Don't have an account?{' '}
-          <Link href="/signup" className="underline underline-offset-4" size="sm">
-            Sign up
-          </Link>
-        </p>
       </div>
     </PageWrapper>
   )

@@ -53,8 +53,8 @@ ReactDOM.createRoot(rootElement).render(
                 <Suspense fallback={<AppLoader />}>
                   <AppRoutes />
                 </Suspense>
-                <ReactQueryDevtools position="right" />
               </AuthProvider>
+              <ReactQueryDevtools position="right" />
             </TRPCProvider>
           </BrowserRouter>
         </NuqsAdapter>

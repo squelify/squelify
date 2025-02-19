@@ -31,11 +31,11 @@ import type { IUserRole } from './schemas/user_role'
 import type { IVerification } from './schemas/verification'
 
 /**
- * The `AppMigrationSchema` interface defines the schema for the `_sq_migrations`
+ * The `AppMigrationSchema` interface defines the schema for the `_migrations`
  * table, which stores information about user defined migrations.
  */
 interface AppMigrationSchema {
-  _sq_migrations: {
+  _migrations: {
     name: string
     checksum: string
     executedAt: ColumnType<Date, number | undefined, never>

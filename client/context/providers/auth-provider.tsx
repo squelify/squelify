@@ -1,13 +1,15 @@
 import { useStore } from '@nanostores/react'
 import consola from 'consola'
 import { createContext, useCallback, useEffect, useMemo, useRef } from 'react'
+import type { LoginResponse } from '~/trpc/schema/auth.schema'
 import { authStore, resetAuthState, saveAuthState } from '#/context/stores/auth.store'
 import { defaultAuthStoreValues } from '#/context/stores/auth.store'
 import type { AuthStore } from '#/context/stores/auth.store'
+import { trpc } from '#/services/trpc-client'
 
 export type AuthProviderState = {
   auth: Pick<AuthStore, 'user'> & {
-    login: (identity: string, password: string) => Promise<ApiResponse<any> | null>
+    login: (identity: string, password: string) => Promise<LoginResponse | null>
     logout: () => Promise<void>
   }
 }
@@ -56,48 +58,40 @@ export default function AuthProvider({ children }: React.PropsWithChildren) {
     }
   }, [checkAuthState])
 
-  const login = useCallback(async (_identity: string, _password: string) => {
-    if (loginLockRef.current) {
-      throw new Error('Login already in progress')
-    }
+  const loginMutation = trpc.auth.login.useMutation()
 
-    loginLockRef.current = true
-
-    try {
-      const loginResult: ApiResponse<any> = {
-        status: 200,
-        success: true,
-        message: 'Login successful',
-        data: {
-          user: {
-            id: 'string',
-            name: 'string',
-            email: 'string',
-            avatar: 'string',
-            role: 'string',
-          },
-        },
+  const login = useCallback(
+    async (email: string, password: string) => {
+      if (loginLockRef.current) {
+        throw new Error('Login already in progress')
       }
 
-      const initialAuthState: AuthStore = {
-        accessToken: 'authData.accessToken',
-        refreshToken: 'authData.refreshToken',
-        accessTokenExpiry: Number(1234567890),
-        refreshTokenExpiry: Number(1234567890),
-        user: null,
+      loginLockRef.current = true
+
+      try {
+        const loginResult = await loginMutation.mutateAsync({ email, password })
+
+        console.info('DEBUG:loginResult', loginResult)
+        const initialAuthState: AuthStore = {
+          accessToken: 'authData.accessToken',
+          refreshToken: 'authData.refreshToken',
+          accessTokenExpiry: Number(1234567890),
+          refreshTokenExpiry: Number(1234567890),
+          user: null,
+        }
+
+        saveAuthState(initialAuthState)
+
+        return loginResult
+      } catch (error) {
+        resetAuthState()
+        throw error
+      } finally {
+        loginLockRef.current = false
       }
-
-      saveAuthState(initialAuthState)
-
-      return loginResult
-    } catch (error) {
-      resetAuthState()
-
-      throw error
-    } finally {
-      loginLockRef.current = false
-    }
-  }, [])
+    },
+    [loginMutation]
+  )
 
   const logout = useCallback(async () => {
     try {

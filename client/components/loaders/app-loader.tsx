@@ -78,7 +78,7 @@ const SVGLoader = () => (
 
 export default function AppLoader() {
   return (
-    <div className="min-h-screen bg-gradient-to-b from-gray-50 to-gray-100 dark:from-gray-950 dark:to-gray-900">
+    <div className="dark:primary/25 size-full min-h-screen bg-gradient-to-bl from-primary/10 via-transparent">
       <div className="flex size-full min-h-screen flex-col items-center justify-center p-4 py-12 sm:px-6 lg:px-8">
         <div className="flex flex-col items-center justify-center space-y-4 sm:mx-auto sm:w-full sm:max-w-lg">
           <h1 className="mt-3 text-center font-medium text-gray-900 dark:text-gray-100">

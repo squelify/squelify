@@ -96,8 +96,8 @@ export async function getMigrationItems(): Promise<DatabaseMigration[]> {
       migration: await import('./migrations/202303021_create_api_keys_table'),
     },
     {
-      name: '202303022_create_user_migration_table',
-      migration: await import('./migrations/202303022_create_user_migration_table'),
+      name: '202303022_create_migrations_table',
+      migration: await import('./migrations/202303022_create_migrations_table'),
     },
   ]
 }
