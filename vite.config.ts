@@ -53,7 +53,7 @@ export default defineConfig({
     rollupOptions: {
       input: resolve('client/entry.client.tsx'),
     },
-    outDir: resolve('.output/client'),
+    outDir: resolve('build/client'),
   },
   customLogger: !isTest
     ? ({

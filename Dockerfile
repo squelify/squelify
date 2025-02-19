@@ -36,7 +36,7 @@ RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install \
 FROM base AS pruner
 
 # Copy output and config file from the builder stage.
-COPY --from=builder /srv/.output /srv
+COPY --from=builder /srv/build /srv
 
 # Create the data directory and set permissions.
 RUN mkdir -p /srv/_data/{backup,functions,migrations,public_html}
@@ -83,4 +83,4 @@ USER nonroot:nonroot
 EXPOSE $PORT/tcp
 
 ENTRYPOINT ["/usr/bin/tini", "--"]
-CMD ["node", "server/index.mjs"]
+CMD ["node", "./server/index.mjs"]

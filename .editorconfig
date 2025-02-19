@@ -13,7 +13,7 @@ max_line_length = 100
 [*.{json,jsonc,plist}]
 max_line_length = off
 
-[*.{js,cjs,mjs,jsx,ts,tsx,html,liquid,txt}]
+[*.{js,cjs,mjs,jsx,ts,tsx,html,txt}]
 indent_size = 2
 
 [{justfile,*.{just,toml,yml,yaml}}]

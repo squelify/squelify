@@ -16,8 +16,8 @@ import pkg from './package.json' with { type: 'json' }
 
 export default defineNitroConfig({
   compatibilityDate: '2025-02-16',
-  preset: 'node-server',
-  serveStatic: 'node',
+  preset: 'deno-server',
+  serveStatic: 'deno',
   srcDir: 'server',
   minify: isProduction,
   sourceMap: isDevelopment,
@@ -31,13 +31,13 @@ export default defineNitroConfig({
   ],
 
   publicAssets: [{ dir: resolve('public') }],
-  serverAssets: [{ baseName: 'vite', dir: resolve('.output/client/.vite') }],
+  serverAssets: [{ baseName: 'vite', dir: resolve('build/client/.vite') }],
   compressPublicAssets: { gzip: isProduction, brotli: isProduction },
 
   output: {
-    dir: resolve('.output'),
-    serverDir: resolve('.output/server'),
-    publicDir: resolve('.output/client'),
+    dir: resolve('build'),
+    serverDir: resolve('build/server'),
+    publicDir: resolve('build/client'),
   },
 
   hooks: {

@@ -1,13 +1,9 @@
-/node_modules
-/.rollup.cache
 /.fleet
 /.idea
 /.pnp
-/.cache
-/.output
 /.husky
-/.temp
 .pnp.js
+.rollup.cache
 .DS_Store
 .DS_Store?
 /coverage
@@ -15,7 +11,9 @@ Thumbs.db
 ehthumbs.db
 Desktop.ini
 $RECYCLE.BIN/
+node_modules/
 *tsbuildinfo
+.unikraft
 .vscode/*
 !.vscode/extensions.json
 !.vscode/settings.json
@@ -27,18 +25,18 @@ $RECYCLE.BIN/
 *.sqlite3*
 *.db
 
-# Nitro
+# Output directory
 _data/
 build/
 dist/
 .data
-.dist
 .nitro
 .cache
 .output
-.client
-.build
 .wrangler
+.cache
+.temp
+.tmp
 
 # Vite & Vitest config
 vite.config.*
@@ -48,7 +46,7 @@ vitest.config.*
 vitest.workspace.*
 !vitest.workspace.ts
 
-# envars
+# Envars
 .env.*
 !.env.example
 compose.env*
@@ -74,9 +72,8 @@ fly*.toml*
 
 # Miscellaneous
 pnpm-exec-summary.json
-RELEASE_NOTE.md
 slim.report.json
-.unikraft/
+RELEASE_NOTE.md
 
 # Terraform
 .terraform/
