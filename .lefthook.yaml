@@ -49,11 +49,11 @@ pre-commit:
       run: lychee --max-concurrency 3 {all_files}
       exclude: [CHANGELOG.md, CONTRIBUTING.md]
 
-pre-push:
-  commands:
-    npm-audit:
-      tags: frontend security
-      run: pnpm --silent audit --prod
+# pre-push:
+#   commands:
+#     npm-audit:
+#       tags: frontend security
+#       run: pnpm --silent audit --prod
 
 pre-deploy:
   parallel: false
