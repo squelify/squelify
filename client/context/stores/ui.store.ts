@@ -1,7 +1,7 @@
 import { persistentMap } from '@nanostores/persistent'
 import { storeDecode, storeEncode } from '#/utils/helper'
 
-export type Theme = 'dark' | 'light' | 'system'
+export type Theme = 'light' | 'dark' | 'system'
 
 type UIStore = {
   sidebar: 'expanded' | 'collapsed'

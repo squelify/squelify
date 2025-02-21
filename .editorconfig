@@ -16,7 +16,7 @@ max_line_length = off
 [*.{js,cjs,mjs,jsx,ts,tsx,html,txt}]
 indent_size = 2
 
-[{justfile,*.{just,toml,yml,yaml}}]
+[{justfile,*.{httl,just,toml,yml,yaml}}]
 indent_size = 2
 
 [*.txt]
