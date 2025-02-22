@@ -44,15 +44,15 @@ jobs:
           pnpm run test:coverage
           pnpm run build
 
-      - name: Upload tests-results if exists
-        run: echo "TEST_RESULTS_EXISTS=$([ -d "tests-results" ] && echo "true" || echo "false")" >> $GITHUB_ENV
+      - name: Upload tests results if exists
+        run: echo "TEST_RESULTS_EXISTS=$([ -d ".output/tests-results" ] && echo "true" || echo "false")" >> $GITHUB_ENV
 
       - name: Upload tests-results
         uses: actions/upload-artifact@v4
         if: env.TEST_RESULTS_EXISTS == 'true'
         with:
-          name: tests-results-${{ matrix.node-version }}
-          path: tests-results/
+          name: .output/tests-results-${{ matrix.node-version }}
+          path: .output/tests-results/
           retention-days: 7
 
   # e2e-test:
@@ -103,5 +103,5 @@ jobs:
   #       if: always()
   #       with:
   #         name: e2e-test-report-${{ github.run_id }}
-  #         path: tests-results/e2e/
+  #         path: .output/test-e2e/
   #         retention-days: 7

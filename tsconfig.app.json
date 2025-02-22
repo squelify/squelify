@@ -38,5 +38,5 @@
         }
     },
     "include": ["**/*.ts", "**/*.tsx", ".nitro/types/nitro.d.ts"],
-    "exclude": ["build", "vite.*.ts", "vitest.*.ts", "storybook-static", "tests-results"]
+    "exclude": ["build", "vite.*.ts", "vitest.*.ts", ".output", "_data"]
 }

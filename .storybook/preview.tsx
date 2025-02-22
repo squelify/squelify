@@ -1,7 +1,7 @@
 import type { Preview } from '@storybook/react'
+import { withThemeProvider } from './components/decorators'
 import { DocsContainer } from './components/docs-container'
 import { Link } from './components/link'
-import { withThemeProvider } from './decorators'
 import { light } from './themes'
 
 // Import the stylesheet (Tailwind CSS)

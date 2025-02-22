@@ -1,8 +1,8 @@
 import type { Decorator } from '@storybook/react'
 import * as React from 'react'
 import { MemoryRouter } from 'react-router'
-import { Toaster } from '../client/components/base-ui'
-import { ThemeProvider } from '../client/context/providers/theme-provider'
+import { Toaster } from '../../client/components/base-ui'
+import { ThemeProvider } from '../../client/context/providers/theme-provider'
 
 function setTheme(theme: 'light' | 'dark') {
   document.documentElement.dataset.theme = theme

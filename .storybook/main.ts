@@ -1,5 +1,4 @@
 import type { StorybookConfig } from '@storybook/react-vite'
-import { resolve } from 'pathe'
 import { mergeConfig } from 'vite'
 import tsconfigPaths from 'vite-tsconfig-paths'
 
@@ -11,23 +10,13 @@ const config: StorybookConfig = {
       options: { backgrounds: false, controls: true, actions: true },
     },
     '@storybook/addon-links',
-    {
-      name: '@storybook/addon-storysource',
-      options: {
-        sourceLoaderOptions: {
-          injectStoryParameters: true,
-        },
-        loaderOptions: {
-          prettierConfig: { printWidth: 80, singleQuote: false },
-        },
-      },
-    },
     '@storybook/addon-a11y',
   ],
-  staticDirs: [resolve('public')],
   framework: {
     name: '@storybook/react-vite',
-    options: { strictMode: true },
+    options: {
+      strictMode: true,
+    },
   },
   core: {
     disableTelemetry: true, // 👈 Disables telemetry
