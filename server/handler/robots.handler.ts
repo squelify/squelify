@@ -15,7 +15,7 @@ export default defineCachedEventHandler(
 defineRouteMeta({
   openAPI: {
     summary: 'robots.txt',
-    tags: ['Miscellaneous'],
+    tags: ['Internal'],
     parameters: [],
     responses: {
       200: { $ref: 'resp-ok' },

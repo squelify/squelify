@@ -70,7 +70,7 @@ export default defineCachedEventHandler(
 defineRouteMeta({
   openAPI: {
     summary: 'site.webmanifest',
-    tags: ['Miscellaneous'],
+    tags: ['Internal'],
     parameters: [],
     responses: {
       200: { $ref: 'resp-ok' },

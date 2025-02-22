@@ -1,5 +1,5 @@
 import { type H3Event } from 'h3'
-import { process } from 'std-env'
+import { env, process } from 'std-env'
 import { DURATION } from '~/utils/datetime'
 import { generateCSRFToken } from '~/utils/string'
 import pkg from '~~/package.json'
@@ -15,6 +15,11 @@ type Manifest = Record<string, { css: string[]; file: string; isEntry: boolean }
 export async function handleSPAClient(event: H3Event, options: SPAClientOptions) {
   const { entryName, title } = options
   const db = event.context.db
+
+  if (env.HEADLESS_MODE) {
+    setResponseHeader(event, 'Content-Type', 'text/plain')
+    return send(event, 'Headless mode is enabled. Admin console is not available.')
+  }
 
   // Check if application is installed by checking existence of admin user
   const isInstalled = await db

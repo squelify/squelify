@@ -32,12 +32,12 @@ const resourceConfig = {
 }
 
 export default function CardSystemMetrics({ className }: { className?: string }) {
-  const { isConnected, messages } = useSSE('/api/realtime/hello')
+  const { isConnected, messages } = useSSE('/api/sysinfo')
 
   // Log any message changes
   React.useEffect(() => {
     if (messages.length > 0) {
-      consola.log('SSE Messages:', {
+      consola.withTag('dashboard:sse').log({
         isConnected,
         total: messages.length,
         message: messages[messages.length - 1].message,

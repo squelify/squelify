@@ -23,11 +23,11 @@ export default defineCachedEventHandler(
 defineRouteMeta({
   openAPI: {
     summary: 'API Settings',
-    tags: ['General'],
+    tags: ['Internal'],
     parameters: [
       {
         in: 'header',
-        name: 'Contennt-Type',
+        name: 'Content-Type',
         required: true,
         example: 'application/json',
       },

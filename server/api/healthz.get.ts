@@ -142,11 +142,11 @@ export default defineEventHandler(async (event): Promise<HealthCheckResponse> =>
 defineRouteMeta({
   openAPI: {
     summary: 'Health Check',
-    tags: ['General'],
+    tags: ['Internal'],
     parameters: [
       {
         in: 'header',
-        name: 'Contennt-Type',
+        name: 'Content-Type',
         required: true,
         example: 'application/json',
       },

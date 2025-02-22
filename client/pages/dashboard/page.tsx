@@ -1,6 +1,5 @@
 import * as Lucide from 'lucide-react'
 import PageWrapper from '#/layouts/page-wrapper'
-import CardGetStarted from './card-get-started'
 import CardSystemMetrics from './card-metrics'
 import CardQuickAccess from './card-quick-access'
 import CardResources from './card-resources'
@@ -36,9 +35,6 @@ export default function Page() {
           <CardResources className="md:col-span-2" />
         </div>
       </div>
-
-      {/* Get Started */}
-      <CardGetStarted />
 
       {/* Quick Access */}
       <div className="grid gap-4">

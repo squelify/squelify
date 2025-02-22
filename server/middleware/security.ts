@@ -23,6 +23,7 @@ const UNPROTECTED_ROUTES = [
   '/auth/password/forgot',
   '/auth/password/reset',
   '/jwks/keys.json',
+  '/sysinfo',
 ]
 
 // Check if pathname is root path (empty or `/`)
@@ -34,7 +35,7 @@ function validateRequiredHeaders(event: H3Event) {
   const apiRequestPath = pathname.replace('/api', '')
 
   // Exclude some paths from validation
-  const excludedPaths = ['/jwks/keys.json']
+  const excludedPaths = ['/jwks/keys.json', '/sysinfo']
 
   if (isRootPath(apiRequestPath) || excludedPaths.includes(apiRequestPath)) {
     return
