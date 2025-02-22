@@ -23,8 +23,8 @@ export default function Page() {
 
   const isDisabled = form.formState.isLoading || form.formState.isSubmitting
 
-  const onSubmit: SubmitHandler<LoginRequest> = async ({ email, password }) => {
-    toast.promise(auth.login(email, password), {
+  const onSubmit: SubmitHandler<LoginRequest> = async ({ email, password, remember }) => {
+    toast.promise(auth.login(email, password, remember), {
       loading: 'Signing in..',
       success: (response) => {
         if (!response?.user) throw new Error('Invalid response')

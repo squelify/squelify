@@ -5,7 +5,6 @@ import { resolve } from 'pathe'
 import { isProduction, isTest } from 'std-env'
 import { type Logger as ViteLogger, defineConfig } from 'vite'
 import tsconfigPaths from 'vite-tsconfig-paths'
-import pkg from './package.json' with { type: 'json' }
 
 export default defineConfig({
   clearScreen: true,
@@ -26,9 +25,7 @@ export default defineConfig({
       },
     },
   ],
-  appType: 'spa',
   envPrefix: 'SQUELIFY_',
-  define: { 'import.meta.env.SQUELIFY_VERSION': `"${pkg.version}"` },
   publicDir: resolve('public'),
   optimizeDeps: {
     /**

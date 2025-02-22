@@ -1,3 +1,5 @@
+import { z } from 'zod'
+import { DURATION } from '~/utils/datetime'
 import { LoginRequestSchema, LoginResponseSchema } from '../schema/auth.schema'
 import { publicProcedure, trpcRouter } from '../trpc'
 
@@ -6,9 +8,13 @@ export const authRouter = trpcRouter({
     .input(LoginRequestSchema)
     .output(LoginResponseSchema)
     .mutation(async ({ input }) => {
-      // Add your authentication logic here
-      const mockResponse = {
-        token: 'jwt-token-here',
+      const now = Math.floor(Date.now() / 1000)
+
+      const response: z.infer<typeof LoginResponseSchema> = {
+        accessToken: 'jwt-token-here',
+        refreshToken: 'jwt-refresh-token-here',
+        accessTokenExpiry: now + DURATION.DAY * 7,
+        refreshTokenExpiry: now + DURATION.DAY * 30,
         user: {
           id: '1',
           email: input.email,
@@ -17,6 +23,6 @@ export const authRouter = trpcRouter({
           avatarUrl: null,
         },
       }
-      return mockResponse
+      return response
     }),
 })

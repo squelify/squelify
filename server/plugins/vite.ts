@@ -8,6 +8,7 @@ export default defineNitroPlugin(async (nitroApp) => {
 
   const { createServer } = await import('vite')
   const vite = await createServer()
+
   await vite.listen()
 
   nitroApp.hooks.hook('request', (event) => {
@@ -17,6 +18,6 @@ export default defineNitroPlugin(async (nitroApp) => {
 
 declare module 'h3' {
   interface H3EventContext {
-    vite?: ViteDevServer
+    vite: ViteDevServer
   }
 }

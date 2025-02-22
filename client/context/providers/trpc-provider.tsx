@@ -1,10 +1,9 @@
 import { QueryClientProvider } from '@tanstack/react-query'
 import { httpLink, loggerLink } from '@trpc/client'
 import consola from 'consola'
-import { fetch } from 'ofetch'
 import * as React from 'react'
-import { deserialize, serialize } from 'seroval'
 import { isDevelopment } from 'std-env'
+import superjson from 'superjson'
 import { queryClient, trpc } from '#/services/trpc-client'
 
 export default function TRPCProvider({ children }: React.PropsWithChildren) {
@@ -13,7 +12,7 @@ export default function TRPCProvider({ children }: React.PropsWithChildren) {
       links: [
         httpLink({
           url: '/trpc',
-          transformer: { serialize, deserialize },
+          transformer: superjson,
           fetch(url, options) {
             return fetch(url, {
               ...options,

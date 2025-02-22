@@ -10,9 +10,8 @@ type Manifest = Record<string, { css: string[]; file: string; isEntry: boolean }
 
 export default defineNitroErrorHandler(async (error, event) => {
   const appConfig = event.context.appConfig
-  const isApiDocsRoute = event.path.startsWith('/api-docs') || event.path !== '/api-specs.json'
 
-  if (event.path.startsWith('/api') && !isApiDocsRoute) {
+  if (event.path.startsWith('/api') && !event.path.startsWith('/_/')) {
     const errorMessage =
       error.statusCode === 404 ? 'Resource not found' : error.message || 'Internal Server Error'
 

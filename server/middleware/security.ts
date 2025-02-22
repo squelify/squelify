@@ -84,8 +84,7 @@ export default defineEventHandler(async (event) => {
     pathname.startsWith('/api/healthz') ||
     pathname.startsWith('/api/settings') ||
     pathname.startsWith('/api/realtime') ||
-    pathname.startsWith('/api-docs') ||
-    pathname === '/api-specs.json'
+    pathname.startsWith('/_/')
   ) {
     return
   }

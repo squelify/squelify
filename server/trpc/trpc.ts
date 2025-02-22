@@ -1,10 +1,10 @@
 import { TRPCError, initTRPC } from '@trpc/server'
-import { deserialize, serialize } from 'seroval'
+import superjson from 'superjson'
 import { ZodError } from 'zod'
 import type { Context } from './context'
 
 const t = initTRPC.context<Context>().create({
-  transformer: { serialize, deserialize },
+  transformer: superjson,
   errorFormatter({ shape, error }) {
     return {
       ...shape,

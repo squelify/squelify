@@ -1,6 +1,7 @@
 import * as Lucide from 'lucide-react'
 import { useMemo } from 'react'
 import { useLocation, useNavigate } from 'react-router'
+import pkg from '~~/package.json' with { type: 'json' }
 import { Button } from '#/components/base-ui'
 import { SidebarFooter, SidebarHeader } from '#/components/base-ui'
 import { SidebarGroup, SidebarGroupContent, SidebarGroupLabel } from '#/components/base-ui'
@@ -226,7 +227,7 @@ export default function AppSidebar({ user, logout }: AppSidebarProps) {
                 )}
               >
                 <span className="font-semibold">Squelify</span>
-                <span className="text-xs">v{import.meta.env.SQUELIFY_VERSION}</span>
+                <span className="text-xs">v{pkg.version}</span>
               </div>
             </SidebarMenuButton>
           </SidebarMenuItem>

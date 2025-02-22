@@ -53,10 +53,10 @@ export default function RootLayout({ children, className }: RootLayoutProps) {
       }
 
       lastCheckTimeRef.current = now
-      consola.info('Performing health check...')
+      consola.withTag('doHealthCheck').debug('Performing health check...')
 
       try {
-        consola.info('[RESULT] Health Check Status:')
+        consola.withTag('doHealthCheck').debug('Health Check Status:')
       } catch (error: unknown) {
         handleError(error)
       }

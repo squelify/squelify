@@ -83,4 +83,4 @@ USER nonroot:nonroot
 EXPOSE $PORT/tcp
 
 ENTRYPOINT ["/usr/bin/tini", "--"]
-CMD ["node", "./server/index.mjs"]
+CMD ["node", "server/index.mjs"]

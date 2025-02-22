@@ -54,7 +54,7 @@ export default defineNitroConfig({
 
   openAPI: {
     production: 'prerender',
-    route: '/api-specs.json',
+    route: '/_/api-specs.json',
     meta: {
       title: 'Squelify API',
       description: 'Squelify API documentation',
@@ -62,7 +62,7 @@ export default defineNitroConfig({
     },
     ui: {
       scalar: {
-        route: '/api-docs',
+        route: '/_/api-docs',
         layout: 'modern',
         theme: 'purple',
       },

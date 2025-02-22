@@ -8,10 +8,10 @@ type AuthStore = {
   refreshTokenExpiry: number | null
   user: {
     id: string
-    name: string
     email: string
-    avatar: string
-    role: string
+    firstName: string
+    lastName: string | null
+    avatarUrl: string | null
   } | null
 }
 

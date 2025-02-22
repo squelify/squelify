@@ -9,7 +9,7 @@ import { trpc } from '#/services/trpc-client'
 
 export type AuthProviderState = {
   auth: Pick<AuthStore, 'user'> & {
-    login: (identity: string, password: string) => Promise<LoginResponse | null>
+    login: (identity: string, password: string, remember: boolean) => Promise<LoginResponse | null>
     logout: () => Promise<void>
   }
 }
@@ -36,6 +36,7 @@ export default function AuthProvider({ children }: React.PropsWithChildren) {
       authState.accessToken && authState.accessTokenExpiry && authState.accessTokenExpiry > now
 
     if (!hasValidToken) {
+      consola.withTag('auth').warn('No valid token found, resetting auth state')
       resetAuthState()
       return
     }
@@ -43,15 +44,12 @@ export default function AuthProvider({ children }: React.PropsWithChildren) {
 
   useEffect(() => {
     let isMounted = true
-
     const runCheckAuthState = async () => {
       if (!isMounted) return
       await checkAuthState()
     }
-
     runCheckAuthState()
     const interval = setInterval(runCheckAuthState, 5 * 60 * 1000)
-
     return () => {
       isMounted = false
       clearInterval(interval)
@@ -61,7 +59,7 @@ export default function AuthProvider({ children }: React.PropsWithChildren) {
   const loginMutation = trpc.auth.login.useMutation()
 
   const login = useCallback(
-    async (email: string, password: string) => {
+    async (email: string, password: string, remember: boolean) => {
       if (loginLockRef.current) {
         throw new Error('Login already in progress')
       }
@@ -69,20 +67,20 @@ export default function AuthProvider({ children }: React.PropsWithChildren) {
       loginLockRef.current = true
 
       try {
-        const loginResult = await loginMutation.mutateAsync({ email, password })
+        const authData = await loginMutation.mutateAsync({ email, password, remember })
 
-        console.info('DEBUG:loginResult', loginResult)
         const initialAuthState: AuthStore = {
-          accessToken: 'authData.accessToken',
-          refreshToken: 'authData.refreshToken',
-          accessTokenExpiry: Number(1234567890),
-          refreshTokenExpiry: Number(1234567890),
-          user: null,
+          accessToken: authData.accessToken,
+          refreshToken: authData.refreshToken,
+          accessTokenExpiry: authData.accessTokenExpiry,
+          refreshTokenExpiry: authData.refreshTokenExpiry,
+          user: authData.user,
         }
 
+        console.info('DEBUG:loginResult', initialAuthState)
         saveAuthState(initialAuthState)
 
-        return loginResult
+        return authData
       } catch (error) {
         resetAuthState()
         throw error
