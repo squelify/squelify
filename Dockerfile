@@ -39,8 +39,8 @@ FROM base AS pruner
 COPY --from=builder /srv/build /srv
 
 # Create the data directory and set permissions.
-RUN mkdir -p /srv/_data/{backup,functions,migrations,public_html}
-RUN chmod -R 0775 /srv/_data
+RUN mkdir -p /srv/sqdata/{backup,functions,migrations,public_html}
+RUN chmod -R 0775 /srv/sqdata
 
 # -----------------------------------------------------------------------------
 # Production image, copy build output files and run the application.

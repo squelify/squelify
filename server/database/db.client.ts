@@ -26,11 +26,11 @@ import type { Database } from '~/database/db.schema'
 import logger from '~/utils/logger'
 
 const isLocalMode = env.DATABASE_MODE === 'local'
-const localDbPath = resolve(process.cwd(), '_data/data.sqlite')
+const localDbPath = resolve(process.cwd(), 'sqdata/data.sqlite')
 
 if (isLocalMode) {
   logger.info('Creating local database directory...')
-  makeDirectorySync(resolve('_data'), { mode: 0o755 })
+  makeDirectorySync(resolve('sqdata'), { mode: 0o755 })
 }
 
 export const libSQLClient = createClient({

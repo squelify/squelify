@@ -111,7 +111,7 @@ export default defineCommand({
     },
   },
   async setup() {
-    await makeDirectory(resolve('_data/dump'), { mode: 0o755 })
+    await makeDirectory(resolve('sqdata/dump'), { mode: 0o755 })
   },
   async run({ args, cmd }) {
     if (args.help) {
@@ -186,7 +186,7 @@ export default defineCommand({
 
       // Add timestamp to filename
       const filename = args.output.replace('.sql', `-${getTimestamp()}.sql`)
-      const exportPath = `_data/backup/${filename}`
+      const exportPath = `sqdata/backup/${filename}`
       const outputPath = resolve(process.cwd(), exportPath)
       writeFileSync(outputPath, schema, 'utf-8')
 

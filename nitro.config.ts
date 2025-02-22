@@ -43,7 +43,7 @@ export default defineNitroConfig({
   hooks: {
     'rollup:before': async (nitro, _config) => {
       consola.withTag('nitro').info('Creating data directory...')
-      await makeDirectory(resolve('_data'), { mode: 0o755 })
+      await makeDirectory(resolve('sqdata'), { mode: 0o755 })
 
       if (!nitro.options.dev) {
         consola.withTag('nitro').info('Building frontend application...')
@@ -70,7 +70,7 @@ export default defineNitroConfig({
     },
   },
 
-  devServer: { watch: ['server', 'client', '_data/functions', '_data/public_html'] },
+  devServer: { watch: ['server', 'client', 'sqdata/functions', 'sqdata/public_html'] },
   typescript: { strict: true, generateTsConfig: false },
   esbuild: { options: { jsx: 'automatic' } },
   experimental: { openAPI: isDevelopment },

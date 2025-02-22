@@ -37,13 +37,13 @@ Example configuration `ecosystem.json`:
 kraft pkg ls --apps --all --update
 
 # Run the application locally
-kraft run --rm -p 3278:3278 -n squelify -v $(pwd)/_data:/srv/_data --arch x86_64 --plat qemu
+kraft run --rm -p 3278:3278 -n squelify -v $(pwd)/sqdata:/srv/sqdata --arch x86_64 --plat qemu
 
-# Attach a volume to the instance `squelify-y1xmz` to the path /srv/_data by volume name.
+# Attach a volume to the instance `squelify-y1xmz` to the path /srv/sqdata by volume name.
 kraft cl vol create --size 10Mi
 kraft cl vol ls
 kraft cl inst stop squelify-y1xmz
-kraft cl vol at vol-cabnh --to squelify-y1xmz --at /srv/_data
+kraft cl vol at vol-cabnh --to squelify-y1xmz --at /srv/sqdata
 kraft cl inst start squelify-y1xmz
 
 kraft cl deploy --metro sin0 -p 443:3278 . -M 256M -e TURSO_DATABASE_URL="libsql://DBNAME.turso.io?authToken='TOKEN'"

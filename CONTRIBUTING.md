@@ -78,7 +78,7 @@ pnpm --silent squelify migrate reset --migrate --seed
 ### User Migrations
 
 Squelify supports custom database migrations through SQL files.
-Place your migration files in `_data/migrations` directory with
+Place your migration files in `sqdata/migrations` directory with
 format `YYYYMMXXX_description.sql`:
 
 #### Migration Filename Format:
@@ -103,7 +103,7 @@ format `YYYYMMXXX_description.sql`:
 
 #### Example:
 ```sql
---- Path: _data/migrations/202411001_create_posts_table.sql
+--- Path: sqdata/migrations/202411001_create_posts_table.sql
 
 CREATE TABLE IF NOT EXISTS posts (
   id TEXT PRIMARY KEY,
@@ -169,7 +169,7 @@ pnpm docker:images
 
 ```sh
 docker run --network=host --rm -it --env-file .env \
-  -v $(pwd)/_data:/srv/_data --name squelify \
+  -v $(pwd)/sqdata:/srv/sqdata --name squelify \
   ghcr.io/squelify/squelify:latest
 ```
 

@@ -19,7 +19,7 @@ async function isFileAccessible(path: string): Promise<boolean> {
 
 export async function handleStaticWeb(event: H3Event) {
   const matchedUrl = event.path.split('?')[0]
-  const staticDir = resolve(process.cwd(), '_data/public_html')
+  const staticDir = resolve(process.cwd(), 'sqdata/public_html')
 
   // Check if directory exists and not empty
   if (!existsSync(staticDir) || readdirSync(staticDir).length === 0) {

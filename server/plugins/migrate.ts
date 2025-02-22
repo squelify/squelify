@@ -49,7 +49,7 @@ export default defineNitroPlugin(async (_nitroApp) => {
     }
 
     // Load user migrations
-    const migrationDir = resolve(process.cwd(), '_data/migrations')
+    const migrationDir = resolve(process.cwd(), 'sqdata/migrations')
 
     // Skip if migrations folder not found
     if (!existsSync(migrationDir)) {

@@ -1,6 +1,6 @@
+sqdata/
 build/
 dist/
-_data/
 .data
 .wrangler
 .cache

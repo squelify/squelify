@@ -51,7 +51,7 @@ services:
     hostname: locals3
     ports:
       - 7070:7070
-    volumes: ['./_data/s3_data:/srv:rw']
+    volumes: ['./sqdata/s3_data:/srv:rw']
     command: --port 0.0.0.0:7070 posix /srv
     environment:
       ROOT_ACCESS_KEY: ${S3_ACCESS_KEY_ID:-myS3AccessKey}
@@ -68,7 +68,7 @@ services:
       SERVER_ROOT: /srv
       SERVER_DIRECTORY_LISTING: true
       SERVER_IGNORE_HIDDEN_FILES: true
-    volumes: ['./_data/s3_data/devbucket:/srv:ro']
+    volumes: ['./sqdata/s3_data/devbucket:/srv:ro']
 
 volumes:
   libsql_data:

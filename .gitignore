@@ -26,7 +26,7 @@ node_modules/
 *.db
 
 # Output directory
-_data/
+sqdata/
 build/
 dist/
 .data
