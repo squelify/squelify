@@ -4,7 +4,7 @@
     "upgrade": true,
     "color": true,
     "root": true,
-    "deep": true,
+    "deep": false,
     "install": "always",
     "packageManager": "pnpm",
     "silent": false,
