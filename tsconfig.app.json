@@ -37,12 +37,6 @@
             "~~/*": ["./*"]
         }
     },
-    "include": ["./client/**/*", "./server/**/*", "./.nitro/types/nitro.d.ts", "./**/*"],
-    "exclude": [
-        "vite.config.ts",
-        "vitest.config.ts",
-        "vitest.workspace.ts",
-        "storybook-static",
-        "tests-results"
-    ]
+    "include": ["**/*.ts", "**/*.tsx", ".nitro/types/nitro.d.ts"],
+    "exclude": ["build", "vite.*.ts", "vitest.*.ts", "storybook-static", "tests-results"]
 }

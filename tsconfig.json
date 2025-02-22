@@ -1,5 +1,4 @@
 {
-    // https://nitro.unjs.io/guide/typescript
     "$schema": "https://json.schemastore.org/tsconfig",
     "references": [{ "path": "./tsconfig.app.json" }, { "path": "./tsconfig.node.json" }],
     "files": []
