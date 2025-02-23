@@ -1,6 +1,10 @@
 import { type AnyTRPCRouter, TRPCError, type inferRouterContext } from '@trpc/server'
-import { HTTPBaseHandlerOptions, TRPCRequestInfo, resolveResponse } from '@trpc/server/http'
-import { ResolveHTTPRequestOptionsContextFn } from '@trpc/server/http'
+import {
+  type HTTPBaseHandlerOptions,
+  type TRPCRequestInfo,
+  resolveResponse,
+} from '@trpc/server/http'
+import type { ResolveHTTPRequestOptionsContextFn } from '@trpc/server/http'
 import type { H3Event, NodeIncomingMessage } from 'h3'
 import { readBody, toWebRequest } from 'h3'
 
@@ -8,7 +12,7 @@ type MaybePromise<T> = T | Promise<T>
 
 export type CreateContextFn<TRouter extends AnyTRPCRouter> = (
   event: H3Event,
-  innerOptions: { info: TRPCRequestInfo }
+  innerOptions: { info: TRPCRequestInfo },
 ) => MaybePromise<inferRouterContext<TRouter>>
 
 type H3HandlerOptions<TRouter extends AnyTRPCRouter> = HTTPBaseHandlerOptions<
@@ -20,7 +24,7 @@ type H3HandlerOptions<TRouter extends AnyTRPCRouter> = HTTPBaseHandlerOptions<
 
 export async function handleTRPC<TRouter extends AnyTRPCRouter>(
   event: H3Event,
-  opts: H3HandlerOptions<TRouter>
+  opts: H3HandlerOptions<TRouter>,
 ) {
   const createContext: ResolveHTTPRequestOptionsContextFn<TRouter> = async (innerOpts) => {
     return await opts.createContext?.(event, innerOpts)

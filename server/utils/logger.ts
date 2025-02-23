@@ -120,7 +120,7 @@ const handleErrorLogging = (
   level: string,
   message: Error,
   logPrefix: string,
-  logFunc: (...args: unknown[]) => void
+  logFunc: (...args: unknown[]) => void,
 ) => {
   const errorObj = {
     name: message.name,

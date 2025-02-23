@@ -38,7 +38,7 @@ export default function AppLayout() {
           <SidebarInset>
             <header
               className={clx(
-                'fixed top-0 z-10 flex h-14 w-full items-center gap-2 border-b bg-sidebar px-4'
+                'fixed top-0 z-10 flex h-14 w-full items-center gap-2 border-b bg-sidebar px-4',
               )}
             >
               <Breadcrumb key={pathname}>

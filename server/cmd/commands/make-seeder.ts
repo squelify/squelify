@@ -77,7 +77,7 @@ export async function seed(db: Kysely<Database>): Promise<void> {
       consola.success(`Seeder file created successfully: ${fileName}`)
     } catch (error) {
       consola.error(
-        `Failed to create seeder: ${error instanceof Error ? error.message : String(error)}`
+        `Failed to create seeder: ${error instanceof Error ? error.message : String(error)}`,
       )
       process.exit(1)
     }

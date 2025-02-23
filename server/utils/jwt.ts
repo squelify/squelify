@@ -49,7 +49,7 @@ export async function generateAccessToken(
   opts: {
     issuer: string
     audience: string | string[]
-  }
+  },
 ) {
   try {
     if (!key.privateKey || !key.algorithm || !key.keyId) {
@@ -104,7 +104,7 @@ export async function verifyAccessToken(
   opts: {
     issuer: string
     audience: string | string[]
-  }
+  },
 ): Promise<JWTPayload | null> {
   try {
     if (!key.publicKey || !key.algorithm) {

@@ -33,7 +33,7 @@ export default defineNitroErrorHandler(async (error, event) => {
         success: false,
         message: errorMessage,
         error: errorIssues,
-      })
+      }),
     )
   }
 
@@ -46,7 +46,7 @@ export default defineNitroErrorHandler(async (error, event) => {
   }
 
   const entryChunk = Object.values(manifest).find(
-    (chunk) => chunk.isEntry && chunk.file.includes(entryName)
+    (chunk) => chunk.isEntry && chunk.file.includes(entryName),
   )
 
   if (!entryChunk) {
@@ -73,7 +73,7 @@ export default defineNitroErrorHandler(async (error, event) => {
   const html = renderToStaticMarkup(
     <BaseLayout title={pkg.config.appName} cssLinks={entryChunk.css} csrfToken={csrfToken}>
       <ErrorView appConfig={appConfig} error={error} />
-    </BaseLayout>
+    </BaseLayout>,
   )
 
   setResponseHeader(event, 'Content-Type', 'text/html')

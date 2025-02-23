@@ -47,7 +47,7 @@ const SCRYPT_PARAMS = {
 
 export async function hashPassword(
   password: string,
-  algorithm: PasswordAlgorithm
+  algorithm: PasswordAlgorithm,
 ): Promise<string> {
   if (!passwordAlgorithmEnum.safeParse(algorithm).success) {
     throw new Error(`Unsupported password algorithm: ${algorithm}`)
@@ -67,7 +67,7 @@ export async function hashPassword(
 export async function verifyPassword(
   password: string,
   hashedPassword: string,
-  algorithm: PasswordAlgorithm
+  algorithm: PasswordAlgorithm,
 ): Promise<boolean> {
   if (!passwordAlgorithmEnum.safeParse(algorithm).success) {
     throw new Error(`Unsupported password algorithm: ${algorithm}`)

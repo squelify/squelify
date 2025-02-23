@@ -1,7 +1,7 @@
 import * as DropdownMenuPrimitive from '@radix-ui/react-dropdown-menu'
 import * as Lucide from 'lucide-react'
 import * as React from 'react'
-import { DropdownMenuVariants, dropdownMenuStyles } from './dropdown-menu.css'
+import { type DropdownMenuVariants, dropdownMenuStyles } from './dropdown-menu.css'
 
 const DropdownMenu = DropdownMenuPrimitive.Root
 const DropdownMenuTrigger = DropdownMenuPrimitive.Trigger

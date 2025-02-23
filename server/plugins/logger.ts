@@ -22,7 +22,7 @@ export default defineNitroPlugin(({ hooks }) => {
       event.path,
       clientIdentifier,
       statusCode,
-      `${responseTimeMs}ms`
+      `${responseTimeMs}ms`,
     )
   })
 

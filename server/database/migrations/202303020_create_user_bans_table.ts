@@ -18,18 +18,18 @@ export const up = async (db: Kysely<Database>): Promise<void> => {
     .createTable('_sq_user_bans')
     .addColumn('id', 'text', (col) => col.primaryKey())
     .addColumn('user_id', 'text', (col) =>
-      col.notNull().references('_sq_users.id').onDelete('cascade')
+      col.notNull().references('_sq_users.id').onDelete('cascade'),
     )
     .addColumn('banned_by', 'text', (col) => col.references('_sq_users.id').onDelete('set null'))
     .addColumn('reason', 'text', (col) => col.notNull())
     .addColumn('details', 'text', (col) => col.notNull().defaultTo('{}'))
     .addColumn('expires_at', 'integer')
     .addColumn('appeal_status', 'text', (col) =>
-      col.check(sql`appeal_status IN ('none', 'pending', 'approved', 'rejected')`)
+      col.check(sql`appeal_status IN ('none', 'pending', 'approved', 'rejected')`),
     )
     .addColumn('appeal_reason', 'text')
     .addColumn('appeal_reviewed_by', 'text', (col) =>
-      col.references('_sq_users.id').onDelete('set null')
+      col.references('_sq_users.id').onDelete('set null'),
     )
     .addColumn('appeal_reviewed_at', 'integer')
     .addColumn('created_at', 'integer', (col) => col.notNull().defaultTo(UNIX_TIMESTAMP))

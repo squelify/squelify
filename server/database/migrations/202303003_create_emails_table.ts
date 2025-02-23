@@ -7,11 +7,11 @@ export const up = async (db: Kysely<Database>): Promise<void> => {
     .createTable('_sq_emails')
     .addColumn('id', 'text', (col) => col.primaryKey())
     .addColumn('user_id', 'text', (col) =>
-      col.notNull().references('_sq_users.id').onDelete('cascade')
+      col.notNull().references('_sq_users.id').onDelete('cascade'),
     )
     .addColumn('email', 'text', (col) => col.notNull().unique().check(sql`LENGTH(email) > 3`))
     .addColumn('is_primary', 'integer', (col) =>
-      col.notNull().defaultTo(0).check(sql`is_primary IN (0, 1)`)
+      col.notNull().defaultTo(0).check(sql`is_primary IN (0, 1)`),
     )
     .addColumn('verified_at', 'integer')
     .addColumn('created_at', 'integer', (col) => col.notNull().defaultTo(UNIX_TIMESTAMP))

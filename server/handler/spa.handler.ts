@@ -1,4 +1,4 @@
-import { type H3Event } from 'h3'
+import type { H3Event } from 'h3'
 import { env, process } from 'std-env'
 import { DURATION } from '~/utils/datetime'
 import { generateCSRFToken } from '~/utils/string'
@@ -97,7 +97,7 @@ export async function handleSPAClient(event: H3Event, options: SPAClientOptions)
   }
 
   const entryChunk = Object.values(manifest).find(
-    (chunk) => chunk.isEntry && chunk.file.includes(entryName)
+    (chunk) => chunk.isEntry && chunk.file.includes(entryName),
   )
 
   if (!entryChunk) {

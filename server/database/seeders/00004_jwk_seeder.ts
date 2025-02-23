@@ -1,5 +1,5 @@
 import * as jose from 'jose'
-import { type Kysely } from 'kysely'
+import type { Kysely } from 'kysely'
 import { typeid } from 'typeid-js'
 import type { Database } from '~/database/db.schema'
 import type { JWKInsert } from '~/database/schemas/jwk'

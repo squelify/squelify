@@ -1,4 +1,4 @@
-import React, { Suspense } from 'react'
+import { Suspense } from 'react'
 import PageLoader from '#/components/loaders/page-loader'
 
 interface PageWrapperProps {

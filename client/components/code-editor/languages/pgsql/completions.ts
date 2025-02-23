@@ -1,4 +1,4 @@
-import { CompletionContext, CompletionResult } from '@codemirror/autocomplete'
+import type { CompletionContext, CompletionResult } from '@codemirror/autocomplete'
 import type { CompletionSuggestion, CompletionType, SQLContextData } from '../../types'
 import { pgsqlKeywords } from './keywords'
 

@@ -1,4 +1,4 @@
-import { Kysely, sql } from 'kysely'
+import { type Kysely, sql } from 'kysely'
 import { typeid } from 'typeid-js'
 import type { Database } from '~/database/db.schema'
 import { RATE_LIMIT_DEFAULTS } from '~/database/schemas/rate_limit'
@@ -16,7 +16,7 @@ export async function createRateLimit(
   key: string,
   context: RateLimitContext,
   limit: number = RATE_LIMIT_DEFAULTS.POINTS,
-  window: number = RATE_LIMIT_DEFAULTS.WINDOW
+  window: number = RATE_LIMIT_DEFAULTS.WINDOW,
 ): Promise<RateLimitInfo> {
   const now = Math.floor(Date.now() / 1000)
   const data: RateLimitInsert = {
@@ -51,7 +51,7 @@ export async function createRateLimit(
             WHEN points + 1 >= ${limit * RATE_LIMIT_DEFAULTS.BLOCK_MULTIPLIER} THEN ${now + window * RATE_LIMIT_DEFAULTS.BLOCK_MULTIPLIER}
             ELSE blocked_until
           END`,
-        })
+        }),
       )
       .execute()
 
@@ -73,7 +73,7 @@ async function cleanupExpiredRecords(db: Kysely<Database>, now: number): Promise
 export async function getRateLimitInfo(
   db: Kysely<Database>,
   key: string,
-  context: RateLimitContext
+  context: RateLimitContext,
 ): Promise<RateLimitInfo> {
   const now = Math.floor(Date.now() / 1000)
 
@@ -112,7 +112,7 @@ export async function getRateLimitInfo(
 export async function clearRateLimit(
   db: Kysely<Database>,
   key: string,
-  context: RateLimitContext
+  context: RateLimitContext,
 ): Promise<void> {
   try {
     await db

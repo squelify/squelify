@@ -7,10 +7,10 @@ export const up = async (db: Kysely<Database>): Promise<void> => {
     .createTable('_sq_role_permissions')
     .addColumn('id', 'text', (col) => col.primaryKey())
     .addColumn('role_id', 'text', (col) =>
-      col.notNull().references('_sq_roles.id').onDelete('cascade')
+      col.notNull().references('_sq_roles.id').onDelete('cascade'),
     )
     .addColumn('permission_id', 'text', (col) =>
-      col.notNull().references('_sq_permissions.id').onDelete('cascade')
+      col.notNull().references('_sq_permissions.id').onDelete('cascade'),
     )
     .addColumn('conditions', 'text', (col) => col.notNull().defaultTo('{}'))
     .addColumn('granted_by', 'text', (col) => col.references('_sq_users.id'))

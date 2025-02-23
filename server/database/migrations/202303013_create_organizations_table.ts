@@ -15,15 +15,15 @@ export const up = async (db: Kysely<Database>): Promise<void> => {
     .addColumn('phone', 'text')
     .addColumn('address', 'text')
     .addColumn('status', 'text', (col) =>
-      col.notNull().check(sql`status IN ('active', 'inactive', 'suspended')`).defaultTo('inactive')
+      col.notNull().check(sql`status IN ('active', 'inactive', 'suspended')`).defaultTo('inactive'),
     )
     .addColumn('settings', 'text', (col) => col.notNull().defaultTo('{}'))
     .addColumn('metadata', 'text', (col) => col.notNull().defaultTo('{}'))
     .addColumn('is_verified', 'integer', (col) =>
-      col.notNull().defaultTo(0).check(sql`is_verified IN (0, 1)`)
+      col.notNull().defaultTo(0).check(sql`is_verified IN (0, 1)`),
     )
     .addColumn('created_by', 'text', (col) =>
-      col.notNull().references('_sq_users.id').onDelete('restrict')
+      col.notNull().references('_sq_users.id').onDelete('restrict'),
     )
     .addColumn('created_at', 'integer', (col) => col.notNull().defaultTo(UNIX_TIMESTAMP))
     .addColumn('updated_at', 'integer')

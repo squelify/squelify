@@ -14,7 +14,7 @@ const SidebarGroup = React.forwardRef<HTMLDivElement, React.ComponentProps<'div'
         {...props}
       />
     )
-  }
+  },
 )
 
 const SidebarGroupLabel = React.forwardRef<
@@ -63,7 +63,7 @@ const SidebarGroupContent = React.forwardRef<HTMLDivElement, React.ComponentProp
         {...props}
       />
     )
-  }
+  },
 )
 
 SidebarGroup.displayName = 'SidebarGroup'

@@ -13,7 +13,7 @@ export interface LinkProps extends Omit<RouterLinkProps, 'to'>, LinkVariants {
 
 const Link = React.forwardRef<HTMLAnchorElement, LinkProps>(function Component(
   { href, asChild, className, newTab, variant, size, children, ...rest },
-  ref
+  ref,
 ) {
   const Comp = asChild ? Slot : RouterLink
   const styles = linkStyles({ variant, size, newTab })

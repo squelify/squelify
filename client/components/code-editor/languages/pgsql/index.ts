@@ -26,7 +26,7 @@ export const pgsqlLanguage: LanguageDefinition = {
       .replace(/\s*([()])\s*/g, ' $1 ')
       .replace(
         /\s*(SELECT|FROM|WHERE|GROUP BY|ORDER BY|HAVING|WITH|UNION|INTERSECT|EXCEPT)\s+/gi,
-        '\n$1 '
+        '\n$1 ',
       )
       .replace(/\s*(LEFT|RIGHT|INNER|OUTER|CROSS|FULL)\s+JOIN\s+/gi, '\n  $1 JOIN ')
       .trim()
@@ -34,7 +34,7 @@ export const pgsqlLanguage: LanguageDefinition = {
   validator: (code: string) => {
     const errors = []
     const hasValidSyntax = /^(SELECT|INSERT|UPDATE|DELETE|CREATE|ALTER|DROP|WITH)\s+/i.test(
-      code.trim()
+      code.trim(),
     )
 
     if (!hasValidSyntax) {

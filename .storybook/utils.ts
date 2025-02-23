@@ -1,14 +1,14 @@
 import { GLOBALS_UPDATED } from '@storybook/core-events'
-import { Theme } from './themes'
+import type { Theme } from './themes'
 
 type EventListener = (
   eventName: string,
-  callback: (context: { globals: Record<string, unknown> }) => void
+  callback: (context: { globals: Record<string, unknown> }) => void,
 ) => void
 
 export function listenToColorScheme(
   eventEmitter: { on: EventListener; off: EventListener },
-  callback: (theme: Theme) => void
+  callback: (theme: Theme) => void,
 ) {
   const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)')
 

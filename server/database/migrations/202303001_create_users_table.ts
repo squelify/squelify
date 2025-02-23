@@ -13,7 +13,7 @@ export const up = async (db: Kysely<Database>): Promise<void> => {
     .addColumn('username', 'text', (col) => col.unique().check(sql`LENGTH(username) >= 3`))
     .addColumn('avatar_url', 'text')
     .addColumn('is_active', 'integer', (col) =>
-      col.notNull().defaultTo(1).check(sql`is_active IN (0, 1)`)
+      col.notNull().defaultTo(1).check(sql`is_active IN (0, 1)`),
     )
     .addColumn('created_at', 'integer', (col) => col.notNull().defaultTo(UNIX_TIMESTAMP))
     .addColumn('updated_at', 'integer')

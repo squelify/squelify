@@ -35,7 +35,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
         {content}
       </Comp>
     )
-  }
+  },
 )
 
 Button.displayName = 'Button'

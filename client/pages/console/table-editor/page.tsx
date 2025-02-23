@@ -1,4 +1,9 @@
-import { EditableGridCell, GridCellKind, GridColumn, Item } from '@glideapps/glide-data-grid'
+import {
+  type EditableGridCell,
+  GridCellKind,
+  type GridColumn,
+  type Item,
+} from '@glideapps/glide-data-grid'
 import consola from 'consola'
 import * as Lucide from 'lucide-react'
 import { useQueryState } from 'nuqs'

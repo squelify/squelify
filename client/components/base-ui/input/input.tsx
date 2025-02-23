@@ -115,7 +115,7 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
         {showCopyButton && !type && <CopyButton />}
       </div>
     )
-  }
+  },
 )
 
 Input.displayName = 'Input'

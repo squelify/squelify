@@ -1,4 +1,4 @@
-import { Kysely, sql } from 'kysely'
+import { type Kysely, sql } from 'kysely'
 import type { Database } from '~/database/db.schema'
 
 /**
@@ -23,7 +23,7 @@ export async function cleanupSessions(db: Kysely<Database>): Promise<void> {
           eb('isActive', '=', 0),
           eb('lastActiveAt', '<', now - 86400 * 30), // 30 days
         ]),
-      ])
+      ]),
     )
     .execute()
 }
@@ -47,7 +47,7 @@ export async function cleanupRateLimits(db: Kysely<Database>): Promise<void> {
       eb.or([
         eb.and([eb('expiresAt', '<', now), eb('blockedUntil', 'is', null)]),
         eb('blockedUntil', '<', now),
-      ])
+      ]),
     )
     .execute()
 }

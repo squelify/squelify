@@ -46,12 +46,12 @@ export const up = async (db: Kysely<Database>): Promise<void> => {
     .createTable('_sq_user_metadata')
     .addColumn('id', 'text', (col) => col.primaryKey())
     .addColumn('user_id', 'text', (col) =>
-      col.notNull().references('_sq_users.id').onDelete('cascade')
+      col.notNull().references('_sq_users.id').onDelete('cascade'),
     )
     .addColumn('key', 'text', (col) => col.notNull())
     .addColumn('value', 'text', (col) => col.notNull())
     .addColumn('is_public', 'integer', (col) =>
-      col.notNull().defaultTo(0).check(sql`is_public IN (0, 1)`)
+      col.notNull().defaultTo(0).check(sql`is_public IN (0, 1)`),
     )
     .addColumn('created_at', 'integer', (col) => col.notNull().defaultTo(UNIX_TIMESTAMP))
     .addColumn('updated_at', 'integer')

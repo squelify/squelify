@@ -21,7 +21,7 @@ export default function AuthLayout() {
     <div
       className={clx(
         'relative flex size-full min-h-screen flex-1 items-center',
-        'dark:primary/25 bg-gradient-to-bl from-primary/10 via-transparent'
+        'dark:primary/25 bg-gradient-to-bl from-primary/10 via-transparent',
       )}
     >
       <Suspense fallback={<AppLoader />}>

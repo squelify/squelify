@@ -1,4 +1,4 @@
-import { type Kysely } from 'kysely'
+import type { Kysely } from 'kysely'
 import { typeid } from 'typeid-js'
 import type { Database } from '~/database/db.schema'
 import { DEFAULT_PASSWORD_ALGORITHM, PASSWORD_POLICIES } from '~/database/schemas/password'
@@ -18,7 +18,7 @@ export async function verifyUserCredentials(db: Kysely<Database>, email: string,
   const user = await db
     .selectFrom('_sq_users as u')
     .innerJoin('_sq_emails as e', (join) =>
-      join.onRef('e.userId', '=', 'u.id').on('e.isPrimary', '=', 1)
+      join.onRef('e.userId', '=', 'u.id').on('e.isPrimary', '=', 1),
     )
     .innerJoin('_sq_passwords as p', 'p.userId', 'u.id')
     .leftJoin('_sq_user_bans as ub', (join) =>
@@ -28,8 +28,8 @@ export async function verifyUserCredentials(db: Kysely<Database>, email: string,
           eb.or([
             eb('ub.expiresAt', '>', Math.floor(Date.now() / 1000)),
             eb('ub.expiresAt', 'is', null),
-          ])
-        )
+          ]),
+        ),
     )
     .where('e.email', '=', email)
     .where('e.verifiedAt', 'is not', null)
@@ -79,7 +79,7 @@ export async function verifyUserCredentials(db: Kysely<Database>, email: string,
         acc[key] = value
         return acc
       },
-      {} as Record<string, string>
+      {} as Record<string, string>,
     ),
   }
 }
@@ -87,7 +87,7 @@ export async function verifyUserCredentials(db: Kysely<Database>, email: string,
 export async function createUserSession(
   db: Kysely<Database>,
   userId: string,
-  options: CreateSessionOptions
+  options: CreateSessionOptions,
 ) {
   const now = Math.floor(Date.now() / 1000)
   const expiresAt = now + DURATION.DAY * 7

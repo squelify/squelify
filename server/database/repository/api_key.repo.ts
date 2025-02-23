@@ -120,7 +120,7 @@ export async function validateApiKey(db: Kysely<Database>, key: string): Promise
         eb.or([
           eb('expiresAt', 'is', null) /* Never expires */,
           eb.and([eb('expiresAt', 'is not', null), eb('expiresAt', '>', now)]),
-        ])
+        ]),
       )
       .select(['id'])
       .executeTakeFirst()

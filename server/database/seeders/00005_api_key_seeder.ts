@@ -1,4 +1,4 @@
-import { type Kysely } from 'kysely'
+import type { Kysely } from 'kysely'
 import type { Database } from '~/database/db.schema'
 import { createApiKey } from '~/database/repository/api_key.repo'
 import { DURATION } from '~/utils/datetime'

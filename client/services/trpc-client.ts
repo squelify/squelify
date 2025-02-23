@@ -1,6 +1,6 @@
 import { QueryClient } from '@tanstack/react-query'
 import { createTRPCReact } from '@trpc/react-query'
-import { AppRouter } from '~/trpc/router'
+import type { AppRouter } from '~/trpc/router'
 
 export const queryClient = new QueryClient({
   defaultOptions: {

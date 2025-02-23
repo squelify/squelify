@@ -10,7 +10,7 @@ export default function createUserRepository(db: Kysely<Database>) {
 
     findById: async <SE extends SelectExpression<Database, '_sq_users'>>(
       id: string,
-      cols?: readonly SE[]
+      cols?: readonly SE[],
     ): Promise<Partial<User> | undefined> => {
       try {
         const query = db.selectFrom('_sq_users').where('id', '=', id)

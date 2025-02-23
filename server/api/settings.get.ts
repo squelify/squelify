@@ -17,7 +17,7 @@ export default defineCachedEventHandler(
   {
     shouldBypassCache: (e) => handleBypassCache(e),
     maxAge: DURATION.HOUR,
-  }
+  },
 )
 
 defineRouteMeta({

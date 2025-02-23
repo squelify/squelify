@@ -13,7 +13,7 @@ const TabsList = React.forwardRef<React.ComponentRef<typeof TabsPrimitive.List>,
   ({ className, ...props }, ref) => {
     const styles = tabsStyles()
     return <TabsPrimitive.List ref={ref} className={styles.list({ className })} {...props} />
-  }
+  },
 )
 
 const TabsTrigger = React.forwardRef<

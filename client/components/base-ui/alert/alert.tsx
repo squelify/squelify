@@ -14,7 +14,7 @@ const AlertTitle = React.forwardRef<HTMLParagraphElement, React.HTMLAttributes<H
   ({ className, ...props }, ref) => {
     const styles = alertStyles()
     return <h5 ref={ref} className={styles.title({ className })} {...props} />
-  }
+  },
 )
 
 const AlertDescription = React.forwardRef<

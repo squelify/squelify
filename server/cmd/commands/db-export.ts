@@ -176,7 +176,7 @@ export default defineCommand({
                   consola.info(`Processing ${idx.type}: ${idx.name}`)
                 }
                 return ensureSemicolon(addIfNotExists(idx.sql))
-              })
+              }),
             )
           }
 
@@ -197,7 +197,7 @@ export default defineCommand({
 
       consola.success(`Schema exported to: ${exportPath}`)
       consola.success(
-        `Total ${tables} tables, ${indexes} indexes, ${triggers} triggers exported (${result.length} objects)`
+        `Total ${tables} tables, ${indexes} indexes, ${triggers} triggers exported (${result.length} objects)`,
       )
 
       await db.destroy()

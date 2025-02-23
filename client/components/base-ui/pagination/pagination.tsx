@@ -1,7 +1,7 @@
 import * as Lucide from 'lucide-react'
 import * as React from 'react'
 import { Link } from '#/components/base-ui'
-import { ButtonProps } from '../button/button'
+import type { ButtonProps } from '../button/button'
 import { buttonStyles } from '../button/button.css'
 import { paginationStyles } from './pagination.css'
 
@@ -14,14 +14,14 @@ const PaginationContent = React.forwardRef<HTMLUListElement, React.ComponentProp
   ({ className, ...props }, ref) => {
     const styles = paginationStyles()
     return <ul ref={ref} className={styles.content({ className })} {...props} />
-  }
+  },
 )
 
 const PaginationItem = React.forwardRef<HTMLLIElement, React.ComponentProps<'li'>>(
   ({ className, ...props }, ref) => {
     const styles = paginationStyles()
     return <li ref={ref} className={styles.item({ className })} {...props} />
-  }
+  },
 )
 
 type PaginationLinkProps = {

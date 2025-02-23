@@ -36,7 +36,7 @@ export const UNIX_TIMESTAMP = sql.raw(`(${TIMESTAMP.UNIX})`)
 export const ISO_TIMESTAMP = sql.raw(`(${TIMESTAMP.ISO})`)
 
 export const addColumnTimestamps = <T extends string, C extends string = never>(
-  builder: CreateTableBuilder<T, C>
+  builder: CreateTableBuilder<T, C>,
 ) => {
   return builder
     .addColumn('created_at', 'text', (col) => col.defaultTo(ISO_TIMESTAMP).notNull())
@@ -44,7 +44,7 @@ export const addColumnTimestamps = <T extends string, C extends string = never>(
 }
 
 export const addColumnSoftDelete = <T extends string, C extends string = never>(
-  builder: CreateTableBuilder<T, C>
+  builder: CreateTableBuilder<T, C>,
 ) => builder.addColumn('deleted_at', 'text', (col) => col.defaultTo(null))
 
 /* @reference: https://www.kysely.dev/docs/recipes/relations */

@@ -18,7 +18,7 @@ const Progress = React.forwardRef<React.ComponentRef<typeof ProgressPrimitive.Ro
         />
       </ProgressPrimitive.Root>
     )
-  }
+  },
 )
 
 Progress.displayName = ProgressPrimitive.Root.displayName

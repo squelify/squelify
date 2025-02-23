@@ -1,5 +1,5 @@
 import * as jose from 'jose'
-import { type Kysely } from 'kysely'
+import type { Kysely } from 'kysely'
 import { typeid } from 'typeid-js'
 import type { Database } from '~/database/db.schema'
 import type { JWK, JWKAlgorithm, JWKInsert } from '~/database/schemas/jwk'
@@ -22,7 +22,7 @@ export async function getActiveJWK(db: Kysely<Database>): Promise<Partial<JWK> |
 
 export async function getJWKByKeyId(
   db: Kysely<Database>,
-  keyId: string
+  keyId: string,
 ): Promise<Partial<JWK> | null> {
   const now = Math.floor(Date.now() / 1000)
 

@@ -7,7 +7,7 @@ export const up = async (db: Kysely<Database>): Promise<void> => {
     .createTable('_sq_passkeys')
     .addColumn('id', 'text', (col) => col.primaryKey())
     .addColumn('user_id', 'text', (col) =>
-      col.notNull().references('_sq_users.id').onDelete('cascade')
+      col.notNull().references('_sq_users.id').onDelete('cascade'),
     )
     .addColumn('webauthn_user_id', 'text', (col) => col.notNull())
     .addColumn('name', 'text', (col) => col.notNull())

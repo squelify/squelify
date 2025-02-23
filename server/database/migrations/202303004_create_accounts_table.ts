@@ -7,7 +7,7 @@ export const up = async (db: Kysely<Database>): Promise<void> => {
     .createTable('_sq_accounts')
     .addColumn('id', 'text', (col) => col.primaryKey())
     .addColumn('user_id', 'text', (col) =>
-      col.notNull().references('_sq_users.id').onDelete('cascade')
+      col.notNull().references('_sq_users.id').onDelete('cascade'),
     )
     .addColumn('provider', 'text')
     .addColumn('provider_account_id', 'text', (col) => col.notNull())

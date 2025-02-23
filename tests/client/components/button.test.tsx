@@ -35,7 +35,7 @@ describe('Button', () => {
       render(
         <Button disabled onClick={handleClick}>
           Disabled Button
-        </Button>
+        </Button>,
       )
       const [button] = screen.getAllByText('Disabled Button')
 

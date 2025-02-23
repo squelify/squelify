@@ -7,14 +7,14 @@ export const up = async (db: Kysely<Database>): Promise<void> => {
     .createTable('_sq_two_factors')
     .addColumn('id', 'text', (col) => col.primaryKey())
     .addColumn('user_id', 'text', (col) =>
-      col.notNull().references('_sq_users.id').onDelete('cascade')
+      col.notNull().references('_sq_users.id').onDelete('cascade'),
     )
     .addColumn('name', 'text', (col) => col.notNull())
     .addColumn('type', 'text', (col) => col.notNull().check(sql`type IN ('totp', 'email', 'sms')`))
     .addColumn('secret', 'text', (col) => col.notNull())
     .addColumn('backup_codes', 'text', (col) => col.notNull().defaultTo('[]'))
     .addColumn('is_primary', 'integer', (col) =>
-      col.notNull().defaultTo(0).check(sql`is_primary IN (0, 1)`)
+      col.notNull().defaultTo(0).check(sql`is_primary IN (0, 1)`),
     )
     .addColumn('last_used_at', 'integer')
     .addColumn('verified_at', 'integer')

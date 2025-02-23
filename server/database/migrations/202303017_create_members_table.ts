@@ -7,13 +7,13 @@ export const up = async (db: Kysely<Database>): Promise<void> => {
     .createTable('_sq_members')
     .addColumn('id', 'text', (col) => col.primaryKey())
     .addColumn('organization_id', 'text', (col) =>
-      col.notNull().references('_sq_organizations.id').onDelete('cascade')
+      col.notNull().references('_sq_organizations.id').onDelete('cascade'),
     )
     .addColumn('user_id', 'text', (col) =>
-      col.notNull().references('_sq_users.id').onDelete('cascade')
+      col.notNull().references('_sq_users.id').onDelete('cascade'),
     )
     .addColumn('role', 'text', (col) =>
-      col.notNull().check(sql`role IN ('org:owner', 'org:admin', 'org:member')`)
+      col.notNull().check(sql`role IN ('org:owner', 'org:admin', 'org:member')`),
     )
     .addColumn('title', 'text')
     .addColumn('department', 'text')
@@ -21,7 +21,7 @@ export const up = async (db: Kysely<Database>): Promise<void> => {
     .addColumn('invited_at', 'integer')
     .addColumn('joined_at', 'integer')
     .addColumn('is_default', 'integer', (col) =>
-      col.notNull().defaultTo(0).check(sql`is_default IN (0, 1)`)
+      col.notNull().defaultTo(0).check(sql`is_default IN (0, 1)`),
     )
     .addColumn('created_at', 'integer', (col) => col.notNull().defaultTo(UNIX_TIMESTAMP))
     .addColumn('updated_at', 'integer')

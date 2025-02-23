@@ -14,14 +14,14 @@ const BreadcrumbList = React.forwardRef<HTMLOListElement, React.ComponentPropsWi
   ({ className, ...props }, ref) => {
     const styles = breadcrumbStyles()
     return <ol ref={ref} className={styles.list({ className })} {...props} />
-  }
+  },
 )
 
 const BreadcrumbItem = React.forwardRef<HTMLLIElement, React.ComponentPropsWithoutRef<'li'>>(
   ({ className, ...props }, ref) => {
     const styles = breadcrumbStyles()
     return <li ref={ref} className={styles.item({ className })} {...props} />
-  }
+  },
 )
 
 const BreadcrumbLink = React.forwardRef<
@@ -47,7 +47,7 @@ const BreadcrumbPage = React.forwardRef<HTMLSpanElement, React.ComponentPropsWit
         {...props}
       />
     )
-  }
+  },
 )
 
 const BreadcrumbSeparator = ({ children, className, ...props }: React.ComponentProps<'span'>) => {

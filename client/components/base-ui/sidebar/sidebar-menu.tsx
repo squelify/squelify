@@ -13,7 +13,7 @@ const SidebarMenu = React.forwardRef<HTMLUListElement, React.ComponentProps<'ul'
     return (
       <ul ref={ref} data-sidebar="menu" className={styles.sidebarMenu({ className })} {...props} />
     )
-  }
+  },
 )
 
 const SidebarMenuItem = React.forwardRef<HTMLLIElement, React.ComponentProps<'li'>>(
@@ -27,7 +27,7 @@ const SidebarMenuItem = React.forwardRef<HTMLLIElement, React.ComponentProps<'li
         {...props}
       />
     )
-  }
+  },
 )
 
 const SidebarMenuButton = React.forwardRef<
@@ -48,7 +48,7 @@ const SidebarMenuButton = React.forwardRef<
       className,
       ...props
     },
-    ref
+    ref,
   ) => {
     const Comp = asChild ? Slot : 'button'
     const { isMobile, state } = useSidebar()
@@ -85,7 +85,7 @@ const SidebarMenuButton = React.forwardRef<
         />
       </Tooltip>
     )
-  }
+  },
 )
 
 const SidebarMenuAction = React.forwardRef<
@@ -120,7 +120,7 @@ const SidebarMenuBadge = React.forwardRef<HTMLDivElement, React.ComponentProps<'
         {...props}
       />
     )
-  }
+  },
 )
 
 const SidebarMenuSkeleton = React.forwardRef<
@@ -166,11 +166,11 @@ const SidebarMenuSub = React.forwardRef<HTMLUListElement, React.ComponentProps<'
         {...props}
       />
     )
-  }
+  },
 )
 
 const SidebarMenuSubItem = React.forwardRef<HTMLLIElement, React.ComponentProps<'li'>>(
-  ({ ...props }, ref) => <li ref={ref} {...props} />
+  ({ ...props }, ref) => <li ref={ref} {...props} />,
 )
 
 const SidebarMenuSubButton = React.forwardRef<
@@ -196,7 +196,7 @@ const SidebarMenuSubButton = React.forwardRef<
         size === 'sm' && 'text-xs',
         size === 'md' && 'text-sm',
         'group-data-[collapsible=icon]:hidden',
-        className
+        className,
       )}
       {...props}
     />

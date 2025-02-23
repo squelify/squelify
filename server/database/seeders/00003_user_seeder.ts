@@ -1,5 +1,5 @@
 import consola from 'consola'
-import { type Kysely } from 'kysely'
+import type { Kysely } from 'kysely'
 import { typeid } from 'typeid-js'
 import type { Database } from '~/database/db.schema'
 import type { AccountInsert } from '~/database/schemas/account'

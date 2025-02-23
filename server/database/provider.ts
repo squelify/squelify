@@ -41,8 +41,8 @@ export default class SquelifyMigrator implements MigrationProvider {
               const importPath = join(this.resolvedPath, fileName).replace(/\\/g, '/')
               const migration = await import(/* @vite-ignore */ importPath)
               return [migrationKey, migration.default || migration] as const
-            })
-        )
+            }),
+        ),
       )
     }
 
@@ -50,7 +50,7 @@ export default class SquelifyMigrator implements MigrationProvider {
     // Automatic Migration mode (run when app is started)
     const migrationItems = await getMigrationItems()
     const migrationEntries = await Promise.all(
-      migrationItems.map(async ({ name, migration }) => [name, migration])
+      migrationItems.map(async ({ name, migration }) => [name, migration]),
     )
 
     return Object.fromEntries(migrationEntries)

@@ -9,13 +9,13 @@ export const up = async (db: Kysely<Database>): Promise<void> => {
     .addColumn('name', 'text', (col) => col.notNull().unique().check(sql`LENGTH(name) >= 3`))
     .addColumn('description', 'text')
     .addColumn('type', 'text', (col) =>
-      col.notNull().check(sql`type IN ('system', 'organization', 'custom')`)
+      col.notNull().check(sql`type IN ('system', 'organization', 'custom')`),
     )
     .addColumn('organization_id', 'text', (col) =>
-      col.references('_sq_organizations.id').onDelete('cascade')
+      col.references('_sq_organizations.id').onDelete('cascade'),
     )
     .addColumn('is_default', 'integer', (col) =>
-      col.notNull().defaultTo(0).check(sql`is_default IN (0, 1)`)
+      col.notNull().defaultTo(0).check(sql`is_default IN (0, 1)`),
     )
     .addColumn('metadata', 'text', (col) => col.notNull().defaultTo('{}'))
     .addColumn('created_at', 'integer', (col) => col.notNull().defaultTo(UNIX_TIMESTAMP))

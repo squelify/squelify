@@ -3,7 +3,7 @@ import * as React from 'react'
 import { Button, DropdownMenu, DropdownMenuContent } from '#/components/base-ui'
 import { DropdownMenuItem, DropdownMenuTrigger, useSidebar } from '#/components/base-ui'
 import { useTheme } from '#/context/hooks/use-theme'
-import { Theme } from '#/context/stores/ui.store'
+import type { Theme } from '#/context/stores/ui.store'
 import { clx } from '#/utils/helper'
 
 type ThemeSelectorProps = {
@@ -68,13 +68,13 @@ export function ThemeSelector({ mode = 'toggle', showTitle = false }: ThemeSelec
         <Lucide.Sun
           className={clx(
             'absolute inset-0 size-4 rotate-0 scale-100 transition-all dark:scale-0',
-            showTitle && '-ml-0.5'
+            showTitle && '-ml-0.5',
           )}
         />
         <Lucide.Moon
           className={clx(
             'absolute inset-0 size-4 rotate-0 scale-0 transition-all dark:scale-100',
-            showTitle && '-ml-0.5'
+            showTitle && '-ml-0.5',
           )}
         />
       </div>
@@ -114,7 +114,7 @@ export function ThemeSwitcher() {
           type="button"
           className={clx(
             'flex w-full items-center rounded-xs px-2 py-1.5 text-sm outline-none transition-colors',
-            'hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground'
+            'hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground',
           )}
         >
           {React.createElement(THEME_OPTIONS[theme].icon, {

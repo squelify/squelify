@@ -1,6 +1,6 @@
 import * as Lucide from 'lucide-react'
 import * as React from 'react'
-import { NumericFormat, NumericFormatProps } from 'react-number-format'
+import { NumericFormat, type NumericFormatProps } from 'react-number-format'
 import useDebounce from '#/context/hooks/use-debounce'
 import { clx } from '#/utils/helper'
 import { Button } from '../button/button'
@@ -39,7 +39,7 @@ export const NumberInput = React.forwardRef<HTMLInputElement, NumberInputProps>(
       onValueChange,
       ...props
     },
-    ref
+    ref,
   ) => {
     const [value, setValue] = React.useState<number | undefined>(controlledValue ?? defaultValue)
     const debouncedValue = useDebounce(value, 300)
@@ -47,13 +47,13 @@ export const NumberInput = React.forwardRef<HTMLInputElement, NumberInputProps>(
 
     const handleIncrement = React.useCallback(() => {
       setValue((prev) =>
-        prev === undefined ? (stepper ?? 1) : Math.min(prev + (stepper ?? 1), max)
+        prev === undefined ? (stepper ?? 1) : Math.min(prev + (stepper ?? 1), max),
       )
     }, [stepper, max])
 
     const handleDecrement = React.useCallback(() => {
       setValue((prev) =>
-        prev === undefined ? -(stepper ?? 1) : Math.max(prev - (stepper ?? 1), min)
+        prev === undefined ? -(stepper ?? 1) : Math.max(prev - (stepper ?? 1), min),
       )
     }, [stepper, min])
 
@@ -114,7 +114,7 @@ export const NumberInput = React.forwardRef<HTMLInputElement, NumberInputProps>(
           props.onBlur(event)
         }
       },
-      [value, min, max, onValueChange, props.onBlur]
+      [value, min, max, onValueChange, props.onBlur],
     )
 
     return (
@@ -160,5 +160,5 @@ export const NumberInput = React.forwardRef<HTMLInputElement, NumberInputProps>(
         </div>
       </div>
     )
-  }
+  },
 )

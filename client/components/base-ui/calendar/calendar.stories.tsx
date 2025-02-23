@@ -4,7 +4,7 @@ import consola from 'consola'
 import { addDays, format } from 'date-fns'
 import * as Lucide from 'lucide-react'
 import * as React from 'react'
-import { DateRange } from 'react-day-picker'
+import type { DateRange } from 'react-day-picker'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 import { clx } from '#/utils/helper'
@@ -87,7 +87,7 @@ export const DatePickerWithForm: StoryObj = {
                         variant="outline"
                         className={clx(
                           'w-[240px] pl-3 text-left font-normal',
-                          !field.value && 'text-muted-foreground'
+                          !field.value && 'text-muted-foreground',
                         )}
                       >
                         {field.value ? format(field.value, 'PPP') : <span>Pick a date</span>}

@@ -16,7 +16,7 @@ export const calculateColumnWidths = <T extends Record<string, any>>(
     minWidth: 80,
     maxWidth: 400,
     padding: 24,
-  }
+  },
 ): Record<string, number> => {
   const widths: Record<string, number> = {}
 
@@ -48,7 +48,7 @@ export const calculateColumnWidths = <T extends Record<string, any>>(
 
 export function useDataGridTheme(customTheme?: Partial<GlideTheme>) {
   const [effectiveTheme, setEffectiveTheme] = useState<Theme>(
-    () => document.documentElement.dataset.theme as Theme
+    () => document.documentElement.dataset.theme as Theme,
   )
 
   useEffect(() => {
@@ -61,7 +61,7 @@ export function useDataGridTheme(customTheme?: Partial<GlideTheme>) {
               ? window.matchMedia('(prefers-color-scheme: dark)').matches
                 ? 'dark'
                 : 'light'
-              : newTheme
+              : newTheme,
           )
         }
       }

@@ -5,7 +5,7 @@ import { DialogHeader, DialogTitle } from '#/components/base-ui'
 import { Popover, PopoverContent, PopoverTrigger } from '#/components/base-ui'
 import { Table, TableBody, TableCell, TableRow } from '#/components/base-ui'
 import { TableHead, TableHeader } from '#/components/base-ui'
-import { type MediaItem } from '#/utils/dummy'
+import type { MediaItem } from '#/utils/dummy'
 
 interface ListViewProps {
   items: MediaItem[]

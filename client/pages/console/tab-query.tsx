@@ -73,17 +73,17 @@ export default function TabQuery() {
   const filteredSavedQueries = useMemo(
     () =>
       savedQueriesItem.filter((item) =>
-        item.name.toLowerCase().includes(debouncedValue.toLowerCase())
+        item.name.toLowerCase().includes(debouncedValue.toLowerCase()),
       ),
-    [debouncedValue]
+    [debouncedValue],
   )
 
   const filteredQueryHistory = useMemo(
     () =>
       queryHistoryItem.filter((item) =>
-        item.query.toLowerCase().includes(debouncedValue.toLowerCase())
+        item.query.toLowerCase().includes(debouncedValue.toLowerCase()),
       ),
-    [debouncedValue]
+    [debouncedValue],
   )
 
   return (
@@ -126,7 +126,7 @@ export default function TabQuery() {
                   key={item.id}
                   className={clx(
                     'group flex select-none items-center justify-between rounded-sm px-2.5 py-1.5 text-sm',
-                    'text-muted-foreground hover:bg-background hover:text-foreground'
+                    'text-muted-foreground hover:bg-background hover:text-foreground',
                   )}
                 >
                   <div className="flex items-center gap-2">

@@ -16,7 +16,7 @@ const Text = React.forwardRef<HTMLParagraphElement, TextProps>(
         {...props}
       />
     )
-  }
+  },
 )
 
 Text.displayName = 'Text'

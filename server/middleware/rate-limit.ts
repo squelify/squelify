@@ -79,7 +79,7 @@ export default defineEventHandler(async (event) => {
       return createErrorResponse(
         event,
         `Too many requests. Please try again in ${waitMinutes} minute(s)`,
-        429
+        429,
       )
     }
 
@@ -92,13 +92,13 @@ export default defineEventHandler(async (event) => {
         const emailLimitInfo = await getRateLimitInfo(db, email, 'email')
         if (emailLimitInfo.isLimited && emailLimitInfo.resetAt !== null) {
           const waitMinutes = Math.ceil(
-            (emailLimitInfo.resetAt - Math.floor(Date.now() / 1000)) / 60
+            (emailLimitInfo.resetAt - Math.floor(Date.now() / 1000)) / 60,
           )
           setResponseStatus(event, 429)
           return createErrorResponse(
             event,
             `Too many requests for this email. Please try again in ${waitMinutes} minute(s)`,
-            429
+            429,
           )
         }
         await createRateLimit(db, email, 'email', rateLimits.user.points, rateLimits.user.window)
@@ -113,7 +113,7 @@ export default defineEventHandler(async (event) => {
         return createErrorResponse(
           event,
           `Too many requests. Please try again in ${waitMinutes} minutes`,
-          429
+          429,
         )
       }
       await createRateLimit(db, userId, 'user', rateLimits.user.points, rateLimits.user.window)

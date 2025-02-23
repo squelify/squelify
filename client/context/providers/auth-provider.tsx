@@ -88,7 +88,7 @@ export default function AuthProvider({ children }: React.PropsWithChildren) {
         loginLockRef.current = false
       }
     },
-    [loginMutation]
+    [loginMutation],
   )
 
   const logout = useCallback(async () => {
@@ -103,7 +103,7 @@ export default function AuthProvider({ children }: React.PropsWithChildren) {
     () => ({
       auth: { user: authState.user, login, logout },
     }),
-    [authState.user, login, logout]
+    [authState.user, login, logout],
   )
 
   return <AppContext.Provider value={value}>{children}</AppContext.Provider>

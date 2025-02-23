@@ -1,4 +1,4 @@
-import { z } from 'zod'
+import type { z } from 'zod'
 import { DURATION } from '~/utils/datetime'
 import { LoginRequestSchema, LoginResponseSchema } from '../schema/auth.schema'
 import { publicProcedure, trpcRouter } from '../trpc'

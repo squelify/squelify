@@ -1,4 +1,4 @@
-import * as React from 'react'
+import type * as React from 'react'
 import { type BadgeVariants, badgeStyles } from './badge.css'
 
 export interface BadgeProps extends React.HTMLAttributes<HTMLDivElement>, BadgeVariants {}

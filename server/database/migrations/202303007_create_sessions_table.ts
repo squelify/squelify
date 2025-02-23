@@ -7,7 +7,7 @@ export const up = async (db: Kysely<Database>): Promise<void> => {
     .createTable('_sq_sessions')
     .addColumn('id', 'text', (col) => col.primaryKey())
     .addColumn('user_id', 'text', (col) =>
-      col.notNull().references('_sq_users.id').onDelete('cascade')
+      col.notNull().references('_sq_users.id').onDelete('cascade'),
     )
     .addColumn('key_id', 'text', (col) => col.references('_sq_jwks.id').onDelete('restrict'))
     .addColumn('refresh_token', 'text', (col) => col.notNull())
@@ -17,7 +17,7 @@ export const up = async (db: Kysely<Database>): Promise<void> => {
     .addColumn('device_type', 'text')
     .addColumn('location', 'text')
     .addColumn('is_active', 'integer', (col) =>
-      col.notNull().defaultTo(1).check(sql`is_active IN (0, 1)`)
+      col.notNull().defaultTo(1).check(sql`is_active IN (0, 1)`),
     )
     .addColumn('expires_at', 'integer', (col) => col.notNull())
     .addColumn('last_active_at', 'integer')

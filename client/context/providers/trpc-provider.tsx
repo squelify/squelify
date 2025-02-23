@@ -31,7 +31,7 @@ export default function TRPCProvider({ children }: React.PropsWithChildren) {
           },
         }),
       ],
-    })
+    }),
   )
 
   return (

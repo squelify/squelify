@@ -1,6 +1,6 @@
 // TODO: (idea) use `cid` instead of `id` for collection identifier in public API
 
-import { Kysely } from 'kysely'
+import type { Kysely } from 'kysely'
 
 /**
  * Checks if a table exists in the database

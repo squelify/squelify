@@ -3,7 +3,7 @@ import { AspectRatio, Button, Card, CardContent, Input, Skeleton } from '#/compo
 import { Dialog, DialogContent, DialogTrigger } from '#/components/base-ui'
 import { DialogHeader, DialogTitle } from '#/components/base-ui'
 import { Popover, PopoverContent, PopoverTrigger } from '#/components/base-ui'
-import { type MediaItem } from '#/utils/dummy'
+import type { MediaItem } from '#/utils/dummy'
 import { clx } from '#/utils/helper'
 
 interface GridViewProps {
@@ -135,7 +135,7 @@ export default function GridView({ items }: GridViewProps) {
           <DialogContent
             className={clx(
               item.type === 'application/pdf' ? 'sm:max-w-lg' : 'sm:max-w-xl',
-              'max-w-full'
+              'max-w-full',
             )}
           >
             <DialogHeader>

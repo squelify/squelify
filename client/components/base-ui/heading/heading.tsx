@@ -12,7 +12,7 @@ const Heading = React.forwardRef<HTMLHeadingElement, HeadingProps>(
     return (
       <Comp ref={ref} className={headingStyles({ level, weight, align, className })} {...props} />
     )
-  }
+  },
 )
 
 Heading.displayName = 'Heading'

@@ -206,7 +206,7 @@ export default defineCommand({
           .filter(([_, count]) => count > 0)
           .map(
             ([method, count]) =>
-              `${METHOD_COLORS[method as keyof typeof METHOD_COLORS](method)} ${chalk.cyan(count.toString())}`
+              `${METHOD_COLORS[method as keyof typeof METHOD_COLORS](method)} ${chalk.cyan(count.toString())}`,
           )
           .join(chalk.gray(' · ')),
       ])

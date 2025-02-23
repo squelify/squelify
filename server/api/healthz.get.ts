@@ -34,7 +34,7 @@ function getCpuUsage(): number {
   const totalIdle = cpus.reduce((acc, cpu) => acc + cpu.times.idle, 0)
   const totalTick = cpus.reduce(
     (acc, cpu) => acc + Object.values(cpu.times).reduce((a, b) => a + b),
-    0
+    0,
   )
   return Math.round((1 - totalIdle / totalTick) * 100)
 }

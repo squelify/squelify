@@ -201,7 +201,7 @@ function validateForeignKeys(stmt: string, errors: string[], warnings: string[])
     // Check for ON DELETE/UPDATE clauses
     const hasReferentialAction =
       /(ON\s+DELETE|ON\s+UPDATE)\s+(SET\s+NULL|SET\s+DEFAULT|CASCADE|RESTRICT|NO\s+ACTION)/i.test(
-        stmt
+        stmt,
       )
     if (!hasReferentialAction) {
       warnings.push(`Foreign key missing ON DELETE/UPDATE clause: ${columns} -> ${targetTable}`)

@@ -9,10 +9,10 @@ import { SidebarMenu, SidebarMenuButton, SidebarMenuItem } from '#/components/ba
 import { Sidebar, SidebarContent, useSidebar } from '#/components/base-ui'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '#/components/base-ui'
 import { Link } from '#/components/base-ui'
-import { MenuItem, useMenu } from '#/context/hooks/use-menu'
+import { type MenuItem, useMenu } from '#/context/hooks/use-menu'
 import { useTheme } from '#/context/hooks/use-theme'
 import { clx } from '#/utils/helper'
-import AppCommand, { CommandMenuGroup } from './app-command'
+import AppCommand, { type CommandMenuGroup } from './app-command'
 import UserMenu from './user-menu'
 
 interface AppSidebarProps {
@@ -207,7 +207,7 @@ export default function AppSidebar({ user, logout }: AppSidebarProps) {
         ],
       },
     ],
-    [navigate, toggleSidebar, theme, setTheme, logout]
+    [navigate, toggleSidebar, theme, setTheme, logout],
   )
 
   return (
@@ -223,7 +223,7 @@ export default function AppSidebar({ user, logout }: AppSidebarProps) {
               <div
                 className={clx(
                   sidebarState === 'expanded' ? 'flex' : 'hidden',
-                  'ml-0.5 flex-col gap-0.5 leading-none'
+                  'ml-0.5 flex-col gap-0.5 leading-none',
                 )}
               >
                 <span className="font-semibold">Squelify</span>
@@ -273,7 +273,7 @@ export default function AppSidebar({ user, logout }: AppSidebarProps) {
         <SidebarMenu
           className={clx(
             sidebarState === 'expanded' ? 'gap-0.5' : 'gap-2',
-            'flex flex-col group-data-[state=expanded]:flex-row group-data-[state=expanded]:items-center'
+            'flex flex-col group-data-[state=expanded]:flex-row group-data-[state=expanded]:items-center',
           )}
         >
           <SidebarMenuItem
@@ -293,7 +293,7 @@ export default function AppSidebar({ user, logout }: AppSidebarProps) {
                     size="icon"
                     className={clx(
                       sidebarState === 'expanded' ? 'size-full' : 'size-8',
-                      'text-muted-foreground'
+                      'text-muted-foreground',
                     )}
                     onClick={toggleSidebar}
                   >

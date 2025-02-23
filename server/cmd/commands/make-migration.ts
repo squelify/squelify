@@ -169,7 +169,7 @@ export const down = async (db: Kysely<Database>): Promise<void> => {
       consola.success(`Migration file created successfully: ${fileName}`)
     } catch (error) {
       consola.error(
-        `Failed to create migration: ${error instanceof Error ? error.message : String(error)}`
+        `Failed to create migration: ${error instanceof Error ? error.message : String(error)}`,
       )
       process.exit(1)
     }

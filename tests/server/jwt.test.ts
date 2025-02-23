@@ -1,7 +1,12 @@
 import * as jose from 'jose'
 import { describe, expect, it } from 'vitest'
-import { JWK, JWKVerifyKey } from '~/database/schemas/jwk'
-import { JWTPayload, TOKEN_DURATION, generateAccessToken, verifyAccessToken } from '~/utils/jwt'
+import type { JWK, JWKVerifyKey } from '~/database/schemas/jwk'
+import {
+  type JWTPayload,
+  TOKEN_DURATION,
+  generateAccessToken,
+  verifyAccessToken,
+} from '~/utils/jwt'
 
 describe('JWT Utils', () => {
   const mockJWTPayload: JWTPayload = {

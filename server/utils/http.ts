@@ -3,7 +3,7 @@ import { status as httpStatus } from 'http-status'
 import { sha256base64 } from 'ohash'
 import { isDevelopment } from 'std-env'
 import { UAParser } from 'ua-parser-js'
-import { z } from 'zod'
+import type { z } from 'zod'
 
 export interface ApiResponse<T = unknown> {
   status: number
@@ -20,7 +20,7 @@ export function createSuccessResponse<T>(
   event: H3Event,
   message: string | null = null,
   data?: T,
-  status = 200
+  status = 200,
 ): ApiResponse<T> {
   setResponseStatus(event, status)
   return { status, success: true, message, ...(data && { data }) }
@@ -33,7 +33,7 @@ export function createErrorResponse(
   error?: {
     issues?: Array<{ field: string; message: string }>
     stack?: string
-  }
+  },
 ): ApiResponse {
   setResponseStatus(event, status)
   return { status, success: false, message, error }
@@ -56,7 +56,7 @@ export function throwErrorResponse(event: H3Event, error: unknown) {
     event,
     err.message || httpStatus['500_MESSAGE'],
     500,
-    isDevelopment ? { stack: err.stack } : undefined
+    isDevelopment ? { stack: err.stack } : undefined,
   )
 }
 
@@ -86,7 +86,7 @@ function isErrorResponse(error: unknown): error is {
  */
 export async function requireValidatedBody<T extends z.ZodType>(
   event: H3Event,
-  schema: T
+  schema: T,
 ): Promise<z.infer<T>> {
   const body = await readValidatedBody(event, (body) => schema.safeParse(body))
 

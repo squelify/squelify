@@ -23,7 +23,7 @@ export default defineEventHandler(async (event) => {
             path: matchedUrl,
             message: `Endpoint ${matchedUrl} does not exist`,
           },
-        })
+        }),
       )
     }
 
@@ -36,7 +36,7 @@ export default defineEventHandler(async (event) => {
           path: matchedUrl,
           message: `An error occurred while processing request to ${matchedUrl}`,
         },
-      })
+      }),
     )
   }
 

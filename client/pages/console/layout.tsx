@@ -45,7 +45,7 @@ export default function SQLConsoleLayout() {
                     href={tab.href}
                     className={clx(
                       'flex h-7 items-center justify-center gap-1.5 px-3 text-xs hover:bg-background',
-                      'data-[state=active]:bg-gray-200/60 data-[state=active]:shadow-none dark:data-[state=active]:bg-gray-700/60'
+                      'data-[state=active]:bg-gray-200/60 data-[state=active]:shadow-none dark:data-[state=active]:bg-gray-700/60',
                     )}
                   >
                     <tab.icon className="size-3.5" strokeWidth={1.6} />

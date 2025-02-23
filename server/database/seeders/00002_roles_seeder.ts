@@ -1,4 +1,4 @@
-import { type Kysely } from 'kysely'
+import type { Kysely } from 'kysely'
 import { typeid } from 'typeid-js'
 import type { Database } from '~/database/db.schema'
 import type { RoleInsert } from '~/database/schemas/role'

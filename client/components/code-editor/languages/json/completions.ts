@@ -1,4 +1,4 @@
-import { CompletionContext, CompletionResult } from '@codemirror/autocomplete'
+import type { CompletionContext, CompletionResult } from '@codemirror/autocomplete'
 import type { CompletionSuggestion, CompletionType } from '../../types'
 import { jsonKeywords } from './keywords'
 

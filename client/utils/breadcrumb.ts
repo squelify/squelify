@@ -6,7 +6,7 @@ import type { MenuGroup } from '#/context/hooks/use-menu'
  */
 export function getBreadcrumbItems(
   pathname: string,
-  menuGroups: MenuGroup[]
+  menuGroups: MenuGroup[],
 ): { title: string; url: string }[] {
   // Early returns for common cases
   if (!pathname || pathname === '/') return []
@@ -153,7 +153,7 @@ function handleConsoleRoute(segments: string[]): { title: string; url: string }[
  */
 function findMenuItemBreadcrumb(
   path: string,
-  menuGroups: MenuGroup[]
+  menuGroups: MenuGroup[],
 ): { title: string; url: string }[] {
   for (const group of menuGroups) {
     const item = group.items.find((item) => path.startsWith(item.url))

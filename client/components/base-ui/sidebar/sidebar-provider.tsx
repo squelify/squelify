@@ -46,7 +46,7 @@ const SidebarProvider = React.forwardRef<
       children,
       ...props
     },
-    ref
+    ref,
   ) => {
     const isMobile = useIsMobile()
     const [openMobile, setOpenMobile] = React.useState(false)
@@ -69,7 +69,7 @@ const SidebarProvider = React.forwardRef<
         // Save the state to local storage to persist the state between page loads.
         saveUiState({ sidebar: openState ? 'expanded' : 'collapsed' })
       },
-      [setOpenProp, open]
+      [setOpenProp, open],
     )
 
     // Helper to toggle the sidebar.
@@ -104,7 +104,7 @@ const SidebarProvider = React.forwardRef<
         setOpenMobile,
         toggleSidebar,
       }),
-      [state, open, setOpen, isMobile, openMobile, toggleSidebar]
+      [state, open, setOpen, isMobile, openMobile, toggleSidebar],
     )
 
     return (
@@ -121,7 +121,7 @@ const SidebarProvider = React.forwardRef<
         </TooltipProvider>
       </SidebarContext.Provider>
     )
-  }
+  },
 )
 
 SidebarProvider.displayName = 'SidebarProvider'

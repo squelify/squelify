@@ -7,11 +7,11 @@ export const up = async (db: Kysely<Database>): Promise<void> => {
     .createTable('_sq_invitations')
     .addColumn('id', 'text', (col) => col.primaryKey())
     .addColumn('organization_id', 'text', (col) =>
-      col.notNull().references('_sq_organizations.id').onDelete('cascade')
+      col.notNull().references('_sq_organizations.id').onDelete('cascade'),
     )
     .addColumn('email', 'text', (col) => col.notNull())
     .addColumn('role', 'text', (col) =>
-      col.notNull().check(sql`role IN ('org:admin', 'org:member')`)
+      col.notNull().check(sql`role IN ('org:admin', 'org:member')`),
     )
     .addColumn('token', 'text', (col) => col.notNull().unique())
     .addColumn('invited_by', 'text', (col) => col.notNull().references('_sq_users.id'))
@@ -19,7 +19,7 @@ export const up = async (db: Kysely<Database>): Promise<void> => {
       col
         .notNull()
         .defaultTo('pending')
-        .check(sql`status IN ('pending', 'accepted', 'expired', 'revoked')`)
+        .check(sql`status IN ('pending', 'accepted', 'expired', 'revoked')`),
     )
     .addColumn('expires_at', 'integer', (col) => col.notNull())
     .addColumn('accepted_at', 'integer')

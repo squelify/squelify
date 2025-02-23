@@ -22,7 +22,7 @@ const InputOTP = React.forwardRef<React.ComponentRef<typeof OTPInput>, InputOTPP
         {...props}
       />
     )
-  }
+  },
 )
 
 const InputOTPGroup = React.forwardRef<
@@ -58,7 +58,7 @@ const InputOTPSlot = React.forwardRef<React.ComponentRef<'div'>, InputOTPSlotPro
         )}
       </div>
     )
-  }
+  },
 )
 
 interface InputOTPSeparatorProps extends React.ComponentPropsWithoutRef<'div'> {
@@ -73,7 +73,7 @@ const InputOTPSeparator = React.forwardRef<React.ComponentRef<'div'>, InputOTPSe
         <Lucide.Minus strokeWidth={2} />
       </div>
     )
-  }
+  },
 )
 
 InputOTP.displayName = 'InputOTP'

@@ -1,4 +1,9 @@
-import { EditableGridCell, GridCellKind, GridColumn, Item } from '@glideapps/glide-data-grid'
+import {
+  type EditableGridCell,
+  GridCellKind,
+  type GridColumn,
+  type Item,
+} from '@glideapps/glide-data-grid'
 import consola from 'consola'
 import * as Lucide from 'lucide-react'
 import { useCallback, useRef, useState } from 'react'
@@ -8,7 +13,7 @@ import { DropdownMenuItem, DropdownMenuTrigger } from '#/components/base-ui'
 import { Button, Input, ScrollArea, Separator } from '#/components/base-ui'
 import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from '#/components/base-ui'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '#/components/base-ui'
-import CodeEditor, { type EditorContextData, EditorRef } from '#/components/code-editor'
+import CodeEditor, { type EditorContextData, type EditorRef } from '#/components/code-editor'
 import DataGrid from '#/components/datagrid'
 import PageWrapper from '#/layouts/page-wrapper'
 import { generateEmail, generateName, generatePhone, getRandomElement } from '#/utils/dummy'
@@ -180,7 +185,7 @@ export default function Page() {
                     value="results"
                     className={clx(
                       'flex h-7 items-center gap-1.5 rounded-none rounded-t-sm border-transparent border-b-2 px-1 text-xs',
-                      'data-[state=active]:border-primary data-[state=active]:bg-transparent data-[state=active]:shadow-none'
+                      'data-[state=active]:border-primary data-[state=active]:bg-transparent data-[state=active]:shadow-none',
                     )}
                   >
                     <Lucide.Sheet className="size-3.5" />
@@ -190,7 +195,7 @@ export default function Page() {
                     value="messages"
                     className={clx(
                       'flex h-7 items-center gap-1.5 rounded-none rounded-t-sm border-transparent border-b-2 px-1 text-xs',
-                      'data-[state=active]:border-primary data-[state=active]:bg-transparent data-[state=active]:shadow-none'
+                      'data-[state=active]:border-primary data-[state=active]:bg-transparent data-[state=active]:shadow-none',
                     )}
                   >
                     <Lucide.MessageSquare className="size-3.5" />

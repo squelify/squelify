@@ -69,7 +69,7 @@ const FormItem = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivEl
         <div ref={ref} className={styles.item({ className })} {...props} />
       </FormItemContext.Provider>
     )
-  }
+  },
 )
 
 const FormLabel = React.forwardRef<

@@ -1,6 +1,6 @@
 import { useStore } from '@nanostores/react'
 import { createContext, useEffect, useState } from 'react'
-import { Theme, saveUiState, uiStore } from '#/context/stores/ui.store'
+import { type Theme, saveUiState, uiStore } from '#/context/stores/ui.store'
 
 type ThemeProviderState = {
   theme: Theme

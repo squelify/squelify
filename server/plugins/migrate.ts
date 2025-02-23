@@ -75,7 +75,7 @@ export default defineNitroPlugin(async (_nitroApp) => {
 
     // Check if all migrations are executed
     const pendingMigrations = userFiles.filter(
-      (file) => !executed.includes(file.replace('.sql', ''))
+      (file) => !executed.includes(file.replace('.sql', '')),
     )
 
     if (pendingMigrations.length === 0) {

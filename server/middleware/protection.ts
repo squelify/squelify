@@ -13,7 +13,7 @@ const ALLOWED_ORIGIN_PATTERN = new RegExp(
     ...appConfig.allowedCorsDomains.STAGING,
     ...appConfig.allowedCorsDomains.TESTING,
     ...appConfig.allowedCorsDomains.PRODUCTION,
-  ].join('|')})${'(:\\d{4,5})?'}$`
+  ].join('|')})${'(:\\d{4,5})?'}$`,
 )
 
 // No protection needed for these routes
@@ -31,7 +31,7 @@ const UNPROTECTED_ROUTES = [
 
 const matchRoute = (pathname: string, patterns: string[]) => {
   return patterns.some((p) =>
-    p.endsWith('/*') ? pathname.startsWith(p.slice(0, -2)) : pathname === p
+    p.endsWith('/*') ? pathname.startsWith(p.slice(0, -2)) : pathname === p,
   )
 }
 

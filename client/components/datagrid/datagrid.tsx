@@ -5,7 +5,7 @@ import { useCallback, useEffect, useRef, useState } from 'react'
 import { clx } from '#/utils/helper'
 
 import { calculateColumnWidths, useDataGridTheme } from './helper'
-import { DataGridProps, SearchState } from './types'
+import type { DataGridProps, SearchState } from './types'
 import '../../styles/datagrid.css'
 
 export function DataGrid<T extends Record<string, any>>({
@@ -78,7 +78,7 @@ export function DataGrid<T extends Record<string, any>>({
       setSelection(newSelection)
       onSelectionChange?.(newSelection)
     },
-    [onSelectionChange]
+    [onSelectionChange],
   )
 
   // Search handlers
@@ -119,7 +119,7 @@ export function DataGrid<T extends Record<string, any>>({
         data: value,
       }
     },
-    [data, columns]
+    [data, columns],
   )
 
   return (

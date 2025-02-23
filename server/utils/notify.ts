@@ -16,7 +16,7 @@ import smtpTransport from '~/mailer/transport'
 export async function sendJSXEmail<T extends EmailTemplateProps>(
   kind: EmailKind,
   to: string,
-  data: T
+  data: T,
 ): Promise<void> {
   const config = EMAIL_CONFIG[kind]
   const Template = config.template(data as any)

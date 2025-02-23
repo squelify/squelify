@@ -1,4 +1,4 @@
-import { Kysely } from 'kysely'
+import type { Kysely } from 'kysely'
 import type { Database } from '~/database/db.schema'
 import { DURATION } from '~/utils/datetime'
 

@@ -25,12 +25,12 @@ const SidebarRail = React.forwardRef<HTMLButtonElement, React.ComponentProps<'bu
           'group-data-[collapsible=offcanvas]:translate-x-0 group-data-[collapsible=offcanvas]:hover:bg-sidebar group-data-[collapsible=offcanvas]:after:left-full',
           '[[data-side=left][data-collapsible=offcanvas]_&]:-right-2',
           '[[data-side=right][data-collapsible=offcanvas]_&]:-left-2',
-          className
+          className,
         )}
         {...props}
       />
     )
-  }
+  },
 )
 
 const SidebarInset = React.forwardRef<HTMLDivElement, React.ComponentProps<'main'>>(
@@ -41,12 +41,12 @@ const SidebarInset = React.forwardRef<HTMLDivElement, React.ComponentProps<'main
         className={clx(
           'relative flex min-h-svh flex-1 flex-col bg-background',
           'peer-data-[variant=inset]:min-h-[calc(100svh-theme(spacing.4))] md:peer-data-[state=collapsed]:peer-data-[variant=inset]:ml-2 md:peer-data-[variant=inset]:m-2 md:peer-data-[variant=inset]:ml-0 md:peer-data-[variant=inset]:rounded-xl md:peer-data-[variant=inset]:shadow',
-          className
+          className,
         )}
         {...props}
       />
     )
-  }
+  },
 )
 
 const SidebarInput = React.forwardRef<
@@ -59,7 +59,7 @@ const SidebarInput = React.forwardRef<
       data-sidebar="input"
       className={clx(
         'h-8 w-full bg-background shadow-none focus:ring-0 focus-visible:ring-1 focus-visible:ring-primary/50',
-        className
+        className,
       )}
       {...props}
     />
@@ -76,7 +76,7 @@ const SidebarHeader = React.forwardRef<HTMLDivElement, React.ComponentProps<'div
         {...props}
       />
     )
-  }
+  },
 )
 
 const SidebarFooter = React.forwardRef<HTMLDivElement, React.ComponentProps<'div'>>(
@@ -89,7 +89,7 @@ const SidebarFooter = React.forwardRef<HTMLDivElement, React.ComponentProps<'div
         {...props}
       />
     )
-  }
+  },
 )
 
 const SidebarSeparator = React.forwardRef<
@@ -112,13 +112,13 @@ const SidebarContent = React.forwardRef<HTMLDivElement, React.ComponentProps<'di
       <ScrollArea
         className={clx(
           'flex min-h-0 flex-1 flex-col gap-2 overflow-auto group-data-[collapsible=icon]:overflow-hidden',
-          className
+          className,
         )}
       >
         <div ref={ref} data-sidebar="content" {...props} />
       </ScrollArea>
     )
-  }
+  },
 )
 
 SidebarRail.displayName = 'SidebarRail'

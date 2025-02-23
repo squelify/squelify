@@ -8,7 +8,7 @@ export const up = async (db: Kysely<Database>): Promise<void> => {
     .addColumn('id', 'text', (col) => col.primaryKey())
     .addColumn('user_id', 'text', (col) => col.references('_sq_users.id').onDelete('cascade'))
     .addColumn('type', 'text', (col) =>
-      col.notNull().check(sql`type IN ('email', 'phone', 'password_reset', 'magic_link', 'otp')`)
+      col.notNull().check(sql`type IN ('email', 'phone', 'password_reset', 'magic_link', 'otp')`),
     )
     .addColumn('identifier', 'text', (col) => col.notNull())
     .addColumn('token', 'text', (col) => col.notNull())

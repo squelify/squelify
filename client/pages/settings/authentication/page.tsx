@@ -18,7 +18,7 @@ export default function Page() {
   const filteredProviders = providers.filter(
     (provider) =>
       provider.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      provider.description.toLowerCase().includes(searchQuery.toLowerCase())
+      provider.description.toLowerCase().includes(searchQuery.toLowerCase()),
   )
 
   return (

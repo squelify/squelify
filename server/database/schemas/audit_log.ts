@@ -30,7 +30,7 @@ const auditActionEnum = z.enum(
   {
     required_error: 'Action is required',
     invalid_type_error: 'Invalid action type',
-  }
+  },
 )
 
 export type AuditAction = z.infer<typeof auditActionEnum>
@@ -54,7 +54,7 @@ const auditEntityEnum = z.enum(
   {
     required_error: 'Entity is required',
     invalid_type_error: 'Invalid entity type',
-  }
+  },
 )
 
 export type AuditEntity = z.infer<typeof auditEntityEnum>

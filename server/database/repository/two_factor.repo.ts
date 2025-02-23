@@ -1,4 +1,4 @@
-import { Kysely } from 'kysely'
+import type { Kysely } from 'kysely'
 import type { Database } from '~/database/db.schema'
 
 export async function getUserActiveTwoFactors(db: Kysely<Database>, userId: string) {
@@ -13,7 +13,7 @@ export async function getUserActiveTwoFactors(db: Kysely<Database>, userId: stri
 export async function setPrimaryTwoFactor(
   db: Kysely<Database>,
   userId: string,
-  twoFactorId: string
+  twoFactorId: string,
 ) {
   return db.transaction().execute(async (trx) => {
     await trx

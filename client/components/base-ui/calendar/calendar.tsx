@@ -36,7 +36,7 @@ function Calendar({
         week: styles.week(),
         day: clx(
           styles.cell(),
-          props.mode === 'range' ? styles.cell_range() : styles.cell_single()
+          props.mode === 'range' ? styles.cell_range() : styles.cell_single(),
         ),
         day_button: styles.day_button(),
         range_start: styles.range_start(),

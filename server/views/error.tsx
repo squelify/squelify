@@ -1,5 +1,5 @@
-import { H3Error } from 'h3'
-import { AppConfig } from '~~/app.config'
+import type { H3Error } from 'h3'
+import type { AppConfig } from '~~/app.config'
 import { errorStyles } from './error.css'
 
 interface ErrorViewProps {

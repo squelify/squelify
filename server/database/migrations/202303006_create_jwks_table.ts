@@ -17,11 +17,11 @@ export const up = async (db: Kysely<Database>): Promise<void> => {
           sql`algorithm IN (
           'RS256', 'RS384', 'RS512', 'PS256', 'PS384',
           'PS512', 'ES256', 'ES384', 'ES512', 'EdDSA'
-        )`
-        )
+        )`,
+        ),
     )
     .addColumn('is_active', 'integer', (col) =>
-      col.notNull().defaultTo(1).check(sql`is_active IN (0, 1)`)
+      col.notNull().defaultTo(1).check(sql`is_active IN (0, 1)`),
     )
     .addColumn('expires_at', 'integer', (col) => col.notNull())
     .addColumn('created_at', 'integer', (col) => col.notNull().defaultTo(UNIX_TIMESTAMP))

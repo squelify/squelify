@@ -1,4 +1,4 @@
-import { type H3Event } from 'h3'
+import type { H3Event } from 'h3'
 import { sql } from 'kysely'
 import { env } from 'std-env'
 import { typeid } from 'typeid-js'
@@ -46,7 +46,7 @@ async function executeIfEnabled(fn: () => Promise<void>) {
 function getRetentionPeriod(
   action: AuditAction,
   entity: AuditEntity,
-  retention?: keyof typeof AUDIT_RETENTION
+  retention?: keyof typeof AUDIT_RETENTION,
 ): number {
   if (retention) {
     return AUDIT_RETENTION[retention]

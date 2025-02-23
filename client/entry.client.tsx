@@ -25,7 +25,7 @@ Does this page need fixes or improvements? ${String.fromCodePoint(0x1f91d)} We l
 Help us improve Squelify by joining the team: ${pkg.homepage}
 `,
     'padding-top: 0.5em; font-size: 2em;',
-    'padding-bottom: 0.5em;'
+    'padding-bottom: 0.5em;',
   )
 }
 
@@ -60,5 +60,5 @@ ReactDOM.createRoot(rootElement).render(
         </NuqsAdapter>
       </ErrorBoundary>
     </ThemeProvider>
-  </React.StrictMode>
+  </React.StrictMode>,
 )

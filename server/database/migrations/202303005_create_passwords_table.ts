@@ -8,18 +8,18 @@ export const up = async (db: Kysely<Database>): Promise<void> => {
     .createTable('_sq_passwords')
     .addColumn('id', 'text', (col) => col.primaryKey())
     .addColumn('user_id', 'text', (col) =>
-      col.notNull().references('_sq_users.id').onDelete('cascade')
+      col.notNull().references('_sq_users.id').onDelete('cascade'),
     )
     .addColumn('hash', 'text', (col) => col.notNull())
     .addColumn('algorithm', 'text', (col) =>
       col
         .notNull()
         .defaultTo(DEFAULT_PASSWORD_ALGORITHM)
-        .check(sql`algorithm IN ('argon2id', 'bcrypt', 'scrypt')`)
+        .check(sql`algorithm IN ('argon2id', 'bcrypt', 'scrypt')`),
     )
     .addColumn('previous_hashes', 'text', (col) => col.notNull().defaultTo('[]'))
     .addColumn('reset_required', 'integer', (col) =>
-      col.notNull().defaultTo(0).check(sql`reset_required IN (0, 1)`)
+      col.notNull().defaultTo(0).check(sql`reset_required IN (0, 1)`),
     )
     .addColumn('failed_attempts', 'integer', (col) => col.notNull().defaultTo(0))
     .addColumn('last_attempt_at', 'integer')

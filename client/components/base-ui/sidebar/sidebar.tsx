@@ -25,7 +25,7 @@ const Sidebar = React.forwardRef<
       children,
       ...props
     },
-    ref
+    ref,
   ) => {
     const { isMobile, state, openMobile, setOpenMobile } = useSidebar()
     // const styles = sidebarStyles()
@@ -35,7 +35,7 @@ const Sidebar = React.forwardRef<
         <div
           className={clx(
             'flex h-full w-(--sidebar-width) flex-col bg-sidebar text-sidebar-foreground',
-            className
+            className,
           )}
           ref={ref}
           {...props}
@@ -82,7 +82,7 @@ const Sidebar = React.forwardRef<
             'group-data-[side=right]:rotate-180',
             variant === 'floating' || variant === 'inset'
               ? 'group-data-[collapsible=icon]:w-[calc(var(--sidebar-width-icon)_+_theme(spacing.4))]'
-              : 'group-data-[collapsible=icon]:w-(--sidebar-width-icon)'
+              : 'group-data-[collapsible=icon]:w-(--sidebar-width-icon)',
           )}
         />
         <div
@@ -95,7 +95,7 @@ const Sidebar = React.forwardRef<
             variant === 'floating' || variant === 'inset'
               ? 'p-2 group-data-[collapsible=icon]:w-[calc(var(--sidebar-width-icon)_+_theme(spacing.4)_+2px)]'
               : 'group-data-[collapsible=icon]:w-(--sidebar-width-icon) group-data-[side=left]:border-r group-data-[side=right]:border-l',
-            className
+            className,
           )}
           {...props}
         >
@@ -108,7 +108,7 @@ const Sidebar = React.forwardRef<
         </div>
       </div>
     )
-  }
+  },
 )
 
 const SidebarTrigger = React.forwardRef<

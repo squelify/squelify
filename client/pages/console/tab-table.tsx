@@ -82,7 +82,7 @@ export default function TabTable() {
   const filteredTables = useMemo(
     () =>
       tableItems.filter((item) => item.name.toLowerCase().includes(debouncedValue.toLowerCase())),
-    [debouncedValue]
+    [debouncedValue],
   )
 
   return (
@@ -124,7 +124,7 @@ export default function TabTable() {
                 collectionId === item.id.toString()
                   ? 'bg-accent text-accent-foreground'
                   : 'text-muted-foreground',
-                'group flex w-full justify-between rounded'
+                'group flex w-full justify-between rounded',
               )}
               onClick={() => setCollectionId(item.id.toString())}
             >

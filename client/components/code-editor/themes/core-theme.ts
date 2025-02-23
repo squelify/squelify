@@ -1,5 +1,5 @@
 import { EditorView } from '@codemirror/view'
-import { EditorTheme } from '../types'
+import type { EditorTheme } from '../types'
 
 /** Font stack for editor monospace text */
 const EDITOR_FONT = 'ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace'
@@ -319,6 +319,6 @@ export const getEditorTheme = (theme: EditorTheme = 'auto') => {
   const fallbackTheme = getSystemTheme()
   return createEditorTheme(
     editorColors[effectiveTheme as keyof typeof editorColors] ||
-      editorColors[fallbackTheme as keyof typeof editorColors]
+      editorColors[fallbackTheme as keyof typeof editorColors],
   )
 }

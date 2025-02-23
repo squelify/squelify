@@ -9,10 +9,10 @@ export const up = async (db: Kysely<Database>): Promise<void> => {
     .addColumn('name', 'text', (col) => col.notNull().unique().check(sql`LENGTH(name) >= 3`))
     .addColumn('description', 'text')
     .addColumn('category', 'text', (col) =>
-      col.notNull().check(sql`category IN ('system', 'user', 'organization', 'content')`)
+      col.notNull().check(sql`category IN ('system', 'user', 'organization', 'content')`),
     )
     .addColumn('action', 'text', (col) =>
-      col.notNull().check(sql`action IN ('create', 'read', 'update', 'delete', 'manage')`)
+      col.notNull().check(sql`action IN ('create', 'read', 'update', 'delete', 'manage')`),
     )
     .addColumn('resource', 'text', (col) => col.notNull())
     .addColumn('conditions', 'text', (col) => col.notNull().defaultTo('{}'))

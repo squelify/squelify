@@ -9,7 +9,7 @@ const Table = React.forwardRef<HTMLTableElement, React.HTMLAttributes<HTMLTableE
         <table ref={ref} className={styles.table({ className })} {...props} />
       </div>
     )
-  }
+  },
 )
 
 const TableHeader = React.forwardRef<
@@ -40,7 +40,7 @@ const TableRow = React.forwardRef<HTMLTableRowElement, React.HTMLAttributes<HTML
   ({ className, ...props }, ref) => {
     const styles = tableStyles()
     return <tr ref={ref} className={styles.row({ className })} {...props} />
-  }
+  },
 )
 
 const TableHead = React.forwardRef<

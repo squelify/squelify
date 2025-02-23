@@ -27,7 +27,7 @@ export const CodeEditor = forwardRef<EditorRef, CodeEditorProps>(function CodeEd
     autoFocus = false,
     theme = 'auto',
   },
-  ref
+  ref,
 ) {
   const editorRef = useRef<HTMLDivElement>(null)
   const editorViewRef = useRef<EditorView>(null)
@@ -163,7 +163,7 @@ export const CodeEditor = forwardRef<EditorRef, CodeEditorProps>(function CodeEd
       },
       format: formatCode,
     }),
-    [executeCurrentBlock, executeAll, formatCode]
+    [executeCurrentBlock, executeAll, formatCode],
   )
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: initialize editor

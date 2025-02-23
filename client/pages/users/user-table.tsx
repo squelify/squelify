@@ -98,7 +98,7 @@ export function UserTable({ users, isLoading }: UserTableProps) {
                   <span
                     className={clx(
                       'inline-flex items-center rounded-full px-2 py-1 font-medium text-xs',
-                      user.isActive ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'
+                      user.isActive ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700',
                     )}
                   >
                     {user.isActive ? 'Active' : 'Inactive'}
