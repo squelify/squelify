@@ -1,6 +1,6 @@
 import { H3Error, type H3Event } from 'h3'
 import { status as httpStatus } from 'http-status'
-import { sha256base64 } from 'ohash'
+import { digest } from 'ohash/crypto'
 import { isDevelopment } from 'std-env'
 import { UAParser } from 'ua-parser-js'
 import type { z } from 'zod'
@@ -111,7 +111,7 @@ export function getClientInfo(event: H3Event) {
   const clientIpAddress = getRequestIP(event, { xForwardedFor: true }) || ''
   const clientInfo = event.headers.get('X-Client-Info') || ''
   const userAgent = event.headers.get('User-Agent') || ''
-  const userAgentHash = sha256base64(userAgent)
+  const userAgentHash = digest(userAgent)
 
   let clientIdentifier = userAgent
 

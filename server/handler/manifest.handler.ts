@@ -77,5 +77,8 @@ defineRouteMeta({
       400: { $ref: 'resp-bad-request' },
       500: { $ref: 'resp-internal-server-error' },
     },
+    $global: {
+      components: {},
+    },
   },
 })
